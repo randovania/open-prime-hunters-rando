@@ -1,0 +1,32 @@
+[build-system]
+requires = [
+    "setuptools>=61.2",
+    "setuptools_scm[toml]>=3.4.3"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "open_prime_hunters_rando"
+description = "An open source randomizer patcher for Metroid Prime Hunters."
+classifiers = [
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.10",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "jsonschema>=4.0.0",
+]
+dynamic = ["version"]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.urls]
+Homepage = "https://github.com/dyceron/open-prime-hunters-rando"
+
+[tool.setuptools_scm]
+local_scheme = "no-local-version"
+write_to = "open_prime_hunters_rando/version.py"
