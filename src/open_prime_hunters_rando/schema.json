@@ -1,5 +1,17 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
-    "properties": {}
+    "properties": {},
+    "$defs": {
+        "area": {
+            "type": "string",
+            "enum": [
+                "Arcterra",
+                "Alinos",
+                "Celestial Archives",
+                "Oubliette",
+                "Vesper Defense Outpost"
+            ]
+        }
+    }
 }

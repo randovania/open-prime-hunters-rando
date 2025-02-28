@@ -1,2 +1,2 @@
-# open-prime-hunters-rando
-Randomizer patcher for Metroid Prime Hunters
+# Open Prime Hunters Rando
+Open Source randomizer patcher for Metroid Prime Hunters
