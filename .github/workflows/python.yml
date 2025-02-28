@@ -15,15 +15,15 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version: "3.10"
      
       - name: Install Python packages
         run: python -m pip install --upgrade pip setuptools build
@@ -35,7 +35,7 @@ jobs:
         run: python -m build --sdist
       
       - name: Store the packages
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: python-package-distributions
           path: dist
@@ -50,15 +50,14 @@ jobs:
       fail-fast: false
       matrix:
         python:
-          - {version: '3.9', wheel: 'cp39-cp39'}
           - {version: '3.10', wheel: 'cp310-cp310'}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python.version }}
 
@@ -78,6 +77,46 @@ jobs:
       - name: test
         run: python -m pytest tests
 
+  mypy:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Workaround for worktree config
+        run: git config --unset-all extensions.worktreeConfig || true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install Python packages
+        run: python -m pip install .[typing]
+
+      - name: Mypy on modified files
+        uses: tsuyoshicho/action-mypy@v5
+        with:
+          github_token: ${{ secrets.github_token }}
+          # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
+          reporter: github-check
+          setup_method: install
+          fail_on_error: false
+
+      - name: Mypy on required files
+        uses: tsuyoshicho/action-mypy@v5
+        with:
+          github_token: ${{ secrets.github_token }}
+          # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
+          reporter: github-check
+          setup_method: install
+          target: --config-file=pyproject.toml
+          fail_on_error: true
+
   pypi:
     runs-on: 'ubuntu-latest'
     needs:
@@ -85,7 +124,7 @@ jobs:
 
     steps:
       - name: Download all the dists
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: python-package-distributions
           path: dist/
@@ -98,7 +137,7 @@ jobs:
           repository_url: https://test.pypi.org/legacy/
 
       - name: Create GitHub release
-        uses: svenstaro/upload-release-action@2.3.0
+        uses: svenstaro/upload-release-action@2.9.0
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
