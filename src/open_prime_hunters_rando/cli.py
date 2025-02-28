@@ -10,9 +10,9 @@ from open_prime_hunters_rando import prime_hunters_patcher
 def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--input-path", required=True, type=Path,
-                        help="Path to where the extracted Metroid Prime Hunters files to randomize can be found.")
+                        help="Path to an unmodified NDS rom of Metroid Prime Hunters.")
     parser.add_argument("--output-path", required=True, type=Path,
-                        help="Path to where the modified files will be written to.")
+                        help="Path to where a modified NDS rom will be written to.")
     parser.add_argument("--input-json", type=Path,
                         help="Path to the configuration json. If missing, it's read from standard input")
     return parser

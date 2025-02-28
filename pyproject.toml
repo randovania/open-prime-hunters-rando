@@ -17,6 +17,7 @@ classifiers = [
 requires-python = ">=3.10"
 dependencies = [
     "jsonschema>=4.0.0",
+    "ndspy>=4.2.0",
 ]
 dynamic = ["version"]
 
