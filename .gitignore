@@ -156,3 +156,6 @@ MANIFEST
 
 # Project
 open_prime_hunters_rando/version.py
+
+# VSCode
+.vscode
