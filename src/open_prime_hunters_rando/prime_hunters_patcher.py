@@ -10,7 +10,7 @@ LOG = logging.getLogger("prime_hunters_patcher")
 
 
 def _read_schema():
-    with Path(__file__).parent.joinpath("schema.json").open() as f:
+    with Path(__file__).parent.joinpath("files", "schema.json").open() as f:
         return json.load(f)
 
 
