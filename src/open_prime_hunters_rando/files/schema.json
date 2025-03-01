@@ -1,16 +1,68 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
-    "properties": {},
+    "properties": {
+        "areas": {
+            "type": "object",
+            "properties": {
+                "Celestial Archives": { "$ref": "#/$defs/area" },
+                "Alinos": { "$ref": "#/$defs/area" },
+                "Arcterra": { "$ref": "#/$defs/area" },
+                "Vesper Defense Outpost": { "$ref": "#/$defs/area" },
+                "Oubliette": { "$ref": "#/$defs/area" }
+            },
+            "default": {},
+            "additionalProperties": false,
+            "$comment": "The list of properties is replaced in runtime with all areas in the provided NDS rom."
+        }
+    },
     "$defs": {
         "area": {
-            "type": "string",
-            "enum": [
-                "Arcterra",
-                "Alinos",
-                "Celestial Archives",
-                "Oubliette",
-                "Vesper Defense Outpost"
+            "type": "object",
+            "properties": {
+                "levels": {
+                    "type": "object",
+                    "patternProperties": {
+                        ".*": {
+                            "#ref": "#/$defs/level"
+                        }
+                    }
+                }
+            }
+        },
+        "level": {
+            "type": "object",
+            "properties": {
+                "entity_file": {
+                    "type": "string"
+                },
+                "pickups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "item_type": {
+                                "type": "integer",
+                                "minimum": -1,
+                                "maximum": 22
+                            },
+                            "offset": {
+                                "type": "integer",
+                                "description": "The offset in the level file to modify for the pickup."
+                            }
+                        },
+                        "required": [
+                            "offset",
+                            "item_type"
+                        ]
+                    },
+                    "default": {},
+                    "description": "Change the pickups using the offset off the pickup.",
+                    "$comment": "The list of pickups is replaced in runtime with the existing pickups of each specific level."
+                }
+            },
+            "required": [
+                "entity_file"
             ]
         }
     }
