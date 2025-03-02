@@ -10,12 +10,12 @@ T = typing.TypeVar("T")
 LOG = logging.getLogger("prime_hunters_patcher")
 
 
-def _read_schema():
+def _read_schema() -> dict:
     with Path(__file__).parent.joinpath("files", "schema.json").open() as f:
         return json.load(f)
 
 
-def patch_pickups(rom: ndspy.rom.NintendoDSRom, configuration: dict[str, dict]):
+def patch_pickups(rom: ndspy.rom.NintendoDSRom, configuration: dict[str, dict]) -> None:
     for area_name, area_config in configuration.items():
         for level_name, level_config in area_config.items():
             for room_name, room_config in level_config.items():
@@ -25,10 +25,10 @@ def patch_pickups(rom: ndspy.rom.NintendoDSRom, configuration: dict[str, dict]):
                 for pickup in room_config["pickups"]:
                     offset = int(pickup["offset"], 16)
                     item_type = pickup["item_type"]
-                    file[offset : offset + 1] = item_type.to_bytes(1, "big")
+                    file[offset : offset + 1] = item_type.to_bytes(1, "big") # type: ignore
 
 
-def patch_rom(input_path: Path, output_path: Path, configuration: dict):
+def patch_rom(input_path: Path, output_path: Path, configuration: dict) -> None:
     LOG.info("Will patch files at %s", input_path)
 
     jsonschema.validate(instance=configuration, schema=_read_schema())
