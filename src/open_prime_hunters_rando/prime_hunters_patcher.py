@@ -1,10 +1,10 @@
 import json
 import logging
-import ndspy.rom
 import typing
 from pathlib import Path
 
 import jsonschema
+import ndspy.rom
 
 T = typing.TypeVar("T")
 LOG = logging.getLogger("prime_hunters_patcher")
@@ -25,7 +25,7 @@ def patch_pickups(rom: ndspy.rom.NintendoDSRom, configuration: dict[str, dict]):
                 for pickup in room_config["pickups"]:
                     offset = int(pickup["offset"], 16)
                     item_type = pickup["item_type"]
-                    file[offset:offset+1] = item_type.to_bytes(1, "big")
+                    file[offset : offset + 1] = item_type.to_bytes(1, "big")
 
 
 def patch(input_path: Path, output_path: Path, configuration: dict):
