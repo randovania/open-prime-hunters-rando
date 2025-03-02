@@ -28,7 +28,7 @@ def patch_pickups(rom: ndspy.rom.NintendoDSRom, configuration: dict[str, dict]):
                     file[offset : offset + 1] = item_type.to_bytes(1, "big")
 
 
-def patch(input_path: Path, output_path: Path, configuration: dict):
+def patch_rom(input_path: Path, output_path: Path, configuration: dict):
     LOG.info("Will patch files at %s", input_path)
 
     jsonschema.validate(instance=configuration, schema=_read_schema())

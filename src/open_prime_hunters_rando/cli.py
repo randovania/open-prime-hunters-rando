@@ -58,7 +58,7 @@ def main():
     with args.input_json.open() as f:
         configuration = json.load(f)
 
-    prime_hunters_patcher.patch(
+    prime_hunters_patcher.patch_rom(
         args.input_path,
         args.output_path,
         configuration,
