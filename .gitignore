@@ -145,17 +145,8 @@ dmypy.json
 .idea/
 
 # Project
-open_prime_hunters_rando/version.py
-open_prime_hunters_rando/__pycache__/open_prime_hunters_rando.cpython-310.pyc
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# Project
-open_prime_hunters_rando/version.py
+src/open_prime_hunters_rando/version.py
+open_prime_hunters_rando/__pycache__/prime_hunters_patcher.cpython-310.pyc
 
 # VSCode
 .vscode

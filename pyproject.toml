@@ -28,9 +28,13 @@ content-type = "text/markdown"
 [project.urls]
 Homepage = "https://github.com/dyceron/open-prime-hunters-rando"
 
+# Entry Points for PyInstaller
+[project.entry-points.pyinstaller40]
+hook-dirs = "open_prime_hunters_rando.__pyinstaller:get_hook_dirs"
+
 [tool.setuptools_scm]
 local_scheme = "no-local-version"
-write_to = "open_prime_hunters_rando/version.py"
+write_to = "src/open_prime_hunters_rando/version.py"
 
 [tool.ruff]
 line-length = 120
