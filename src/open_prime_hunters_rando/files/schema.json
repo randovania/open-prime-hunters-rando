@@ -47,7 +47,7 @@
                                 "maximum": 22
                             },
                             "offset": {
-                                "type": "integer",
+                                "type": "string",
                                 "description": "The offset in the level file to modify for the pickup."
                             }
                         },

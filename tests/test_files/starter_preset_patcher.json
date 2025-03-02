@@ -1,3 +1,18 @@
 {
-    "$schema": "../../src/open_prime_hunters_rando/files/schema.json"
+    "$schema": "../../src/open_prime_hunters_rando/files/schema.json",
+    "areas": {
+        "Oubliette": {
+            "levels": {
+                "Gorea Peek": {
+                    "entity_file": "Gorea_Peek_Ent",
+                    "pickups": [
+                        {
+                            "item_type": 10,
+                            "offset": "138"
+                        }
+                    ]
+                }
+            }
+        }
+    }
 }
