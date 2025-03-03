@@ -4,18 +4,25 @@
         "Alinos": {
             "levels": {
                 "Alinos Gateway": {
-                    "pickups": [
+                    "item_spawns": [
                         {
-                            "entity_offset": 2068,
+                            "entity_id": 13,
                             "item_type": "ShockCoil"
                         }
                     ]
                 },
                 "Echo Hall": {
-                    "pickups": [
+                    "item_spawns": [
                         {
-                            "entity_offset": 3444,
+                            "entity_id": 3,
                             "item_type": "HealthBig"
+                        }
+                    ],
+                    "artifacts": [
+                        {
+                            "entity_id": 15,
+                            "model_id": 0,
+                            "artifact_id": 1
                         }
                     ]
                 }
@@ -24,9 +31,9 @@
         "Oubliette": {
             "levels": {
                 "Gorea Peek": {
-                    "pickups": [
+                    "item_spawns": [
                         {
-                            "entity_offset": 312,
+                            "entity_id": 1,
                             "item_type": "Magmaul"
                         }
                     ]
