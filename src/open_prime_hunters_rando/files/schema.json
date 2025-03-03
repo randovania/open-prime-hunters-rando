@@ -24,11 +24,14 @@
                     "type": "object",
                     "patternProperties": {
                         ".*": {
-                            "#ref": "#/$defs/level"
+                            "$ref": "#/$defs/level"
                         }
                     }
                 }
-            }
+            },
+            "required": ["levels"],
+            "additionalProperties": false,
+            "$comment": "The list of levels is replaced in runtime with the existing levels of each specific area."
         },
         "level": {
             "type": "object",
@@ -41,28 +44,55 @@
                     "items": {
                         "type": "object",
                         "properties": {
-                            "item_type": {
+                            "entity_offset": {
                                 "type": "integer",
-                                "minimum": -1,
-                                "maximum": 22
+                                "description": "The offset of the pickup in the level file."
                             },
-                            "offset": {
+                            "item_type": {
                                 "type": "string",
-                                "description": "The offset in the level file to modify for the pickup."
+                                "$ref": "#/$defs/item_types",
+                                "description": "The item type to change the pickup into."
                             }
                         },
                         "required": [
-                            "offset",
+                            "entity_offset",
                             "item_type"
-                        ]
+                        ],
+                        "additionalProperties": false
                     },
                     "default": {},
-                    "description": "Change the pickups using the offset off the pickup.",
+                    "description": "Change pickups to be another type.",
                     "$comment": "The list of pickups is replaced in runtime with the existing pickups of each specific level."
                 }
-            },
-            "required": [
-                "entity_file"
+            }
+        },
+        "item_types": {
+            "type": "string",
+            "enum": [
+                "None",
+                "HealthMedium",
+                "HealthSmall",
+                "HealthBig",
+                "DoubleDamage",
+                "EnergyTank",
+                "VoltDriver",
+                "MissileExpansion",
+                "Battlehammer",
+                "Imperialist",
+                "Judicator",
+                "Magmaul",
+                "ShockCoil",
+                "OmegaCannon",
+                "UASmall",
+                "UABig",
+                "MissileSmall",
+                "MissileBig",
+                "Cloak",
+                "UAExpansion",
+                "ArtifactKey",
+                "Deathalt",
+                "AffinityWeapon",
+                "PickWpnMissile"
             ]
         }
     }
