@@ -6,7 +6,7 @@
                 "Alinos Gateway": {
                     "pickups": [
                         {
-                            "entity_offset": 13,
+                            "entity_offset": 2068,
                             "item_type": "ShockCoil"
                         }
                     ]
