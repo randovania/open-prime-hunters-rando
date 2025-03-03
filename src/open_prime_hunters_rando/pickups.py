@@ -83,8 +83,11 @@ def patch_pickups(rom: NintendoDSRom, configuration: dict[str, dict]) -> None:
     for area_name, area_config in configuration.items():
         for level_name, level_config in area_config.items():
             for room_name, room_config in level_config.items():
+                # Load the entity file
                 entity_file = rom.getFileByName(f"levels/entities/{ENTITY_FILES[room_name]}_Ent.bin")
+                mv = memoryview(entity_file)
                 for pickup in room_config["pickups"]:
+                    # Modify the value at the specified offset to edit the ItemType
                     offset = pickup["entity_offset"]
                     item_type = ITEM_TYPES_TO_IDS[pickup["item_type"]]
-                    entity_file[offset : offset + 1] = item_type.to_bytes(1, "big")  # type: ignore
+                    mv[offset] = item_type
