@@ -1,14 +1,33 @@
 {
     "$schema": "../../src/open_prime_hunters_rando/files/schema.json",
     "areas": {
+        "Alinos": {
+            "levels": {
+                "Alinos Gateway": {
+                    "pickups": [
+                        {
+                            "entity_offset": 13,
+                            "item_type": "ShockCoil"
+                        }
+                    ]
+                },
+                "Echo Hall": {
+                    "pickups": [
+                        {
+                            "entity_offset": 3444,
+                            "item_type": "HealthBig"
+                        }
+                    ]
+                }
+            }
+        },
         "Oubliette": {
             "levels": {
                 "Gorea Peek": {
-                    "entity_file": "Gorea_Peek_Ent",
                     "pickups": [
                         {
-                            "item_type": 10,
-                            "offset": "138"
+                            "entity_offset": 312,
+                            "item_type": "Magmaul"
                         }
                     ]
                 }
