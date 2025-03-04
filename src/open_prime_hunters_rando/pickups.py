@@ -1,5 +1,7 @@
 from ndspy.rom import NintendoDSRom
 
+from open_prime_hunters_rando.entity_data import get_data
+
 ITEM_TYPES_TO_IDS = {
     "None": -1,
     "HealthMedium": 0,
@@ -28,66 +30,61 @@ ITEM_TYPES_TO_IDS = {
 }
 
 
-ENTITY_FILES = {
-    # Celestial Archives
-    "Celestial Gateway": "unit2_Land",
-    "Biodefense Chamber 01": "Unit2_b1",
-    "Biodefense Chamber 05": "Unit2_b2",
-    "Data Shrine 01": "unit2_RM1",
-    "Data Shrine 02": "unit2_RM2",
-    "Data Shrine 03": "unit2_RM3",
-    "Docking Bay": "Unit2_RM8",
-    "Incubation Vault 01": "unit2_RM5",
-    "Incubation Vault 02": "unit2_RM6",
-    "Incubation Vault 03": "Unit2_RM7",
-    "New Arrival Registration": "Unit2_C7",
-    "Synergy Core": "unit2_C4",
-    "Transfer Lock": "Unit2_RM4",
-    # Alinos
-    "Alinos Gateway": "Unit1_Land",
-    "Alinos Perch": "unit1_RM2",
-    "Biodefense Chamber 02": "Unit1_b1",
-    "Biodefense Chamber 06": "Unit1_b2",
-    "Council Chamber": "unit1_rm3",
-    "Crash Site": "Unit1_C3",
-    "Echo Hall": "Unit1_C0",
-    "Elder Passage": "unit_RM6",
-    "High Ground": "unit1_RM1",
-    "Magma Drop": "Unit1_C4",
-    "Piston Cave": "Unit1_C5",
-    "Processor Core": "unit1_rm5",
-    # Arcterra
-    "Biodefense Chamber 04": "Unit1_b1",
-    "Biodefense Chamber 07": "Unit1_b2",
-    "Drip Moat": "unit4_C1",
-    "Fault Line": "Unit4_RM5",
-    "Frost Labyrinth": "unit4_C0",
-    "Ice Hive": "Unit4_RM1",
-    "Sanctorus": "unit4_rm4",
-    "Sic Transit": "unit4_rm3",
-    "Subterranean": "Unit4_RM2",
-    # Vesper Defense Outpost
-    "Biodefense Chamber 03": "Unit1_b1",
-    "Biodefense Chamber 08": "Unit1_b2",
-    "Compression Chamber": "unit3_rm4",
-    "Cortex CPU": "Unit3_C2",
-    "Fuel Stack": "Unit3_RM2",
-    "Stasis Bunker": "Unit3_RM3",
-    "Weapons Complex": "Unit3_RM1",
-    # Oubliette
-    "Gorea Peek": "Gorea_Peek",
-}
+ENTITY_TYPES_TO_IDS = {"item_spawns": 4, "artifacts": 17}
+
+
+class ItemSpawnEntity:
+    @classmethod
+    def entity_header(cls, entity_type: int, entity_id: int) -> bytearray:
+        header = bytearray(3)
+        mv = memoryview(header)
+
+        mv[0] = entity_type
+        # mv[1] is always 0
+        mv[2] = entity_id
+
+        return header
+
+    @classmethod
+    def entity_data(cls, item_type: int, collected_message: int, enabled: bool, has_base: bool) -> bytearray:
+        data = bytearray(32)
+        mv = memoryview(data)
+
+        mv[0] = 255  # Always FF
+        mv[1] = 255  # Always FF
+        mv[4] = item_type
+        mv[8] = enabled
+        mv[9] = has_base
+        mv[12] = 1  # max spawn count
+        mv[20] = collected_message
+
+        return data
 
 
 def patch_pickups(rom: NintendoDSRom, configuration: dict[str, dict]) -> None:
     for area_name, area_config in configuration.items():
         for level_name, level_config in area_config.items():
-            for room_name, room_config in level_config.items():
+            for room_name, entities in level_config.items():
                 # Load the entity file
-                entity_file = rom.getFileByName(f"levels/entities/{ENTITY_FILES[room_name]}_Ent.bin")
+                level_data = get_data(room_name)
+                entity_file = rom.getFileByName(f"levels/entities/{level_data.entity_file}_Ent.bin")
                 mv = memoryview(entity_file)
-                for pickup in room_config["pickups"]:
-                    # Modify the value at the specified offset to edit the ItemType
-                    offset = pickup["entity_offset"]
-                    item_type = ITEM_TYPES_TO_IDS[pickup["item_type"]]
-                    mv[offset] = item_type
+                for entity_type in entities:
+                    # Modify ItemSpawns
+                    if entity_type == "item_spawns":
+                        type = ENTITY_TYPES_TO_IDS[entity_type]
+                        for entity in entities["item_spawns"]:
+                            entity_id = entity["entity_id"]
+                            item_type = ITEM_TYPES_TO_IDS[entity["item_type"]]
+                            collected_message = 0
+                            for entity_data in level_data.entities:
+                                if entity_id == entity_data.entity_id:
+                                    header = ItemSpawnEntity.entity_header(type, entity_id)
+                                    data = ItemSpawnEntity.entity_data(
+                                        item_type, collected_message, entity_data.enabled, entity_data.has_base
+                                    )
+                                    offset = entity_data.offset
+                                    # The item data has an offset of 40 from the header
+                                    data_offset = offset + 40
+                                    mv[offset : offset + 3] = header
+                                    mv[data_offset : data_offset + 32] = data
