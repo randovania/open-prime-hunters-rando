@@ -46,59 +46,75 @@
         "level": {
             "type": "object",
             "properties": {
-                "item_spawns": {
+                "pickups": {
                     "type": "array",
                     "items": {
                         "type": "object",
                         "properties": {
                             "entity_id": {
                                 "type": "integer",
-                                "description": "The id of the Item Spawn entity."
+                                "description": "The id of the entity."
                             },
-                            "item_type": {
+                            "entity_type": {
                                 "type": "string",
-                                "$ref": "#/$defs/item_types",
-                                "description": "The item type to change the entity into."
+                                "$ref": "#/$defs/entity_types",
+                                "description": "The entity type of the entity."
                             }
                         },
                         "required": [
                             "entity_id",
-                            "item_type"
-                        ]
-                    },
-                    "default": []
-                },
-                "artifacts": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "entity_id": {
-                                "type": "integer",
-                                "description": "The id of the Artifact entity."
-                            },
-                            "model_id": {
-                                "type": "integer",
-                                "miniumum": 0,
-                                "maximum": 8,
-                                "description": "The id of the model to use for the artifact."
-                            },
-                            "artifact_id": {
-                                "type": "integer",
-                                "miniumum": 0,
-                                "maximum": 7,
-                                "description": "The id of the artifact."
+                            "entity_type"
+                        ],
+                        "if": {
+                            "properties": {
+                                "entity_type": {
+                                    "const": "ItemSpawn"
+                                }
                             }
                         },
-                        "required": [
-                            "entity_id",
-                            "model_id",
-                            "artifact_id"
-                        ]
+                        "then": {
+                            "properties": {
+                                "item_type": {
+                                    "type": "string",
+                                    "$ref": "#/$defs/item_types",
+                                    "description": "The item type to change the entity into."
+                                }
+                            },
+                            "required": [
+                                "item_type"
+                            ]
+                        },
+                        "else": {
+                            "properties": {
+                                "model_id": {
+                                    "type": "integer",
+                                    "miniumum": 0,
+                                    "maximum": 8,
+                                    "description": "The id of the model to use for the artifact."
+                                },
+                                "artifact_id": {
+                                    "type": "integer",
+                                    "miniumum": 0,
+                                    "maximum": 7,
+                                    "description": "The id of the artifact."
+                                }
+                            },
+                            "required": [
+                                "model_id",
+                                "artifact_id"
+                            ]
+                        }
                     },
                     "default": []
                 }
             }
+        },
+        "entity_types": {
+            "type": "string",
+            "enum": [
+                "ItemSpawn",
+                "Artifact"
+            ]
         },
         "item_types": {
             "type": "string",
