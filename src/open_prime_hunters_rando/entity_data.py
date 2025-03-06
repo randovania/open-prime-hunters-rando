@@ -120,7 +120,11 @@ ITEM_ENTITIES_DATA: dict[str, LevelData] = {
     "Echo Hall": LevelData(
         entity_file="Unit1_C0",
         entities=[
-            EntityData(entity_id=3, offset=1920),
+            EntityData(
+                item_type="Artifact",
+                entity_id=3,
+                offset=1920,
+            ),
             EntityData(
                 item_type="EnergyTank",
                 entity_id=15,
