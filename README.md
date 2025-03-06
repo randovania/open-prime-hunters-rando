@@ -1,10 +1,8 @@
 # Open Prime Hunters Rando
-Open Source randomizer patcher for Metroid Prime Hunters
-
-Currently supports patching the following:
+Open Source randomizer patcher for Metroid Prime Hunters. Currently supports patching the following:
 - Pickups
 
-## Installation an Usage
+## Usage
 
 You will need to provide JSON data matching the [JSON schema](https://github.com/randovania/open-prime-hunters-rando/blob/main/src/open_prime_hunters_rando/files/schema.json) in order to successfully patch the game.
 
