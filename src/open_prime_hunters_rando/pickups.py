@@ -40,13 +40,14 @@ def patch_header(entity_id: int, entity_type: int) -> bytearray:
     mv = memoryview(header)
 
     mv[0] = entity_type
-    # mv[1] is always 0
     mv[2] = entity_id
 
     return header
 
 
-def patch_item_spawn_entity(item_type: int, collected_message: int, active: bool, has_base: bool) -> bytearray:
+def patch_item_spawn_entity(
+    item_type: int, active: bool, has_base: bool, notify_message_id: int, collected_message: int
+) -> bytearray:
     data = bytearray(32)
     mv = memoryview(data)
 
@@ -56,13 +57,23 @@ def patch_item_spawn_entity(item_type: int, collected_message: int, active: bool
     mv[8] = active
     mv[9] = has_base
     mv[12] = 1  # max spawn count
+    mv[18] = notify_message_id
     mv[20] = collected_message
 
     return data
 
 
 def patch_artifact_entity(
-    model_id: int, artifact_id: int, active: bool, has_base: bool, collected_message: int
+    model_id: int,
+    artifact_id: int,
+    active: bool,
+    has_base: bool,
+    message1_target: int,
+    message1: int,
+    message2_target: int,
+    message2: int,
+    message3_target: int,
+    message3: int,
 ) -> bytearray:
     data = bytearray(32)
     mv = memoryview(data)
@@ -71,7 +82,12 @@ def patch_artifact_entity(
     mv[1] = artifact_id
     mv[2] = active
     mv[3] = has_base
-    mv[8] = collected_message
+    mv[4] = message1_target
+    mv[8] = message1
+    mv[12] = message2_target
+    mv[16] = message2
+    mv[20] = message3_target
+    mv[24] = message3
     mv[28] = 255  # Always FF
     mv[29] = 255  # Always FF
 
@@ -94,27 +110,57 @@ def patch_pickups(rom: NintendoDSRom, configuration: dict[str, dict]) -> None:
                         for entity_data in level_data.entities:
                             if entity_id == entity_data.entity_id:
                                 header = patch_header(entity_id, converted_entity_type)
-                                collected_message = 0
-                                if entity_type == "ItemSpawn":
-                                    item_type = ITEM_TYPES_TO_IDS[entity["item_type"]]
-                                    data = patch_item_spawn_entity(
-                                        item_type, collected_message, entity_data.active, entity_data.has_base
-                                    )
-                                elif entity_type == "Artifact":
-                                    model_id = entity["model_id"]
-                                    artifact_id = entity["artifact_id"]
-                                    data = patch_artifact_entity(
-                                        model_id,
-                                        artifact_id,
-                                        entity_data.active,
-                                        entity_data.has_base,
-                                        collected_message,
-                                    )
-                                else:
-                                    raise KeyError(f"Unknown entity type '{entity['entity_type']}'.")
                                 offset = entity_data.offset
                                 # The item data has an offset of 40 from the header
                                 data_offset = offset + 40
                                 mv[offset : offset + 3] = header
-                                mv[offset : offset + 3]
+                                if entity_type == "ItemSpawn":
+                                    item_type = ITEM_TYPES_TO_IDS[entity["item_type"]]
+                                    if entity_data.item_spawn_messages is not None:
+                                        data = patch_item_spawn_entity(
+                                            item_type,
+                                            entity_data.active,
+                                            entity_data.has_base,
+                                            entity_data.item_spawn_messages.notify_entity_id,
+                                            entity_data.item_spawn_messages.collected_message,
+                                        )
+                                    else:
+                                        data = patch_item_spawn_entity(
+                                            item_type,
+                                            entity_data.active,
+                                            entity_data.has_base,
+                                            0,
+                                            0,
+                                        )
+                                elif entity_type == "Artifact":
+                                    model_id = entity["model_id"]
+                                    artifact_id = entity["artifact_id"]
+                                    if entity_data.artifact_messages is not None:
+                                        data = patch_artifact_entity(
+                                            model_id,
+                                            artifact_id,
+                                            entity_data.active,
+                                            entity_data.has_base,
+                                            entity_data.artifact_messages.message1_target,
+                                            entity_data.artifact_messages.message1,
+                                            entity_data.artifact_messages.message2_target,
+                                            entity_data.artifact_messages.message2,
+                                            entity_data.artifact_messages.message3_target,
+                                            entity_data.artifact_messages.message3,
+                                        )
+                                    else:
+                                        data = patch_artifact_entity(
+                                            model_id,
+                                            artifact_id,
+                                            entity_data.active,
+                                            entity_data.has_base,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                            0,
+                                        )
+                                else:
+                                    raise KeyError(f"Unknown entity type '{entity['entity_type']}'.")
                                 mv[data_offset : data_offset + 32] = data
