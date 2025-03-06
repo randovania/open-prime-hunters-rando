@@ -5,15 +5,24 @@
         "areas": {
             "type": "object",
             "properties": {
-                "Celestial Archives": { "$ref": "#/$defs/area" },
-                "Alinos": { "$ref": "#/$defs/area" },
-                "Arcterra": { "$ref": "#/$defs/area" },
-                "Vesper Defense Outpost": { "$ref": "#/$defs/area" },
-                "Oubliette": { "$ref": "#/$defs/area" }
+                "Celestial Archives": {
+                    "$ref": "#/$defs/area"
+                },
+                "Alinos": {
+                    "$ref": "#/$defs/area"
+                },
+                "Arcterra": {
+                    "$ref": "#/$defs/area"
+                },
+                "Vesper Defense Outpost": {
+                    "$ref": "#/$defs/area"
+                },
+                "Oubliette": {
+                    "$ref": "#/$defs/area"
+                }
             },
             "default": {},
-            "additionalProperties": false,
-            "$comment": "The list of properties is replaced in runtime with all areas in the provided NDS rom."
+            "additionalProperties": false
         }
     },
     "$defs": {
@@ -29,42 +38,83 @@
                     }
                 }
             },
-            "required": ["levels"],
-            "additionalProperties": false,
-            "$comment": "The list of levels is replaced in runtime with the existing levels of each specific area."
+            "required": [
+                "levels"
+            ],
+            "additionalProperties": false
         },
         "level": {
             "type": "object",
             "properties": {
-                "entity_file": {
-                    "type": "string"
-                },
                 "pickups": {
                     "type": "array",
                     "items": {
                         "type": "object",
                         "properties": {
-                            "entity_offset": {
+                            "entity_id": {
                                 "type": "integer",
-                                "description": "The offset of the pickup in the level file."
+                                "description": "The id of the entity."
                             },
-                            "item_type": {
+                            "entity_type": {
                                 "type": "string",
-                                "$ref": "#/$defs/item_types",
-                                "description": "The item type to change the pickup into."
+                                "$ref": "#/$defs/entity_types",
+                                "description": "The entity type of the entity."
                             }
                         },
                         "required": [
-                            "entity_offset",
-                            "item_type"
+                            "entity_id",
+                            "entity_type"
                         ],
-                        "additionalProperties": false
+                        "if": {
+                            "properties": {
+                                "entity_type": {
+                                    "const": "ItemSpawn"
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "item_type": {
+                                    "type": "string",
+                                    "$ref": "#/$defs/item_types",
+                                    "description": "The item type to change the entity into."
+                                }
+                            },
+                            "required": [
+                                "item_type"
+                            ]
+                        },
+                        "else": {
+                            "properties": {
+                                "model_id": {
+                                    "type": "integer",
+                                    "miniumum": 0,
+                                    "maximum": 8,
+                                    "description": "The id of the model to use for the artifact."
+                                },
+                                "artifact_id": {
+                                    "type": "integer",
+                                    "miniumum": 0,
+                                    "maximum": 7,
+                                    "description": "The id of the artifact."
+                                }
+                            },
+                            "required": [
+                                "model_id",
+                                "artifact_id"
+                            ]
+                        }
                     },
-                    "default": {},
-                    "description": "Change pickups to be another type.",
-                    "$comment": "The list of pickups is replaced in runtime with the existing pickups of each specific level."
+                    "default": []
                 }
             }
+        },
+        "entity_types": {
+            "type": "string",
+            "enum": [
+                "ItemSpawn",
+                "Artifact"
+            ]
         },
         "item_types": {
             "type": "string",

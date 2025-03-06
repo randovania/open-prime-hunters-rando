@@ -6,7 +6,8 @@
                 "Alinos Gateway": {
                     "pickups": [
                         {
-                            "entity_offset": 2068,
+                            "entity_id": 13,
+                            "entity_type": "ItemSpawn",
                             "item_type": "ShockCoil"
                         }
                     ]
@@ -14,8 +15,38 @@
                 "Echo Hall": {
                     "pickups": [
                         {
-                            "entity_offset": 3444,
+                            "entity_id": 3,
+                            "entity_type": "ItemSpawn",
                             "item_type": "HealthBig"
+                        },
+                        {
+                            "entity_id": 15,
+                            "entity_type": "Artifact",
+                            "model_id": 0,
+                            "artifact_id": 1
+                        }
+                    ]
+                },
+                "Council Chamber": {
+                    "pickups": [
+                        {
+                            "entity_id": 21,
+                            "entity_type": "ItemSpawn",
+                            "item_type": "MissileExpansion"
+                        }
+                    ]
+                }
+            }
+        },
+        "Celestial Archives": {
+            "levels": {
+                "Celestial Gateway": {
+                    "pickups": [
+                        {
+                            "entity_id": 21,
+                            "entity_type": "Artifact",
+                            "model_id": 8,
+                            "artifact_id": 2
                         }
                     ]
                 }
@@ -26,7 +57,8 @@
                 "Gorea Peek": {
                     "pickups": [
                         {
-                            "entity_offset": 312,
+                            "entity_id": 1,
+                            "entity_type": "ItemSpawn",
                             "item_type": "Magmaul"
                         }
                     ]

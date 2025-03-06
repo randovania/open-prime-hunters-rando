@@ -6,7 +6,7 @@ from pathlib import Path
 import jsonschema
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.pickups import patch_pickups
+from open_prime_hunters_rando.pickup import patch_pickups
 
 T = typing.TypeVar("T")
 LOG = logging.getLogger("prime_hunters_patcher")
