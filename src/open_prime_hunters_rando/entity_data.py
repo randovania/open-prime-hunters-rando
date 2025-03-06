@@ -6,7 +6,7 @@ class EntityData:
     item_type: str
     entity_id: int
     offset: int
-    enabled: bool = True
+    active: bool = True
     has_base: bool = True
 
 
@@ -47,7 +47,7 @@ ITEM_ENTITIES_DATA: dict[str, LevelData] = {
         entities=[
             EntityData(item_type="EnergyTank", entity_id=5, offset=4004),
             EntityData(item_type="Artifact", entity_id=19, offset=4076),
-            EntityData(item_type="Magmaul", entity_id=21, offset=4148, enabled=False, has_base=False),
+            EntityData(item_type="Magmaul", entity_id=21, offset=4148, active=False, has_base=False),
         ],
     ),
     "Crash Site": LevelData(
@@ -110,7 +110,7 @@ ITEM_ENTITIES_DATA: dict[str, LevelData] = {
     "Celestial Gateway": LevelData(
         entity_file="unit2_Land",
         entities=[
-            EntityData(item_type="UAExpansion", entity_id=21, offset=4323),
+            EntityData(item_type="UAExpansion", entity_id=21, offset=4328),
         ],
     ),
     "Data Shrine 01": LevelData(
@@ -249,7 +249,7 @@ ITEM_ENTITIES_DATA: dict[str, LevelData] = {
     "Fault Line": LevelData(
         entity_file="Unit4_RM5",
         entities=[
-            EntityData(item_type="Imperialist", entity_id=46, offset=4288, enabled=False, has_base=False),
+            EntityData(item_type="Imperialist", entity_id=46, offset=4288, active=False, has_base=False),
             EntityData(item_type="Artifact", entity_id=47, offset=4360, has_base=False),
         ],
     ),

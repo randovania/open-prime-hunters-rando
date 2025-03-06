@@ -38,6 +38,20 @@
                 }
             }
         },
+        "Celestial Archives": {
+            "levels": {
+                "Celestial Gateway": {
+                    "pickups": [
+                        {
+                            "entity_id": 21,
+                            "entity_type": "Artifact",
+                            "model_id": 8,
+                            "artifact_id": 2
+                        }
+                    ]
+                }
+            }
+        },
         "Oubliette": {
             "levels": {
                 "Gorea Peek": {
