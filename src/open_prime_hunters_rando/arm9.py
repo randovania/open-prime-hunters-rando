@@ -1,11 +1,12 @@
 from ndspy.rom import NintendoDSRom
 
-ARM9_PATCHES = {
-    0x0205C5DC: 0xFF  # Unlock all planets from the start (excluding Oubliette)
-}
 
+def patch_arm9(rom: NintendoDSRom, starting_items: str) -> None:
+    ARM9_PATCHES = {
+        0x0205C4F0: int(starting_items, 2),  # Set starting items
+        0x0205C5DC: 0xFF,  # Unlock all planets from the start (excluding Oubliette)
+    }
 
-def patch_arm9(rom: NintendoDSRom) -> None:
     # Decompress arm9.bin for editing
     arm9 = rom.loadArm9()
     # Load the addresses and bytes

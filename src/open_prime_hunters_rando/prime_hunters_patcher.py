@@ -26,11 +26,11 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict) -> None:
     # Load rom file as input
     rom = NintendoDSRom.fromFile(input_path)
 
+    # Modify main code file arm9.bin
+    patch_arm9(rom, configuration["starting_items"])
+
     # Patch pickups
     patch_pickups(rom, configuration["areas"])
-
-    # Modify main code file arm9.bin
-    patch_arm9(rom)
 
     # Save changes to a new rom
     rom.saveToFile(output_path)
