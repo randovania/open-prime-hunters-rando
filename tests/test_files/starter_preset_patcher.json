@@ -1,5 +1,6 @@
 {
     "$schema": "../../src/open_prime_hunters_rando/files/schema.json",
+    "starting_items": "00000101",
     "areas": {
         "Alinos": {
             "levels": {
@@ -22,7 +23,7 @@
                         {
                             "entity_id": 15,
                             "entity_type": "Artifact",
-                            "model_id": 0,
+                            "model_id": 6,
                             "artifact_id": 1
                         }
                     ]
@@ -45,7 +46,7 @@
                         {
                             "entity_id": 21,
                             "entity_type": "Artifact",
-                            "model_id": 8,
+                            "model_id": 7,
                             "artifact_id": 2
                         }
                     ]
