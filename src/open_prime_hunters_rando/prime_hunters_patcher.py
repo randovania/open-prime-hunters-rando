@@ -3,11 +3,11 @@ import logging
 import typing
 from pathlib import Path
 
-import jsonschema
 from ndspy.rom import NintendoDSRom
 
 from open_prime_hunters_rando.arm9 import patch_arm9
 from open_prime_hunters_rando.pickup import patch_pickups
+from open_prime_hunters_rando.validator_with_default import DefaultValidatingDraft7Validator
 
 T = typing.TypeVar("T")
 LOG = logging.getLogger("prime_hunters_patcher")
@@ -23,10 +23,15 @@ def _read_schema() -> dict:
         return json.load(f)
 
 
+def validate(configuration: dict) -> None:
+    # validate patcher json with the schema.json
+    DefaultValidatingDraft7Validator(_read_schema()).validate(configuration)
+
+
 def patch_rom(input_path: Path, output_path: Path, configuration: dict) -> None:
     LOG.info("Will patch files at %s", input_path)
 
-    jsonschema.validate(instance=configuration, schema=_read_schema())
+    validate(configuration)
 
     # Load rom file as input
     rom = DebugNintendoDsRom.fromFile(input_path)
