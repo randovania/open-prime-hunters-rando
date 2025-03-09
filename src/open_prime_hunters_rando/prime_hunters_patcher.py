@@ -12,6 +12,11 @@ T = typing.TypeVar("T")
 LOG = logging.getLogger("prime_hunters_patcher")
 
 
+class DebugNintendoDsRom(NintendoDSRom):
+    def __repr__(self) -> str:
+        return f"NintendoDsRom({self.name!r})"
+
+
 def _read_schema() -> dict:
     with Path(__file__).parent.joinpath("files", "schema.json").open() as f:
         return json.load(f)
