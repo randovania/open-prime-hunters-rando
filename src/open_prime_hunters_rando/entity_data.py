@@ -31,6 +31,7 @@ class EntityData:
 
 @dataclasses.dataclass(frozen=True)
 class LevelData:
+    room_id: int
     entity_file: str
     entities: list[EntityData]
 
@@ -38,6 +39,7 @@ class LevelData:
 ALL_ENTITIES_DATA: dict[str, LevelData] = {
     # Alinos
     "Alinos Gateway": LevelData(
+        room_id=27,
         entity_file="Unit1_Land",
         entities=[
             EntityData(
@@ -49,6 +51,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Alinos Perch": LevelData(
+        room_id=39,
         entity_file="unit1_RM2",
         entities=[
             EntityData(
@@ -60,6 +63,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Biodefense Chamber 02": LevelData(
+        room_id=35,
         entity_file="Unit1_b1",
         entities=[
             EntityData(
@@ -75,6 +79,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Biodefense Chamber 06": LevelData(
+        room_id=44,
         entity_file="Unit1_b2",
         entities=[
             EntityData(
@@ -90,6 +95,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Council Chamber": LevelData(
+        room_id=40,
         entity_file="unit1_rm3",
         entities=[
             EntityData(
@@ -115,6 +121,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Crash Site": LevelData(
+        room_id=42,
         entity_file="Unit1_C3",
         entities=[
             EntityData(
@@ -127,6 +134,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Echo Hall": LevelData(
+        room_id=28,
         entity_file="Unit1_C0",
         entities=[
             EntityData(
@@ -145,6 +153,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Elder Passage": LevelData(
+        room_id=31,
         entity_file="unit_RM6",
         entities=[
             EntityData(
@@ -163,6 +172,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "High Ground": LevelData(
+        room_id=29,
         entity_file="unit1_RM1",
         entities=[
             EntityData(
@@ -190,6 +200,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Magma Drop": LevelData(
+        room_id=30,
         entity_file="Unit1_C4",
         entities=[
             EntityData(
@@ -201,6 +212,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Piston Cave": LevelData(
+        room_id=38,
         entity_file="Unit1_C5",
         entities=[
             EntityData(
@@ -219,6 +231,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Processor Core": LevelData(
+        room_id=41,
         entity_file="unit1_rm5",
         entities=[
             EntityData(
@@ -231,6 +244,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     ),
     # Celestial Archives
     "Biodefense Chamber 01": LevelData(
+        room_id=55,
         entity_file="Unit2_b1",
         entities=[
             EntityData(
@@ -246,6 +260,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Biodefense Chamber 05": LevelData(
+        room_id=64,
         entity_file="Unit2_b2",
         entities=[
             EntityData(
@@ -261,6 +276,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Celestial Gateway": LevelData(
+        room_id=45,
         entity_file="unit2_Land",
         entities=[
             EntityData(
@@ -272,6 +288,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Data Shrine 01": LevelData(
+        room_id=48,
         entity_file="unit2_RM1",
         entities=[
             EntityData(
@@ -295,6 +312,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Data Shrine 02": LevelData(
+        room_id=50,
         entity_file="unit2_RM2",
         entities=[
             EntityData(
@@ -323,6 +341,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Data Shrine 03": LevelData(
+        room_id=52,
         entity_file="unit2_RM3",
         entities=[
             EntityData(
@@ -339,6 +358,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Docking Bay": LevelData(
+        room_id=62,
         entity_file="Unit2_RM8",
         entities=[
             EntityData(
@@ -358,6 +378,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Incubation Vault 01": LevelData(
+        room_id=59,
         entity_file="unit2_RM5",
         entities=[
             EntityData(
@@ -370,6 +391,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Incubation Vault 02": LevelData(
+        room_id=60,
         entity_file="unit2_RM6",
         entities=[
             EntityData(
@@ -385,6 +407,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Incubation Vault 03": LevelData(
+        room_id=61,
         entity_file="Unit2_RM7",
         entities=[
             EntityData(
@@ -396,6 +419,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "New Arrival Registration": LevelData(
+        room_id=57,
         entity_file="Unit2_C7",
         entities=[
             EntityData(
@@ -418,6 +442,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Synergy Core": LevelData(
+        room_id=53,
         entity_file="unit2_C4",
         entities=[
             EntityData(
@@ -434,6 +459,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Transfer Lock": LevelData(
+        room_id=58,
         entity_file="Unit2_RM4",
         entities=[
             EntityData(
@@ -446,6 +472,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     ),
     # Vesper Defense Outpost
     "Biodefense Chamber 03": LevelData(
+        room_id=71,
         entity_file="Unit3_b1",
         entities=[
             EntityData(
@@ -461,6 +488,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Biodefense Chamber 08": LevelData(
+        room_id=76,
         entity_file="Unit3_b2",
         entities=[
             EntityData(
@@ -476,6 +504,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Compression Chamber": LevelData(
+        room_id=69,
         entity_file="unit3_rm4",
         entities=[
             EntityData(
@@ -498,6 +527,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Cortex CPU": LevelData(
+        room_id=67,
         entity_file="Unit3_C2",
         entities=[
             EntityData(
@@ -520,6 +550,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Fuel Stack": LevelData(
+        room_id=73,
         entity_file="Unit3_RM2",
         entities=[
             EntityData(
@@ -538,6 +569,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Stasis Bunker": LevelData(
+        room_id=74,
         entity_file="Unit3_RM3",
         entities=[
             EntityData(
@@ -575,6 +607,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Weapons Complex": LevelData(
+        room_id=68,
         entity_file="Unit3_RM1",
         entities=[
             EntityData(
@@ -595,6 +628,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     ),
     # Arcterra
     "Biodefense Chamber 04": LevelData(
+        room_id=82,
         entity_file="Unit4_b1",
         entities=[
             EntityData(
@@ -612,6 +646,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Biodefense Chamber 07": LevelData(
+        room_id=88,
         entity_file="Unit4_b2",
         entities=[
             EntityData(
@@ -627,6 +662,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Drip Moat": LevelData(
+        room_id=83,
         entity_file="unit4_C1",
         entities=[
             EntityData(
@@ -639,6 +675,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Fault Line": LevelData(
+        room_id=86,
         entity_file="Unit4_RM5",
         entities=[
             EntityData(
@@ -663,6 +700,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Frost Labyrinth": LevelData(
+        room_id=80,
         entity_file="unit4_C0",
         entities=[
             EntityData(
@@ -680,6 +718,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Ice Hive": LevelData(
+        room_id=78,
         entity_file="Unit4_RM1",
         entities=[
             EntityData(
@@ -720,6 +759,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Sanctorus": LevelData(
+        room_id=85,
         entity_file="unit4_rm4",
         entities=[
             EntityData(
@@ -742,6 +782,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Sic Transit": LevelData(
+        room_id=105,
         entity_file="unit4_rm3",
         entities=[
             EntityData(
@@ -770,6 +811,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
         ],
     ),
     "Subterranean": LevelData(
+        room_id=109,
         entity_file="Unit4_RM2",
         entities=[
             EntityData(
@@ -799,6 +841,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     ),
     # Oubliette
     "Gorea Peek": LevelData(
+        room_id=90,
         entity_file="Gorea_Peek",
         entities=[
             EntityData(
