@@ -65,9 +65,12 @@
                                 "description": "The id of the entity."
                             },
                             "entity_type": {
-                                "type": "string",
-                                "$ref": "#/$defs/entity_types",
-                                "description": "The entity type of the entity."
+                                "type": "integer",
+                                "enum": [
+                                    4,
+                                    17
+                                ],
+                                "description": "The entity type of the entity.\nItemSpawn: 4, Artifact: 17"
                             }
                         },
                         "required": [
@@ -77,7 +80,7 @@
                         "if": {
                             "properties": {
                                 "entity_type": {
-                                    "const": "ItemSpawn"
+                                    "const": 4
                                 }
                             }
                         },
@@ -118,21 +121,12 @@
                 }
             }
         },
-        "entity_types": {
-            "type": "string",
-            "enum": [
-                "ItemSpawn",
-                "Artifact"
-            ]
-        },
         "item_types": {
             "type": "string",
             "enum": [
-                "None",
                 "HealthMedium",
                 "HealthSmall",
                 "HealthBig",
-                "DoubleDamage",
                 "EnergyTank",
                 "VoltDriver",
                 "MissileExpansion",
@@ -146,12 +140,8 @@
                 "UABig",
                 "MissileSmall",
                 "MissileBig",
-                "Cloak",
                 "UAExpansion",
-                "ArtifactKey",
-                "Deathalt",
-                "AffinityWeapon",
-                "PickWpnMissile"
+                "ArtifactKey"
             ]
         }
     }
