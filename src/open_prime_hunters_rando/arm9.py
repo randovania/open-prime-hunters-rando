@@ -3,6 +3,7 @@ from ndspy.rom import NintendoDSRom
 
 def patch_arm9(rom: NintendoDSRom, starting_items: str) -> None:
     ARM9_PATCHES = {
+        0x0205C530: 0x00,   # Start game with 0/0 Missiles
         0x0205C4F0: int(starting_items, 2),  # Set starting items
         0x0205C5DC: 0xFF,  # Unlock all planets from the start (excluding Oubliette)
     }
