@@ -5,7 +5,7 @@
         "starting_items": {
             "type": "string",
             "default": "00000101",
-            "description": "String of bits that determines what weapons to start with.\nLeft to Right: ShockCoil, Magmaul, Judicator, Imperialist, Battlehammer, Missile, VoltDriver, PowerBeam"
+            "description": "String of bits that determines what weapons to start with.\nLeft to Right: Shock Coil, Magmaul, Judicator, Imperialist, Battlehammer, Missile, Volt Driver, Power Beam"
         },
         "areas": {
             "type": "object",
