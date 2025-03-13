@@ -1,6 +1,6 @@
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.entity_data import PickupData, get_data
+from open_prime_hunters_rando.entity_data import ArtifactEntityData, ItemSpawnEntityData, get_data
 
 ITEM_TYPES_TO_IDS = {
     "HealthMedium": 0,
@@ -33,7 +33,7 @@ def _patch_header(entity_id: int, entity_type: int) -> bytearray:
     return header
 
 
-def _patch_item_spawn_data(entity_data: PickupData, item_type: int) -> bytearray:
+def _patch_item_spawn_data(entity_data: ItemSpawnEntityData, item_type: int) -> bytearray:
     data = bytearray(32)
 
     data[0] = 0xFF  # Always FF
@@ -42,33 +42,27 @@ def _patch_item_spawn_data(entity_data: PickupData, item_type: int) -> bytearray
     data[8] = entity_data.active
     data[9] = entity_data.has_base
     data[12] = 0x01  # max spawn count
-
-    # Messages
-    if entity_data.item_spawn_messages is not None:
-        data[18] = entity_data.item_spawn_messages.notify_entity_id
-        data[20] = entity_data.item_spawn_messages.collected_message
+    data[18] = entity_data.notify_entity_id
+    data[20] = entity_data.collected_message
 
     return data
 
 
-def _patch_artifact_data(entity_data: PickupData, model_id: int, artifact_id: int) -> bytearray:
+def _patch_artifact_data(entity_data: ArtifactEntityData, model_id: int, artifact_id: int) -> bytearray:
     data = bytearray(32)
 
     data[0] = model_id
     data[1] = artifact_id
     data[2] = entity_data.active
     data[3] = entity_data.has_base
+    data[4] = entity_data.message1_target
+    data[8] = entity_data.message1
+    data[12] = entity_data.message2_target
+    data[16] = entity_data.message2
+    data[20] = entity_data.message3_target
+    data[24] = entity_data.message3
     data[28] = 0xFF  # Always FF
     data[29] = 0xFF  # Always FF
-
-    # Messages
-    if entity_data.artifact_messages is not None:
-        data[4] = entity_data.artifact_messages.message1_target
-        data[8] = entity_data.artifact_messages.message1
-        data[12] = entity_data.artifact_messages.message2_target
-        data[16] = entity_data.artifact_messages.message2
-        data[20] = entity_data.artifact_messages.message3_target
-        data[24] = entity_data.artifact_messages.message3
 
     return data
 
@@ -95,10 +89,14 @@ def patch_pickups(rom: NintendoDSRom, configuration: dict[str, dict]) -> None:
 
                                 # Update ItemSpawn entities
                                 if entity_type == 4:
-                                    data = _patch_item_spawn_data(entity_data, ITEM_TYPES_TO_IDS[entity["item_type"]])
+                                    data = _patch_item_spawn_data(
+                                        ItemSpawnEntityData, ITEM_TYPES_TO_IDS[entity["item_type"]] # type: ignore
+                                    )
                                 # Update Artifact Entities
                                 elif entity_type == 17:
-                                    data = _patch_artifact_data(entity_data, entity["model_id"], entity["artifact_id"])
+                                    data = _patch_artifact_data(
+                                        ArtifactEntityData, entity["model_id"], entity["artifact_id"] # type: ignore
+                                    )
 
                                 # The item data has an offset of 40 from the header
                                 data_offset = offset + 40
