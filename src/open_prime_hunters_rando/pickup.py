@@ -1,6 +1,6 @@
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.entity_data import EntityData, get_data
+from open_prime_hunters_rando.entity_data import PickupData, get_data
 
 ITEM_TYPES_TO_IDS = {
     "HealthMedium": 0,
@@ -24,55 +24,53 @@ ITEM_TYPES_TO_IDS = {
 }
 
 
-class ItemEntity:
-    @classmethod
-    def patch_header(cls, entity_id: int, entity_type: int) -> bytearray:
-        header = bytearray(3)
+def _patch_header(entity_id: int, entity_type: int) -> bytearray:
+    header = bytearray(3)
 
-        header[0] = entity_type
-        header[2] = entity_id
+    header[0] = entity_type
+    header[2] = entity_id
 
-        return header
+    return header
 
-    @classmethod
-    def patch_item_spawn_data(cls, entity_data: EntityData, item_type: int) -> bytearray:
-        data = bytearray(32)
 
-        data[0] = 0xFF  # Always FF
-        data[1] = 0xFF  # Always FF
-        data[4] = item_type
-        data[8] = entity_data.active
-        data[9] = entity_data.has_base
-        data[12] = 0x01  # max spawn count
+def _patch_item_spawn_data(entity_data: PickupData, item_type: int) -> bytearray:
+    data = bytearray(32)
 
-        # Messages
-        if entity_data.item_spawn_messages is not None:
-            data[18] = entity_data.item_spawn_messages.notify_entity_id
-            data[20] = entity_data.item_spawn_messages.collected_message
+    data[0] = 0xFF  # Always FF
+    data[1] = 0xFF  # Always FF
+    data[4] = item_type
+    data[8] = entity_data.active
+    data[9] = entity_data.has_base
+    data[12] = 0x01  # max spawn count
 
-        return data
+    # Messages
+    if entity_data.item_spawn_messages is not None:
+        data[18] = entity_data.item_spawn_messages.notify_entity_id
+        data[20] = entity_data.item_spawn_messages.collected_message
 
-    @classmethod
-    def patch_artifact_data(cls, entity_data: EntityData, model_id: int, artifact_id: int) -> bytearray:
-        data = bytearray(32)
+    return data
 
-        data[0] = model_id
-        data[1] = artifact_id
-        data[2] = entity_data.active
-        data[3] = entity_data.has_base
-        data[28] = 0xFF  # Always FF
-        data[29] = 0xFF  # Always FF
 
-        # Messages
-        if entity_data.artifact_messages is not None:
-            data[4] = entity_data.artifact_messages.message1_target
-            data[8] = entity_data.artifact_messages.message1
-            data[12] = entity_data.artifact_messages.message2_target
-            data[16] = entity_data.artifact_messages.message2
-            data[20] = entity_data.artifact_messages.message3_target
-            data[24] = entity_data.artifact_messages.message3
+def _patch_artifact_data(entity_data: PickupData, model_id: int, artifact_id: int) -> bytearray:
+    data = bytearray(32)
 
-        return data
+    data[0] = model_id
+    data[1] = artifact_id
+    data[2] = entity_data.active
+    data[3] = entity_data.has_base
+    data[28] = 0xFF  # Always FF
+    data[29] = 0xFF  # Always FF
+
+    # Messages
+    if entity_data.artifact_messages is not None:
+        data[4] = entity_data.artifact_messages.message1_target
+        data[8] = entity_data.artifact_messages.message1
+        data[12] = entity_data.artifact_messages.message2_target
+        data[16] = entity_data.artifact_messages.message2
+        data[20] = entity_data.artifact_messages.message3_target
+        data[24] = entity_data.artifact_messages.message3
+
+    return data
 
 
 def patch_pickups(rom: NintendoDSRom, configuration: dict[str, dict]) -> None:
@@ -86,22 +84,22 @@ def patch_pickups(rom: NintendoDSRom, configuration: dict[str, dict]) -> None:
                     for entity in entities:
                         entity_id = entity["entity_id"]
                         entity_type = entity["entity_type"]
-                        for entity_data in level_data.entities:
-                            offset = entity_data.offset
+
+                        for entity_data in level_data.pickups:
                             if entity_id == entity_data.entity_id:
-                                header = ItemEntity.patch_header(entity_id, entity_type)
+                                offset = entity_data.offset
+
                                 # Replace the existing header data with the modified header data
+                                header = _patch_header(entity_id, entity_type)
                                 entity_file[offset : offset + 3] = header
+
+                                # Update ItemSpawn entities
                                 if entity_type == 4:
-                                    data = ItemEntity.patch_item_spawn_data(
-                                        entity_data, ITEM_TYPES_TO_IDS[entity["item_type"]]
-                                    )
+                                    data = _patch_item_spawn_data(entity_data, ITEM_TYPES_TO_IDS[entity["item_type"]])
+                                # Update Artifact Entities
                                 elif entity_type == 17:
-                                    data = ItemEntity.patch_artifact_data(
-                                        entity_data, entity["model_id"], entity["artifact_id"]
-                                    )
-                                else:
-                                    raise KeyError(f"Unknown entity type {entity_type}.")
+                                    data = _patch_artifact_data(entity_data, entity["model_id"], entity["artifact_id"])
+
                                 # The item data has an offset of 40 from the header
                                 data_offset = offset + 40
                                 # Replace the existing item data with the modified item data
