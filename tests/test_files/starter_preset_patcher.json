@@ -8,7 +8,7 @@
                     "pickups": [
                         {
                             "entity_id": 13,
-                            "entity_type": "ItemSpawn",
+                            "entity_type": 4,
                             "item_type": "ShockCoil"
                         }
                     ]
@@ -17,12 +17,12 @@
                     "pickups": [
                         {
                             "entity_id": 3,
-                            "entity_type": "ItemSpawn",
+                            "entity_type": 4,
                             "item_type": "HealthBig"
                         },
                         {
                             "entity_id": 15,
-                            "entity_type": "Artifact",
+                            "entity_type": 17,
                             "model_id": 6,
                             "artifact_id": 1
                         }
@@ -32,7 +32,7 @@
                     "pickups": [
                         {
                             "entity_id": 21,
-                            "entity_type": "ItemSpawn",
+                            "entity_type": 4,
                             "item_type": "MissileExpansion"
                         }
                     ]
@@ -45,7 +45,7 @@
                     "pickups": [
                         {
                             "entity_id": 21,
-                            "entity_type": "Artifact",
+                            "entity_type": 17,
                             "model_id": 7,
                             "artifact_id": 2
                         }
@@ -59,7 +59,7 @@
                     "pickups": [
                         {
                             "entity_id": 1,
-                            "entity_type": "ItemSpawn",
+                            "entity_type": 4,
                             "item_type": "Magmaul"
                         }
                     ]
