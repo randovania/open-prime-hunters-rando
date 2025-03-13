@@ -36,10 +36,14 @@ class ArtifactMessages:
 
 
 @dataclasses.dataclass(frozen=True)
-class PickupData:
+class EntityData:
     entity_type: EntityType
     entity_id: int
     offset: int
+
+
+@dataclasses.dataclass(frozen=True)
+class PickupData(EntityData):
     item_type: ItemType | None = None
     active: bool = True
     has_base: bool = True
@@ -51,7 +55,7 @@ class PickupData:
 class LevelData:
     room_id: int
     entity_file: str
-    pickups: list[PickupData]
+    entities: list
 
 
 ALL_ENTITIES_DATA: dict[str, LevelData] = {
@@ -59,7 +63,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Alinos Gateway": LevelData(
         room_id=27,
         entity_file="Unit1_Land",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=13,
@@ -71,7 +75,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Alinos Perch": LevelData(
         room_id=39,
         entity_file="unit1_RM2",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=15,
@@ -83,7 +87,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Biodefense Chamber 02": LevelData(
         room_id=35,
         entity_file="Unit1_b1",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=2,
@@ -98,7 +102,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Biodefense Chamber 06": LevelData(
         room_id=44,
         entity_file="Unit1_b2",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=8,
@@ -113,7 +117,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Council Chamber": LevelData(
         room_id=40,
         entity_file="unit1_rm3",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=5,
@@ -138,7 +142,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Crash Site": LevelData(
         room_id=42,
         entity_file="Unit1_C3",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=4,
@@ -150,7 +154,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Echo Hall": LevelData(
         room_id=28,
         entity_file="Unit1_C0",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=15,
@@ -168,7 +172,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Elder Passage": LevelData(
         room_id=31,
         entity_file="unit_RM6",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=4,
@@ -186,7 +190,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "High Ground": LevelData(
         room_id=29,
         entity_file="unit1_RM1",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=80,
@@ -213,7 +217,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Magma Drop": LevelData(
         room_id=30,
         entity_file="Unit1_C4",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=14,
@@ -225,7 +229,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Piston Cave": LevelData(
         room_id=38,
         entity_file="Unit1_C5",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=38,
@@ -243,7 +247,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Processor Core": LevelData(
         room_id=41,
         entity_file="unit1_rm5",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=23,
@@ -256,7 +260,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Biodefense Chamber 01": LevelData(
         room_id=55,
         entity_file="Unit2_b1",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=8,
@@ -271,7 +275,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Biodefense Chamber 05": LevelData(
         room_id=64,
         entity_file="Unit2_b2",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=2,
@@ -286,7 +290,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Celestial Gateway": LevelData(
         room_id=45,
         entity_file="unit2_Land",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=21,
@@ -298,7 +302,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Data Shrine 01": LevelData(
         room_id=48,
         entity_file="unit2_RM1",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=14,
@@ -321,7 +325,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Data Shrine 02": LevelData(
         room_id=50,
         entity_file="unit2_RM2",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=14,
@@ -350,7 +354,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Data Shrine 03": LevelData(
         room_id=52,
         entity_file="unit2_RM3",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=2,
@@ -366,7 +370,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Docking Bay": LevelData(
         room_id=62,
         entity_file="Unit2_RM8",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=6,
@@ -385,7 +389,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Incubation Vault 01": LevelData(
         room_id=59,
         entity_file="unit2_RM5",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=10,
@@ -397,7 +401,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Incubation Vault 02": LevelData(
         room_id=60,
         entity_file="unit2_RM6",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=7,
@@ -413,7 +417,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Incubation Vault 03": LevelData(
         room_id=61,
         entity_file="Unit2_RM7",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=10,
@@ -425,7 +429,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "New Arrival Registration": LevelData(
         room_id=57,
         entity_file="Unit2_C7",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=21,
@@ -447,7 +451,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Synergy Core": LevelData(
         room_id=53,
         entity_file="unit2_C4",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=3,
@@ -463,7 +467,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Transfer Lock": LevelData(
         room_id=58,
         entity_file="Unit2_RM4",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=64,
@@ -476,7 +480,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Biodefense Chamber 03": LevelData(
         room_id=71,
         entity_file="Unit3_b1",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=8,
@@ -491,7 +495,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Biodefense Chamber 08": LevelData(
         room_id=76,
         entity_file="Unit3_b2",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=2,
@@ -506,7 +510,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Compression Chamber": LevelData(
         room_id=69,
         entity_file="unit3_rm4",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=9,
@@ -528,7 +532,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Cortex CPU": LevelData(
         room_id=67,
         entity_file="Unit3_C2",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=9,
@@ -551,7 +555,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Fuel Stack": LevelData(
         room_id=73,
         entity_file="Unit3_RM2",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=72,
@@ -569,7 +573,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Stasis Bunker": LevelData(
         room_id=74,
         entity_file="Unit3_RM3",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=90,
@@ -605,7 +609,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Weapons Complex": LevelData(
         room_id=68,
         entity_file="Unit3_RM1",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=23,
@@ -624,7 +628,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Biodefense Chamber 04": LevelData(
         room_id=82,
         entity_file="Unit4_b1",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=2,
@@ -641,7 +645,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Biodefense Chamber 07": LevelData(
         room_id=88,
         entity_file="Unit4_b2",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ARTIFACT,
                 entity_id=8,
@@ -656,7 +660,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Drip Moat": LevelData(
         room_id=83,
         entity_file="unit4_C1",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=50,
@@ -669,7 +673,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Fault Line": LevelData(
         room_id=86,
         entity_file="Unit4_RM5",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=46,
@@ -693,7 +697,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Frost Labyrinth": LevelData(
         room_id=80,
         entity_file="unit4_C0",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=18,
@@ -710,7 +714,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Ice Hive": LevelData(
         room_id=78,
         entity_file="Unit4_RM1",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=1,
@@ -750,7 +754,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Sanctorus": LevelData(
         room_id=85,
         entity_file="unit4_rm4",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=43,
@@ -772,7 +776,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Sic Transit": LevelData(
         room_id=105,
         entity_file="unit4_rm3",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=29,
@@ -800,7 +804,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Subterranean": LevelData(
         room_id=109,
         entity_file="Unit4_RM2",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=57,
@@ -829,7 +833,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
     "Gorea Peek": LevelData(
         room_id=90,
         entity_file="Gorea_Peek",
-        pickups=[
+        entities=[
             PickupData(
                 entity_type=EntityType.ITEM_SPAWN,
                 entity_id=1,

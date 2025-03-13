@@ -85,7 +85,7 @@ def patch_pickups(rom: NintendoDSRom, configuration: dict[str, dict]) -> None:
                         entity_id = entity["entity_id"]
                         entity_type = entity["entity_type"]
 
-                        for entity_data in level_data.pickups:
+                        for entity_data in level_data.entities:
                             if entity_id == entity_data.entity_id:
                                 offset = entity_data.offset
 
