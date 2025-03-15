@@ -66,7 +66,7 @@ class ForceFieldType(Enum):
 
 @dataclasses.dataclass(frozen=True)
 class ForceFieldEntityData(EntityData):
-    weapon_type: ForceFieldType = ForceFieldType.NONE
+    type: ForceFieldType
     entity_type: EntityType = EntityType.FORCE_FIELD
     active: bool = True
 
@@ -103,7 +103,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
             ForceFieldEntityData(
                 entity_id=26,
                 offset=5152,
-                weapon_type=ForceFieldType.MAGMAUL,
+                type=ForceFieldType.MAGMAUL,
             ),
         ],
     ),
@@ -154,17 +154,17 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
             ForceFieldEntityData(
                 entity_id=22,
                 offset=4220,
-                weapon_type=ForceFieldType.MAGMAUL,
+                type=ForceFieldType.MAGMAUL,
             ),
             ForceFieldEntityData(
                 entity_id=23,
                 offset=4276,
-                weapon_type=ForceFieldType.MAGMAUL,
+                type=ForceFieldType.MAGMAUL,
             ),
             ForceFieldEntityData(
                 entity_id=26,
                 offset=4548,
-                weapon_type=ForceFieldType.MAGMAUL,
+                type=ForceFieldType.MAGMAUL,
             ),
         ],
     ),
@@ -234,32 +234,32 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
             ForceFieldEntityData(
                 entity_id=6,
                 offset=12616,
-                weapon_type=ForceFieldType.VOLT_DRIVER,
+                type=ForceFieldType.VOLT_DRIVER,
             ),
             ForceFieldEntityData(
                 entity_id=8,
                 offset=12672,
-                weapon_type=ForceFieldType.VOLT_DRIVER,
+                type=ForceFieldType.VOLT_DRIVER,
             ),
             ForceFieldEntityData(
                 entity_id=9,
                 offset=12728,
-                weapon_type=ForceFieldType.VOLT_DRIVER,
+                type=ForceFieldType.VOLT_DRIVER,
             ),
             ForceFieldEntityData(
                 entity_id=74,
                 offset=15288,
-                weapon_type=ForceFieldType.JUDICATOR,
+                type=ForceFieldType.JUDICATOR,
             ),
             ForceFieldEntityData(
                 entity_id=77,
                 offset=15656,
-                weapon_type=ForceFieldType.JUDICATOR,
+                type=ForceFieldType.JUDICATOR,
             ),
             ForceFieldEntityData(
                 entity_id=40,
                 offset=7344,
-                weapon_type=ForceFieldType.VOLT_DRIVER,
+                type=ForceFieldType.VOLT_DRIVER,
             ),
         ],
     ),
@@ -337,7 +337,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
             ForceFieldEntityData(
                 entity_id=20,
                 offset=4272,
-                weapon_type=ForceFieldType.BATTLEHAMMER,
+                type=ForceFieldType.BATTLEHAMMER,
             ),
         ],
     ),
@@ -426,7 +426,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
             ForceFieldEntityData(
                 entity_id=4,
                 offset=6016,
-                weapon_type=ForceFieldType.SHOCK_COIL,
+                type=ForceFieldType.SHOCK_COIL,
             ),
         ],
     ),
@@ -444,7 +444,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
             ForceFieldEntityData(
                 entity_id=3,
                 offset=8640,
-                weapon_type=ForceFieldType.SHOCK_COIL,
+                type=ForceFieldType.SHOCK_COIL,
             ),
         ],
     ),
@@ -460,7 +460,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
             ForceFieldEntityData(
                 entity_id=8,
                 offset=2092,
-                weapon_type=ForceFieldType.SHOCK_COIL,
+                type=ForceFieldType.SHOCK_COIL,
             ),
         ],
     ),
@@ -495,8 +495,8 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
             ),
             ForceFieldEntityData(
                 entity_id=15,
-                offset=6516,
-                weapon_type=ForceFieldType.VOLT_DRIVER,
+                offset=6476,
+                type=ForceFieldType.VOLT_DRIVER,
             ),
         ],
     ),
@@ -555,12 +555,12 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
             ForceFieldEntityData(
                 entity_id=35,
                 offset=10132,
-                weapon_type=ForceFieldType.BATTLEHAMMER,
+                type=ForceFieldType.BATTLEHAMMER,
             ),
             ForceFieldEntityData(
                 entity_id=36,
                 offset=10188,
-                weapon_type=ForceFieldType.BATTLEHAMMER,
+                type=ForceFieldType.BATTLEHAMMER,
             ),
         ],
     ),
@@ -584,7 +584,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
             ForceFieldEntityData(
                 entity_id=27,
                 offset=7404,
-                weapon_type=ForceFieldType.BATTLEHAMMER,
+                type=ForceFieldType.BATTLEHAMMER,
             ),
         ],
     ),
@@ -648,7 +648,7 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
             ForceFieldEntityData(
                 entity_id=9,
                 offset=5700,
-                weapon_type=ForceFieldType.BATTLEHAMMER,
+                type=ForceFieldType.BATTLEHAMMER,
             ),
         ],
     ),
@@ -760,27 +760,27 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
             ForceFieldEntityData(
                 entity_id=39,
                 offset=9496,
-                weapon_type=ForceFieldType.JUDICATOR,
+                type=ForceFieldType.JUDICATOR,
             ),
             ForceFieldEntityData(
                 entity_id=4,
                 offset=9608,
-                weapon_type=ForceFieldType.JUDICATOR,
+                type=ForceFieldType.JUDICATOR,
             ),
             ForceFieldEntityData(
                 entity_id=18,
                 offset=10176,
-                weapon_type=ForceFieldType.JUDICATOR,
+                type=ForceFieldType.JUDICATOR,
             ),
             ForceFieldEntityData(
                 entity_id=59,
                 offset=11188,
-                weapon_type=ForceFieldType.JUDICATOR,
+                type=ForceFieldType.JUDICATOR,
             ),
             ForceFieldEntityData(
                 entity_id=72,
                 offset=55824,
-                weapon_type=ForceFieldType.JUDICATOR,
+                type=ForceFieldType.JUDICATOR,
             ),
         ],
     ),

@@ -1,5 +1,6 @@
 from ndspy.rom import NintendoDSRom
 from open_prime_hunters_rando.entities.entity_data import get_data
+from open_prime_hunters_rando.entities.force_field import patch_force_fields
 from open_prime_hunters_rando.entities.pickup import patch_pickups
 
 
@@ -12,4 +13,4 @@ def patch_entities(rom: NintendoDSRom, configuration: dict[str, dict]) -> None:
                 entity_file = memoryview(rom.getFileByName(f"levels/entities/{level_data.entity_file}_Ent.bin"))
 
                 patch_pickups(entity_file, level_data, entity_groups["pickups"])
-
+                patch_force_fields(entity_file, level_data, entity_groups["force_fields"])

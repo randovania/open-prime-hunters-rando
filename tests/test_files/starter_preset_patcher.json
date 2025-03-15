@@ -49,6 +49,12 @@
                             "model_id": 7,
                             "artifact_id": 2
                         }
+                    ],
+                    "force_fields": [
+                        {
+                            "entity_id": 20,
+                            "type": 4
+                        }
                     ]
                 }
             }
