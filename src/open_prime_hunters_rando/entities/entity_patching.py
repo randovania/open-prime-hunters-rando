@@ -1,7 +1,6 @@
 from ndspy.rom import NintendoDSRom
-
-from open_prime_hunters_rando.entity_data import get_data
-from open_prime_hunters_rando.pickup import patch_pickups
+from open_prime_hunters_rando.entities.entity_data import get_data
+from open_prime_hunters_rando.entities.pickup import patch_pickups
 
 
 def patch_entities(rom: NintendoDSRom, configuration: dict[str, dict]) -> None:

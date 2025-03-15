@@ -1,4 +1,4 @@
-from open_prime_hunters_rando.entity_data import ArtifactEntityData, ItemSpawnEntityData, LevelData
+from open_prime_hunters_rando.entities.entity_data import ArtifactEntityData, ItemSpawnEntityData, LevelData
 
 ITEM_TYPES_TO_IDS = {
     "HealthMedium": 0,

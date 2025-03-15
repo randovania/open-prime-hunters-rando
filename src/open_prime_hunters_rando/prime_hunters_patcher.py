@@ -6,7 +6,7 @@ from pathlib import Path
 from ndspy.rom import NintendoDSRom
 
 from open_prime_hunters_rando.arm9 import patch_arm9
-from open_prime_hunters_rando.entity_patching import patch_entities
+from open_prime_hunters_rando.entities.entity_patching import patch_entities
 from open_prime_hunters_rando.validator_with_default import DefaultValidatingDraft7Validator
 
 T = typing.TypeVar("T")
