@@ -8,8 +8,9 @@
                     "pickups": [
                         {
                             "entity_id": 13,
-                            "entity_type": 4,
-                            "item_type": "ShockCoil"
+                            "entity_type": 17,
+                            "model_id": 4,
+                            "artifact_id": 3
                         }
                     ]
                 },
@@ -34,6 +35,17 @@
                             "entity_id": 21,
                             "entity_type": 4,
                             "item_type": "MissileExpansion"
+                        },
+                        {
+                            "entity_id": 5,
+                            "entity_type": 4,
+                            "item_type": "Battlehammer"
+                        },
+                        {
+                            "entity_id": 19,
+                            "entity_type": 17,
+                            "artifact_id": 3,
+                            "model_id": 6
                         }
                     ]
                 }
@@ -54,6 +66,15 @@
                         {
                             "entity_id": 20,
                             "type": 4
+                        }
+                    ]
+                },
+                "New Arrival Registration": {
+                    "pickups": [
+                        {
+                            "entity_id": 19,
+                            "entity_type": 4,
+                            "item_type": "MissileExpansion"
                         }
                     ]
                 }

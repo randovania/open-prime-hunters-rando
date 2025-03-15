@@ -1,5 +1,3 @@
-from open_prime_hunters_rando.entities.entity_data import ArtifactEntityData, ItemSpawnEntityData, LevelData
-
 ITEM_TYPES_TO_IDS = {
     "HealthMedium": 0,
     "HealthSmall": 1,
@@ -22,77 +20,91 @@ ITEM_TYPES_TO_IDS = {
 }
 
 
-def _patch_header(entity_id: int, entity_type: int) -> bytearray:
-    header = bytearray(3)
+def _get_entity(entity_file: memoryview, entity_id: int) -> tuple[int, int]:
+    num_entities = entity_file[0x04]
+    entry_length = 0x18
 
-    header[0] = entity_type
-    header[2] = entity_id
+    i = 1
+    entry_start = 0x24
+    entry_end = 0x3C
+    while i <= num_entities:
+        entity_entry = entity_file[entry_start:entry_end]
+        data_offset = int.from_bytes(entity_entry[0x14:0x16], "little")
+        found_entity_type = entity_file[data_offset]
+        found_entity_id = entity_file[data_offset + 2]
+        if found_entity_id != entity_id:
+            entry_start += entry_length
+            entry_end += entry_length
+            i += 1
+        else:
+            break
 
-    return header
-
-
-def _patch_item_spawn_data(entity_data: ItemSpawnEntityData, item_type: int) -> bytearray:
-    data = bytearray(32)
-
-    data[0] = 0xFF  # Always FF
-    data[1] = 0xFF  # Always FF
-    data[4] = item_type
-    data[8] = entity_data.active
-    data[9] = entity_data.has_base
-    data[12] = 0x01  # max spawn count
-    data[18] = entity_data.notify_entity_id
-    data[20] = entity_data.collected_message
-
-    return data
+    return data_offset, found_entity_type
 
 
-def _patch_artifact_data(entity_data: ArtifactEntityData, model_id: int, artifact_id: int) -> bytearray:
-    data = bytearray(32)
-
-    data[0] = model_id
-    data[1] = artifact_id
-    data[2] = entity_data.active
-    data[3] = entity_data.has_base
-    data[4] = entity_data.message1_target
-    data[8] = entity_data.message1
-    data[12] = entity_data.message2_target
-    data[16] = entity_data.message2
-    data[20] = entity_data.message3_target
-    data[24] = entity_data.message3
-    data[28] = 0xFF  # Always FF
-    data[29] = 0xFF  # Always FF
-
-    return data
-
-
-def patch_pickups(entity_file: memoryview, level_data: LevelData, pickups: list) -> None:
+def patch_pickups(entity_file: memoryview, pickups: list) -> None:
     for pickup in pickups:
         entity_id = pickup["entity_id"]
-        entity_type = pickup["entity_type"]
+        new_entity_type = pickup["entity_type"]
 
-        for entity_data in level_data.entities:
-            if entity_id == entity_data.entity_id:
-                offset = entity_data.offset
+        data_offset, old_entity_type = _get_entity(entity_file, entity_id)
 
-                # Replace the existing header data with the modified header data
-                header = _patch_header(entity_id, entity_type)
-                entity_file[offset : offset + 3] = header
+        # Update the header to use the new item type
+        entity_file[data_offset] = new_entity_type
 
-                # Update ItemSpawn entities
-                if entity_type == 4:
-                    data = _patch_item_spawn_data(
-                        ItemSpawnEntityData,  # type: ignore
-                        ITEM_TYPES_TO_IDS[pickup["item_type"]],
-                    )
-                # Update Artifact Entities
-                elif entity_type == 17:
-                    data = _patch_artifact_data(
-                        ArtifactEntityData,  # type: ignore
-                        pickup["model_id"],
-                        pickup["artifact_id"],
-                    )
+        # Entity Data is offset 0x28 (40) from the start of the header
+        main_data = data_offset + 40
 
-                # The item data has an offset of 40 from the header
-                data_offset = offset + 40
-                # Replace the existing item data with the modified item data
-                entity_file[data_offset : data_offset + 32] = data
+        # Update ItemSpawn entities
+        # Entity was ItemSpawn
+        if old_entity_type == 4:
+            # Entity is still ItemSpawn
+            if new_entity_type == old_entity_type:
+                entity_file[main_data + 4] = ITEM_TYPES_TO_IDS[pickup["item_type"]]
+            # Entity is now Artifact
+            else:
+                # Moving similar fields to the new offsets
+                entity_file[main_data + 2] = entity_file[main_data + 8]  # active
+                entity_file[main_data + 3] = entity_file[main_data + 9]  # has_base
+                entity_file[main_data + 4] = entity_file[main_data + 18]  # notify_entity_id
+                entity_file[main_data + 8] = entity_file[main_data + 20]  # collected_message
+
+                # Changes to match Artifact entities
+                entity_file[main_data] = pickup["model_id"]
+                entity_file[main_data + 1] = pickup["artifact_id"]
+                entity_file[main_data + 5] = 0xFF
+                entity_file[main_data + 9] = 0x00
+                entity_file[main_data + 12] = 0xFF  # Always FF
+                entity_file[main_data + 13] = 0xFF  # Always FF
+                entity_file[main_data + 18] = 0x00
+                entity_file[main_data + 19] = 0x00
+                entity_file[main_data + 20] = 0xFF  # Always FF
+                entity_file[main_data + 21] = 0xFF  # Always FF
+
+        # Update Artifact Entities
+        # Entity was Artifact
+        else:
+            # Entity is still Artifact
+            if new_entity_type == old_entity_type:
+                entity_file[main_data] = pickup["model_id"]
+                entity_file[main_data + 1] = pickup["artifact_id"]
+            # Entity is now ItemSpawn
+            else:
+                # Moving similar fields to the new offsets
+                entity_file[main_data + 20] = entity_file[main_data + 8]  # message1
+                entity_file[main_data + 8] = entity_file[main_data + 2]  # active
+                entity_file[main_data + 9] = entity_file[main_data + 3]  # has_base
+                entity_file[main_data + 18] = entity_file[main_data + 4]  # message1_target
+
+                # Changes to match ItemSpawn entities
+                entity_file[main_data] = 0xFF  # Always FF
+                entity_file[main_data + 1] = 0xFF  # Always FF
+                entity_file[main_data + 2] = 0x00
+                entity_file[main_data + 3] = 0x00
+                entity_file[main_data + 4] = ITEM_TYPES_TO_IDS[pickup["item_type"]]
+                entity_file[main_data + 12] = 0x01  # max spawn count
+                entity_file[main_data + 13] = 0x00
+                entity_file[main_data + 19] = 0x00
+                entity_file[main_data + 21] = 0x00
+                entity_file[main_data + 28] = 0x00
+                entity_file[main_data + 29] = 0x00
