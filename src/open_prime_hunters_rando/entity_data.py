@@ -11,6 +11,7 @@ class EntityData:
 class EntityType(Enum):
     ITEM_SPAWN = 4
     ARTIFACT = 17
+    FORCE_FIELD = 19
 
 
 class ItemType(Enum):
@@ -50,6 +51,26 @@ class ArtifactEntityData(PickupData):
     message3: int = 0
 
 
+class ForceFieldType(Enum):
+    POWER_BEAM = 0
+    VOLT_DRIVER = 1
+    MISSILE = 2
+    BATTLEHAMMER = 3
+    IMPERIALIST = 4
+    JUDICATOR = 5
+    MAGMAUL = 6
+    SHOCK_COIL = 7
+    OMEGA_CANNON = 8
+    NONE = 9
+
+
+@dataclasses.dataclass(frozen=True)
+class ForceFieldEntityData(EntityData):
+    weapon_type: ForceFieldType = ForceFieldType.NONE
+    entity_type: EntityType = EntityType.FORCE_FIELD
+    active: bool = True
+
+
 @dataclasses.dataclass(frozen=True)
 class LevelData:
     room_id: int
@@ -78,6 +99,11 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
                 entity_id=15,
                 offset=4228,
                 item_type=ItemType.MISSILE_EXPANSION,
+            ),
+            ForceFieldEntityData(
+                entity_id=26,
+                offset=5152,
+                weapon_type=ForceFieldType.MAGMAUL,
             ),
         ],
     ),
@@ -124,6 +150,21 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
             ArtifactEntityData(
                 entity_id=19,
                 offset=4076,
+            ),
+            ForceFieldEntityData(
+                entity_id=22,
+                offset=4220,
+                weapon_type=ForceFieldType.MAGMAUL,
+            ),
+            ForceFieldEntityData(
+                entity_id=23,
+                offset=4276,
+                weapon_type=ForceFieldType.MAGMAUL,
+            ),
+            ForceFieldEntityData(
+                entity_id=26,
+                offset=4548,
+                weapon_type=ForceFieldType.MAGMAUL,
             ),
         ],
     ),
@@ -190,6 +231,36 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
                 message3_target=94,
                 message3=9,
             ),
+            ForceFieldEntityData(
+                entity_id=6,
+                offset=12616,
+                weapon_type=ForceFieldType.VOLT_DRIVER,
+            ),
+            ForceFieldEntityData(
+                entity_id=8,
+                offset=12672,
+                weapon_type=ForceFieldType.VOLT_DRIVER,
+            ),
+            ForceFieldEntityData(
+                entity_id=9,
+                offset=12728,
+                weapon_type=ForceFieldType.VOLT_DRIVER,
+            ),
+            ForceFieldEntityData(
+                entity_id=74,
+                offset=15288,
+                weapon_type=ForceFieldType.JUDICATOR,
+            ),
+            ForceFieldEntityData(
+                entity_id=77,
+                offset=15656,
+                weapon_type=ForceFieldType.JUDICATOR,
+            ),
+            ForceFieldEntityData(
+                entity_id=40,
+                offset=7344,
+                weapon_type=ForceFieldType.VOLT_DRIVER,
+            ),
         ],
     ),
     "Magma Drop": LevelData(
@@ -239,6 +310,11 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
                 offset=1592,
                 message1_target=1,
                 message1=16,
+            ),
+            ForceFieldEntityData(
+                entity_id=20,
+                offset=4272,
+                weapon_type=ForceFieldType.BATTLEHAMMER,
             ),
         ],
     ),
@@ -347,6 +423,11 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
                 offset=1336,
                 has_base=False,
             ),
+            ForceFieldEntityData(
+                entity_id=4,
+                offset=6016,
+                weapon_type=ForceFieldType.SHOCK_COIL,
+            ),
         ],
     ),
     "Incubation Vault 02": LevelData(
@@ -360,6 +441,11 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
                 notify_entity_id=4,
                 collected_message=18,
             ),
+            ForceFieldEntityData(
+                entity_id=3,
+                offset=8640,
+                weapon_type=ForceFieldType.SHOCK_COIL,
+            ),
         ],
     ),
     "Incubation Vault 03": LevelData(
@@ -370,6 +456,11 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
                 entity_id=10,
                 offset=944,
                 item_type=ItemType.MISSILE_EXPANSION,
+            ),
+            ForceFieldEntityData(
+                entity_id=8,
+                offset=2092,
+                weapon_type=ForceFieldType.SHOCK_COIL,
             ),
         ],
     ),
@@ -401,6 +492,11 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
                 has_base=False,
                 message1_target=22,
                 message1=9,
+            ),
+            ForceFieldEntityData(
+                entity_id=15,
+                offset=6516,
+                weapon_type=ForceFieldType.VOLT_DRIVER,
             ),
         ],
     ),
@@ -456,6 +552,16 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
                 message1_target=55,
                 message1=18,
             ),
+            ForceFieldEntityData(
+                entity_id=35,
+                offset=10132,
+                weapon_type=ForceFieldType.BATTLEHAMMER,
+            ),
+            ForceFieldEntityData(
+                entity_id=36,
+                offset=10188,
+                weapon_type=ForceFieldType.BATTLEHAMMER,
+            ),
         ],
     ),
     "Cortex CPU": LevelData(
@@ -474,6 +580,11 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
                 offset=5828,
                 has_base=False,
                 item_type=ItemType.MISSILE_EXPANSION,
+            ),
+            ForceFieldEntityData(
+                entity_id=27,
+                offset=7404,
+                weapon_type=ForceFieldType.BATTLEHAMMER,
             ),
         ],
     ),
@@ -533,6 +644,11 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
                 entity_id=61,
                 offset=2228,
                 has_base=False,
+            ),
+            ForceFieldEntityData(
+                entity_id=9,
+                offset=5700,
+                weapon_type=ForceFieldType.BATTLEHAMMER,
             ),
         ],
     ),
@@ -640,6 +756,31 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
             ArtifactEntityData(
                 entity_id=26,
                 offset=5596,
+            ),
+            ForceFieldEntityData(
+                entity_id=39,
+                offset=9496,
+                weapon_type=ForceFieldType.JUDICATOR,
+            ),
+            ForceFieldEntityData(
+                entity_id=4,
+                offset=9608,
+                weapon_type=ForceFieldType.JUDICATOR,
+            ),
+            ForceFieldEntityData(
+                entity_id=18,
+                offset=10176,
+                weapon_type=ForceFieldType.JUDICATOR,
+            ),
+            ForceFieldEntityData(
+                entity_id=59,
+                offset=11188,
+                weapon_type=ForceFieldType.JUDICATOR,
+            ),
+            ForceFieldEntityData(
+                entity_id=72,
+                offset=55824,
+                weapon_type=ForceFieldType.JUDICATOR,
             ),
         ],
     ),
