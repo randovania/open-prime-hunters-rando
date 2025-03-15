@@ -13,4 +13,4 @@ def patch_entities(rom: NintendoDSRom, configuration: dict[str, dict]) -> None:
                 entity_file = memoryview(rom.getFileByName(f"levels/entities/{level_data.entity_file}_Ent.bin"))
 
                 patch_pickups(entity_file, entity_groups["pickups"])
-                patch_force_fields(entity_file, level_data, entity_groups["force_fields"])
+                patch_force_fields(entity_file, entity_groups["force_fields"])
