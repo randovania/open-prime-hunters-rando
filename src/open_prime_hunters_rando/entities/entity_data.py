@@ -311,11 +311,6 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
                 message1_target=1,
                 message1=16,
             ),
-            ForceFieldEntityData(
-                entity_id=20,
-                offset=4272,
-                weapon_type=ForceFieldType.BATTLEHAMMER,
-            ),
         ],
     ),
     "Biodefense Chamber 05": LevelData(
@@ -338,6 +333,11 @@ ALL_ENTITIES_DATA: dict[str, LevelData] = {
                 entity_id=21,
                 offset=4328,
                 item_type=ItemType.UA_EXPANSION,
+            ),
+            ForceFieldEntityData(
+                entity_id=20,
+                offset=4272,
+                weapon_type=ForceFieldType.BATTLEHAMMER,
             ),
         ],
     ),
