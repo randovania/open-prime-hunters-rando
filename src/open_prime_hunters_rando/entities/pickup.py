@@ -1,25 +1,4 @@
-from open_prime_hunters_rando.entities.get_entity import get_entity
-
-ITEM_TYPES_TO_IDS = {
-    "HealthMedium": 0,
-    "HealthSmall": 1,
-    "HealthBig": 2,
-    "EnergyTank": 4,
-    "VoltDriver": 5,
-    "MissileExpansion": 6,
-    "Battlehammer": 7,
-    "Imperialist": 8,
-    "Judicator": 9,
-    "Magmaul": 10,
-    "ShockCoil": 11,
-    "OmegaCannon": 12,
-    "UASmall": 13,
-    "UABig": 14,
-    "MissileSmall": 15,
-    "MissileBig": 16,
-    "UAExpansion": 18,
-    "ArtifactKey": 19,
-}
+from open_prime_hunters_rando.constants import ITEM_TYPES_TO_IDS, get_entity
 
 
 def patch_pickups(entity_file: memoryview, pickups: list) -> None:

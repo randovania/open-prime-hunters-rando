@@ -1,4 +1,4 @@
-from open_prime_hunters_rando.entities.get_entity import get_entity
+from open_prime_hunters_rando.constants import get_entity
 
 
 def patch_force_fields(entity_file: memoryview, force_fields: list) -> None:

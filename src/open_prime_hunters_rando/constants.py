@@ -1,3 +1,25 @@
+ITEM_TYPES_TO_IDS = {
+    "HealthMedium": 0,
+    "HealthSmall": 1,
+    "HealthBig": 2,
+    "EnergyTank": 4,
+    "VoltDriver": 5,
+    "MissileExpansion": 6,
+    "Battlehammer": 7,
+    "Imperialist": 8,
+    "Judicator": 9,
+    "Magmaul": 10,
+    "ShockCoil": 11,
+    "OmegaCannon": 12,
+    "UASmall": 13,
+    "UABig": 14,
+    "MissileSmall": 15,
+    "MissileBig": 16,
+    "UAExpansion": 18,
+    "ArtifactKey": 19,
+}
+
+
 def get_entity(entity_file: memoryview, new_entity_id: int) -> tuple[int, int]:
     num_entities = entity_file[0x04]
     entry_length = 0x18
