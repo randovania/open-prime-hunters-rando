@@ -38,6 +38,10 @@ write_to = "src/open_prime_hunters_rando/version.py"
 
 [tool.ruff]
 line-length = 120
+target-version = "py310"
+src = ["src"]
+
+[tool.ruff.lint]
 select = [
     "E", "F", "W", "C90", "I", "UP", "C4",
     "RSE",
@@ -49,18 +53,17 @@ select = [
     "PT",
 
     "PLC",
-    "PLC0208",  # iterating over set is also not deterministic, so we shouldn't do that!
 
     "PLE",
-    "PLR0402", "PLR1701", "PLR1711", "PLR1722", "PLR0206",
+    "PLR0402", "SIM101", "PLR1711", "PLR1722", "PLR0206",
     "PLR0133", "PLR0124",
     "PLW",
 ]
+extend-ignore = [
+    "ISC001",  # may cause conflicts with formatter
+]
 
-# Version to target for generated code.
-target-version = "py39"
-
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 # Flag errors (`C901`) whenever the complexity level exceeds 25.
 # Defaults to 10, but we're being very flexible right now
 max-complexity = 25
