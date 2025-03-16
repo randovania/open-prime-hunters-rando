@@ -1,4 +1,5 @@
 from ndspy.rom import NintendoDSRom
+
 from open_prime_hunters_rando.entities.entity_data import get_data
 from open_prime_hunters_rando.entities.force_field import patch_force_fields
 from open_prime_hunters_rando.entities.pickup import patch_pickups
