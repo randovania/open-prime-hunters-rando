@@ -118,6 +118,29 @@
                         }
                     },
                     "default": []
+                },
+                "force_fields": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "entity_id": {
+                                "type": "integer",
+                                "description": "The id of the entity."
+                            },
+                            "type": {
+                                "type": "integer",
+                                "miniumum": 0,
+                                "maximum": 9,
+                                "description": "The type of force field. Sealed force fields can only be unlocked remotely.\nPower Beam, Volt Driver, Missile, Battlehammer, Imperialist, Judicator, Magmaul, Shock Coil, Omega Cannon, Sealed."
+                            }
+                        }
+                    },
+                    "required": [
+                        "entity_id",
+                        "weapon_type"
+                    ],
+                    "default": []
                 }
             }
         },
