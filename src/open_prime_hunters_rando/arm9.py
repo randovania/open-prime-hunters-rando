@@ -1,14 +1,17 @@
 from ndspy.rom import NintendoDSRom
 
+from open_prime_hunters_rando.version_checking import validate_rom
+
 
 def patch_arm9(rom: NintendoDSRom, starting_items: str) -> None:
+    arm9_addresses = validate_rom(rom)
     # Validate starting_items string
     _validate_starting_items(starting_items)
 
     ARM9_PATCHES = {
-        0x0205C4F0: int(starting_items, 2),  # Modify starting weapons
-        0x0205C530: _patch_starting_missiles(starting_items),  # Modify starting Missile ammo (0 or 5)
-        0x0205C5DC: 0xFF,  # Unlock all planets from the start (excluding Oubliette)
+        arm9_addresses["starting_weapons"]: int(starting_items, 2),  # Modify starting weapons
+        arm9_addresses["starting_missiles"]: _patch_starting_missiles(starting_items),  # Modify starting Missile ammo
+        arm9_addresses["unlock_planets"]: 0xFF,  # Unlock all planets from the start (excluding Oubliette)
     }
 
     # Decompress arm9.bin for editing
