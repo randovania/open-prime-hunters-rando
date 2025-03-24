@@ -5,21 +5,21 @@ from ndspy.rom import NintendoDSRom
 
 room_name_to_entity_file = [
     # Room ID, Area Name, Room Name, Enitity File
-    (0, "Alinos", "Connector X", None),
-    (2, "Alinos", "Connector Z", None),
-    (4, "Alinos", "Morph Connector X", None),
-    (6, "Alinos", "Morph Connector Z", None),
-    (8, "Celestial Archives", "Connector X", "unit2_CX"),
-    (10, "Celestial Archives", "Connector Z", "unit2_CZ"),
-    (12, "Vesper Defense Outpost", "Connector X", "unit3_CX"),
-    (14, "Vesper Defense Outpost", "Connector Z", "unit3_CZ"),
-    (16, "Arcterra", "Connector X", None),
-    (18, "Arcterra", "Connector Z", None),
+    # (0, "Alinos", "Connector X", None),
+    # (2, "Alinos", "Connector Z", None),
+    # (4, "Alinos", "Morph Connector X", None),
+    # (6, "Alinos", "Morph Connector Z", None),
+    # (8, "Celestial Archives", "Connector X", "unit2_CX"),
+    # (10, "Celestial Archives", "Connector Z", "unit2_CZ"),
+    # (12, "Vesper Defense Outpost", "Connector X", "unit3_CX"),
+    # (14, "Vesper Defense Outpost", "Connector Z", "unit3_CZ"),
+    # (16, "Arcterra", "Connector X", None),
+    # (18, "Arcterra", "Connector Z", None),
     # (20, "Alinos", "Connector CX", "unit1_CX"),
     # (21, "Alinos", "Connector CX", "unit1_CX"),
-    (22, "Alinos", "Small Connector X", None),
-    (24, "Oubliette", "Connector Z", None),
-    (25, "Vesper Defense Outpost", "Morph Connector Z", None),
+    # (22, "Alinos", "Small Connector X", None),
+    # (24, "Oubliette", "Connector Z", None),
+    # (25, "Vesper Defense Outpost", "Morph Connector Z", None),
     (27, "Alinos", "Alinos Gateway", "Unit1_Land"),
     (28, "Alinos", "Echo Hall", "Unit1_C0"),
     (29, "Alinos", "High Ground", "unit1_RM1"),
@@ -74,13 +74,13 @@ room_name_to_entity_file = [
     (78, "Arcterra", "Ice Hive", "Unit4_RM1"),
     (79, "Arcterra", "Sic Transit", "unit4_rm3"),
     (80, "Arcterra", "Frost Labyrinth", "unit4_C0"),
-    (81, "Arcterra", "Stronghold Void B", "Unit4_TP1"),
-    (82, "Arcterra", "Biodefense Chamber B", "unit4_b1"),
+    (81, "Arcterra", "Stronghold Void A", "Unit4_TP1"),
+    (82, "Arcterra", "Biodefense Chamber A", "unit4_b1"),
     (83, "Arcterra", "Drip Moat", "unit4_C1"),
     (84, "Arcterra", "Subterranean", "Unit4_RM2"),
     (85, "Arcterra", "Sanctorus", "unit4_rm4"),
     (86, "Arcterra", "Fault Line", "Unit4_RM5"),
-    (87, "Arcterra", "Stronghold Void A", "Unit4_TP2"),
+    (87, "Arcterra", "Stronghold Void B", "Unit4_TP2"),
     (88, "Arcterra", "Biodefense Chamber B", "unit4_b2"),
     (89, "Oubliette", "Oubliette Gateway", "Gorea_Land"),
     (90, "Oubliette", "Oubliette Storage ", "Gorea_Peek"),
@@ -93,9 +93,10 @@ def _get_all_entity_files(rom: NintendoDSRom) -> list:
     files = rom.filenames
     # Entity files
     entity_files = []
+    entity_files.append(files[1059])
     for i in range(1065, 1070):
         entity_files.append(files[i])
-    for i in range(1090, 1159):
+    for i in range(1090, 1160):
         entity_files.append(files[i])
 
     return entity_files
@@ -118,15 +119,27 @@ def get_entity_data(rom: NintendoDSRom, export_path: Path) -> dict:
             continue
         if "unit3_rm5" in entity_file:
             continue
+        if "_CX" in entity_file or "_CZ" in entity_file:
+            continue
 
         entry_length = 0x18
         entry_start = 0x24
         entry_end = 0x3C
 
-        num_entities = file[0x04]
+        layer_0 = file[0x04]
+        layer_2 = file[0x06]
+
+        num_entities = layer_0
+        if layer_2 > layer_0:
+            num_entities = layer_2
 
         entity_dict: dict = {}
-
+        if "Unit2_RM4" in entity_file:
+            num_entities = 86
+        if "Unit4_RM1" in entity_file:
+            num_entities = 210
+        if "Unit3_RM3" in entity_file:
+            num_entities = 92
         for i in range(num_entities + 1):
             entity_entry = file[entry_start:entry_end]
             data_offset = int.from_bytes(entity_entry[0x14:0x16], "little")
@@ -175,9 +188,6 @@ def get_entity_data(rom: NintendoDSRom, export_path: Path) -> dict:
             # Item Spawn
             if entity_type == 4:
                 item_type = file[data_offset + 44]
-                # Refills
-                # if item_type in [0, 1, 2, 12, 13, 14, 15, 16, 19]:
-                #     continue
                 entity_type_data["item_type"] = item_type
                 entity_type_data["enabled"] = bool(file[data_offset + 48])
                 entity_type_data["has_base"] = bool(file[data_offset + 49])
@@ -241,26 +251,25 @@ def get_entity_data(rom: NintendoDSRom, export_path: Path) -> dict:
                 entity_type_data["message3"] = int.from_bytes(file[data_offset + 64 : data_offset + 68], "little")
             # Force Field
             if entity_type == 19:
-                type = file[data_offset + 40]
-                # if type == 9:
-                #     continue
+                entity_type_data["type"] = int.from_bytes(file[data_offset + 40 : data_offset + 44], "little")
+                if "Unit4_RM1" in entity_file and entity_id == 72:
+                    entity_type_data["width"] = {
+                        "x": int.from_bytes(file[data_offset + 44 : data_offset + 48], "little", signed=True) / 4096.0,
+                        "y": int.from_bytes(file[data_offset + 48 : data_offset + 52], "little", signed=True) / 4096.0,
+                    }
+                else:
+                    entity_type_data["width"] = {
+                        "x": int.from_bytes(file[data_offset + 44 : data_offset + 48], "little", signed=True) / 4096.0,
+                        "y": int.from_bytes(file[data_offset + 48 : data_offset + 52], "little", signed=True) / 4096.0,
+                        "z": int.from_bytes(file[data_offset + 52 : data_offset + 56], "little", signed=True) / 4096.0,
+                    }
 
-                width = {
-                    "x": int.from_bytes(file[data_offset + 42 : data_offset + 46], "little", signed=True) / 4096.0,
-                    "y": int.from_bytes(file[data_offset + 46 : data_offset + 50], "little", signed=True) / 4096.0,
-                    "z": int.from_bytes(file[data_offset + 50 : data_offset + 54], "little", signed=True) / 4096.0,
-                }
-
-                height = {
-                    "x": int.from_bytes(file[data_offset + 58 : data_offset + 62], "little", signed=True) / 4096.0,
-                    "y": int.from_bytes(file[data_offset + 66 : data_offset + 70], "little", signed=True) / 4096.0,
-                    "z": int.from_bytes(file[data_offset + 74 : data_offset + 78], "little", signed=True) / 4096.0,
-                }
-
-                entity_type_data["type"] = type
-                entity_type_data["width"] = width
-                entity_type_data["height"] = height
-                entity_type_data["active"] = bool(file[data_offset + 78])
+                    entity_type_data["height"] = {
+                        "x": int.from_bytes(file[data_offset + 56 : data_offset + 60], "little", signed=True) / 4096.0,
+                        "y": int.from_bytes(file[data_offset + 60 : data_offset + 64], "little", signed=True) / 4096.0,
+                        "z": int.from_bytes(file[data_offset + 64 : data_offset + 68], "little", signed=True) / 4096.0,
+                    }
+                    entity_type_data["active"] = bool(file[data_offset + 68])
 
             entity_dict[i] = {
                 "entity_type": entity_type,
@@ -274,9 +283,12 @@ def get_entity_data(rom: NintendoDSRom, export_path: Path) -> dict:
             entry_start += entry_length
             entry_end += entry_length
 
-        data_dict: dict = {"num_entities": num_entities, "entities": entity_dict}
+        data_dict: dict = {
+            "num_entities": num_entities,
+            "entities": entity_dict,
+        }
         name = entity_file[16:-8]
-        if name[4] == "1":
+        if name[4] == "1" or name == "crystalroom":
             entities_per_area["Alinos"][name] = data_dict
         elif name[4] == "2":
             entities_per_area["Celestial Archives"][name] = data_dict
@@ -336,6 +348,7 @@ def main() -> None:
                         "layers": ["default"],
                         "extra": {
                             "entity_id": data["entity_id"],
+                            "position": data["position"],
                             "up_vector": data["up_vector"],
                             "facing_vector": data["facing_vector"],
                             "entity_type_data": data["entity_type_data"],
@@ -345,7 +358,23 @@ def main() -> None:
                     }
                 # Door
                 if data["entity_type"] == 3:
-                    room_dict[room]["nodes"][f"Door {door_index}"] = {
+                    connecting_room = data["entity_type_data"]["room_name"]
+                    for room_id, area_name, room_name, ent_file in room_name_to_entity_file:
+                        if (
+                            ent_file in connecting_room
+                            or ent_file[1:] in connecting_room
+                            or ent_file[1:] in connecting_room.lower()
+                            or ent_file[4:] in connecting_room.upper()
+                        ):
+                            connecting_room = room_name
+                            break
+                    if connecting_room == " ":
+                        connecting_room = f"{room}"
+                    node_name = f"Door to {connecting_room}"
+                    if node_name in room_dict[room]["nodes"]:
+                        node_name = f"Door to {connecting_room} {door_index + 1}"
+
+                    room_dict[room]["nodes"][node_name] = {
                         "node_type": "dock",
                         "heal": False,
                         "coordinates": data["position"],
@@ -355,6 +384,7 @@ def main() -> None:
                         ],
                         "extra": {
                             "entity_id": data["entity_id"],
+                            "position": data["position"],
                             "up_vector": data["up_vector"],
                             "facing_vector": data["facing_vector"],
                             "entity_type_data": data["entity_type_data"],
@@ -362,11 +392,11 @@ def main() -> None:
                         "valid_starting_location": False,
                         "dock_type": "Door",
                         "default_connection": {
-                            "region": None,
-                            "area": None,
-                            "node": None,
+                            "region": area,
+                            "area": f"{connecting_room}",
+                            "node": f"Door to {room}",
                         },
-                        "default_dock_weakness": "Normal",
+                        "default_dock_weakness": "Normal Door",
                         "exclude_from_dock_rando": False,
                         "incompatible_dock_weaknesses": [],
                         "override_default_open_requirement": None,
@@ -387,6 +417,7 @@ def main() -> None:
                         "layers": ["default"],
                         "extra": {
                             "entity_id": data["entity_id"],
+                            "position": data["position"],
                             "up_vector": data["up_vector"],
                             "facing_vector": data["facing_vector"],
                             "entity_type_data": data["entity_type_data"],
@@ -400,7 +431,21 @@ def main() -> None:
                     pickup_index += 1
                 # Teleporter
                 if data["entity_type"] == 14:
-                    room_dict[room]["nodes"][f"Teleporter {teleporter_index}"] = {
+                    connecting_room = data["entity_type_data"]["entity_filename"]
+                    for room_id, area_name, room_name, ent_file in room_name_to_entity_file:
+                        if (
+                            ent_file[1:].lower() in connecting_room.lower()
+                            or ent_file[4:].upper() in connecting_room.upper()
+                        ):
+                            connecting_room = room_name
+                            break
+                    if connecting_room == "  " or connecting_room == " ":
+                        continue
+                    node_name = f"Teleporter to {connecting_room}"
+                    if node_name in room_dict[room]["nodes"]:
+                        node_name = f"Teleporter to {connecting_room} {teleporter_index + 1}"
+
+                    room_dict[room]["nodes"][node_name] = {
                         "node_type": "dock",
                         "heal": False,
                         "coordinates": data["position"],
@@ -408,6 +453,7 @@ def main() -> None:
                         "layers": ["default"],
                         "extra": {
                             "entity_id": data["entity_id"],
+                            "position": data["position"],
                             "up_vector": data["up_vector"],
                             "facing_vector": data["facing_vector"],
                             "entity_type_data": data["entity_type_data"],
@@ -415,9 +461,9 @@ def main() -> None:
                         "valid_starting_location": False,
                         "dock_type": "Other",
                         "default_connection": {
-                            "region": None,
-                            "area": None,
-                            "node": None,
+                            "region": area,
+                            "area": f"{connecting_room}",
+                            "node": f"Teleporter to {room}",
                         },
                         "default_dock_weakness": "Not Determined",
                         "exclude_from_dock_rando": False,
@@ -438,6 +484,7 @@ def main() -> None:
                         "layers": ["default"],
                         "extra": {
                             "entity_id": data["entity_id"],
+                            "position": data["position"],
                             "up_vector": data["up_vector"],
                             "facing_vector": data["facing_vector"],
                             "entity_type_data": data["entity_type_data"],
@@ -450,8 +497,8 @@ def main() -> None:
                     }
                     pickup_index += 1
                 # Force Field
-                if data["entity_type"] == 19 and data["entity_type_data"]["type"] != 9:
-                    room_dict[room]["nodes"][f"Force Field {teleporter_index}"] = {
+                if data["entity_type"] == 19:
+                    room_dict[room]["nodes"][f"Force Field {force_field_index}"] = {
                         "node_type": "configurable_node",
                         "heal": False,
                         "coordinates": data["position"],
@@ -459,6 +506,7 @@ def main() -> None:
                         "layers": ["default"],
                         "extra": {
                             "entity_id": data["entity_id"],
+                            "position": data["position"],
                             "up_vector": data["up_vector"],
                             "facing_vector": data["facing_vector"],
                             "entity_type_data": data["entity_type_data"],
