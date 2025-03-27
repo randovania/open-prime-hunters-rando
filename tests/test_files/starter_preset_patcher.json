@@ -82,7 +82,7 @@
         },
         "Oubliette": {
             "levels": {
-                "Gorea Peek": {
+                "Oubliette Storage": {
                     "pickups": [
                         {
                             "entity_id": 1,
