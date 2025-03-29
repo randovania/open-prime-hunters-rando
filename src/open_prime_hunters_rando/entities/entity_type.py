@@ -49,7 +49,7 @@ class FixedAdapter(construct.Adapter):
     """Fixed-point number with 12-bit fractional part"""
 
     def __init__(self) -> None:
-        super().__init__(construct.Int32ul)
+        super().__init__(construct.Int32sl)
 
     def _decode(self, obj: int, context: dict, path: str) -> float:
         return float(obj) / 4096
@@ -76,6 +76,7 @@ Vector4Fx = Struct(
 DecodedString = PaddedString(16, "utf-8")
 
 EntityDataHeader = Struct(
+    "entity_type" / EntityTypeConstruct,
     "entity_id" / Int16sl,
     "position" / Vector3Fx,
     "up_vector" / Vector3Fx,
