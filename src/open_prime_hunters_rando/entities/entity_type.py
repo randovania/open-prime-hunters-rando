@@ -9,7 +9,7 @@ from construct import (
     Int16ul,
     Int32sl,
     Int32ul,
-    PascalString,
+    PaddedString,
     Peek,
     Pointer,
     RepeatUntil,
@@ -73,7 +73,7 @@ Vector4Fx = Struct(
     "w" / Fixed,
 )
 
-DecodedString = PascalString(Int16ul, "ascii")
+DecodedString = PaddedString(16, "utf-8")
 
 EntityDataHeader = Struct(
     "entity_id" / Int16sl,
