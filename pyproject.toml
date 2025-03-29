@@ -16,6 +16,7 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
+    "construct>=2.10.70",
     "jsonschema>=4.0.0",
     "ndspy>=4.2.0",
 ]
@@ -77,6 +78,7 @@ typing = [
 ]
 
 [tool.mypy]
+disable_error_code = "operator"
 files = [
     "src/"
 ]
