@@ -4,12 +4,13 @@ import math
 import construct
 from construct import (
     Byte,
+    Bytes,
     Flag,
     Int16sl,
     Int16ul,
     Int32sl,
     Int32ul,
-    PaddedString,
+    Padded,
     Peek,
     Pointer,
     RepeatUntil,
@@ -19,8 +20,10 @@ from construct import (
     this,
 )
 
+from open_prime_hunters_rando.constants import EnumAdapter
 
-class EntityType(enum.Enum):
+
+class EntityType(enum.IntEnum):
     PLATFORM = 0
     OBJECT = 1
     PLAYER_SPAWN = 2
@@ -42,7 +45,7 @@ class EntityType(enum.Enum):
     FORCE_FIELD = 19
 
 
-EntityTypeConstruct = construct.Enum(Int16ul, EntityType)
+EntityTypeConstruct = EnumAdapter(EntityType, Int16ul)
 
 
 class FixedAdapter(construct.Adapter):
@@ -73,7 +76,7 @@ Vector4Fx = Struct(
     "w" / Fixed,
 )
 
-DecodedString = PaddedString(16, "utf-8")
+DecodedString = Bytes(16)
 
 EntityDataHeader = Struct(
     "entity_type" / EntityTypeConstruct,
@@ -84,7 +87,7 @@ EntityDataHeader = Struct(
 )
 
 
-class Message(enum.Enum):
+class Message(enum.IntEnum):
     NONE = 0
     SET_ACTIVE = 5
     DESTROYED = 6
@@ -133,7 +136,73 @@ class Message(enum.Enum):
     ESCAPE_UPDATE2 = 61
 
 
-MessageConstruct = construct.Enum(Int32ul, Message)
+MessageConstruct = EnumAdapter(Message, Int32ul)
+
+
+class PlatformFlags(enum.IntFlag):
+    NONE = 0x0
+    HAZARD = 0x1
+    CONTACT_DAMAGE = 0x2
+    BEAM_SPAWNER = 0x4
+    BEAM_COL_EFFECT = 0x8
+    DAMAGE_REFLECT1 = 0x10
+    DAMAGE_REFLECT2 = 0x20
+    STANDING_COL_ONLY = 0x40
+    START_SLEEP = 0x80
+    SLEEP_AT_END = 0x100
+    DRIP_MOAT = 0x200
+    SKIP_NODE_REF = 0x400
+    DRAW_IF_NODE_REF = 0x800
+    DRAW_ALWAYS = 0x1000
+    HIDE_ON_SLEEP = 0x2000
+    SYLUX_SHIP = 0x4000
+    BIT15 = 0x8000
+    BEAM_REFLECTION = 0x10000
+    USE_ROOM_STATE = 0x20000
+    BEAM_TARGET = 0x40000
+    SAMUS_SHIP = 0x80000
+    BREAKABLE = 0x100000
+    PERSIST_ROOM_STATE = 0x200000
+    NO_BEAM_IF_CULL = 0x400000
+    NO_RECOIL = 0x800000
+    BIT24 = 0x1000000
+    BIT25 = 0x2000000
+    BIT26 = 0x4000000
+    BIT27 = 0x8000000
+    BIT28 = 0x10000000
+    BIT29 = 0x20000000
+    BIT30 = 0x40000000
+    BIT31 = 0x80000000
+
+
+class ItemType(enum.IntEnum):
+    NONE = -1
+    HEALTH_MEDIUM = 0
+    HEALTH_SMALL = 1
+    HEALTH_BIG = 2
+    DOUBLE_DAMAGE = 3
+    ENERGY_TANK = 4
+    VOLT_DRIVER = 5
+    MISSILE_EXPANSION = 6
+    BATTLEHAMMER = 7
+    IMPERIALIST = 8
+    JUDICATOR = 9
+    MAGMAUL = 10
+    SHOCK_COIL = 11
+    OMEGA_CANNON = 12
+    UA_SMALL = 13
+    UA_BIG = 14
+    MISSILE_SMALL = 15
+    MISSILE_BIG = 16
+    CLOAK = 17
+    UA_EXPANSION = 18
+    ARTIFACT_KEY = 19
+    DEATHALT = 20
+    AFFINITY_WEAPON = 21
+    PICK_WPN_MISSILE = 22
+
+
+ItemTypeConstruct = EnumAdapter(ItemType, Int32sl)
 
 PlatformEntityData = Struct(
     "header" / EntityDataHeader,
@@ -152,12 +221,11 @@ PlatformEntityData = Struct(
     "position_offset" / Vector3Fx,
     "forward_speed" / Fixed,
     "backward_speed" / Fixed,
-    "unk" / Int32ul[4],
     "portal_name" / DecodedString,
-    "movment_type" / Int32ul,
+    "movement_type" / Int32ul,
     "for_cutscene" / Int32ul,
     "reverse_type" / Int32ul,
-    "flags" / Int32ul,
+    "flags" / construct.FlagsEnum(Int32ul, PlatformFlags),
     "contact_damage" / Int32ul,
     "beam_spawn_direction" / Vector3Fx,
     "beam_spawn_position" / Vector3Fx,
@@ -174,14 +242,13 @@ PlatformEntityData = Struct(
     "item_chance" / Byte,
     "_padding1" / Byte,
     "_padding2" / Int16ul,
-    "item_type" / Int32sl,
+    "item_type" / ItemTypeConstruct,
     "_unused3" / Int32ul,
     "_unused4" / Int32ul,
     "beam_hit_message_target" / Int32sl,
     "beam_hit_message" / MessageConstruct,
     "beam_hit_message_param1" / Int32sl,
     "beam_hit_message_param2" / Int32sl,
-    "dead_message_target" / Int32sl,
     "player_collision_message_target" / Int32sl,
     "player_collision_message" / MessageConstruct,
     "player_collision_message_param1" / Int32sl,
@@ -235,7 +302,7 @@ class ObjectEffectFlags(enum.IntFlag):
     UNKNOWN = 0x8000
 
 
-class VolumeType(enum.Enum):
+class VolumeType(enum.IntEnum):
     BOX = 0
     CYLINDER = 1
     SPHERE = 2
@@ -264,8 +331,8 @@ volume_types = {
 }
 
 RawCollisionVolume = Struct(
-    "type" / construct.Enum(Int32ul, VolumeType),
-    "data" / Switch(construct.this.type, volume_types),
+    "type" / EnumAdapter(VolumeType, Int32ul),
+    "data" / Padded(60, Switch(construct.this.type, volume_types)),
 )
 
 ObjectEntityData = Struct(
@@ -295,7 +362,7 @@ PlayerSpawnEntityData = Struct(
 )
 
 
-class DoorType(enum.Enum):
+class DoorType(enum.IntEnum):
     STANDARD = 0
     MORPH_BALL = 1
     BOSS = 2
@@ -306,7 +373,7 @@ DoorEntityData = Struct(
     "header" / EntityDataHeader,
     "node_name" / DecodedString,
     "palette_id" / Int32ul,
-    "door_type" / construct.Enum(Int32ul, DoorType),
+    "door_type" / EnumAdapter(DoorType, Int32ul),
     "connector_id" / Int32ul,
     "target_layer_id" / Byte,
     "locked" / Flag,
@@ -315,36 +382,6 @@ DoorEntityData = Struct(
     "entity_file_name" / DecodedString,
     "room_name" / DecodedString,
 )
-
-
-class ItemType(enum.Enum):
-    NONE = -1
-    HEALTH_MEDIUM = 0
-    HEALTH_SMALL = 1
-    HEALTH_BIG = 2
-    DOUBLE_DAMAGE = 3
-    ENERGY_TANK = 4
-    VOLT_DRIVER = 5
-    MISSILE_EXPANSION = 6
-    BATTLEHAMMER = 7
-    IMPERIALIST = 8
-    JUDICATOR = 9
-    MAGMAUL = 10
-    SHOCK_COIL = 11
-    OMEGA_CANNON = 12
-    UA_SMALL = 13
-    UA_BIG = 14
-    MISSILE_SMALL = 15
-    MISSILE_BIG = 16
-    CLOAK = 17
-    UA_EXPANSION = 18
-    ARTIFACT_KEY = 19
-    DEATHALT = 20
-    AFFINITY_WEAPON = 21
-    PICK_WPN_MISSILE = 22
-
-
-ItemTypeConstruct = construct.Enum(Int32ul, ItemType)
 
 
 ItemSpawnEntityData = Struct(
@@ -360,12 +397,12 @@ ItemSpawnEntityData = Struct(
     "spawn_delay" / Int16ul,
     "notify_entity_id" / Int16sl,
     "collected_message" / MessageConstruct,
-    "collected_message_param1" / Int16ul,
-    "collected_message_param2" / Int16ul,
+    "collected_message_param1" / Int32ul,
+    "collected_message_param2" / Int32ul,
 )
 
 
-class EnemyType(enum.Enum):
+class EnemyType(enum.IntEnum):
     WAR_WASP = 0
     ZOOMER = 1
     TEMROID = 2
@@ -420,6 +457,8 @@ class EnemyType(enum.Enum):
     CARNIVOROUS_PLANT = 51
 
 
+EnemyTypeConstruct = EnumAdapter(EnemyType, Byte)
+
 WarWaspSpawnField = Struct(
     "volume0" / RawCollisionVolume,
     "volume1" / RawCollisionVolume,
@@ -448,7 +487,6 @@ enemy_spawn_fields = {
         "volume1" / RawCollisionVolume,
         "volume2" / RawCollisionVolume,
         "volume3" / RawCollisionVolume,
-        "_empty_bytes" / Int32ul[36],
     ),
     EnemyType.WAR_WASP: Struct(
         "war_wasp" / WarWaspSpawnField,
@@ -460,7 +498,6 @@ enemy_spawn_fields = {
         "path_vector" / Vector3Fx,
         "volume1" / RawCollisionVolume,
         "volume2" / RawCollisionVolume,
-        "_empty_bytes" / Int32ul[49],
     ),
     EnemyType.BARBED_WAR_WASP: Struct(
         "enemy_subtype" / Int32ul,
@@ -473,7 +510,6 @@ enemy_spawn_fields = {
         "facing" / Vector3Fx,
         "position" / Vector3Fx,
         "idle_range" / Vector3Fx,
-        "_empty_bytes" / Int32ul[68],
     ),
     (EnemyType.PETRASYL2 or EnemyType.PETRASYL3 or EnemyType.PETRASYL4): Struct(
         "volume0" / RawCollisionVolume,
@@ -481,7 +517,6 @@ enemy_spawn_fields = {
         "position" / Vector3Fx,
         "weave_offset" / Int32ul,
         "field" / Int32sl,
-        "_empty_bytes" / Int32ul[75],
     ),
     (EnemyType.CRETAPHID or EnemyType.GREATER_ITHRAK): Struct(
         "enemy_subtype" / Int32ul,
@@ -489,7 +524,6 @@ enemy_spawn_fields = {
         "volume1" / RawCollisionVolume,
         "volume2" / RawCollisionVolume,
         "volume3" / RawCollisionVolume,
-        "_empty_bytes" / Int32ul[35],
     ),
     (
         EnemyType.ALIMBIC_TURRET
@@ -504,14 +538,12 @@ enemy_spawn_fields = {
         "volume1" / RawCollisionVolume,
         "volume2" / RawCollisionVolume,
         "volume3" / RawCollisionVolume,
-        "_empty_bytes" / Int32ul[34],
     ),
     EnemyType.CARNIVOROUS_PLANT: Struct(
         "enemy_health" / Int16ul,
         "enemy_damage" / Int16ul,
         "enemy_subtype" / Int32ul,
         "volume0" / RawCollisionVolume,
-        "_empty_bytes" / Int32ul[82],
     ),
     EnemyType.HUNTER: Struct(
         "hunter_id" / Int32ul,
@@ -522,7 +554,6 @@ enemy_spawn_fields = {
         "field" / Int16ul,  # set in AI data
         "hunter_color" / Byte,
         "hunter_chance" / Byte,
-        "_empty_bytes" / Int32ul[95],
     ),
     EnemyType.SLENCH_TURRET: Struct(
         "enemy_subtype" / Int32ul,
@@ -530,32 +561,29 @@ enemy_spawn_fields = {
         "volume0" / RawCollisionVolume,
         "volume1" / RawCollisionVolume,
         "index" / Int32sl,
-        "_empty_bytes" / Int32ul[65],
     ),
     EnemyType.GOREA1_A: Struct(
         "sphere1_position" / Vector3Fx,
         "sphere1_radius" / Fixed,
         "sphere2_position" / Vector3Fx,
         "sphere2_radius" / Fixed,
-        "_empty_bytes" / Int32ul[92],
     ),
     EnemyType.GOREA2: Struct(
         "field1" / Vector3Fx,
         "field2" / Int32ul,
         "field3" / Int32ul,
-        "_empty_bytes" / Int32ul[95],
     ),
 }
 
 EnumSpawnUnion = Struct(
-    "type" / construct.Enum(Byte, EnemyType),
-    "data" / Switch(construct.this.type, enemy_spawn_fields),
+    "type" / EnemyTypeConstruct,
+    "data" / Padded(400, Switch(construct.this.type, enemy_spawn_fields)),
 )
 
 
 EnemySpawnEntityData = Struct(
     "header" / EntityDataHeader,
-    "enemy_type" / construct.Enum(Byte, EnemyType),
+    "enemy_type" / EnemyTypeConstruct,
     "_padding1" / Byte,
     "_padding2" / Int16ul,
     "fields" / EnumSpawnUnion,
@@ -586,7 +614,7 @@ EnemySpawnEntityData = Struct(
 )
 
 
-class TriggerVolumeType(enum.Enum):
+class TriggerVolumeType(enum.IntEnum):
     VOLUME = 0
     THRESHOLD = 1
     RELAY = 2
@@ -614,7 +642,7 @@ TriggerVolumeFlagsConstruct = construct.FlagsEnum(Int32ul, TriggerVolumeFlags)
 
 TriggerVolumeEntityData = Struct(
     "header" / EntityDataHeader,
-    "subtype" / construct.Enum(Int32ul, TriggerVolumeType),
+    "subtype" / EnumAdapter(TriggerVolumeType, Int32ul),
     "volume" / RawCollisionVolume,
     "_unused" / Int16ul,
     "active" / Flag,
@@ -637,14 +665,6 @@ TriggerVolumeEntityData = Struct(
     "child_message_param1" / Int32sl,
     "child_message_param2" / Int32sl,
 )
-
-
-class AreaVolumeType(enum.Enum):
-    VOLUME = 0
-    THRESHOLD = 1
-    RELAY = 2
-    AUTOMATIC = 3
-    STATE_BITS = 4
 
 
 AreaVolumeEntityData = Struct(
@@ -672,8 +692,8 @@ AreaVolumeEntityData = Struct(
 
 JumpPadEntityData = Struct(
     "header" / EntityDataHeader,
-    "parent_id" / Int16sl,
-    "_unused" / Int16ul,
+    "parent_id" / Int32sl,
+    "_unused" / Int32ul,
     "volume" / RawCollisionVolume,
     "beam_vector" / Vector3Fx,
     "speed" / Fixed,
@@ -717,7 +737,7 @@ TeleporterEntityData = Struct(
     "artifact_id" / Byte,
     "active" / Flag,
     "invisible" / Flag,
-    "entity_filename" / DecodedString,
+    "entity_filename" / Bytes(5),
     "_unused" / Int16ul[2],
     "target_position" / Vector3Fx,
     "node_name" / DecodedString,
@@ -733,7 +753,7 @@ class ColorRgbAdapter(construct.Adapter):
     """RGB for LightSource Entities"""
 
     def __init__(self) -> None:
-        super().__init__(construct.Int32ul)
+        super().__init__(construct.Byte)
 
     def _decode(self, obj: int, context: dict, path: str) -> float:
         return float(obj) / 255
@@ -797,7 +817,7 @@ CameraSequenceEntityData = Struct(
 
 ForceFieldEntityData = Struct(
     "header" / EntityDataHeader,
-    "type" / Int16ul,
+    "type" / Int32ul,
     "width" / Fixed,
     "height" / Fixed,
     "active" / Flag,
@@ -825,14 +845,15 @@ types_to_construct = {
     EntityType.FORCE_FIELD: ForceFieldEntityData,
 }
 
+
 EntityEntry = Struct(
     "node_name" / DecodedString,
     "layer_mask" / Int16ul,  # maybe a FlagsEnum? or an array of 16 bools? might not be necessary
     "length" / Int16ul,  # likely needs a Rebuild
     "data_offset" / Int32ul,  # likely needs a Rebuild
     StopIf(this.data_offset == 0),
-    "entity_type" / Peek(Pointer(this.data_offset, EntityTypeConstruct)),
-    "data" / Pointer(this.data_offset, Switch(this.entity_type, types_to_construct)),
+    "_entity_type" / Peek(Pointer(this.data_offset, EntityTypeConstruct)),
+    "data" / Pointer(this.data_offset, Switch(this._entity_type, types_to_construct)),
 )
 
 EntityFile = Struct(
@@ -841,5 +862,5 @@ EntityFile = Struct(
         "version" / Int32ul,
         "lengths" / Int16ul[16],  # might need a Rebuild?
     ),
-    "entities" / RepeatUntil(lambda entity: entity.data_offset == 0, EntityEntry),
+    "entities" / RepeatUntil(lambda entity, lst, ctx: entity.data_offset == 0, EntityEntry),
 )
