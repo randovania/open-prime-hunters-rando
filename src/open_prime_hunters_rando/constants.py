@@ -1,3 +1,8 @@
+from __future__ import annotations
+
+import construct
+from construct import Adapter, Construct, Enum, Int32ub
+
 ITEM_TYPES_TO_IDS = {
     "HealthMedium": 0,
     "HealthSmall": 1,
@@ -20,23 +25,48 @@ ITEM_TYPES_TO_IDS = {
 }
 
 
-def get_entity(entity_file: memoryview, new_entity_id: int) -> tuple[int, int]:
-    num_entities = entity_file[0x04]
-    entry_length = 0x18
-
-    i = 1
-    entry_start = 0x24
-    entry_end = 0x3C
-    while i <= num_entities:
-        entity_entry = entity_file[entry_start:entry_end]
-        data_offset = int.from_bytes(entity_entry[0x14:0x16], "little")
-        found_entity_type = entity_file[data_offset]
-        found_entity_id = entity_file[data_offset + 2]
-        if found_entity_id != new_entity_id:
-            entry_start += entry_length
-            entry_end += entry_length
-            i += 1
-        else:
+def get_entity(entity_file: Construct, entity_id: int) -> int:
+    entity_idx = 0
+    for entity in entity_file.entities:
+        if entity.length == 0:
+            continue
+        if entity.data.header.entity_id == entity_id:
             break
+        entity_idx += 1
+    return entity_idx
 
-    return data_offset, found_entity_type
+
+class EnumAdapter(Adapter):
+    def __init__(self, enum_class, subcon=Int32ub):  # type:ignore
+        super().__init__(Enum(subcon, enum_class))
+        self._enum_class = enum_class
+
+    def _decode(self, obj, context, path):  # type:ignore
+        try:
+            return self._enum_class[obj]
+        except KeyError:
+            return obj
+
+    def _encode(self, obj, context, path):  # type:ignore
+        if isinstance(obj, self._enum_class):
+            return obj.name
+        return obj
+
+
+class ErrorWithMessage(Construct):
+    def __init__(self, message, error=construct.ExplicitError) -> None:  # type:ignore
+        super().__init__()
+        self.message = message
+        self.flagbuildnone = True
+        self.error = error
+
+    def _parse(self, stream, context, path) -> None:  # type:ignore
+        message = construct.evaluate(self.message, context)
+        raise self.error(f"Error field was activated during parsing with error {message}", path=path)
+
+    def _build(self, obj, stream, context, path) -> None:  # type:ignore
+        message = construct.evaluate(self.message, context)
+        raise self.error(f"Error field was activated during building with error {message}", path=path)
+
+    def _sizeof(self, context, path) -> None:  # type:ignore
+        raise construct.SizeofError("Error does not have size, because it interrupts parsing and building", path=path)
