@@ -252,24 +252,13 @@ def get_entity_data(rom: NintendoDSRom, export_path: Path) -> dict:
             # Force Field
             if entity_type == 19:
                 entity_type_data["type"] = int.from_bytes(file[data_offset + 40 : data_offset + 44], "little")
-                if "Unit4_RM1" in entity_file and entity_id == 72:
-                    entity_type_data["width"] = {
-                        "x": int.from_bytes(file[data_offset + 44 : data_offset + 48], "little", signed=True) / 4096.0,
-                        "y": int.from_bytes(file[data_offset + 48 : data_offset + 52], "little", signed=True) / 4096.0,
-                    }
-                else:
-                    entity_type_data["width"] = {
-                        "x": int.from_bytes(file[data_offset + 44 : data_offset + 48], "little", signed=True) / 4096.0,
-                        "y": int.from_bytes(file[data_offset + 48 : data_offset + 52], "little", signed=True) / 4096.0,
-                        "z": int.from_bytes(file[data_offset + 52 : data_offset + 56], "little", signed=True) / 4096.0,
-                    }
-
-                    entity_type_data["height"] = {
-                        "x": int.from_bytes(file[data_offset + 56 : data_offset + 60], "little", signed=True) / 4096.0,
-                        "y": int.from_bytes(file[data_offset + 60 : data_offset + 64], "little", signed=True) / 4096.0,
-                        "z": int.from_bytes(file[data_offset + 64 : data_offset + 68], "little", signed=True) / 4096.0,
-                    }
-                    entity_type_data["active"] = bool(file[data_offset + 68])
+                entity_type_data["width"] = (
+                    int.from_bytes(file[data_offset + 44 : data_offset + 48], "little", signed=True) / 4096.0
+                )
+                entity_type_data["height"] = (
+                    int.from_bytes(file[data_offset + 48 : data_offset + 52], "little", signed=True) / 4096.0
+                )
+                entity_type_data["active"] = bool(file[data_offset + 52])
 
             entity_dict[i] = {
                 "entity_type": entity_type,
