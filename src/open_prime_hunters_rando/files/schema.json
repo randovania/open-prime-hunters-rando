@@ -3,9 +3,34 @@
     "type": "object",
     "properties": {
         "starting_items": {
-            "type": "string",
-            "default": "00000101",
-            "description": "String of bits that determines what weapons to start with.\nLeft to Right: Shock Coil, Magmaul, Judicator, Imperialist, Battlehammer, Missile, Volt Driver, Power Beam"
+            "type": "object",
+            "properties": {
+                "weapons_string": {
+                    "type": "string",
+                    "default": "00000101",
+                    "description": "String of bits that determines what weapons to start with.\nLeft to Right: Shock Coil, Magmaul, Judicator, Imperialist, Battlehammer, Missile, Volt Driver, Power Beam"
+                },
+                "starting_ammo": {
+                    "type": "object",
+                    "propertyNames": {
+                        "type": "string",
+                        "enum": [
+                            "Missiles",
+                            "Energy"
+                        ]
+                    },
+                    "default": {
+                        "Missiles": 5,
+                        "Energy": 99
+                    },
+                    "required": [
+                        "Missiles"
+                    ]
+                }
+            },
+            "required": [
+                "weapons_string"
+            ]
         },
         "areas": {
             "type": "object",
