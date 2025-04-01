@@ -1,6 +1,8 @@
 {
     "$schema": "../../src/open_prime_hunters_rando/files/schema.json",
-    "starting_items": "00000101",
+    "starting_items": {
+        "weapons_string": "00000001"
+    },
     "areas": {
         "Alinos": {
             "levels": {
