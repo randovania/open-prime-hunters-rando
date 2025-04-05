@@ -15,16 +15,18 @@
                     "propertyNames": {
                         "type": "string",
                         "enum": [
-                            "Missiles",
-                            "Energy"
+                            "missiles",
+                            "energy",
+                            "ammo"
                         ]
                     },
                     "default": {
-                        "Missiles": 5,
-                        "Energy": 99
+                        "missiles": 5,
+                        "energy": 100,
+                        "ammo": 40
                     },
                     "required": [
-                        "Missiles"
+                        "missiles"
                     ]
                 }
             },
