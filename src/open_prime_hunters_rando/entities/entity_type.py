@@ -13,6 +13,7 @@ from construct import (
     Padded,
     Peek,
     Pointer,
+    Rebuild,
     RepeatUntil,
     StopIf,
     Struct,
@@ -848,11 +849,11 @@ types_to_construct = {
 
 EntityEntry = Struct(
     "node_name" / DecodedString,
-    "layer_mask" / Int16ul,  # maybe a FlagsEnum? or an array of 16 bools? might not be necessary
-    "size" / Int16ul,  # likely needs a Rebuild
-    "data_offset" / Int32ul,  # likely needs a Rebuild
+    "layer_mask" / Int16ul,
+    "size" / Int16ul,
+    "data_offset" / Int32ul,
     StopIf(this.data_offset == 0),
-    "_entity_type" / Peek(Pointer(this.data_offset, EntityTypeConstruct)),
+    "_entity_type" / Rebuild(Peek(Pointer(this.data_offset, EntityTypeConstruct)), this.data.header.entity_type),
     "data" / Pointer(this.data_offset, Switch(this._entity_type, types_to_construct)),
 )
 
@@ -860,7 +861,7 @@ EntityFile = Struct(
     "header"
     / Struct(
         "version" / Int32ul,
-        "lengths" / Int16ul[16],  # might need a Rebuild?
+        "lengths" / Int16ul[16],
     ),
     "entities" / RepeatUntil(lambda entity, lst, ctx: entity.data_offset == 0, EntityEntry),
 )

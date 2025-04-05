@@ -1,4 +1,4 @@
-from construct import Construct, Container, Int16ul
+from construct import Construct, Container
 
 from open_prime_hunters_rando.constants import ITEM_TYPES_TO_IDS, get_entity
 
@@ -35,13 +35,13 @@ def patch_pickups(entity_file: Construct, pickups: list) -> None:
                         "active": old_entity_data.enabled,
                         "has_base": old_entity_data.has_base,
                         "message1_target": old_entity_data.notify_entity_id,
-                        "_padding1": Int16ul,
+                        "_padding1": 0,
                         "message1": old_entity_data.collected_message,
                         "message2_target": 0,
-                        "_padding2": Int16ul,
+                        "_padding2": 0,
                         "message2": 0,
                         "message3_target": 0,
-                        "_padding3": Int16ul,
+                        "_padding3": 0,
                         "message3": 0,
                         "linked_entity_id": -1,
                     }
@@ -65,7 +65,7 @@ def patch_pickups(entity_file: Construct, pickups: list) -> None:
                         "enabled": old_entity_data.active,
                         "has_base": old_entity_data.has_base,
                         "always_active": False,
-                        "_padding": Int16ul,
+                        "_padding": 0,
                         "max_spawn_count": 1,
                         "spawn_interval": 0,
                         "spawn_delay": 0,
