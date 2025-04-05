@@ -5,6 +5,7 @@ from ndspy.rom import NintendoDSRom
 
 from open_prime_hunters_rando.entities.entity_type import EntityFile
 from open_prime_hunters_rando.entities.force_field import patch_force_fields
+from open_prime_hunters_rando.entities.pickup import patch_pickups
 from open_prime_hunters_rando.level_data import LevelData, get_data
 
 
@@ -20,7 +21,7 @@ def patch_entities(rom: NintendoDSRom, configuration: dict[str, dict]) -> None:
                 parsed_file = EntityFile.parse(rom.getFileByName(file_name))
 
                 # Modify entities
-                # patch_pickups(parsed_file, entity_groups["pickups"])
+                patch_pickups(parsed_file, entity_groups["pickups"])
                 patch_force_fields(parsed_file, entity_groups["force_fields"])
 
                 # Overwrite the file with the modified parsed data
