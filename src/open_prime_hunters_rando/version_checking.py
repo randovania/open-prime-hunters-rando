@@ -13,20 +13,28 @@ class Revision(Enum):
 def validate_rom(rom: NintendoDSRom) -> dict:
     # Validate the rom
     id_code = rom.idCode
-    arm9_addresses: dict = {}
+    # Use US addresses as a base, then add the offset difference based on region
+    init_function: dict = {
+        "starting_ammo": 0x0205C514,
+        "starting_energy": 0x0205C518,
+        "starting_weapons": 0x0205C4F0,
+        "starting_missiles": 0x0205C530,
+        "unlock_planets": 0x0205C5DC,
+        "starting_energy_ptr": 0x0205C720,
+    }
     match id_code:
         case Revision.AMHE.value:
-            arm9_addresses["starting_weapons"] = 0x0205C4F0
-            arm9_addresses["starting_missiles"] = 0x0205C530
-            arm9_addresses["unlock_planets"] = 0x0205C5DC
+            return init_function
         case Revision.AMHP.value:
-            arm9_addresses["starting_weapons"] = 0x0205C59C
-            arm9_addresses["starting_missiles"] = 0x0205C5DC
-            arm9_addresses["unlock_planets"] = 0x0205C688
+            _update_revision_offset(init_function, 0xAC)
         case Revision.AMHJ.value:
-            arm9_addresses["starting_weapons"] = 0x0205D9CC
-            arm9_addresses["starting_missiles"] = 0x0205DA0C
-            arm9_addresses["unlock_planets"] = 0x0205DAB8
+            _update_revision_offset(init_function, 0x14DC)
         case _:
             raise ValueError(f"Unsupported ROM detected. Detected {id_code!r}!")
-    return arm9_addresses
+    return init_function
+
+
+def _update_revision_offset(init_function: dict, revision_offset: int) -> dict:
+    for init_field, address in init_function.items():
+        init_function[init_field] = address + revision_offset
+    return init_function
