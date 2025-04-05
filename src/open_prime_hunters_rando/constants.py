@@ -28,7 +28,7 @@ ITEM_TYPES_TO_IDS = {
 def get_entity(entity_file: Construct, entity_id: int) -> int:
     entity_idx = 0
     for entity in entity_file.entities:
-        if entity.length == 0:
+        if entity.size == 0:
             continue
         if entity.data.header.entity_id == entity_id:
             break

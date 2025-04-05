@@ -785,15 +785,15 @@ ArtifactEntityData = Struct(
     "artifact_id" / Byte,
     "active" / Flag,
     "has_base" / Flag,
-    "message1_target" / MessageConstruct,
+    "message1_target" / Int16sl,
     "_padding1" / Int16ul,
-    "message1" / Int16ul,
-    "message2_target" / MessageConstruct,
+    "message1" / MessageConstruct,
+    "message2_target" / Int16sl,
     "_padding2" / Int16ul,
-    "message2" / Int16ul,
-    "message3_target" / MessageConstruct,
+    "message2" / MessageConstruct,
+    "message3_target" / Int16sl,
     "_padding3" / Int16ul,
-    "message3" / Int16ul,
+    "message3" / MessageConstruct,
     "linked_entity_id" / Int16sl,
 )
 
@@ -849,7 +849,7 @@ types_to_construct = {
 EntityEntry = Struct(
     "node_name" / DecodedString,
     "layer_mask" / Int16ul,  # maybe a FlagsEnum? or an array of 16 bools? might not be necessary
-    "length" / Int16ul,  # likely needs a Rebuild
+    "size" / Int16ul,  # likely needs a Rebuild
     "data_offset" / Int32ul,  # likely needs a Rebuild
     StopIf(this.data_offset == 0),
     "_entity_type" / Peek(Pointer(this.data_offset, EntityTypeConstruct)),
