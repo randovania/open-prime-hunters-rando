@@ -460,6 +460,22 @@ class EnemyType(enum.IntEnum):
 
 EnemyTypeConstruct = EnumAdapter(EnemyType, Byte)
 
+
+class Hunter(enum.Enum):
+    SAMUS = 0
+    KANDEN = 1
+    TRACE = 2
+    SYLUX = 3
+    NOXUS = 4
+    SPIRE = 5
+    WEAVEL = 6
+    GUARDIAN = 7
+    RANDOM = 8
+
+
+HunterConstruct = EnumAdapter(Hunter, Int32ul)
+
+
 WarWaspSpawnField = Struct(
     "volume0" / RawCollisionVolume,
     "volume1" / RawCollisionVolume,
@@ -470,7 +486,6 @@ WarWaspSpawnField = Struct(
     "_padding2" / Int16ul,
     "movement_type" / Int32ul,
 )
-
 
 enemy_spawn_fields = {
     (
@@ -508,8 +523,8 @@ enemy_spawn_fields = {
     (EnemyType.TEMROID or EnemyType.PETRASYL1): Struct(
         "volume0" / RawCollisionVolume,
         "_unused" / Int32ul[7],
-        "facing" / Vector3Fx,
         "position" / Vector3Fx,
+        "facing" / Vector3Fx,
         "idle_range" / Vector3Fx,
     ),
     (EnemyType.PETRASYL2 or EnemyType.PETRASYL3 or EnemyType.PETRASYL4): Struct(
@@ -547,7 +562,7 @@ enemy_spawn_fields = {
         "volume0" / RawCollisionVolume,
     ),
     EnemyType.HUNTER: Struct(
-        "hunter_id" / Int32ul,
+        "hunter_id" / HunterConstruct,
         "encounter_type" / Int32ul,
         "hunter_weapon" / Int32ul,
         "hunter_health" / Int16ul,
@@ -576,18 +591,13 @@ enemy_spawn_fields = {
     ),
 }
 
-EnumSpawnUnion = Struct(
-    "type" / EnemyTypeConstruct,
-    "data" / Padded(400, Switch(construct.this.type, enemy_spawn_fields)),
-)
-
 
 EnemySpawnEntityData = Struct(
     "header" / EntityDataHeader,
     "enemy_type" / EnemyTypeConstruct,
     "_padding1" / Byte,
     "_padding2" / Int16ul,
-    "fields" / EnumSpawnUnion,
+    "fields" / Padded(400, Switch(construct.this.enemy_type, enemy_spawn_fields)),
     "linked_entity_id" / Int16sl,
     "spawn_limit" / Byte,
     "spawn_total" / Byte,
@@ -738,7 +748,7 @@ TeleporterEntityData = Struct(
     "artifact_id" / Byte,
     "active" / Flag,
     "invisible" / Flag,
-    "entity_filename" / Bytes(5),
+    "entity_filename" / Bytes(15),
     "_unused" / Int16ul[2],
     "target_position" / Vector3Fx,
     "node_name" / DecodedString,
