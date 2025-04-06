@@ -15,7 +15,7 @@ def patch_entities(rom: NintendoDSRom, configuration: dict[str, dict]) -> None:
             for room_name, entity_groups in level_config.items():
                 # Load the entity file for the room
                 level_data = get_data(area_name, room_name)
-                file_name = f"levels/entities/{level_data.entity_file}_Ent.bin"
+                file_name = f"levels/entities/{level_data.entity_file}.bin"
 
                 # Parse the file into a construct
                 parsed_file = EntityFile.parse(rom.getFileByName(file_name))

@@ -1,6 +1,7 @@
 from construct import Construct, Container
 
-from open_prime_hunters_rando.constants import ITEM_TYPES_TO_IDS, get_entity
+from open_prime_hunters_rando.constants import get_entity
+from open_prime_hunters_rando.entities.entity_type import EntityType
 
 
 def patch_pickups(entity_file: Construct, pickups: list) -> None:
@@ -15,17 +16,15 @@ def patch_pickups(entity_file: Construct, pickups: list) -> None:
         old_entity_data = entity.data
         old_entity_type = old_entity_data.header.entity_type
 
-        # Update the header to use the new item type
-        entity.data.header.entity_type = new_entity_type
-
         # Update ItemSpawn entities
         # Entity was ItemSpawn
-        if old_entity_type == 4:
+        if old_entity_type == EntityType.ITEM_SPAWN:
             # Entity is still ItemSpawn
-            if new_entity_type == old_entity_type:
-                entity.data.item_type = ITEM_TYPES_TO_IDS[pickup["item_type"]]
+            if new_entity_type == EntityType.ITEM_SPAWN.value:
+                entity.data.item_type = pickup["item_type"]
             # Entity is now Artifact
             else:
+                entity.data.header.entity_type = EntityType.ARTIFACT
                 entity.size = 70
                 entity.data = Container(
                     {
@@ -51,17 +50,18 @@ def patch_pickups(entity_file: Construct, pickups: list) -> None:
         # Entity was Artifact
         else:
             # Entity is still Artifact
-            if new_entity_type == old_entity_type:
+            if new_entity_type == EntityType.ARTIFACT.value:
                 entity.data.model_id = pickup["model_id"]
                 entity.data.artifact_id = pickup["artifact_id"]
             # Entity is now ItemSpawn
             else:
+                entity.data.header.entity_type = EntityType.ITEM_SPAWN
                 entity.size = 72
                 entity.data = Container(
                     {
                         "header": header,
                         "parent_id": 65535,
-                        "item_type": ITEM_TYPES_TO_IDS[pickup["item_type"]],
+                        "item_type": pickup["item_type"],
                         "enabled": old_entity_data.active,
                         "has_base": old_entity_data.has_base,
                         "always_active": False,

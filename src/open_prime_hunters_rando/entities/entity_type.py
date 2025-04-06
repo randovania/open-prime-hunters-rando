@@ -24,7 +24,7 @@ from construct import (
 from open_prime_hunters_rando.constants import EnumAdapter
 
 
-class EntityType(enum.IntEnum):
+class EntityType(enum.Enum):
     PLATFORM = 0
     OBJECT = 1
     PLAYER_SPAWN = 2
@@ -88,7 +88,7 @@ EntityDataHeader = Struct(
 )
 
 
-class Message(enum.IntEnum):
+class Message(enum.Enum):
     NONE = 0
     SET_ACTIVE = 5
     DESTROYED = 6
@@ -176,7 +176,7 @@ class PlatformFlags(enum.IntFlag):
     BIT31 = 0x80000000
 
 
-class ItemType(enum.IntEnum):
+class ItemType(enum.Enum):
     NONE = -1
     HEALTH_MEDIUM = 0
     HEALTH_SMALL = 1
@@ -303,7 +303,7 @@ class ObjectEffectFlags(enum.IntFlag):
     UNKNOWN = 0x8000
 
 
-class VolumeType(enum.IntEnum):
+class VolumeType(enum.Enum):
     BOX = 0
     CYLINDER = 1
     SPHERE = 2
@@ -363,17 +363,32 @@ PlayerSpawnEntityData = Struct(
 )
 
 
-class DoorType(enum.IntEnum):
+class DoorType(enum.Enum):
     STANDARD = 0
     MORPH_BALL = 1
     BOSS = 2
     THIN = 3
 
 
+class PaletteId(enum.Enum):
+    POWER_BEAM = 0
+    VOLT_DRIVER = 1
+    MISSILE = 2
+    BATTLEHAMMER = 3
+    IMPERIALIST = 4
+    JUDICATOR = 5
+    MAGMAUL = 6
+    SHOCK_COIL = 7
+    OMEGA_CANNON = 8
+    LOCKED = 9
+
+
+PaletteIdConstruct = EnumAdapter(PaletteId, Int32ul)
+
 DoorEntityData = Struct(
     "header" / EntityDataHeader,
     "node_name" / DecodedString,
-    "palette_id" / Int32ul,
+    "palette_id" / PaletteIdConstruct,
     "door_type" / EnumAdapter(DoorType, Int32ul),
     "connector_id" / Int32ul,
     "target_layer_id" / Byte,
@@ -403,7 +418,7 @@ ItemSpawnEntityData = Struct(
 )
 
 
-class EnemyType(enum.IntEnum):
+class EnemyType(enum.Enum):
     WAR_WASP = 0
     ZOOMER = 1
     TEMROID = 2
@@ -487,108 +502,124 @@ WarWaspSpawnField = Struct(
     "movement_type" / Int32ul,
 )
 
-enemy_spawn_fields = {
-    (
-        EnemyType.ZOOMER
-        or EnemyType.GEEMER
-        or EnemyType.BLASTCAP
-        or EnemyType.VOLDRUM2
-        or EnemyType.QUADTROID
-        or EnemyType.CRASH_PILLAR
-        or EnemyType.SLENCH
-        or EnemyType.LESSER_ITHRAK
-        or EnemyType.TROCRA
-    ): Struct(
-        "volume0" / RawCollisionVolume,
-        "volume1" / RawCollisionVolume,
-        "volume2" / RawCollisionVolume,
-        "volume3" / RawCollisionVolume,
-    ),
-    EnemyType.WAR_WASP: Struct(
-        "war_wasp" / WarWaspSpawnField,
-        "_padding1" / Int16ul,
-        "_padding2" / Int16ul,
-    ),
-    EnemyType.SHRIEKBAT: Struct(
-        "volume0" / RawCollisionVolume,
-        "path_vector" / Vector3Fx,
-        "volume1" / RawCollisionVolume,
-        "volume2" / RawCollisionVolume,
-    ),
-    EnemyType.BARBED_WAR_WASP: Struct(
-        "enemy_subtype" / Int32ul,
-        "enemy_version" / Int32ul,
-        "war_wasp" / WarWaspSpawnField,
-    ),
-    (EnemyType.TEMROID or EnemyType.PETRASYL1): Struct(
-        "volume0" / RawCollisionVolume,
-        "_unused" / Int32ul[7],
-        "position" / Vector3Fx,
-        "facing" / Vector3Fx,
-        "idle_range" / Vector3Fx,
-    ),
-    (EnemyType.PETRASYL2 or EnemyType.PETRASYL3 or EnemyType.PETRASYL4): Struct(
-        "volume0" / RawCollisionVolume,
-        "_unused" / Int32ul[4],
-        "position" / Vector3Fx,
-        "weave_offset" / Int32ul,
-        "field" / Int32sl,
-    ),
-    (EnemyType.CRETAPHID or EnemyType.GREATER_ITHRAK): Struct(
-        "enemy_subtype" / Int32ul,
-        "volume0" / RawCollisionVolume,
-        "volume1" / RawCollisionVolume,
-        "volume2" / RawCollisionVolume,
-        "volume3" / RawCollisionVolume,
-    ),
-    (
-        EnemyType.ALIMBIC_TURRET
-        or EnemyType.PSYCHO_BIT1
-        or EnemyType.PSYCHO_BIT2
-        or EnemyType.VOLDRUM1
-        or EnemyType.FIRE_SPAWN
-    ): Struct(
-        "enemy_subtype" / Int32ul,
-        "enemy_version" / Int32ul,
-        "volume0" / RawCollisionVolume,
-        "volume1" / RawCollisionVolume,
-        "volume2" / RawCollisionVolume,
-        "volume3" / RawCollisionVolume,
-    ),
-    EnemyType.CARNIVOROUS_PLANT: Struct(
-        "enemy_health" / Int16ul,
-        "enemy_damage" / Int16ul,
-        "enemy_subtype" / Int32ul,
-        "volume0" / RawCollisionVolume,
-    ),
-    EnemyType.HUNTER: Struct(
-        "hunter_id" / HunterConstruct,
-        "encounter_type" / Int32ul,
-        "hunter_weapon" / Int32ul,
-        "hunter_health" / Int16ul,
-        "hunter_health_max" / Int16ul,
-        "field" / Int16ul,  # set in AI data
-        "hunter_color" / Byte,
-        "hunter_chance" / Byte,
-    ),
-    EnemyType.SLENCH_TURRET: Struct(
-        "enemy_subtype" / Int32ul,
-        "enemy_version" / Int32ul,
-        "volume0" / RawCollisionVolume,
-        "volume1" / RawCollisionVolume,
-        "index" / Int32sl,
-    ),
-    EnemyType.GOREA1_A: Struct(
-        "sphere1_position" / Vector3Fx,
-        "sphere1_radius" / Fixed,
-        "sphere2_position" / Vector3Fx,
-        "sphere2_radius" / Fixed,
-    ),
-    EnemyType.GOREA2: Struct(
-        "field1" / Vector3Fx,
-        "field2" / Int32ul,
-        "field3" / Int32ul,
-    ),
+
+EnemySpawnField0 = Struct(
+    "volume0" / RawCollisionVolume,
+    "volume1" / RawCollisionVolume,
+    "volume2" / RawCollisionVolume,
+    "volume3" / RawCollisionVolume,
+)
+EnemySpawnField1 = Struct(
+    "war_wasp" / WarWaspSpawnField,
+    "_padding1" / Int16ul,
+    "_padding2" / Int16ul,
+)
+EnemySpawnField2 = Struct(
+    "volume0" / RawCollisionVolume,
+    "path_vector" / Vector3Fx,
+    "volume1" / RawCollisionVolume,
+    "volume2" / RawCollisionVolume,
+)
+EnemySpawnField3 = Struct(
+    "volume0" / RawCollisionVolume,
+    "_unused" / Int32ul[7],
+    "facing" / Vector3Fx,
+    "position" / Vector3Fx,
+    "idle_range" / Vector3Fx,
+)
+EnemySpawnField4 = Struct(
+    "volume0" / RawCollisionVolume,
+    "_unused" / Int32ul[4],
+    "position" / Vector3Fx,
+    "weave_offset" / Int32ul,
+    "field" / Int32sl,
+)
+EnemySpawnField5 = Struct(
+    "enemy_subtype" / Int32ul,
+    "volume0" / RawCollisionVolume,
+    "volume1" / RawCollisionVolume,
+    "volume2" / RawCollisionVolume,
+    "volume3" / RawCollisionVolume,
+)
+EnemySpawnField6 = Struct(
+    "enemy_subtype" / Int32ul,
+    "enemy_version" / Int32ul,
+    "volume0" / RawCollisionVolume,
+    "volume1" / RawCollisionVolume,
+    "volume2" / RawCollisionVolume,
+    "volume3" / RawCollisionVolume,
+)
+EnemySpawnField7 = Struct(
+    "enemy_health" / Int16ul,
+    "enemy_damage" / Int16ul,
+    "enemy_subtype" / Int32ul,
+    "volume0" / RawCollisionVolume,
+)
+EnemySpawnField8 = Struct(
+    "enemy_subtype" / Int32ul,
+    "enemy_version" / Int32ul,
+    "war_wasp" / WarWaspSpawnField,
+)
+EnemySpawnField9 = Struct(
+    "hunter_id" / HunterConstruct,
+    "encounter_type" / Int32ul,
+    "hunter_weapon" / Int32ul,
+    "hunter_health" / Int16ul,
+    "hunter_health_max" / Int16ul,
+    "field" / Int16ul,  # set in AI data
+    "hunter_color" / Byte,
+    "hunter_chance" / Byte,
+)
+EnemySpawnField10 = Struct(
+    "enemy_subtype" / Int32ul,
+    "enemy_version" / Int32ul,
+    "volume0" / RawCollisionVolume,
+    "volume1" / RawCollisionVolume,
+    "index" / Int32sl,
+)
+EnemySpawnField11 = Struct(
+    "sphere1_position" / Vector3Fx,
+    "sphere1_radius" / Fixed,
+    "sphere2_position" / Vector3Fx,
+    "sphere2_radius" / Fixed,
+)
+EnemySpawnField12 = Struct(
+    "field1" / Vector3Fx,
+    "field2" / Int32ul,
+    "field3" / Int32ul,
+)
+
+
+enemy_to_spawn_field = {
+    EnemyType.ZOOMER: EnemySpawnField0,
+    EnemyType.GEEMER: EnemySpawnField0,
+    EnemyType.BLASTCAP: EnemySpawnField0,
+    EnemyType.QUADTROID: EnemySpawnField0,
+    EnemyType.CRASH_PILLAR: EnemySpawnField0,
+    EnemyType.SLENCH: EnemySpawnField0,
+    EnemyType.LESSER_ITHRAK: EnemySpawnField0,
+    EnemyType.TROCRA: EnemySpawnField0,
+    EnemyType.VOLDRUM2: EnemySpawnField0,
+    EnemyType.WAR_WASP: EnemySpawnField1,
+    EnemyType.SHRIEKBAT: EnemySpawnField2,
+    EnemyType.TEMROID: EnemySpawnField3,
+    EnemyType.PETRASYL1: EnemySpawnField3,
+    EnemyType.PETRASYL2: EnemySpawnField4,
+    EnemyType.PETRASYL3: EnemySpawnField4,
+    EnemyType.PETRASYL4: EnemySpawnField4,
+    EnemyType.CRETAPHID: EnemySpawnField5,
+    EnemyType.GREATER_ITHRAK: EnemySpawnField5,
+    EnemyType.ALIMBIC_TURRET: EnemySpawnField6,
+    EnemyType.PSYCHO_BIT1: EnemySpawnField6,
+    EnemyType.PSYCHO_BIT2: EnemySpawnField6,
+    EnemyType.VOLDRUM1: EnemySpawnField6,
+    EnemyType.FIRE_SPAWN: EnemySpawnField6,
+    EnemyType.CARNIVOROUS_PLANT: EnemySpawnField7,
+    EnemyType.BARBED_WAR_WASP: EnemySpawnField8,
+    EnemyType.HUNTER: EnemySpawnField9,
+    EnemyType.SLENCH_TURRET: EnemySpawnField10,
+    EnemyType.GOREA1_A: EnemySpawnField11,
+    EnemyType.GOREA2: EnemySpawnField12,
 }
 
 
@@ -597,7 +628,7 @@ EnemySpawnEntityData = Struct(
     "enemy_type" / EnemyTypeConstruct,
     "_padding1" / Byte,
     "_padding2" / Int16ul,
-    "fields" / Padded(400, Switch(construct.this.enemy_type, enemy_spawn_fields)),
+    "fields" / Padded(400, Switch(construct.this.enemy_type, enemy_to_spawn_field)),
     "linked_entity_id" / Int16sl,
     "spawn_limit" / Byte,
     "spawn_total" / Byte,
@@ -625,7 +656,7 @@ EnemySpawnEntityData = Struct(
 )
 
 
-class TriggerVolumeType(enum.IntEnum):
+class TriggerVolumeType(enum.Enum):
     VOLUME = 0
     THRESHOLD = 1
     RELAY = 2
@@ -828,7 +859,7 @@ CameraSequenceEntityData = Struct(
 
 ForceFieldEntityData = Struct(
     "header" / EntityDataHeader,
-    "type" / Int32ul,
+    "type" / PaletteIdConstruct,
     "width" / Fixed,
     "height" / Fixed,
     "active" / Flag,
