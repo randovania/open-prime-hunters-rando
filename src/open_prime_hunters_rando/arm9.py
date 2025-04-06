@@ -14,7 +14,7 @@ def patch_arm9(rom: NintendoDSRom, starting_items: dict) -> None:
     ARM9_PATCHES = {
         init["starting_ammo"]: bytes.fromhex(starting_ammo),  # Starting UA Ammo
         init["starting_energy"]: bytes.fromhex("00F020E3"),  # NOP (Normally loads value of etank (100))
-        init["starting_weapons"]: bytes.fromhex(str(int(starting_items["weapons_string"], 2))),  # Starting weapons
+        init["starting_weapons"]: int(starting_items["weapons_string"], 2).to_bytes(),  # Starting weapons
         init["starting_missiles"]: _patch_starting_missiles(starting_items),  # Starting Missile ammo
         init["unlock_planets"]: bytes.fromhex("FF"),  # Unlock all planets from the start (excluding Oubliette)
         init["starting_energy_ptr"]: starting_energy,  # Starting energy - 1
@@ -56,4 +56,4 @@ def _patch_starting_missiles(starting_items: dict) -> bytes:
     missile_ammo = starting_items["starting_ammo"]["missiles"]
 
     # Set the value of Missiles to 0 if the missile bit flag is 0
-    return bytes.fromhex("0") if missiles == "0" else missile_ammo.to_bytes()
+    return bytes.fromhex("00") if missiles == "0" else missile_ammo.to_bytes()
