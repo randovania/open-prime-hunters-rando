@@ -56,4 +56,4 @@ def _patch_starting_missiles(starting_items: dict) -> bytes:
     missile_ammo = starting_items["starting_ammo"]["missiles"]
 
     # Set the value of Missiles to 0 if the missile bit flag is 0
-    return bytes.fromhex("0") if missiles == "0" else missile_ammo.to_bytes()
+    return bytes.fromhex("00") if missiles == "0" else missile_ammo.to_bytes()
