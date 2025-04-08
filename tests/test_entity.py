@@ -1,9 +1,17 @@
 import itertools
-from open_prime_hunters_rando.level_data import ALINOS, ARCTERRA, CELESTIAL_ARCHIVES, CONNECTORS, OUBLIETTE, VESPER_DEFENSE_OUTPOST
+
 import pytest
-from open_prime_hunters_rando.entities.entity_type import Entity, EntityFile, EntityType
 from construct import Container
 
+from open_prime_hunters_rando.entities.entity_type import Entity, EntityFile, EntityType
+from open_prime_hunters_rando.level_data import (
+    ALINOS,
+    ARCTERRA,
+    CELESTIAL_ARCHIVES,
+    CONNECTORS,
+    OUBLIETTE,
+    VESPER_DEFENSE_OUTPOST,
+)
 
 all_entity_files = [
     level.entity_file
@@ -34,16 +42,24 @@ def test_compare_entity_file(entity_file):
 
 def test_add_entity(entity_file):
     parsed = EntityFile.parse(entity_file)
-    parsed.entities.append(Entity.create(Container({
-        "header": Container({
-            "entity_type": EntityType.OCTOLITH_FLAG,
-            "entity_id": 0,
-            "position": {"x": 0.0, "y": 0.0, "z": 0.0},
-            "up_vector": {"x": 0.0, "y": 0.0, "z": 0.0},
-            "facing_vector": {"x": 0.0, "y": 0.0, "z": 0.0},
-        }),
-        "team_id": 0,
-    })))
+    parsed.entities.append(
+        Entity.create(
+            Container(
+                {
+                    "header": Container(
+                        {
+                            "entity_type": EntityType.OCTOLITH_FLAG,
+                            "entity_id": 0,
+                            "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+                            "up_vector": {"x": 0.0, "y": 0.0, "z": 0.0},
+                            "facing_vector": {"x": 0.0, "y": 0.0, "z": 0.0},
+                        }
+                    ),
+                    "team_id": 0,
+                }
+            )
+        )
+    )
 
     built = EntityFile.build(parsed)
     assert parsed == EntityFile.parse(built)

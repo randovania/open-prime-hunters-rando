@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from construct import Construct
+from construct import Construct, Container, ListContainer
 from ndspy.rom import NintendoDSRom
 
 from open_prime_hunters_rando.entities.entity_type import EntityFile
@@ -32,7 +32,14 @@ def patch_entities(rom: NintendoDSRom, configuration: dict[str, dict]) -> None:
 
 
 def _export_parsed_entity_files(level_data: LevelData, parsed_file: Construct) -> None:
+    to_export = Container(
+        {
+            "header": parsed_file._raw.header,
+            "entities": ListContainer([e._raw for e in parsed_file.entities]),
+        }
+    )
+
     export_path = Path(__file__).parent.joinpath("parsed_files")
     export_path.mkdir(parents=True, exist_ok=True)
     with Path.open(export_path / f"{level_data.entity_file}.txt", "w") as f:
-        f.write(str(parsed_file))
+        f.write(str(to_export))

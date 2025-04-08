@@ -2,16 +2,33 @@ import copy
 import enum
 import math
 import typing
-from collections.abc import Collection
-from typing import Any, Iterator, Self
-
-from construct import Optional, Probe, Tell, Terminated
+from collections.abc import Collection, Iterator
+from typing import Any, Self
 
 import construct
-from construct import (Aligned, BitsSwapped, Bitwise, Byte, Bytes, Container,
-                       Flag, Int16sl, Int16ul, Int32sl, Int32ul, ListContainer,
-                       Padded, PaddedString, Peek, Pointer, Rebuild,
-                       RepeatUntil, StopIf, Struct, Switch, this)
+from construct import (
+    Aligned,
+    BitsSwapped,
+    Bitwise,
+    Byte,
+    Container,
+    Flag,
+    Int16sl,
+    Int16ul,
+    Int32sl,
+    Int32ul,
+    ListContainer,
+    Padded,
+    PaddedString,
+    Peek,
+    Pointer,
+    Rebuild,
+    RepeatUntil,
+    StopIf,
+    Struct,
+    Switch,
+    this,
+)
 
 from open_prime_hunters_rando.constants import EnumAdapter
 
@@ -772,7 +789,7 @@ TeleporterEntityData = Struct(
     "artifact_id" / Byte,
     "active" / Flag,
     "invisible" / Flag,
-    "entity_filename" / Bytes(15),
+    "entity_filename" / PaddedString(15, "ascii"),
     "_unused" / Int16ul[2],
     "target_position" / Vector3Fx,
     "node_name" / DecodedString,
@@ -916,8 +933,8 @@ def num_bytes_to_align(length: int, modulus: int = 4) -> int:
 class EntityAdapter(construct.Adapter):
     def __init__(self):
         super().__init__(EntityFileConstruct)
-    
-    def _decode(self, obj, context, path):
+
+    def _decode(self, obj, context, path):  # type: ignore
         decoded = copy.deepcopy(obj)
 
         # remove empty entry
@@ -925,13 +942,13 @@ class EntityAdapter(construct.Adapter):
 
         # wrap entities
         decoded.entities = ListContainer([Entity(entity) for entity in decoded.entities])
-        
+
         return decoded
-    
-    def _encode(self, obj, context, path):
+
+    def _encode(self, obj, context, path):  # type: ignore
         encoded = copy.deepcopy(obj)
 
-        entities = typing.cast(list[Entity], encoded.entities)
+        entities = typing.cast("list[Entity]", encoded.entities)
 
         # update sizes and offsets
         encoded.entities = ListContainer()
@@ -941,7 +958,7 @@ class EntityAdapter(construct.Adapter):
 
         for entity_wrapper in entities:
             entity = entity_wrapper._raw
-            
+
             size = entity_wrapper.size
             entity._size = size
             entity._data_offset = offset
@@ -951,35 +968,43 @@ class EntityAdapter(construct.Adapter):
             encoded.entities.append(entity)
 
         # add empty entry
-        encoded.entities.append(Container({
-            "node_name": "",
-            "layer_state": [False] * 16,
-            "_size": 0,
-            "_data_offset": 0,
-        }))
+        encoded.entities.append(
+            Container(
+                {
+                    "node_name": "",
+                    "layer_state": [False] * 16,
+                    "_size": 0,
+                    "_data_offset": 0,
+                }
+            )
+        )
 
         return encoded
-    
+
 
 class Entity:
     def __init__(self, raw: Container):
         self._raw = raw
-    
+
     @classmethod
     def create(cls, data: Container, node_name: str = "", active_layers: Collection[int] = tuple(range(16))) -> Self:
         layer_state = [False] * 16
         for layer in active_layers:
             layer_state[layer] = True
-        
-        return cls(Container({
-            "node_name": node_name,
-            "layer_state": layer_state,
-            "data": data,
-        }))
-    
+
+        return cls(
+            Container(
+                {
+                    "node_name": node_name,
+                    "layer_state": layer_state,
+                    "data": data,
+                }
+            )
+        )
+
     def __repr__(self) -> str:
         return f"<Entity type={self.entity_type} id={self.entity_id}>"
-    
+
     def __eq__(self, value: Any) -> bool:
         if not isinstance(value, Entity):
             return False
@@ -988,7 +1013,7 @@ class Entity:
         for i in range(16):
             if value.layer_state(i) != self.layer_state(i):
                 return False
-        
+
         def check_container(container: dict, other: dict) -> bool:
             for k in container.keys() | other.keys():
                 if k.startswith("_"):
@@ -1008,41 +1033,41 @@ class Entity:
     @property
     def node_name(self) -> str:
         return self._raw.node_name
-    
+
     @node_name.setter
     def node_name(self, value: str) -> None:
         self._raw.node_name = value
-    
+
     @property
     def active_layers(self) -> tuple[int, ...]:
         return tuple(i for i in range(16) if self.layer_state(i))
-    
+
     def layer_state(self, layer: int) -> bool:
         return self._raw.layer_state[layer]
-    
+
     def set_layer_state(self, layer: int, state: bool) -> None:
         self._raw.layer_state[layer] = state
 
     @property
     def entity_type(self) -> EntityType:
         return self.data.header.entity_type
-    
+
     @property
     def entity_id(self) -> int:
         return self.data.header.entity_id
-    
+
     @property
     def data(self) -> Container:
         return self._raw.data
-    
+
     @data.setter
     def data(self, value: Container) -> None:
         self._raw.data = value
-    
+
     @property
     def type_construct(self) -> Struct:
         return types_to_construct[self.entity_type]
-    
+
     @property
     def size(self) -> int:
         return self.type_construct.sizeof()
@@ -1051,19 +1076,19 @@ class Entity:
 class EntityFile:
     def __init__(self, raw: Container):
         self._raw = raw
-    
+
     @classmethod
     def parse(cls, data: bytes) -> Self:
         # align data to 4
-        data = bytes(data) + b'\0' * num_bytes_to_align(len(data))
+        data = bytes(data) + b"\0" * num_bytes_to_align(len(data))
 
         return cls(EntityAdapter().parse(data))
-    
+
     def build(self) -> bytes:
         # update layer counts
         for i in range(16):
             self._raw.header.layer_counts[i] = len(list(self.entities_for_layer(i)))
-        
+
         # build
         data = EntityAdapter().build(self._raw)
 
@@ -1074,23 +1099,23 @@ class EntityFile:
                 data = data[:-to_strip]
 
         return data
-    
+
     def __eq__(self, value: Any) -> bool:
         return isinstance(value, EntityFile) and self.version == value.version and self.entities == value.entities
-    
+
     @property
     def version(self) -> int:
         return self._raw.header.version
-    
+
     def entities_for_layer(self, layer: int) -> Iterator[Entity]:
         for entity in self.entities:
             if entity.layer_state(layer):
                 yield entity
-    
+
     @property
     def entities(self) -> list[Entity]:
         return self._raw.entities
-    
+
     @entities.setter
-    def entities(self, value: list[Entity]):
+    def entities(self, value: list[Entity]) -> None:
         self._raw.entities = value

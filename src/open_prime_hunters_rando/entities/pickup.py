@@ -25,7 +25,6 @@ def patch_pickups(entity_file: Construct, pickups: list) -> None:
             # Entity is now Artifact
             else:
                 entity.data.header.entity_type = EntityType.ARTIFACT
-                entity.size = 70
                 entity.data = Container(
                     {
                         "header": header,
@@ -56,7 +55,6 @@ def patch_pickups(entity_file: Construct, pickups: list) -> None:
             # Entity is now ItemSpawn
             else:
                 entity.data.header.entity_type = EntityType.ITEM_SPAWN
-                entity.size = 72
                 entity.data = Container(
                     {
                         "header": header,
