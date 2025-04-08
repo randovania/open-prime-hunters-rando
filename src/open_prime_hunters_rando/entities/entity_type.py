@@ -5,6 +5,8 @@ import typing
 from collections.abc import Collection
 from typing import Any, Iterator, Self
 
+from construct import Optional, Probe, Tell, Terminated
+
 import construct
 from construct import (Aligned, BitsSwapped, Bitwise, Byte, Bytes, Container,
                        Flag, Int16sl, Int16ul, Int32sl, Int32ul, ListContainer,
@@ -663,6 +665,7 @@ class TriggerVolumeFlags(enum.IntFlag):
     IMPERIALIST = 0x10
     MAGMAUL = 0x20
     SHOCK_COIL = 0x40
+    BIT_7 = 0x80  # unused?
     BEAM_CHARGED = 0x100
     PLAYER_BIPED = 0x200
     PLAYER_ALT = 0x400
@@ -904,6 +907,12 @@ EntityFileConstruct = Struct(
 )
 
 
+def num_bytes_to_align(length: int, modulus: int = 4) -> int:
+    if length % modulus > 0:
+        return modulus - (length % modulus)
+    return 0
+
+
 class EntityAdapter(construct.Adapter):
     def __init__(self):
         super().__init__(EntityFileConstruct)
@@ -932,19 +941,15 @@ class EntityAdapter(construct.Adapter):
 
         for entity_wrapper in entities:
             entity = entity_wrapper._raw
-            entity_construct = types_to_construct[entity.data.header.entity_type]
-            size = entity_construct.sizeof()
+            
+            size = entity_wrapper.size
             entity._size = size
             entity._data_offset = offset
 
-            offset += size
-            # align to 4
-            if size % 4 > 0:
-                offset += 4 - (size % 4)
-            
+            offset += size + num_bytes_to_align(size)
+
             encoded.entities.append(entity)
 
-        
         # add empty entry
         encoded.entities.append(Container({
             "node_name": "",
@@ -1033,6 +1038,14 @@ class Entity:
     @data.setter
     def data(self, value: Container) -> None:
         self._raw.data = value
+    
+    @property
+    def type_construct(self) -> Struct:
+        return types_to_construct[self.entity_type]
+    
+    @property
+    def size(self) -> int:
+        return self.type_construct.sizeof()
 
 
 class EntityFile:
@@ -1041,17 +1054,29 @@ class EntityFile:
     
     @classmethod
     def parse(cls, data: bytes) -> Self:
+        # align data to 4
+        data = bytes(data) + b'\0' * num_bytes_to_align(len(data))
+
         return cls(EntityAdapter().parse(data))
-    
-    def __eq__(self, value: Any) -> bool:
-        return isinstance(value, EntityFile) and self.version == value.version and self.entities == value.entities
     
     def build(self) -> bytes:
         # update layer counts
         for i in range(16):
             self._raw.header.layer_counts[i] = len(list(self.entities_for_layer(i)))
         
-        return EntityAdapter().build(self._raw)
+        # build
+        data = EntityAdapter().build(self._raw)
+
+        # remove unnecessary alignment bytes
+        if self.entities:
+            to_strip = num_bytes_to_align(self.entities[-1].size)
+            if to_strip:
+                data = data[:-to_strip]
+
+        return data
+    
+    def __eq__(self, value: Any) -> bool:
+        return isinstance(value, EntityFile) and self.version == value.version and self.entities == value.entities
     
     @property
     def version(self) -> int:
