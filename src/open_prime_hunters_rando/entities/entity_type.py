@@ -663,9 +663,9 @@ class TriggerVolumeFlags(enum.IntFlag):
     MISSILE = 0x4
     BATTLEHAMMER = 0x8
     IMPERIALIST = 0x10
-    MAGMAUL = 0x20
-    SHOCK_COIL = 0x40
-    BIT_7 = 0x80  # unused?
+    JUDICATOR = 0x20
+    MAGMAUL = 0x40
+    SHOCK_COIL = 0x80
     BEAM_CHARGED = 0x100
     PLAYER_BIPED = 0x200
     PLAYER_ALT = 0x400
