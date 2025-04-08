@@ -1052,6 +1052,10 @@ class Entity:
     def entity_type(self) -> EntityType:
         return self.data.header.entity_type
 
+    @entity_type.setter
+    def entity_type(self, value: EntityType) -> None:
+        self.data.header.entity_type = value
+
     @property
     def entity_id(self) -> int:
         return self.data.header.entity_id
@@ -1119,3 +1123,13 @@ class EntityFile:
     @entities.setter
     def entities(self, value: list[Entity]) -> None:
         self._raw.entities = value
+
+    def get_entity(self, entity_id: int) -> Entity:
+        entity_idx = 0
+        for entity in self.entities:
+            if entity.size == 0:
+                continue
+            if entity.entity_id == entity_id:
+                break
+            entity_idx += 1
+        return entity

@@ -1,20 +1,18 @@
-from construct import Construct, Container
+from construct import Container
 
-from open_prime_hunters_rando.constants import get_entity
-from open_prime_hunters_rando.entities.entity_type import EntityType
+from open_prime_hunters_rando.entities.entity_type import EntityFile, EntityType
 
 
-def patch_pickups(entity_file: Construct, pickups: list) -> None:
+def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
     for pickup in pickups:
         entity_id = pickup["entity_id"]
         new_entity_type = pickup["entity_type"]
-        entity_idx = get_entity(entity_file, entity_id)
 
-        entity = entity_file.entities[entity_idx]
+        entity = EntityFile.get_entity(entity_file, entity_id)
         header = entity.data.header
 
         old_entity_data = entity.data
-        old_entity_type = old_entity_data.header.entity_type
+        old_entity_type = entity.entity_type
 
         # Update ItemSpawn entities
         # Entity was ItemSpawn
@@ -24,7 +22,7 @@ def patch_pickups(entity_file: Construct, pickups: list) -> None:
                 entity.data.item_type = pickup["item_type"]
             # Entity is now Artifact
             else:
-                entity.data.header.entity_type = EntityType.ARTIFACT
+                entity.entity_type = EntityType.ARTIFACT
                 entity.data = Container(
                     {
                         "header": header,
@@ -54,7 +52,7 @@ def patch_pickups(entity_file: Construct, pickups: list) -> None:
                 entity.data.artifact_id = pickup["artifact_id"]
             # Entity is now ItemSpawn
             else:
-                entity.data.header.entity_type = EntityType.ITEM_SPAWN
+                entity.entity_type = EntityType.ITEM_SPAWN
                 entity.data = Container(
                     {
                         "header": header,

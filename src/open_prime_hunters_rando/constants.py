@@ -4,17 +4,6 @@ import construct
 from construct import Adapter, Construct, Enum, Int32ub
 
 
-def get_entity(entity_file: Construct, entity_id: int) -> int:
-    entity_idx = 0
-    for entity in entity_file.entities:
-        if entity.size == 0:
-            continue
-        if entity.data.header.entity_id == entity_id:
-            break
-        entity_idx += 1
-    return entity_idx
-
-
 class EnumAdapter(Adapter):
     def __init__(self, enum_class, subcon=Int32ub):
         super().__init__(Enum(subcon, enum_class))
