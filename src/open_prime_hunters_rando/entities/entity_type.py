@@ -931,10 +931,10 @@ def num_bytes_to_align(length: int, modulus: int = 4) -> int:
 
 
 class EntityAdapter(construct.Adapter):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(EntityFileConstruct)
 
-    def _decode(self, obj, context, path):  # type: ignore
+    def _decode(self, obj: Container, context: Container, path: str) -> Container:
         decoded = copy.deepcopy(obj)
 
         # remove empty entry
@@ -945,7 +945,7 @@ class EntityAdapter(construct.Adapter):
 
         return decoded
 
-    def _encode(self, obj, context, path):  # type: ignore
+    def _encode(self, obj: Container, context: Container, path: str) -> Container:
         encoded = copy.deepcopy(obj)
 
         entities = typing.cast("list[Entity]", encoded.entities)
@@ -983,7 +983,7 @@ class EntityAdapter(construct.Adapter):
 
 
 class Entity:
-    def __init__(self, raw: Container):
+    def __init__(self, raw: Container) -> None:
         self._raw = raw
 
     @classmethod

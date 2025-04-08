@@ -6,7 +6,7 @@ from open_prime_hunters_rando.entities.entity_type import EntityFile, EntityType
 def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
     for pickup in pickups:
         entity_id = pickup["entity_id"]
-        new_entity_type = pickup["entity_type"]
+        new_entity_type = EntityType(pickup["entity_type"])
 
         entity = EntityFile.get_entity(entity_file, entity_id)
         header = entity.data.header
@@ -18,7 +18,7 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
         # Entity was ItemSpawn
         if old_entity_type == EntityType.ITEM_SPAWN:
             # Entity is still ItemSpawn
-            if new_entity_type == EntityType.ITEM_SPAWN.value:
+            if new_entity_type == EntityType.ITEM_SPAWN:
                 entity.data.item_type = pickup["item_type"]
             # Entity is now Artifact
             else:
@@ -47,7 +47,7 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
         # Entity was Artifact
         else:
             # Entity is still Artifact
-            if new_entity_type == EntityType.ARTIFACT.value:
+            if new_entity_type == EntityType.ARTIFACT:
                 entity.data.model_id = pickup["model_id"]
                 entity.data.artifact_id = pickup["artifact_id"]
             # Entity is now ItemSpawn
@@ -65,6 +65,7 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
                         "max_spawn_count": 1,
                         "spawn_interval": 0,
                         "spawn_delay": 0,
+                        # TODO: Handle sending messages to multiple entities where vanilla artifact did so
                         "notify_entity_id": old_entity_data.message1_target,
                         "collected_message": old_entity_data.message1,
                         "collected_message_param1": 0,
