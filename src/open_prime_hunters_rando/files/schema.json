@@ -114,9 +114,11 @@
                         "then": {
                             "properties": {
                                 "item_type": {
-                                    "type": "string",
-                                    "$ref": "#/$defs/item_types",
-                                    "description": "The item type to change the entity into."
+                                    "type": "integer",
+                                    "description": "The item type to change the entity into.",
+                                    "minimum": 0,
+                                    "maximum": 22
+
                                 }
                             },
                             "required": [
@@ -127,13 +129,13 @@
                             "properties": {
                                 "model_id": {
                                     "type": "integer",
-                                    "miniumum": 0,
+                                    "minimum": 0,
                                     "maximum": 8,
                                     "description": "The id of the model to use for the artifact."
                                 },
                                 "artifact_id": {
                                     "type": "integer",
-                                    "miniumum": 0,
+                                    "minimum": 0,
                                     "maximum": 7,
                                     "description": "The id of the artifact."
                                 }
@@ -157,7 +159,7 @@
                             },
                             "type": {
                                 "type": "integer",
-                                "miniumum": 0,
+                                "minimum": 0,
                                 "maximum": 9,
                                 "description": "The type of force field. Sealed force fields can only be unlocked remotely.\nPower Beam, Volt Driver, Missile, Battlehammer, Imperialist, Judicator, Magmaul, Shock Coil, Omega Cannon, Sealed."
                             }
@@ -170,29 +172,6 @@
                     "default": []
                 }
             }
-        },
-        "item_types": {
-            "type": "string",
-            "enum": [
-                "HealthMedium",
-                "HealthSmall",
-                "HealthBig",
-                "EnergyTank",
-                "VoltDriver",
-                "MissileExpansion",
-                "Battlehammer",
-                "Imperialist",
-                "Judicator",
-                "Magmaul",
-                "ShockCoil",
-                "OmegaCannon",
-                "UASmall",
-                "UABig",
-                "MissileSmall",
-                "MissileBig",
-                "UAExpansion",
-                "ArtifactKey"
-            ]
         }
     }
 }

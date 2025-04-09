@@ -1,10 +1,9 @@
-from open_prime_hunters_rando.constants import get_entity
+from open_prime_hunters_rando.entities.entity_type import EntityFile
 
 
-def patch_force_fields(entity_file: memoryview, force_fields: list) -> None:
+def patch_force_fields(entity_file: EntityFile, force_fields: list) -> None:
     for force_field in force_fields:
         entity_id = force_field["entity_id"]
 
-        data_offset = get_entity(entity_file, entity_id)[0]
-
-        entity_file[data_offset + 40] = force_field["type"]
+        entity = EntityFile.get_entity(entity_file, entity_id)
+        entity.entity_type = force_field["type"]

@@ -16,6 +16,7 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
+    "construct>=2.10.70",
     "jsonschema>=4.0.0",
     "ndspy>=4.2.0",
 ]
@@ -83,3 +84,12 @@ files = [
 follow_imports = "silent"
 disallow_untyped_defs = true
 local_partial_types = true
+
+[[tool.mypy.overrides]]
+# any dependencies which we do not control but are missing types go here
+# not too much can be done about these, so they're not the end of the world
+# dependencies we DO control should use `type: ignore[import-untyped]`
+module = [
+    "construct.*",
+]
+ignore_missing_imports = true
