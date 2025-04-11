@@ -7,6 +7,7 @@ from ndspy.rom import NintendoDSRom
 
 from open_prime_hunters_rando.arm9 import patch_arm9
 from open_prime_hunters_rando.entities.entity_patching import patch_entities
+from open_prime_hunters_rando.static_patches import static_patches
 from open_prime_hunters_rando.validator_with_default import DefaultValidatingDraft7Validator
 
 T = typing.TypeVar("T")
@@ -38,6 +39,9 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict) -> None:
 
     # Modify main code file arm9.bin
     patch_arm9(rom, configuration["starting_items"])
+
+    # Static patches to rooms
+    static_patches(rom)
 
     # Patch entities
     patch_entities(rom, configuration["areas"])
