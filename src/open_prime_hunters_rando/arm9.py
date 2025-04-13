@@ -10,12 +10,13 @@ def patch_arm9(rom: NintendoDSRom, starting_items: dict) -> None:
 
     starting_energy = starting_items["starting_ammo"]["energy"].to_bytes(4, "little")
     starting_ammo = str(hex(starting_items["starting_ammo"]["ammo"] * 10))[2:-1]
+    starting_missiles = starting_items["starting_ammo"]["missiles"].to_bytes()
 
     ARM9_PATCHES = {
         init["starting_ammo"]: bytes.fromhex(starting_ammo),  # Starting UA Ammo
         init["starting_energy"]: bytes.fromhex("00F020E3"),  # NOP (Normally loads value of etank (100))
         init["starting_weapons"]: int(starting_items["weapons_string"], 2).to_bytes(),  # Starting weapons
-        init["starting_missiles"]: _patch_starting_missiles(starting_items),  # Starting Missile ammo
+        init["starting_missiles"]: starting_missiles,  # Starting Missile ammo
         init["unlock_planets"]: bytes.fromhex("FF"),  # Unlock all planets from the start (excluding Oubliette)
         init["starting_energy_ptr"]: starting_energy,  # Starting energy - 1
     }
@@ -49,11 +50,3 @@ def _validate_starting_items(starting_items: dict) -> None:
     # Validate starting ammo
     if starting_items["starting_ammo"]["ammo"] > 400:
         raise ValueError(f"Starting ammo must be 400 or less! Got {starting_items['starting_ammo']['ammo']}")
-
-
-def _patch_starting_missiles(starting_items: dict) -> bytes:
-    missiles = starting_items["weapons_string"][5]
-    missile_ammo = starting_items["starting_ammo"]["missiles"]
-
-    # Set the value of Missiles to 0 if the missile bit flag is 0
-    return bytes.fromhex("00") if missiles == "0" else missile_ammo.to_bytes()
