@@ -30,17 +30,24 @@ def _disable_boss_force_fields(rom: NintendoDSRom) -> None:
 
 
 def _disable_message_prompts(rom: NintendoDSRom) -> None:
-    message_prompts_per_room = [
-        ("Celestial Archives", "Celestial Gateway", [8, 24]),
-        ("Celestial Archives", "Fan Room Beta", [8]),
-    ]
-    for area_name, room_name, message_prompts in message_prompts_per_room:
-        file_name, parsed_file = get_entity_file(rom, area_name, room_name)
-        for message_prompt in message_prompts:
-            entity = EntityFile.get_entity(parsed_file, message_prompt)
-            entity.data.active = False
+    message_prompts_per_room = {
+        "Celestial Archives": {
+            "Celestial Gateway": [8, 24],  # Scan Visor and Enter Ship
+            "Data Shrine 01": [54, 56],  # Unknown ship and Enter Morph Ball
+            "Fan Room Beta": [8],  # Slench presence
+        },
+        "Arcterra": {
+            "Fault Line": [63],  # Imperialist tutorial
+        },
+    }
+    for area_name, room_names in message_prompts_per_room.items():
+        for room_name, message_prompts in room_names.items():
+            file_name, parsed_file = get_entity_file(rom, area_name, room_name)
+            for message_prompt in message_prompts:
+                entity = EntityFile.get_entity(parsed_file, message_prompt)
+                entity.data.active = False
 
-        rom.setFileByName(file_name, EntityFile.build(parsed_file))
+            rom.setFileByName(file_name, EntityFile.build(parsed_file))
 
 
 def _disable_new_arrival_registration_cutscenes(rom: NintendoDSRom) -> None:
