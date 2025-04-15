@@ -1,6 +1,6 @@
 from construct import Container
 
-from open_prime_hunters_rando.entities.entity_type import EntityFile, EntityType
+from open_prime_hunters_rando.entities.entity_type import EntityFile, EntityType, ItemType
 
 
 def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
@@ -19,7 +19,7 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
         if old_entity_type == EntityType.ITEM_SPAWN:
             # Entity is still ItemSpawn
             if new_entity_type == EntityType.ITEM_SPAWN:
-                entity.data.item_type = pickup["item_type"]
+                entity.data.item_type = ItemType(pickup["item_type"])
             # Entity is now Artifact
             else:
                 entity.entity_type = EntityType.ARTIFACT
@@ -57,7 +57,7 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
                     {
                         "header": header,
                         "parent_id": 65535,
-                        "item_type": pickup["item_type"],
+                        "item_type": ItemType(pickup["item_type"]),
                         "enabled": old_entity_data.active,
                         "has_base": old_entity_data.has_base,
                         "always_active": False,
