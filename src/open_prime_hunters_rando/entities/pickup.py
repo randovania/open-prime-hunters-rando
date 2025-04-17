@@ -39,7 +39,7 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
                         "message3_target": 0,
                         "_padding3": 0,
                         "message3": 0,
-                        "linked_entity_id": -1,
+                        "linked_entity_id": -1 if old_entity_data.parent_id == 65535 else old_entity_data.parent_id,
                     }
                 )
 

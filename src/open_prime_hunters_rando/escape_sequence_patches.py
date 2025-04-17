@@ -6,7 +6,7 @@ from open_prime_hunters_rando.level_data import get_entity_file
 
 def patch_escape_sequences(rom: NintendoDSRom) -> None:
     _disable_escape_triggers(rom)
-    _remove_disabled_portal_switches(rom)
+    _remove_disabled_portals(rom)
     _patch_specific_rooms(rom)
     _patch_both_escape_layers(rom)
 
@@ -14,10 +14,18 @@ def patch_escape_sequences(rom: NintendoDSRom) -> None:
 def _disable_escape_triggers(rom: NintendoDSRom) -> None:
     areas = ["Alinos", "Celestial Archives", "Vesper Defense Outpost", "Arcterra"]
     stronghold_voids = ["A", "B"]
-    escape_triggers = [5, 16]
+    escape_triggers = []
     for area in areas:
         for stronghold_void in stronghold_voids:
             file_name, parsed_file = get_entity_file(rom, area, f"Stronghold Void {stronghold_void}")
+            # The Show_Prompt trigger has a different id in three rooms
+            if area == "Celestial Archives" and stronghold_void == "A":
+                escape_triggers = [5, 8]
+            elif area == "Arcterra":
+                escape_triggers = [4, 5]
+            else:
+                escape_triggers = [5, 16]
+
             for escape_trigger in escape_triggers:
                 entity = EntityFile.get_entity(parsed_file, escape_trigger)
                 entity.set_layer_state(1, False)
@@ -25,30 +33,31 @@ def _disable_escape_triggers(rom: NintendoDSRom) -> None:
             rom.setFileByName(file_name, EntityFile.build(parsed_file))
 
 
-def _remove_disabled_portal_switches(rom: NintendoDSRom) -> None:
-    disabled_portal_switches = {
+def _remove_disabled_portals(rom: NintendoDSRom) -> None:
+    disabled_portal_entities = {
         "Alinos": {
-            "Elder Passage": 21,
-            "Council Chamber": 54,
+            "Elder Passage": [21, 24],
+            "Council Chamber": [54, 57],
         },
         "Celestial Archives": {
-            "Synergy Core": 47,
-            "New Arrival Registration": 43,
+            "Synergy Core": [47, 45],
+            "New Arrival Registration": [43, 45],
         },
         "Vesper Defense Outpost": {
-            "Weapons Complex": 78,
-            "Ascension": 38,
+            "Weapons Complex": [78, 54],
+            "Ascension": [38, 6],
         },
         "Arcterra": {
-            "Ice Hive": 174,
-            "Fault Line": 76,
+            "Ice Hive": [174, 207],
+            "Fault Line": [76, 73],
         },
     }
-    for area_name, room_names in disabled_portal_switches.items():
-        for room_name, disabled_portal_switch in room_names.items():
+    for area_name, room_names in disabled_portal_entities.items():
+        for room_name, portal_entities in room_names.items():
             file_name, parsed_file = get_entity_file(rom, area_name, room_name)
-            entity = EntityFile.get_entity(parsed_file, disabled_portal_switch)
-            entity.set_layer_state(1, False)
+            for portal_entity in portal_entities:
+                entity = EntityFile.get_entity(parsed_file, portal_entity)
+                entity.set_layer_state(1, False)
 
             rom.setFileByName(file_name, EntityFile.build(parsed_file))
 
@@ -87,9 +96,6 @@ def _patch_specific_rooms(rom: NintendoDSRom) -> None:
         for layer in range(1, 3):
             entity.set_layer_state(layer, False)
 
-    portal_trigger_volume = EntityFile.get_entity(parsed_file, 24)
-    portal_trigger_volume.set_layer_state(3, True)
-
     rom.setFileByName(file_name, EntityFile.build(parsed_file))
 
     # Alinos Perch
@@ -100,12 +106,6 @@ def _patch_specific_rooms(rom: NintendoDSRom) -> None:
     second_pass_door.set_layer_state(2, False)
 
     rom.setFileByName(file_name, EntityFile.build(parsed_file))
-
-    # Council Chamber
-    file_name, parsed_file = get_entity_file(rom, "Alinos", "Council Chamber")
-
-    portal_trigger_volume = EntityFile.get_entity(parsed_file, 57)
-    portal_trigger_volume.set_layer_state(1, False)
 
     # Data Shrine 01
     file_name, parsed_file = get_entity_file(rom, "Celestial Archives", "Data Shrine 01")
@@ -184,7 +184,7 @@ def _patch_both_escape_layers(rom: NintendoDSRom) -> None:
             "Council Chamber": [],
             "Crash Site": [],
             "Echo Hall": [],
-            "Elder Passage": [],
+            "Elder Passage": [39],  # Spire top force field
             "High Ground": [10, 33, 38, 39, 41],  # Slench 1 force fields
             "Piston Cave": [],
             "Processor Core": [],
@@ -212,7 +212,7 @@ def _patch_both_escape_layers(rom: NintendoDSRom) -> None:
         },
         "Arcterra": {
             "Drip Moat": [],
-            "Fault Line": [],
+            "Fault Line": [73],  # Disabled ship deck portal
             "Frost Labyrinth": [],
             "Ice Hive": [],
             "Sanctorus": [],

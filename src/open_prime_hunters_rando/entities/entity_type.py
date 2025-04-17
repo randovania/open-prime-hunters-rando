@@ -1132,4 +1132,6 @@ class EntityFile:
             if entity.entity_id == entity_id:
                 break
             entity_idx += 1
+        else:
+            raise ValueError(f"No entity with ID {entity_id} found!")
         return entity

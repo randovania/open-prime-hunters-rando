@@ -8,7 +8,9 @@ def static_patches(rom: NintendoDSRom) -> None:
     _disable_boss_force_fields(rom)
     _disable_message_prompts(rom)
     _disable_new_arrival_registration_cutscenes(rom)
-    _disable_elder_passage_top_lock(rom)
+    _remove_elder_passage_top_lock_and_force_field(rom)
+    _disable_alimbic_garden_cutscene(rom)
+    _disable_fault_line_imperialist_cutscene(rom)
 
 
 def _disable_boss_force_fields(rom: NintendoDSRom) -> None:
@@ -70,9 +72,30 @@ def _disable_new_arrival_registration_cutscenes(rom: NintendoDSRom) -> None:
     rom.setFileByName(file_name, EntityFile.build(parsed_file))
 
 
-def _disable_elder_passage_top_lock(rom: NintendoDSRom) -> None:
+def _remove_elder_passage_top_lock_and_force_field(rom: NintendoDSRom) -> None:
     file_name, parsed_file = get_entity_file(rom, "Alinos", "Elder Passage")
     trigger_volume = EntityFile.get_entity(parsed_file, 25)
     trigger_volume.data.parent_message = Message.NONE
+
+    force_field = EntityFile.get_entity(parsed_file, 39)
+    force_field.set_layer_state(0, False)
+    force_field.set_layer_state(3, False)
+
+    rom.setFileByName(file_name, EntityFile.build(parsed_file))
+
+
+def _disable_alimbic_garden_cutscene(rom: NintendoDSRom) -> None:
+    file_name, parsed_file = get_entity_file(rom, "Alinos", "Alimbic Gardens")
+    trigger_volume = EntityFile.get_entity(parsed_file, 7)
+    trigger_volume.data.active = False
+
+    rom.setFileByName(file_name, EntityFile.build(parsed_file))
+
+
+def _disable_fault_line_imperialist_cutscene(rom: NintendoDSRom) -> None:
+    file_name, parsed_file = get_entity_file(rom, "Arcterra", "Fault Line")
+    imperialist = EntityFile.get_entity(parsed_file, 46)
+    imperialist.data.message1_target = 0
+    imperialist.data.message1 = Message.NONE
 
     rom.setFileByName(file_name, EntityFile.build(parsed_file))
