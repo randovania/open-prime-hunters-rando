@@ -1,5 +1,9 @@
 import dataclasses
 
+from ndspy.rom import NintendoDSRom
+
+from open_prime_hunters_rando.entities.entity_type import EntityFile
+
 
 @dataclasses.dataclass(frozen=True)
 class LevelData:
@@ -431,3 +435,11 @@ def get_data(area_name: str, room_name: str) -> LevelData:
             return OUBLIETTE[room_name]
         case _:
             return CONNECTORS[room_name]
+
+
+def get_entity_file(rom: NintendoDSRom, area_name: str, room_name: str) -> tuple[str, EntityFile]:
+    level_data = get_data(area_name, room_name)
+    file_name = f"levels/entities/{level_data.entity_file}.bin"
+    parsed_file = EntityFile.parse(rom.getFileByName(file_name))
+
+    return file_name, parsed_file
