@@ -5,6 +5,7 @@ from pathlib import Path
 
 from ndspy.rom import NintendoDSRom
 
+from open_prime_hunters_rando.add_entities import add_new_entities
 from open_prime_hunters_rando.arm9 import patch_arm9
 from open_prime_hunters_rando.entities.entity_patching import patch_entities
 from open_prime_hunters_rando.escape_sequence_patches import patch_escape_sequences
@@ -49,6 +50,9 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict) -> None:
 
     # Patch entities
     patch_entities(rom, configuration["areas"])
+
+    # Add new entities
+    add_new_entities(rom)
 
     # Save changes to a new rom
     rom.saveToFile(output_path)
