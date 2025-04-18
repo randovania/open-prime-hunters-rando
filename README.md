@@ -1,6 +1,8 @@
 # Open Prime Hunters Rando
 Open Source randomizer patcher for Metroid Prime Hunters. Currently supports patching the following:
+- Starting Items
 - Pickups
+- Force Fields
 
 ## Usage
 
