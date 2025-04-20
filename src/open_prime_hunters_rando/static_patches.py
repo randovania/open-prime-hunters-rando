@@ -37,10 +37,7 @@ def _disable_message_prompts(rom: NintendoDSRom) -> None:
             "Celestial Gateway": [8, 24],  # Scan Visor and Enter Ship
             "Data Shrine 01": [54, 56],  # Unknown ship and Enter Morph Ball
             "Fan Room Beta": [8],  # Slench presence
-        },
-        "Arcterra": {
-            "Fault Line": [63],  # Imperialist tutorial
-        },
+        }
     }
     for area_name, room_names in message_prompts_per_room.items():
         for room_name, message_prompts in room_names.items():
@@ -95,7 +92,7 @@ def _disable_alimbic_garden_cutscene(rom: NintendoDSRom) -> None:
 def _disable_fault_line_imperialist_cutscene(rom: NintendoDSRom) -> None:
     file_name, parsed_file = get_entity_file(rom, "Arcterra", "Fault Line")
     imperialist = EntityFile.get_entity(parsed_file, 46)
-    imperialist.data.message1_target = 0
-    imperialist.data.message1 = Message.NONE
+    imperialist.data.notify_entity_id = 0
+    imperialist.data.collected_message = Message.NONE
 
     rom.setFileByName(file_name, EntityFile.build(parsed_file))
