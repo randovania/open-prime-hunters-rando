@@ -987,10 +987,12 @@ class Entity:
         self._raw = raw
 
     @classmethod
-    def create(cls, data: Container, node_name: str = "", active_layers: Collection[int] = tuple(range(16))) -> Self:
+    def create(
+        cls, data: Container, node_name: str = "rmMain", active_layers: Collection[int] = tuple(range(16))
+    ) -> Self:
         layer_state = [False] * 16
         for layer in active_layers:
-            layer_state[layer] = True
+            layer_state[layer] = False
 
         return cls(
             Container(

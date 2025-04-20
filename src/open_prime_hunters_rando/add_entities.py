@@ -1,4 +1,5 @@
 import copy
+from typing import NamedTuple
 
 from ndspy.rom import NintendoDSRom
 
@@ -6,15 +7,47 @@ from open_prime_hunters_rando.entities.entity_type import Entity, EntityFile, En
 from open_prime_hunters_rando.level_data import get_entity_file
 
 
-def add_new_entities(rom: NintendoDSRom) -> None:
-    file_name, parsed_file = get_entity_file(rom, "Alinos", "High Ground")
-    template_entity = EntityFile.get_entity(parsed_file, 37).data
-    template_entity.active = False
+class NewTrigger(NamedTuple):
+    area_name: str
+    room_name: str
+    active_layers: list[int]
+    artifact_id: int
+    artifact_messages: list[tuple[int, Message]]
+    node_name: str = "rmMain"
 
-    _high_ground(rom, template_entity)
-    _elder_passage(rom, template_entity)
-    _sic_transit(rom, template_entity)
-    _subterranean(rom, template_entity)
+
+new_triggers = [
+    NewTrigger(
+        "Alinos",
+        "High Ground",
+        [0, 1, 2, 3],
+        24,
+        [(17, Message.UNLOCK), (56, Message.UNLOCK_CONNECTORS), (94, Message.TRIGGER)],
+    ),
+    NewTrigger(
+        "Alinos",
+        "Elder Passage",
+        [0, 1, 2, 3],
+        4,
+        [(40, Message.TRIGGER), (1, Message.UNLOCK)],
+        "rmHallB",
+    ),
+    NewTrigger(
+        "Arcterra",
+        "Sic Transit",
+        [0, 1, 2],
+        35,
+        [(6, Message.UNLOCK), (9, Message.UNLOCK)],
+    ),
+    NewTrigger(
+        "Arcterra",
+        "Subterranean",
+        [0, 1, 2],
+        18,
+        [(56, Message.ACTIVATE), (58, Message.UNLOCK)],
+        "rmSubE",
+    ),
+]
 
 
 def _set_new_entity_id(parsed_file: EntityFile, template_entity: Entity) -> int:
@@ -24,134 +57,66 @@ def _set_new_entity_id(parsed_file: EntityFile, template_entity: Entity) -> int:
     return max_entity_id
 
 
-def _high_ground(rom: NintendoDSRom, template_entity: Entity) -> None:
-    file_name, parsed_file = get_entity_file(rom, "Alinos", "High Ground")
-    artifact_entity = EntityFile.get_entity(parsed_file, 24)
+def _add_triggers(rom: NintendoDSRom, new_trigger: NewTrigger) -> None:
+    template_file_name, template_parsed_file = get_entity_file(rom, "Alinos", "High Ground")
+    template_trigger = EntityFile.get_entity(template_parsed_file, 37).data
+    template_trigger.active = False
 
-    # Only add new triggers if the entity is an ItemSpawn
-    if artifact_entity.entity_type == EntityType.ARTIFACT:
-        return
-
-    # Get the first new trigger
-    new_trigger_a = EntityFile.get_entity(parsed_file, _set_new_entity_id(parsed_file, template_entity))
-
-    # Update the ItemSpawn to activate the first trigger
-    artifact_entity.data.notify_entity_id = new_trigger_a.entity_id
-    artifact_entity.data.collected_message = Message.ACTIVATE
-
-    # Send the first message from the Artifact
-    new_trigger_a.data.parent_id = 17
-    new_trigger_a.data.parent_message = Message.UNLOCK
-
-    # Get the second new trigger
-    new_trigger_b = EntityFile.get_entity(parsed_file, _set_new_entity_id(parsed_file, copy.deepcopy(template_entity)))
-
-    # Activate the second trigger
-    new_trigger_a.data.child_id = new_trigger_b.entity_id
-    new_trigger_a.data.child_message = Message.ACTIVATE
-
-    for trigger in [new_trigger_a, new_trigger_b]:
-        trigger.node_name = "rmMain"
-        trigger.data.header.position = artifact_entity.data.header.position
-
-        for layer_state in range(4, 16):
-            trigger.set_layer_state(layer_state, False)
-
-    # Send the second message from the Artifact
-    new_trigger_b.data.parent_id = 56
-    new_trigger_b.data.parent_message = Message.UNLOCK_CONNECTORS
-    # Send the third message from the Artifact
-    new_trigger_b.data.child_id = 94
-    new_trigger_b.data.child_message = Message.TRIGGER
-
-    rom.setFileByName(file_name, EntityFile.build(parsed_file))
-
-
-def _elder_passage(rom: NintendoDSRom, template_entity: Entity) -> None:
-    file_name, parsed_file = get_entity_file(rom, "Alinos", "Elder Passage")
-    artifact_entity = EntityFile.get_entity(parsed_file, 4)
+    file_name, parsed_file = get_entity_file(rom, new_trigger.area_name, new_trigger.room_name)
+    artifact_entity = EntityFile.get_entity(parsed_file, new_trigger.artifact_id)
 
     # Only add new triggers if the entity is an ItemSpawn
     if artifact_entity.entity_type == EntityType.ARTIFACT:
         return
 
     # Get the new trigger
-    new_trigger = EntityFile.get_entity(parsed_file, _set_new_entity_id(parsed_file, template_entity))
-    new_trigger.node_name = "rmHallB"
-    new_trigger.data.header.position = artifact_entity.data.header.position
+    trigger_entity = EntityFile.get_entity(parsed_file, _set_new_entity_id(parsed_file, template_trigger))
+    trigger_entity.node_name = new_trigger.node_name
+    trigger_entity.data.header.position = artifact_entity.data.header.position
 
-    for layer_state in range(4, 16):
-        new_trigger.set_layer_state(layer_state, False)
+    for layer in new_trigger.active_layers:
+        trigger_entity.set_layer_state(layer, True)
 
     # Update the ItemSpawn to activate the trigger
-    artifact_entity.data.notify_entity_id = new_trigger.entity_id
+    artifact_entity.data.notify_entity_id = trigger_entity.entity_id
     artifact_entity.data.collected_message = Message.ACTIVATE
 
     # Send the first message from the Artifact
-    new_trigger.data.parent_id = 40
-    new_trigger.data.parent_message = Message.TRIGGER
-    # Send the second message from the Artifact
-    new_trigger.data.child_id = 1
-    new_trigger.data.child_message = Message.UNLOCK
+    trigger_entity.data.parent_id = new_trigger.artifact_messages[0][0]
+    trigger_entity.data.parent_message = new_trigger.artifact_messages[0][1]
+
+    num_messages = len(new_trigger.artifact_messages)
+
+    if num_messages == 2:
+        # Send the second message from the Artifact
+        trigger_entity.data.child_id = new_trigger.artifact_messages[1][0]
+        trigger_entity.data.child_message = new_trigger.artifact_messages[1][1]
+    elif num_messages == 3:
+        # Create a second trigger
+        trigger_entity_b = EntityFile.get_entity(
+            parsed_file, _set_new_entity_id(parsed_file, copy.deepcopy(template_trigger))
+        )
+
+        # Activate the second trigger
+        trigger_entity.data.child_id = trigger_entity_b.entity_id
+        trigger_entity.data.child_message = Message.ACTIVATE
+
+        trigger_entity_b.node_name = new_trigger.node_name
+
+        for layer in new_trigger.active_layers:
+            trigger_entity_b.set_layer_state(layer, True)
+
+        # Send the second message from the Artifact
+        trigger_entity_b.data.parent_id = new_trigger.artifact_messages[1][0]
+        trigger_entity_b.data.parent_message = new_trigger.artifact_messages[1][1]
+
+        # Send the third message from the Artifact
+        trigger_entity_b.data.child_id = new_trigger.artifact_messages[2][0]
+        trigger_entity_b.data.child_message = new_trigger.artifact_messages[2][1]
 
     rom.setFileByName(file_name, EntityFile.build(parsed_file))
 
 
-def _sic_transit(rom: NintendoDSRom, template_entity: Entity) -> None:
-    file_name, parsed_file = get_entity_file(rom, "Arcterra", "Sic Transit")
-    artifact_entity = EntityFile.get_entity(parsed_file, 35)
-
-    # Only add new triggers if the entity is an ItemSpawn
-    if artifact_entity.entity_type == EntityType.ARTIFACT:
-        return
-
-    # Get the new trigger
-    new_trigger = EntityFile.get_entity(parsed_file, _set_new_entity_id(parsed_file, template_entity))
-    new_trigger.node_name = "rmMain"
-    new_trigger.data.header.position = artifact_entity.data.header.position
-
-    for layer_state in range(3, 16):
-        new_trigger.set_layer_state(layer_state, False)
-
-    # Update the ItemSpawn to activate the trigger
-    artifact_entity.data.notify_entity_id = new_trigger.entity_id
-    artifact_entity.data.collected_message = Message.ACTIVATE
-
-    # Send the first message from the Artifact
-    new_trigger.data.parent_id = 6
-    new_trigger.data.parent_message = Message.UNLOCK
-    # Send the second message from the Artifact
-    new_trigger.data.child_id = 9
-    new_trigger.data.child_message = Message.UNLOCK
-
-    rom.setFileByName(file_name, EntityFile.build(parsed_file))
-
-
-def _subterranean(rom: NintendoDSRom, template_entity: Entity) -> None:
-    file_name, parsed_file = get_entity_file(rom, "Arcterra", "Subterranean")
-    artifact_entity = EntityFile.get_entity(parsed_file, 18)
-
-    # Only add new triggers if the entity is an ItemSpawn
-    if artifact_entity.entity_type == EntityType.ARTIFACT:
-        return
-
-    # Get the new trigger
-    new_trigger = EntityFile.get_entity(parsed_file, _set_new_entity_id(parsed_file, template_entity))
-    new_trigger.node_name = "rmSubE"
-    new_trigger.data.header.position = artifact_entity.data.header.position
-
-    for layer_state in range(3, 16):
-        new_trigger.set_layer_state(layer_state, False)
-
-    # Update the ItemSpawn to activate the trigger
-    artifact_entity.data.notify_entity_id = new_trigger.entity_id
-    artifact_entity.data.collected_message = Message.ACTIVATE
-
-    # Send the first message from the Artifact
-    new_trigger.data.parent_id = 56
-    new_trigger.data.parent_message = Message.ACTIVATE
-    # Send the second message from the Artifact
-    new_trigger.data.child_id = 58
-    new_trigger.data.child_message = Message.UNLOCK
-
-    rom.setFileByName(file_name, EntityFile.build(parsed_file))
+def add_new_entities(rom: NintendoDSRom) -> None:
+    for new_trigger in new_triggers:
+        _add_triggers(rom, new_trigger)
