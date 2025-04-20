@@ -987,16 +987,18 @@ class Entity:
         self._raw = raw
 
     @classmethod
-    def create(cls, data: Container, node_name: str = "", active_layers: Collection[int] = tuple(range(16))) -> Self:
+    def create(
+        cls, data: Container, node_name: str = "rmMain", active_layers: Collection[int] = tuple(range(16))
+    ) -> Self:
         layer_state = [False] * 16
         for layer in active_layers:
-            layer_state[layer] = True
+            layer_state[layer] = False
 
         return cls(
             Container(
                 {
                     "node_name": node_name,
-                    "layer_state": layer_state,
+                    "layer_state": ListContainer(layer_state),
                     "data": data,
                 }
             )
@@ -1135,3 +1137,10 @@ class EntityFile:
         else:
             raise ValueError(f"No entity with ID {entity_id} found!")
         return entity
+
+    def get_max_entity_id(self) -> int:
+        entity_id = 0
+        for entity in self.entities:
+            if entity.entity_id > entity_id:
+                entity_id = entity.entity_id
+        return entity_id + 1
