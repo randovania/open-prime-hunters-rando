@@ -1,6 +1,6 @@
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.entities.entity_type import EntityFile, Message
+from open_prime_hunters_rando.entities.entity_type import DoorType, EntityFile, Message
 from open_prime_hunters_rando.level_data import get_entity_file
 
 
@@ -11,6 +11,7 @@ def static_patches(rom: NintendoDSRom) -> None:
     _remove_elder_passage_top_lock_and_force_field(rom)
     _disable_alimbic_garden_cutscene(rom)
     _disable_fault_line_imperialist_cutscene(rom)
+    _patch_sic_transit_inner_door(rom)
 
 
 def _disable_boss_force_fields(rom: NintendoDSRom) -> None:
@@ -94,5 +95,13 @@ def _disable_fault_line_imperialist_cutscene(rom: NintendoDSRom) -> None:
     imperialist = EntityFile.get_entity(parsed_file, 46)
     imperialist.data.notify_entity_id = 0
     imperialist.data.collected_message = Message.NONE
+
+    rom.setFileByName(file_name, EntityFile.build(parsed_file))
+
+
+def _patch_sic_transit_inner_door(rom: NintendoDSRom) -> None:
+    file_name, parsed_file = get_entity_file(rom, "Arcterra", "Sic Transit")
+    door = EntityFile.get_entity(parsed_file, 24)
+    door.data.door_type = DoorType.THIN
 
     rom.setFileByName(file_name, EntityFile.build(parsed_file))
