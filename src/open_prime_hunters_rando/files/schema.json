@@ -170,6 +170,37 @@
                         "weapon_type"
                     ],
                     "default": []
+                },
+                "portals": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "entity_id": {
+                                "type": "integer",
+                                "description": "The id of the entity."
+                            },
+                            "load_index": {
+                                "type": "integer",
+                                "minimum": 0
+                            },
+                            "target_index": {
+                                "type": "integer",
+                                "minimum": 0
+                            },
+                            "entity_filename": {
+                                "type": "string",
+                                "description": "The entity file of the portal's destination."
+                            }
+                        }
+                    },
+                    "required": [
+                        "entity_id",
+                        "load_index",
+                        "target_index",
+                        "entity_filename"
+                    ],
+                    "default": []
                 }
             }
         }
