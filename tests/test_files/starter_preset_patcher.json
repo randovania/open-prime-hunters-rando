@@ -60,7 +60,6 @@
                     "portals": [
                         {
                             "entity_id": 1,
-                            "load_index": 60,
                             "target_index": 60,
                             "entity_filename": "unit4_RM1_Ent.b"
                         }
@@ -474,7 +473,6 @@
                     "portals": [
                         {
                             "entity_id": 162,
-                            "load_index": 31,
                             "target_index": 32,
                             "entity_filename": "unit2_C6_Ent.bi"
                         }
