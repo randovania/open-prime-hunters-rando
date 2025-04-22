@@ -1,7 +1,7 @@
 from open_prime_hunters_rando.entities.entity_type import EntityFile
 
 
-def patch_teleporters(parsed_file: EntityFile, portals: list, room_name: str) -> None:
+def patch_portals(parsed_file: EntityFile, portals: list, room_name: str) -> None:
     for portal in portals:
         entity_id = portal["entity_id"]
         filename: str = portal["entity_filename"]
