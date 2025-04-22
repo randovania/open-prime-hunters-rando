@@ -56,7 +56,14 @@
                 },
                 "Tetra Vista": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": [
+                        {
+                            "entity_id": 1,
+                            "target_index": 60,
+                            "entity_filename": "unit4_RM1_Ent.b"
+                        }
+                    ]
                 },
                 "New Arrival Registration": {
                     "pickups": [
@@ -462,7 +469,14 @@
                             "artifact_id": 0
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": [
+                        {
+                            "entity_id": 162,
+                            "target_index": 32,
+                            "entity_filename": "unit2_C6_Ent.bi"
+                        }
+                    ]
                 },
                 "Subterranean": {
                     "pickups": [
