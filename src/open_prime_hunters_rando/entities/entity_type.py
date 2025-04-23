@@ -1143,4 +1143,4 @@ class EntityFile:
         for entity in self.entities:
             if entity.entity_id > entity_id:
                 entity_id = entity.entity_id
-        return entity_id + 1
+        return entity_id

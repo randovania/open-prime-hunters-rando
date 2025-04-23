@@ -1,12 +1,12 @@
 from open_prime_hunters_rando.entities.entity_type import EntityFile
 
 
-def patch_portals(parsed_file: EntityFile, portals: list, room_name: str) -> None:
+def patch_portals(entity_file: EntityFile, portals: list, room_name: str) -> None:
     for portal in portals:
         entity_id = portal["entity_id"]
         filename: str = portal["entity_filename"]
 
-        entity = EntityFile.get_entity(parsed_file, entity_id)
+        entity = entity_file.get_entity(entity_id)
 
         # target_index is the load_index of the desination portal
         entity.data.target_index = portal["target_index"]

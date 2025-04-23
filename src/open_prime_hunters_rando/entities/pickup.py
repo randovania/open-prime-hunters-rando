@@ -8,7 +8,7 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
         entity_id = pickup["entity_id"]
         new_entity_type = EntityType(pickup["entity_type"])
 
-        entity = EntityFile.get_entity(entity_file, entity_id)
+        entity = entity_file.get_entity(entity_id)
         header = entity.data.header
 
         old_entity_data = entity.data
@@ -65,7 +65,6 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
                         "max_spawn_count": 1,
                         "spawn_interval": 0,
                         "spawn_delay": 0,
-                        # TODO: Handle sending messages to multiple entities where vanilla artifact did so
                         "notify_entity_id": old_entity_data.message1_target,
                         "collected_message": old_entity_data.message1,
                         "collected_message_param1": 0,
