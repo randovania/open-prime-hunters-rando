@@ -49,4 +49,4 @@ def _validate_starting_items(starting_items: dict) -> None:
 
     # Validate starting ammo
     if starting_items["ammo"] > 400:
-        raise ValueError(f"Starting ammo must be 400 or less! Got {starting_items['starting_ammo']['ammo']}")
+        raise ValueError(f"Starting ammo must be 400 or less! Got {starting_items['ammo']}")
