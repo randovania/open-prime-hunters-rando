@@ -1,7 +1,7 @@
 {
     "$schema": "../../src/open_prime_hunters_rando/files/schema.json",
     "starting_items": {
-        "weapons": "00100111",
+        "weapons": "00000101",
         "missiles": 0
     },
     "areas": {
