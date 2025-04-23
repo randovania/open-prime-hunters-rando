@@ -5,33 +5,30 @@
         "starting_items": {
             "type": "object",
             "properties": {
-                "weapons_string": {
+                "weapons": {
                     "type": "string",
                     "default": "00000101",
                     "description": "String of bits that determines what weapons to start with.\nLeft to Right: Shock Coil, Magmaul, Judicator, Imperialist, Battlehammer, Missile, Volt Driver, Power Beam"
                 },
-                "starting_ammo": {
-                    "type": "object",
-                    "propertyNames": {
-                        "type": "string",
-                        "enum": [
-                            "missiles",
-                            "energy",
-                            "ammo"
-                        ]
-                    },
-                    "default": {
-                        "missiles": 5,
-                        "energy": 100,
-                        "ammo": 40
-                    },
-                    "required": [
-                        "missiles"
-                    ]
+                "missiles": {
+                    "type": "integer",
+                    "default": 5,
+                    "description": "The number of missiles to start with."
+                },
+                "ammo": {
+                    "type": "integer",
+                    "default": 40,
+                    "description": "The amount of UA to start with."
+                },
+                "energy": {
+                    "type": "integer",
+                    "default": 100,
+                    "description": "The amount of energy to start with. In game, starting energy is this value minus 1."
                 }
             },
             "required": [
-                "weapons_string"
+                "weapons",
+                "missiles"
             ]
         },
         "areas": {
