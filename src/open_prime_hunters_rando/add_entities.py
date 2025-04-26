@@ -91,7 +91,7 @@ def _add_triggers(file_manager: FileManager, new_trigger: NewTrigger) -> None:
         trigger_entity.data.child_message = new_trigger.artifact_messages[1][1]
     elif num_messages == 3:
         # Create a second trigger
-        trigger_entity_b = entity_file.get_entity(_set_new_entity_id(entity_file, template_trigger))
+        trigger_entity_b = entity_file.get_entity(_set_new_entity_id(entity_file, copy.deepcopy(template_trigger)))
 
         # Activate the second trigger
         trigger_entity.data.child_id = trigger_entity_b.entity_id
