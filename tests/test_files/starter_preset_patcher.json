@@ -1,5 +1,6 @@
 {
     "$schema": "../../src/open_prime_hunters_rando/files/schema.json",
+    "configuration_id": "OPHRTEST",
     "starting_items": {
         "weapons": "00000101",
         "missiles": 0
