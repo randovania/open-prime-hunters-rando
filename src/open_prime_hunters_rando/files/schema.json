@@ -24,11 +24,17 @@
                     "type": "integer",
                     "default": 100,
                     "description": "The amount of energy to start with. In game, starting energy is this value minus 1."
+                },
+                "octoliths": {
+                    "type": "string",
+                    "default": "00000000",
+                    "description": "String of bits that determines what Octoliths to start with.\nLeft to Right: VDO 2-1, Arcterra 2-1, Celestial Archives 2-1, Alinos 2-1"
                 }
             },
             "required": [
                 "weapons",
-                "missiles"
+                "missiles",
+                "octoliths"
             ]
         },
         "areas": {

@@ -21,6 +21,9 @@ def validate_rom(rom: NintendoDSRom) -> dict:
         "starting_missiles": 0x0205C530,
         "unlock_planets": 0x0205C5DC,
         "starting_energy_ptr": 0x0205C720,
+        "starting_octoliths": 0x0205C4E8,
+        "reordered_instructions": 0x0205C53C,
+        "weapon_slots": 0x0205C500,
     }
     match id_code:
         case Revision.AMHE.value:
