@@ -15,10 +15,13 @@ def validate_rom(rom: NintendoDSRom) -> dict:
     id_code = rom.idCode
     # Use US addresses as a base, then add the offset difference based on region
     init_function: dict = {
+        "starting_octoliths": 0x0205C4E8,
+        "starting_weapons": 0x0205C4F0,
+        "weapon_slots": 0x0205C500,
         "starting_ammo": 0x0205C514,
         "starting_energy": 0x0205C518,
-        "starting_weapons": 0x0205C4F0,
         "starting_missiles": 0x0205C530,
+        "reordered_instructions": 0x0205C53C,
         "unlock_planets": 0x0205C5DC,
         "starting_energy_ptr": 0x0205C720,
     }
