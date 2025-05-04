@@ -2,8 +2,7 @@
     "$schema": "../../src/open_prime_hunters_rando/files/schema.json",
     "starting_items": {
         "weapons": "00000101",
-        "missiles": 0,
-        "octoliths": "00000000"
+        "missiles": 0
     },
     "areas": {
         "Celestial Archives": {
