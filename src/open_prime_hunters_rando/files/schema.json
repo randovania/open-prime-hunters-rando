@@ -8,7 +8,7 @@
                 "weapons": {
                     "type": "string",
                     "default": "00000101",
-                    "description": "String of bits that determines what weapons to start with.\nLeft to Right: Shock Coil, Magmaul, Judicator, Imperialist, Battlehammer, Missile, Volt Driver, Power Beam"
+                    "description": "Bitfield that determines what weapons to start with.\nLeft to Right: Shock Coil, Magmaul, Judicator, Imperialist, Battlehammer, Missile, Volt Driver, Power Beam"
                 },
                 "missiles": {
                     "type": "integer",
@@ -28,7 +28,7 @@
                 "octoliths": {
                     "type": "string",
                     "default": "00000000",
-                    "description": "String of bits that determines what Octoliths to start with.\nLeft to Right: VDO 2-1, Arcterra 2-1, Celestial Archives 2-1, Alinos 2-1"
+                    "description": "Bitfield that determines what Octoliths to start with.\nLeft to Right: VDO 2-1, Arcterra 2-1, Celestial Archives 2-1, Alinos 2-1"
                 }
             },
             "required": [

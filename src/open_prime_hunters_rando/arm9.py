@@ -25,15 +25,15 @@ def patch_arm9(rom: NintendoDSRom, starting_items: dict) -> None:
     )
 
     ARM9_PATCHES = {
+        init["starting_octoliths"]: starting_octoliths,  # Starting Octoliths by changing R0
+        init["starting_weapons"]: int(starting_items["weapons"], 2).to_bytes(),  # Starting weapons
+        init["weapon_slots"]: bytes.fromhex("00F020E3"),  # NOP to not delete the weapons when changing Octoliths
         init["starting_ammo"]: bytes.fromhex(starting_ammo),  # Starting UA Ammo
         init["starting_energy"]: bytes.fromhex("00F020E3"),  # NOP (Normally loads value of etank (100))
-        init["starting_weapons"]: int(starting_items["weapons"], 2).to_bytes(),  # Starting weapons
         init["starting_missiles"]: starting_missiles,  # Starting Missile ammo
+        init["reordered_instructions"]: reordered_instructions,  # Changing R0 affects later instructions, so reorder
         init["unlock_planets"]: bytes.fromhex("FF"),  # Unlock all planets from the start (excluding Oubliette)
         init["starting_energy_ptr"]: starting_energy,  # Starting energy - 1
-        init["starting_octoliths"]: starting_octoliths,  # Starting Octoliths by changing R0
-        init["reordered_instructions"]: reordered_instructions,  # Changing R0 affects later instructions, so reorder
-        init["weapon_slots"]: bytes.fromhex("00F020E3"),  # NOP to not delete the weapons when changing Octoliths
     }
 
     # Decompress arm9.bin for editing
@@ -64,9 +64,7 @@ def _validate_starting_items(starting_items: dict) -> None:
 
         for bitflag in starting_items[bitfield]:
             if bitflag not in ["0", "1"]:
-                raise ValueError(
-                    f"Invalid starting {bitfield} bitfield. String must only contain 0 or 1, got {bitflag}!"
-                )
+                raise ValueError(f"Invalid starting {bitfield} bitfield. Must only contain 0 or 1, got {bitflag}!")
 
     # Validate starting ammo
     if starting_items["ammo"] > 400:
