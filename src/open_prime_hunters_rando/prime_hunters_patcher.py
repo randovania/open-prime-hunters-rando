@@ -59,6 +59,9 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict) -> None:
     # Add new entities
     add_new_entities(file_manager)
 
+    # Patch Hunter Spawns
+    patch_hunters(file_manager, configuration)
+
     # Save all changes to a new rom
     file_manager.save_to_rom(output_path)
 
