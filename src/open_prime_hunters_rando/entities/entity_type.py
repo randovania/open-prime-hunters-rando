@@ -1143,4 +1143,10 @@ class EntityFile:
         for entity in self.entities:
             if entity.entity_id > entity_id:
                 entity_id = entity.entity_id
-        return entity_id + 1
+        return entity_id
+
+    def append_entity(self, template: Entity) -> int:
+        new_entity_id = self.get_max_entity_id() + 1
+        template.header.entity_id = new_entity_id
+        self.entities.append(Entity.create(template))
+        return new_entity_id

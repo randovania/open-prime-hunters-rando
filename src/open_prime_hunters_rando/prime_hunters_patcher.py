@@ -9,6 +9,7 @@ from open_prime_hunters_rando.add_entities import add_new_entities
 from open_prime_hunters_rando.arm9 import patch_arm9
 from open_prime_hunters_rando.entities.entity_patching import patch_entities
 from open_prime_hunters_rando.escape_sequence_patches import patch_escape_sequences
+from open_prime_hunters_rando.file_manager import FileManager
 from open_prime_hunters_rando.static_patches import static_patches
 from open_prime_hunters_rando.validator_with_default import DefaultValidatingDraft7Validator
 
@@ -39,22 +40,25 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict) -> None:
     # Load rom file as input
     rom = DebugNintendoDsRom.fromFile(input_path)
 
+    # Initialize the file manager
+    file_manager = FileManager(rom)
+
     # Modify main code file arm9.bin
     patch_arm9(rom, configuration["starting_items"])
 
     # Static patches to rooms
-    static_patches(rom)
+    static_patches(file_manager)
 
     # Patch escape sequences
-    patch_escape_sequences(rom)
+    patch_escape_sequences(file_manager)
 
     # Patch entities
-    patch_entities(rom, configuration["areas"])
+    patch_entities(file_manager, configuration["areas"])
 
     # Add new entities
-    add_new_entities(rom)
+    add_new_entities(file_manager)
 
-    # Save changes to a new rom
-    rom.saveToFile(output_path)
+    # Save all changes to a new rom
+    file_manager.save_to_rom(output_path)
 
     logging.info("Done")

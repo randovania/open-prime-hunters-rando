@@ -1,23 +1,20 @@
-from ndspy.rom import NintendoDSRom
-
-from open_prime_hunters_rando.entities.entity_type import EntityFile
-from open_prime_hunters_rando.level_data import get_entity_file
+from open_prime_hunters_rando.file_manager import FileManager
 
 
-def patch_escape_sequences(rom: NintendoDSRom) -> None:
-    _disable_escape_triggers(rom)
-    _remove_disabled_portals(rom)
-    _patch_specific_rooms(rom)
-    _patch_both_escape_layers(rom)
+def patch_escape_sequences(file_manager: FileManager) -> None:
+    _disable_escape_triggers(file_manager)
+    _remove_disabled_portals(file_manager)
+    _patch_specific_rooms(file_manager)
+    _patch_both_escape_layers(file_manager)
 
 
-def _disable_escape_triggers(rom: NintendoDSRom) -> None:
+def _disable_escape_triggers(file_manager: FileManager) -> None:
     areas = ["Alinos", "Celestial Archives", "Vesper Defense Outpost", "Arcterra"]
     stronghold_voids = ["A", "B"]
     escape_triggers = []
     for area in areas:
         for stronghold_void in stronghold_voids:
-            file_name, parsed_file = get_entity_file(rom, area, f"Stronghold Void {stronghold_void}")
+            entity_file = file_manager.get_entity_file(area, f"Stronghold Void {stronghold_void}")
             # The Show_Prompt trigger has a different id in three rooms
             if area == "Celestial Archives" and stronghold_void == "A":
                 escape_triggers = [5, 8]
@@ -27,13 +24,11 @@ def _disable_escape_triggers(rom: NintendoDSRom) -> None:
                 escape_triggers = [5, 16]
 
             for escape_trigger in escape_triggers:
-                entity = EntityFile.get_entity(parsed_file, escape_trigger)
+                entity = entity_file.get_entity(escape_trigger)
                 entity.set_layer_state(1, False)
 
-            rom.setFileByName(file_name, EntityFile.build(parsed_file))
 
-
-def _remove_disabled_portals(rom: NintendoDSRom) -> None:
+def _remove_disabled_portals(file_manager: FileManager) -> None:
     disabled_portal_entities = {
         "Alinos": {
             "Elder Passage": [21, 24],
@@ -54,129 +49,109 @@ def _remove_disabled_portals(rom: NintendoDSRom) -> None:
     }
     for area_name, room_names in disabled_portal_entities.items():
         for room_name, portal_entities in room_names.items():
-            file_name, parsed_file = get_entity_file(rom, area_name, room_name)
+            entity_file = file_manager.get_entity_file(area_name, room_name)
             for portal_entity in portal_entities:
-                entity = EntityFile.get_entity(parsed_file, portal_entity)
+                entity = entity_file.get_entity(portal_entity)
                 entity.set_layer_state(1, False)
 
-            rom.setFileByName(file_name, EntityFile.build(parsed_file))
 
-
-def _patch_specific_rooms(rom: NintendoDSRom) -> None:
+def _patch_specific_rooms(file_manager: FileManager) -> None:
     # High Ground
-    file_name, parsed_file = get_entity_file(rom, "Alinos", "High Ground")
+    entity_file = file_manager.get_entity_file("Alinos", "High Ground")
 
-    first_pass_bottom_door = EntityFile.get_entity(parsed_file, 15)
+    first_pass_bottom_door = entity_file.get_entity(15)
     first_pass_bottom_door.set_layer_state(3, True)
 
     second_pass_bottom_doors = [56, 72]
     for door in second_pass_bottom_doors:
-        entity = EntityFile.get_entity(parsed_file, door)
+        entity = entity_file.get_entity(door)
         for layer in range(1, 4):
             entity.set_layer_state(layer, False)
 
     force_fields = [74, 77]
     for force_field in force_fields:
-        entity = EntityFile.get_entity(parsed_file, force_field)
+        entity = entity_file.get_entity(force_field)
         entity.set_layer_state(3, True)
 
     portals = [57, 58]
     for portal in portals:
-        entity = EntityFile.get_entity(parsed_file, portal)
+        entity = entity_file.get_entity(portal)
         entity.set_layer_state(3, True)
 
-    rom.setFileByName(file_name, EntityFile.build(parsed_file))
-
     # Elder Passage
-    file_name, parsed_file = get_entity_file(rom, "Alinos", "Elder Passage")
+    entity_file = file_manager.get_entity_file("Alinos", "Elder Passage")
 
     second_pass_doors = [11, 18]
     for door in second_pass_doors:
-        entity = EntityFile.get_entity(parsed_file, door)
+        entity = entity_file.get_entity(door)
         for layer in range(1, 3):
             entity.set_layer_state(layer, False)
 
-    rom.setFileByName(file_name, EntityFile.build(parsed_file))
-
     # Alinos Perch
-    file_name, parsed_file = get_entity_file(rom, "Alinos", "Alinos Perch")
+    entity_file = file_manager.get_entity_file("Alinos", "Alinos Perch")
 
-    second_pass_door = EntityFile.get_entity(parsed_file, 5)
+    second_pass_door = entity_file.get_entity(5)
     second_pass_door.set_layer_state(1, False)
     second_pass_door.set_layer_state(2, False)
-
-    rom.setFileByName(file_name, EntityFile.build(parsed_file))
 
     # Data Shrine 01
-    file_name, parsed_file = get_entity_file(rom, "Celestial Archives", "Data Shrine 01")
+    entity_file = file_manager.get_entity_file("Celestial Archives", "Data Shrine 01")
 
-    second_pass_door = EntityFile.get_entity(parsed_file, 37)
+    second_pass_door = entity_file.get_entity(37)
     second_pass_door.set_layer_state(1, False)
     second_pass_door.set_layer_state(2, False)
 
-    rom.setFileByName(file_name, EntityFile.build(parsed_file))
-
     # Frost Labyrinth
-    file_name, parsed_file = get_entity_file(rom, "Arcterra", "Frost Labyrinth")
+    entity_file = file_manager.get_entity_file("Arcterra", "Frost Labyrinth")
 
-    force_field = EntityFile.get_entity(parsed_file, 5)
+    force_field = entity_file.get_entity(5)
     second_pass_door.set_layer_state(0, False)
 
-    rom.setFileByName(file_name, EntityFile.build(parsed_file))
-
     # Arcterra Gateway
-    file_name, parsed_file = get_entity_file(rom, "Arcterra", "Arcterra Gateway")
+    entity_file = file_manager.get_entity_file("Arcterra", "Arcterra Gateway")
 
     # Landing camera
-    camera_sequence = EntityFile.get_entity(parsed_file, 36)
+    camera_sequence = entity_file.get_entity(36)
     camera_sequence.set_layer_state(1, True)
     camera_sequence.set_layer_state(2, True)
 
     # Teleporter triggers
     trigger_volumes = [5, 39]
     for trigger_volume in trigger_volumes:
-        entity = EntityFile.get_entity(parsed_file, trigger_volume)
+        entity = entity_file.get_entity(trigger_volume)
         entity.set_layer_state(1, True)
 
-    rom.setFileByName(file_name, EntityFile.build(parsed_file))
-
     # Ice Hive
-    file_name, parsed_file = get_entity_file(rom, "Arcterra", "Ice Hive")
+    entity_file = file_manager.get_entity_file("Arcterra", "Ice Hive")
 
-    entrance_jump_pad = EntityFile.get_entity(parsed_file, 65)
+    entrance_jump_pad = entity_file.get_entity(65)
     entrance_jump_pad.set_layer_state(1, False)
     entrance_jump_pad.set_layer_state(2, False)
 
-    rom.setFileByName(file_name, EntityFile.build(parsed_file))
-
     # Sic Transit
-    file_name, parsed_file = get_entity_file(rom, "Arcterra", "Sic Transit")
+    entity_file = file_manager.get_entity_file("Arcterra", "Sic Transit")
 
-    first_pass_inner_door = EntityFile.get_entity(parsed_file, 24)
+    first_pass_inner_door = entity_file.get_entity(24)
     first_pass_inner_door.set_layer_state(1, True)
     first_pass_inner_door.set_layer_state(2, True)
 
-    second_pass_inner_door = EntityFile.get_entity(parsed_file, 11)
+    second_pass_inner_door = entity_file.get_entity(11)
     second_pass_inner_door.set_layer_state(1, False)
     second_pass_inner_door.set_layer_state(2, False)
 
-    artifact = EntityFile.get_entity(parsed_file, 35)
+    artifact = entity_file.get_entity(35)
     artifact.set_layer_state(1, True)
     artifact.set_layer_state(2, True)
 
-    rom.setFileByName(file_name, EntityFile.build(parsed_file))
-
     # Fault Line
-    file_name, parsed_file = get_entity_file(rom, "Arcterra", "Fault Line")
+    entity_file = file_manager.get_entity_file("Arcterra", "Fault Line")
 
-    knocked_down_pillar = EntityFile.get_entity(parsed_file, 13)
+    knocked_down_pillar = entity_file.get_entity(13)
     knocked_down_pillar.set_layer_state(1, False)
     knocked_down_pillar.set_layer_state(2, False)
 
-    rom.setFileByName(file_name, EntityFile.build(parsed_file))
 
-
-def _patch_both_escape_layers(rom: NintendoDSRom) -> None:
+def _patch_both_escape_layers(file_manager: FileManager) -> None:
     ROOMS_TO_PATCH = {
         "Alinos": {
             "Alinos Gateway": [],
@@ -221,8 +196,8 @@ def _patch_both_escape_layers(rom: NintendoDSRom) -> None:
     }
     for area_name, room_names in ROOMS_TO_PATCH.items():
         for room_name, skipped_entities in room_names.items():
-            file_name, parsed_file = get_entity_file(rom, area_name, room_name)
-            for entity in parsed_file.entities:
+            entity_file = file_manager.get_entity_file(area_name, room_name)
+            for entity in entity_file.entities:
                 # Skip modifying any entities in this list
                 if entity.entity_id in skipped_entities:
                     continue
@@ -230,5 +205,3 @@ def _patch_both_escape_layers(rom: NintendoDSRom) -> None:
                 elif entity.layer_state(0) is True:
                     entity.set_layer_state(1, True)
                     entity.set_layer_state(2, True)
-
-            rom.setFileByName(file_name, EntityFile.build(parsed_file))

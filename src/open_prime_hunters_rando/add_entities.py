@@ -1,10 +1,8 @@
 import copy
 from typing import NamedTuple
 
-from ndspy.rom import NintendoDSRom
-
-from open_prime_hunters_rando.entities.entity_type import Entity, EntityFile, EntityType, Message
-from open_prime_hunters_rando.level_data import get_entity_file
+from open_prime_hunters_rando.entities.entity_type import EntityType, Message
+from open_prime_hunters_rando.file_manager import FileManager
 
 
 class NewTrigger(NamedTuple):
@@ -50,27 +48,20 @@ new_triggers = [
 ]
 
 
-def _set_new_entity_id(parsed_file: EntityFile, template_entity: Entity) -> int:
-    max_entity_id = EntityFile.get_max_entity_id(parsed_file)
-    template_entity.header.entity_id = max_entity_id
-    parsed_file.entities.append(Entity.create(template_entity))
-    return max_entity_id
-
-
-def _add_triggers(rom: NintendoDSRom, new_trigger: NewTrigger) -> None:
-    template_file_name, template_parsed_file = get_entity_file(rom, "Alinos", "High Ground")
-    template_trigger = EntityFile.get_entity(template_parsed_file, 37).data
+def _add_triggers(file_manager: FileManager, new_trigger: NewTrigger) -> None:
+    template_file = file_manager.get_entity_file("Alinos", "High Ground")
+    template_trigger = copy.deepcopy(template_file.get_entity(37).data)
     template_trigger.active = False
 
-    file_name, parsed_file = get_entity_file(rom, new_trigger.area_name, new_trigger.room_name)
-    artifact_entity = EntityFile.get_entity(parsed_file, new_trigger.artifact_id)
+    entity_file = file_manager.get_entity_file(new_trigger.area_name, new_trigger.room_name)
+    artifact_entity = entity_file.get_entity(new_trigger.artifact_id)
 
     # Only add new triggers if the entity is an ItemSpawn
     if artifact_entity.entity_type == EntityType.ARTIFACT:
         return
 
     # Get the new trigger
-    trigger_entity = EntityFile.get_entity(parsed_file, _set_new_entity_id(parsed_file, template_trigger))
+    trigger_entity = entity_file.get_entity(entity_file.append_entity(template_trigger))
     trigger_entity.node_name = new_trigger.node_name
     trigger_entity.data.header.position = artifact_entity.data.header.position
 
@@ -93,9 +84,7 @@ def _add_triggers(rom: NintendoDSRom, new_trigger: NewTrigger) -> None:
         trigger_entity.data.child_message = new_trigger.artifact_messages[1][1]
     elif num_messages == 3:
         # Create a second trigger
-        trigger_entity_b = EntityFile.get_entity(
-            parsed_file, _set_new_entity_id(parsed_file, copy.deepcopy(template_trigger))
-        )
+        trigger_entity_b = entity_file.get_entity(entity_file.append_entity(copy.deepcopy(template_trigger)))
 
         # Activate the second trigger
         trigger_entity.data.child_id = trigger_entity_b.entity_id
@@ -114,9 +103,7 @@ def _add_triggers(rom: NintendoDSRom, new_trigger: NewTrigger) -> None:
         trigger_entity_b.data.child_id = new_trigger.artifact_messages[2][0]
         trigger_entity_b.data.child_message = new_trigger.artifact_messages[2][1]
 
-    rom.setFileByName(file_name, EntityFile.build(parsed_file))
 
-
-def add_new_entities(rom: NintendoDSRom) -> None:
+def add_new_entities(file_manager: FileManager) -> None:
     for new_trigger in new_triggers:
-        _add_triggers(rom, new_trigger)
+        _add_triggers(file_manager, new_trigger)
