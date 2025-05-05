@@ -38,3 +38,8 @@ class FileManager:
         export_path.mkdir(parents=True, exist_ok=True)
         with Path.open(export_path / f"{file_name[16:-4]}.txt", "w") as f:
             f.write(str(to_export))
+
+    def save_to_rom(self, rom: NintendoDSRom, output_path: Path) -> None:
+        # Save and build all parsed entity files
+        self.finalize_entity_files()
+        rom.saveToFile(output_path)

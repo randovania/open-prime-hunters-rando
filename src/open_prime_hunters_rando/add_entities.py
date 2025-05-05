@@ -1,7 +1,7 @@
 import copy
 from typing import NamedTuple
 
-from open_prime_hunters_rando.entities.entity_type import Entity, EntityFile, EntityType, Message
+from open_prime_hunters_rando.entities.entity_type import EntityType, Message
 from open_prime_hunters_rando.file_manager import FileManager
 
 
@@ -48,13 +48,6 @@ new_triggers = [
 ]
 
 
-def _set_new_entity_id(entity_file: EntityFile, template_entity: Entity) -> int:
-    new_entity_id = entity_file.get_max_entity_id() + 1
-    template_entity.header.entity_id = new_entity_id
-    entity_file.entities.append(Entity.create(template_entity))
-    return new_entity_id
-
-
 def _add_triggers(file_manager: FileManager, new_trigger: NewTrigger) -> None:
     template_file = file_manager.get_entity_file("Alinos", "High Ground")
     template_trigger = copy.deepcopy(template_file.get_entity(37).data)
@@ -68,7 +61,7 @@ def _add_triggers(file_manager: FileManager, new_trigger: NewTrigger) -> None:
         return
 
     # Get the new trigger
-    trigger_entity = entity_file.get_entity(_set_new_entity_id(entity_file, template_trigger))
+    trigger_entity = entity_file.get_entity(entity_file.append_entity(template_trigger))
     trigger_entity.node_name = new_trigger.node_name
     trigger_entity.data.header.position = artifact_entity.data.header.position
 
@@ -91,7 +84,7 @@ def _add_triggers(file_manager: FileManager, new_trigger: NewTrigger) -> None:
         trigger_entity.data.child_message = new_trigger.artifact_messages[1][1]
     elif num_messages == 3:
         # Create a second trigger
-        trigger_entity_b = entity_file.get_entity(_set_new_entity_id(entity_file, copy.deepcopy(template_trigger)))
+        trigger_entity_b = entity_file.get_entity(entity_file.append_entity(copy.deepcopy(template_trigger)))
 
         # Activate the second trigger
         trigger_entity.data.child_id = trigger_entity_b.entity_id

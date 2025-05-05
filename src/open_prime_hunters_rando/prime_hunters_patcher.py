@@ -58,10 +58,7 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict) -> None:
     # Add new entities
     add_new_entities(file_manager)
 
-    # Save and build all parsed entity files
-    file_manager.finalize_entity_files()
-
-    # Save changes to a new rom
-    rom.saveToFile(output_path)
+    # Save all changes to a new rom
+    file_manager.save_to_rom(rom, output_path)
 
     logging.info("Done")
