@@ -59,6 +59,6 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict) -> None:
     add_new_entities(file_manager)
 
     # Save all changes to a new rom
-    file_manager.save_to_rom(rom, output_path)
+    file_manager.save_to_rom(output_path)
 
     logging.info("Done")
