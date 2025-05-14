@@ -8,7 +8,10 @@ def patch_arm9(rom: NintendoDSRom, starting_items: dict) -> None:
     # Validate starting_items string
     _validate_starting_items(starting_items)
 
-    starting_energy = starting_items["energy"].to_bytes(4, "little")
+    etanks = starting_items["energy_tanks"]
+    tanks_to_energy = etanks * 100 if etanks > 0 else 100
+
+    starting_energy = tanks_to_energy.to_bytes(4, "little")
     starting_ammo = str(hex(starting_items["ammo"] * 10))[2:-1]
     starting_missiles = starting_items["missiles"].to_bytes()
     starting_octoliths = int(starting_items["octoliths"], 2).to_bytes(byteorder="little")

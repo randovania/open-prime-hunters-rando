@@ -24,10 +24,10 @@
                     "default": 40,
                     "description": "The amount of UA to start with."
                 },
-                "energy": {
+                "energy_tanks": {
                     "type": "integer",
-                    "default": 100,
-                    "description": "The amount of energy to start with. In game, starting energy is this value minus 1."
+                    "default": 0,
+                    "description": "The amount of energy tanks to start with."
                 },
                 "octoliths": {
                     "type": "string",
