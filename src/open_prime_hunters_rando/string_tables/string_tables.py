@@ -33,8 +33,8 @@ ScanIconConstruct = EnumAdapter(ScanIcon, Int16ul)
 
 raw_string_entry = [
     "string_id" / PaddedString(4, "ascii"),
-    "data_offset" / Int32ul,
-    "string_length" / Int16ul,
+    "_data_offset" / Int32ul,  # TODO: Rebuilding to account for custom length strings
+    "_string_length" / Int16ul,  # TODO: Rebuilding for custom length strings
     "scan_icon" / ScanIconConstruct,
 ]
 
@@ -42,7 +42,7 @@ RawStringEntry = Struct(*raw_string_entry)
 
 Strings = Struct(
     *raw_string_entry,
-    "string" / Pointer(this.data_offset, PaddedString(this.string_length, "ascii")),
+    "string" / Pointer(this._data_offset, PaddedString(this._string_length, "ascii")),
 )
 
 StringTableConstruct = Struct(
