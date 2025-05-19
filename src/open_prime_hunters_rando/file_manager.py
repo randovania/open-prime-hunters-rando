@@ -1,4 +1,5 @@
 import logging
+from enum import Enum
 from pathlib import Path
 
 import construct
@@ -8,6 +9,15 @@ from ndspy.rom import NintendoDSRom
 from open_prime_hunters_rando.entities.entity_type import EntityFile
 from open_prime_hunters_rando.level_data import get_data
 from open_prime_hunters_rando.string_tables.string_tables import StringTable
+
+
+class Language(Enum):
+    ENGLISH = "stringTables"
+    FRENCH = "stringTables_fr"
+    GERMAN = "stringTables_gr"
+    ITALIAN = "stringTables_it"
+    JAPANESE = "stringTables_jp"
+    SPANISH = "stringTables_sp"
 
 
 class FileManager:
@@ -46,8 +56,8 @@ class FileManager:
         with Path.open(export_path / f"{file_name[16:-4]}.txt", "w") as f:
             f.write(str(to_export))
 
-    def get_string_table(self, string_table: str) -> StringTable:
-        file_name = f"stringTables/{string_table}.bin"
+    def get_string_table(self, language: Language, string_table: str) -> StringTable:
+        file_name = f"{language.value}/{string_table}.bin"
         if file_name not in self.string_tables:
             self.string_tables[file_name] = StringTable.parse(self.rom.getFileByName(file_name))
         return self.string_tables[file_name]
