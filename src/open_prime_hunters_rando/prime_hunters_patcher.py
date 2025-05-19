@@ -12,6 +12,7 @@ from open_prime_hunters_rando.escape_sequence_patches import patch_escape_sequen
 from open_prime_hunters_rando.file_manager import FileManager
 from open_prime_hunters_rando.hunter_spawn_patches import patch_hunters
 from open_prime_hunters_rando.static_patches import static_patches
+from open_prime_hunters_rando.string_tables.hints import patch_hints
 from open_prime_hunters_rando.validator_with_default import DefaultValidatingDraft7Validator
 
 T = typing.TypeVar("T")
@@ -61,6 +62,9 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
 
     # Patch Hunter Spawns
     patch_hunters(file_manager, configuration)
+
+    # Patch hints
+    patch_hints(file_manager, configuration["hints"])
 
     # Save all changes to a new rom
     file_manager.save_to_rom(output_path)

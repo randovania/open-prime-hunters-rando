@@ -99,7 +99,28 @@
                 }
             },
             "default": {}
-        }
+        },
+        "hints": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "string_id": {
+                        "type": "string",
+                        "description": "The id of the string to modify."
+                    },
+                    "string": {
+                        "type": "string",
+                        "description": "The text of the string."
+                    }
+                }
+            },
+            "required": [
+                "string_id",
+                "string"
+            ]
+        },
+        "default": {}
     },
     "required": [
         "starting_items",
