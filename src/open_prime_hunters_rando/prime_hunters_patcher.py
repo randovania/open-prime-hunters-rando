@@ -45,7 +45,7 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict) -> None:
     file_manager = FileManager(rom)
 
     # Modify main code file arm9.bin
-    patch_arm9(rom, configuration["starting_items"])
+    patch_arm9(rom, configuration)
 
     # Static patches to rooms
     static_patches(file_manager)
