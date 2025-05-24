@@ -74,6 +74,26 @@
                     "type": "boolean",
                     "description": "Changes the hunter spawns to be a different hunter.",
                     "default": false
+                },
+                "unlock_planets": {
+                    "type": "object",
+                    "description": "Choose which planets are unlocked from the start.",
+                    "properties": {
+                        "Alinos": {
+                            "type": "boolean"
+                        },
+                        "Arcterra": {
+                            "type": "boolean"
+                        },
+                        "Vesper Defense Outpost": {
+                            "type": "boolean"
+                        }
+                    },
+                    "default": {
+                        "Alinos": true,
+                        "Arcterra": true,
+                        "Vesper Defense Outpost": true
+                    }
                 }
             },
             "default": {}

@@ -3,9 +3,10 @@ from ndspy.rom import NintendoDSRom
 from open_prime_hunters_rando.version_checking import validate_rom
 
 
-def patch_arm9(rom: NintendoDSRom, starting_items: dict) -> None:
+def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     init = validate_rom(rom)
-    # Validate starting_items string
+    # Validate starting items
+    starting_items = configuration["starting_items"]
     _validate_starting_items(starting_items)
 
     etanks = starting_items["energy_tanks"]
@@ -34,7 +35,7 @@ def patch_arm9(rom: NintendoDSRom, starting_items: dict) -> None:
         init["starting_energy"]: bytes.fromhex("00F020E3"),  # NOP (Normally loads value of etank (100))
         init["starting_missiles"]: starting_items["missiles"].to_bytes(),  # Starting Missiles
         init["reordered_instructions"]: reordered_instructions,  # Changing R0 affects later instructions, so reorder
-        init["unlock_planets"]: bytes.fromhex("FF"),  # Unlock all planets from the start (excluding Oubliette)
+        init["unlock_planets"]: _unlock_planets(configuration["game_patches"]),  # Unlock planets from the start
         init["starting_energy_ptr"]: starting_energy,  # Starting energy - 1
     }
 
@@ -75,3 +76,21 @@ def _validate_starting_items(starting_items: dict) -> None:
 
 def _bitfield_to_hex(bitfield: str) -> int:
     return int(bitfield, 2).to_bytes()
+
+
+def _unlock_planets(game_patches: dict) -> int:
+    unlock_planets = game_patches["unlock_planets"]
+    planets = [
+        unlock_planets["Arcterra"],  # Arcterra 1
+        unlock_planets["Arcterra"],  # Arcterra 2
+        unlock_planets["Vesper Defense Outpost"],  # Vesper Defense Outpost 1
+        unlock_planets["Vesper Defense Outpost"],  # Vesper Defense Outpost 2
+        True,  # Celestial Archives 1 (Always unlocked)
+        True,  # Celestial Archives 2 (Always unlocked)
+        unlock_planets["Alinos"],  # Alinos 1
+        unlock_planets["Alinos"],  # Alinos 2
+    ]
+
+    fmt = "{:d}" * 8
+    planets_to_unlock = fmt.format(*planets)
+    return _bitfield_to_hex(planets_to_unlock)
