@@ -431,3 +431,10 @@ def get_data(area_name: str, room_name: str) -> LevelData:
             return OUBLIETTE[room_name]
         case _:
             return CONNECTORS[room_name]
+
+
+ALL_ENTITY_FILES = {
+    entity_file
+    for level_data in (ALINOS | CELESTIAL_ARCHIVES | VESPER_DEFENSE_OUTPOST | ARCTERRA | OUBLIETTE).values()
+    if (entity_file := level_data.entity_file) is not None
+}
