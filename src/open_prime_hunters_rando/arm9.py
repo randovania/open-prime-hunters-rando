@@ -14,7 +14,7 @@ def patch_arm9(rom: NintendoDSRom, starting_items: dict) -> None:
     starting_energy = tanks_to_energy.to_bytes(4, "little")
     starting_ammo = str(hex(starting_items["ammo"] * 10))[2:-1]
     starting_missiles = starting_items["missiles"].to_bytes()
-    starting_octoliths = int(starting_items["octoliths"], 2).to_bytes(byteorder="little")
+    starting_octoliths = int(starting_items["octoliths"], 2).to_bytes()
     reordered_instructions = bytes.fromhex(
         "2400C4E5"  # strb r0, [r4, 24h]
         "2600C4E5"  # strb r0, [r4, 26h]
