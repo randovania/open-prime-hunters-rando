@@ -187,7 +187,7 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
         },
         "Arcterra": {
             "Drip Moat": [],
-            "Fault Line": [73],  # Disabled ship deck portal
+            "Fault Line": [],
             "Frost Labyrinth": [],
             "Ice Hive": [],
             "Sanctorus": [],
