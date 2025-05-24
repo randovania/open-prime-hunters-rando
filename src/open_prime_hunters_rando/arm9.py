@@ -10,11 +10,10 @@ def patch_arm9(rom: NintendoDSRom, starting_items: dict) -> None:
 
     etanks = starting_items["energy_tanks"]
     tanks_to_energy = etanks * 100 if etanks > 0 else 100
-
     starting_energy = tanks_to_energy.to_bytes(4, "little")
+
     starting_ammo = str(hex(starting_items["ammo"] * 10))[2:-1]
-    starting_missiles = starting_items["missiles"].to_bytes()
-    starting_octoliths = int(starting_items["octoliths"], 2).to_bytes()
+
     reordered_instructions = bytes.fromhex(
         "2400C4E5"  # strb r0, [r4, 24h]
         "2600C4E5"  # strb r0, [r4, 26h]
@@ -28,12 +27,12 @@ def patch_arm9(rom: NintendoDSRom, starting_items: dict) -> None:
     )
 
     ARM9_PATCHES = {
-        init["starting_octoliths"]: starting_octoliths,  # Starting Octoliths by changing R0
-        init["starting_weapons"]: int(starting_items["weapons"], 2).to_bytes(),  # Starting weapons
+        init["starting_octoliths"]: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths by changing R0
+        init["starting_weapons"]: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
         init["weapon_slots"]: bytes.fromhex("00F020E3"),  # NOP to not delete the weapons when changing Octoliths
-        init["starting_ammo"]: bytes.fromhex(starting_ammo),  # Starting UA Ammo
+        init["starting_ammo"]: bytes.fromhex(starting_ammo),  # Starting UA
         init["starting_energy"]: bytes.fromhex("00F020E3"),  # NOP (Normally loads value of etank (100))
-        init["starting_missiles"]: starting_missiles,  # Starting Missile ammo
+        init["starting_missiles"]: starting_items["missiles"].to_bytes(),  # Starting Missiles
         init["reordered_instructions"]: reordered_instructions,  # Changing R0 affects later instructions, so reorder
         init["unlock_planets"]: bytes.fromhex("FF"),  # Unlock all planets from the start (excluding Oubliette)
         init["starting_energy_ptr"]: starting_energy,  # Starting energy - 1
@@ -72,3 +71,7 @@ def _validate_starting_items(starting_items: dict) -> None:
     # Validate starting ammo
     if starting_items["ammo"] > 400:
         raise ValueError(f"Starting ammo must be 400 or less! Got {starting_items['ammo']}")
+
+
+def _bitfield_to_hex(bitfield: str) -> int:
+    return int(bitfield, 2).to_bytes()
