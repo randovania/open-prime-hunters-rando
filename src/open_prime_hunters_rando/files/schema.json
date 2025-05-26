@@ -67,6 +67,11 @@
         "game_patches": {
             "type": "object",
             "properties": {
+                "missiles_per_tank": {
+                    "type": "integer",
+                    "default": 10,
+                    "maximum": 25
+                },
                 "shuffle_hunter_colors": {
                     "type": "boolean",
                     "description": "Changes the colors of the hunters.",

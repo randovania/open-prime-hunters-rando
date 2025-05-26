@@ -28,6 +28,7 @@ def _update_revision_offsets(revision_offset: int = 0) -> dict:
     # Use US addresses as a base, then add the offset difference based on region
     # ROM addresses that are different across all revisions and pertain to the StorySaveData
     story_save_data_addresses: dict = {
+        "missiles_per_tank": 0x0201A350,
         "starting_octoliths": 0x0205C4E8,
         "starting_weapons": 0x0205C4F0,
         "weapon_slots": 0x0205C500,
