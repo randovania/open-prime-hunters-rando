@@ -4,9 +4,11 @@ from open_prime_hunters_rando.version_checking import validate_rom
 
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
-    init = validate_rom(rom)
-    # Validate starting items
+    arm9 = validate_rom(rom)
+
     starting_items = configuration["starting_items"]
+    game_patches = configuration["game_patches"]
+    # Validate starting items
     _validate_starting_items(starting_items)
 
     etanks = starting_items["energy_tanks"]
@@ -28,15 +30,16 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     )
 
     ARM9_PATCHES = {
-        init["starting_octoliths"]: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths by changing R0
-        init["starting_weapons"]: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
-        init["weapon_slots"]: bytes.fromhex("00F020E3"),  # NOP to not delete the weapons when changing Octoliths
-        init["starting_ammo"]: bytes.fromhex(starting_ammo),  # Starting UA
-        init["starting_energy"]: bytes.fromhex("00F020E3"),  # NOP (Normally loads value of etank (100))
-        init["starting_missiles"]: starting_items["missiles"].to_bytes(),  # Starting Missiles
-        init["reordered_instructions"]: reordered_instructions,  # Changing R0 affects later instructions, so reorder
-        init["unlock_planets"]: _unlock_planets(configuration["game_patches"]),  # Unlock planets from the start
-        init["starting_energy_ptr"]: starting_energy,  # Starting energy - 1
+        arm9["missiles_per_tank"]: (game_patches["missiles_per_tank"] * 10).to_bytes(),  # Missiles per tank
+        arm9["starting_octoliths"]: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths by changing R0
+        arm9["starting_weapons"]: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
+        arm9["weapon_slots"]: bytes.fromhex("00F020E3"),  # NOP to not delete the weapons when changing Octoliths
+        arm9["starting_ammo"]: bytes.fromhex(starting_ammo),  # Starting UA
+        arm9["starting_energy"]: bytes.fromhex("00F020E3"),  # NOP (Normally loads value of etank (100))
+        arm9["starting_missiles"]: starting_items["missiles"].to_bytes(),  # Starting Missiles
+        arm9["reordered_instructions"]: reordered_instructions,  # Changing R0 affects later instructions, so reorder
+        arm9["unlock_planets"]: _unlock_planets(game_patches["unlock_planets"]),  # Unlock planets from the start
+        arm9["starting_energy_ptr"]: starting_energy,  # Starting energy - 1,
     }
 
     # Decompress arm9.bin for editing
@@ -78,8 +81,7 @@ def _bitfield_to_hex(bitfield: str) -> int:
     return int(bitfield, 2).to_bytes()
 
 
-def _unlock_planets(game_patches: dict) -> int:
-    unlock_planets = game_patches["unlock_planets"]
+def _unlock_planets(unlock_planets: dict) -> int:
     planets = [
         unlock_planets["Arcterra"],  # Arcterra 1
         unlock_planets["Arcterra"],  # Arcterra 2
