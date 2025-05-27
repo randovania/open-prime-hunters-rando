@@ -38,6 +38,7 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
 
     ARM9_PATCHES = {
         arm9["missiles_per_tank"]: (game_patches["missiles_per_tank"] * 10).to_bytes(),  # Missiles per tank
+        arm9["ammo_per_tank"]: _create_asm_patch(f"add r2, r2, #{game_patches['ammo_per_tank'] * 10}"),  # UA per tank
         arm9["starting_octoliths"]: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths by changing R0
         arm9["starting_weapons"]: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
         arm9["weapon_slots"]: NOP,  # NOP to not delete the weapons when changing Octoliths
