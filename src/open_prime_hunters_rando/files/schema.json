@@ -72,6 +72,12 @@
                     "default": 10,
                     "maximum": 25
                 },
+                "ammo_per_tank": {
+                    "type": "integer",
+                    "default": 30,
+                    "maximum": 100,
+                    "multipleOf": 10
+                },
                 "shuffle_hunter_colors": {
                     "type": "boolean",
                     "description": "Changes the colors of the hunters.",
