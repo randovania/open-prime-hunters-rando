@@ -27,7 +27,9 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     reordered_instructions = read_asm_file("reordered_instructions.s")
 
     ARM9_PATCHES = {
-        validated_rom["missiles_per_tank"]: (game_patches["missiles_per_tank"] * 10).to_bytes(),  # Missiles per tank
+        validated_rom["missiles_per_tank"]: create_asm_patch(
+            f"add r2, r2, #{game_patches['missiles_per_tank'] * 10}"
+        ),  # Missiles per tank
         validated_rom["ammo_per_tank"]: create_asm_patch(
             f"add r2, r2, #{game_patches['ammo_per_tank'] * 10}"
         ),  # UA per tank
