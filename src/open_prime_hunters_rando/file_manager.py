@@ -72,9 +72,8 @@ class FileManager:
     def export_string_table(self, file_name: str, string_table: StringTable) -> None:
         to_export = Container(
             {
-                "entries": string_table._raw.entries,
-                "unk": string_table._raw.unk,
-                "strings": string_table._raw.strings,
+                "header": string_table._raw.header,
+                "strings": ListContainer([e._raw for e in string_table.strings]),
             }
         )
 
