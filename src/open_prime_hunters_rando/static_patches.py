@@ -10,6 +10,7 @@ def static_patches(file_manager: FileManager) -> None:
     _disable_alimbic_garden_cutscene(file_manager)
     _disable_fault_line_imperialist_cutscene(file_manager)
     _patch_sic_transit_inner_door(file_manager)
+    _lock_fault_line_magmaul_door(file_manager)
 
 
 def _disable_boss_force_fields(file_manager: FileManager) -> None:
@@ -89,3 +90,10 @@ def _patch_sic_transit_inner_door(file_manager: FileManager) -> None:
     entity_file = file_manager.get_entity_file("Arcterra", "Sic Transit")
     door = entity_file.get_entity(24)
     door.data.door_type = DoorType.THIN
+
+
+def _lock_fault_line_magmaul_door(file_manager: FileManager) -> None:
+    # The door from Sic Transit is a Magmaul door but not locked in game
+    entity_file = file_manager.get_entity_file("Arcterra", "Fault Line")
+    door = entity_file.get_entity(31)
+    door.data.locked = True
