@@ -1,3 +1,4 @@
+from open_prime_hunters_rando.entities.door import patch_doors
 from open_prime_hunters_rando.entities.force_field import patch_force_fields
 from open_prime_hunters_rando.entities.pickup import patch_pickups
 from open_prime_hunters_rando.entities.portal import patch_portals
@@ -15,3 +16,4 @@ def patch_entities(file_manager: FileManager, configuration: dict[str, dict]) ->
                 patch_pickups(entity_file, entity_groups["pickups"])
                 patch_force_fields(entity_file, entity_groups["force_fields"])
                 patch_portals(entity_file, entity_groups["portals"], room_name)
+                patch_doors(entity_file, entity_groups["doors"])
