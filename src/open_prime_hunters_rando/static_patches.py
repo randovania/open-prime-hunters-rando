@@ -11,6 +11,7 @@ def static_patches(file_manager: FileManager) -> None:
     _disable_fault_line_imperialist_cutscene(file_manager)
     _patch_sic_transit_inner_door(file_manager)
     _lock_fault_line_magmaul_door(file_manager)
+    _fix_incubation_vault_03_portal_spawn(file_manager)
 
 
 def _disable_boss_force_fields(file_manager: FileManager) -> None:
@@ -97,3 +98,10 @@ def _lock_fault_line_magmaul_door(file_manager: FileManager) -> None:
     entity_file = file_manager.get_entity_file("Arcterra", "Fault Line")
     door = entity_file.get_entity(31)
     door.data.locked = True
+
+
+def _fix_incubation_vault_03_portal_spawn(file_manager: FileManager) -> None:
+    # The portal from Docking Bay to Incubation Vault 03 spawned Samus at the room spawn and not at the portal
+    entity_file = file_manager.get_entity_file("Celestial Archives", "Docking Bay")
+    portal = entity_file.get_entity(7)
+    portal.data.target_index = 27
