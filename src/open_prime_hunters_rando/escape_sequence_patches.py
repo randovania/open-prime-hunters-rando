@@ -78,6 +78,11 @@ def _patch_specific_rooms(file_manager: FileManager) -> None:
         entity = entity_file.get_entity(portal)
         entity.set_layer_state(3, True)
 
+    hunters = [85, 95]
+    for hunter in hunters:
+        entity = entity_file.get_entity(hunter)
+        entity.set_layer_state(1, True)
+
     # Elder Passage
     entity_file = file_manager.get_entity_file("Alinos", "Elder Passage")
 
@@ -155,7 +160,7 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
     ROOMS_TO_PATCH = {
         "Alinos": {
             "Alinos Gateway": [],
-            "Alinos Perch": [0, 8, 10],  # layer 0 Guardian spawns
+            "Alinos Perch": [],
             "Council Chamber": [],
             "Crash Site": [],
             "Echo Hall": [],
