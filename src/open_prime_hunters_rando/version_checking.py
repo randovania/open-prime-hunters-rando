@@ -14,7 +14,8 @@ def validate_rom(rom: NintendoDSRom) -> dict:
     # Validate the rom
     id_code = rom.idCode
     # Use US addresses as a base, then add the offset difference based on region
-    init_function: dict = {
+    # arm9 addresses that are different across all revisions and pertain to the StorySaveData
+    ssd_addresses: dict = {
         "starting_octoliths": 0x0205C4E8,
         "starting_weapons": 0x0205C4F0,
         "weapon_slots": 0x0205C500,
@@ -27,17 +28,17 @@ def validate_rom(rom: NintendoDSRom) -> dict:
     }
     match id_code:
         case Revision.AMHE.value:
-            return init_function
+            return ssd_addresses
         case Revision.AMHP.value:
-            _update_revision_offset(init_function, 0xAC)
+            _update_revision_offset(ssd_addresses, 0xAC)
         case Revision.AMHJ.value:
-            _update_revision_offset(init_function, 0x14DC)
+            _update_revision_offset(ssd_addresses, 0x14DC)
         case _:
             raise ValueError(f"Unsupported ROM detected. Detected {id_code!r}!")
-    return init_function
+    return ssd_addresses
 
 
-def _update_revision_offset(init_function: dict, revision_offset: int) -> dict:
-    for init_field, address in init_function.items():
-        init_function[init_field] = address + revision_offset
-    return init_function
+def _update_revision_offset(ssd_addresses: dict, revision_offset: int) -> dict:
+    for field, address in ssd_addresses.items():
+        ssd_addresses[field] = address + revision_offset
+    return ssd_addresses
