@@ -109,7 +109,7 @@
                         "type": "string",
                         "description": "The id of the string to modify."
                     },
-                    "string": {
+                    "text": {
                         "type": "string",
                         "description": "The text of the string."
                     }
@@ -117,7 +117,7 @@
             },
             "required": [
                 "string_id",
-                "string"
+                "text"
             ]
         },
         "default": {}

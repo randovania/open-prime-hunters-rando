@@ -35,13 +35,25 @@ class FileManager:
             self.entity_files[file_name] = EntityFile.parse(self.rom.getFileByName(file_name))
         return self.entity_files[file_name]
 
-    def finalize_entity_files(self) -> None:
+    def get_string_table(self, language: Language, string_table: str) -> StringTable:
+        file_name = f"{language.value}/{string_table}.bin"
+        if file_name not in self.string_tables:
+            self.string_tables[file_name] = StringTable.parse(self.rom.getFileByName(file_name))
+        return self.string_tables[file_name]
+
+    def finalize_parsed_files(self) -> None:
         for file_name, entity_file in self.entity_files.items():
             self.rom.setFileByName(file_name, entity_file.build())
 
             # Export parsed entity file
             if self.export_parsed_files:
                 self.export_entity_file(file_name, entity_file)
+
+        for file_name, string_table in self.string_tables.items():
+            self.rom.setFileByName(file_name, string_table.build())
+
+            # # Uncomment to export parsed string table
+            # self.export_string_table(file_name, string_table)
 
     def export_entity_file(self, file_name: str, entity_file: EntityFile) -> None:
         to_export = Container(
@@ -55,19 +67,6 @@ class FileManager:
         export_path.mkdir(parents=True, exist_ok=True)
         with Path.open(export_path / f"{file_name[16:-4]}.txt", "w") as f:
             f.write(str(to_export))
-
-    def get_string_table(self, language: Language, string_table: str) -> StringTable:
-        file_name = f"{language.value}/{string_table}.bin"
-        if file_name not in self.string_tables:
-            self.string_tables[file_name] = StringTable.parse(self.rom.getFileByName(file_name))
-        return self.string_tables[file_name]
-
-    def finalize_string_tables(self) -> None:
-        for file_name, string_table in self.string_tables.items():
-            self.rom.setFileByName(file_name, string_table.build())
-
-            # # Uncomment to export parsed string table
-            # self.export_string_table(file_name, string_table)
 
     def export_string_table(self, file_name: str, string_table: StringTable) -> None:
         to_export = Container(
@@ -83,10 +82,9 @@ class FileManager:
             f.write(str(to_export))
 
     def save_to_rom(self, output_path: Path) -> None:
-        # Save and build all parsed entity files
-        logging.info("Finalizing all entity files")
-        self.finalize_entity_files()
+        # Save and build all parsed entity files and string tables
+        logging.info("Finalizing all parsed files")
+        self.finalize_parsed_files()
 
         logging.info("Saving files to a new rom")
-        self.finalize_string_tables()
         self.rom.saveToFile(output_path)

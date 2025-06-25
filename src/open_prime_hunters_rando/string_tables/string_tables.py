@@ -21,6 +21,7 @@ from open_prime_hunters_rando.constants import EnumAdapter
 
 
 class ScanIcon(enum.Enum):
+    NONE = 0
     BIOFORM = 16897
     BIOFORM_BOSS = 16898
     BIOFORM3 = 16899
@@ -45,7 +46,7 @@ RawStringEntry = Struct(*raw_string_entry)
 
 Strings = Struct(
     *raw_string_entry,
-    "string" / Pointer(this._data_offset, PaddedString(this._string_length, "ascii")),
+    "text" / Pointer(this._data_offset, PaddedString(this._string_length, "ascii")),
 )
 
 StringTableHeader = Struct(
@@ -91,7 +92,7 @@ class StringTableAdapter(construct.Adapter):
         for string_wrapper in strings:
             string = string_wrapper._raw
 
-            size = len(string_wrapper.string)
+            size = len(string_wrapper.text)
             string._string_length = size
             string._data_offset = offset
 
@@ -107,7 +108,7 @@ class StringEntry:
         self._raw = raw
 
     def __repr__(self) -> str:
-        return f"<String id={self.string_id}>"
+        return f"<String string_id={self.string_id}> text={self.text}"
 
     def __eq__(self, value: Any) -> bool:
         if not isinstance(value, StringEntry):
@@ -148,12 +149,12 @@ class StringEntry:
         self._raw.scan_icon = value
 
     @property
-    def string(self) -> str:
-        return self._raw.string
+    def text(self) -> str:
+        return self._raw.text
 
-    @string.setter
-    def string(self, value: str) -> None:
-        self._raw.string = value
+    @text.setter
+    def text(self, value: str) -> None:
+        self._raw.text = value
 
     @property
     def string_length(self) -> int:
