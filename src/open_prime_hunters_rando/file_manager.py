@@ -76,9 +76,10 @@ class FileManager:
             }
         )
 
-        export_path = Path(__file__).parent.joinpath("string_tables")
+        language = file_name.split("/")
+        export_path = Path(__file__).parent.joinpath(f"string_tables/{language[0]}")
         export_path.mkdir(parents=True, exist_ok=True)
-        with Path.open(export_path / f"{file_name[13:-4]}.txt", "w") as f:
+        with Path.open(export_path / f"{language[1][:-4]}.txt", "w") as f:
             f.write(str(to_export))
 
     def save_to_rom(self, output_path: Path) -> None:
