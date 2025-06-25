@@ -6,7 +6,7 @@ def patch_hints(file_manager: FileManager, hints: dict[str, str]) -> None:
 
     for hint in hints:
         string_id = hint["string_id"]
-        string = hint["string"]
+        text = hint["text"]
 
         string_entry = scan_log.get_string(string_id)
-        string_entry.string = string
+        string_entry.text = text
