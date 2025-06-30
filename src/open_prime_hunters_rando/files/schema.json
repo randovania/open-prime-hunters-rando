@@ -4,6 +4,7 @@
     "properties": {
         "configuration_id": {
             "type": "string",
+            "default": "",
             "description": "Identifier of the seed. Used for calculating RNG."
         },
         "starting_items": {
@@ -100,7 +101,6 @@
         }
     },
     "required": [
-        "configuration_id",
         "starting_items",
         "areas"
     ],
