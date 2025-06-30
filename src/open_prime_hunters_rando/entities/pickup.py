@@ -23,6 +23,8 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
             # Entity is now Artifact
             else:
                 entity.entity_type = EntityType.ARTIFACT
+                # Raise entity so it doesn't clip into the floor
+                header.position.y += 0.2
                 entity.data = Container(
                     {
                         "header": header,
@@ -53,6 +55,9 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
             # Entity is now ItemSpawn
             else:
                 entity.entity_type = EntityType.ITEM_SPAWN
+                # Only lower entity if it had a base prior to avoid entity clipping into the floor in shields
+                if old_entity_data.has_base:
+                    header.position.y -= 0.3
                 entity.data = Container(
                     {
                         "header": header,
