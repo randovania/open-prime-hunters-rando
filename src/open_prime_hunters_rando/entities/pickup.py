@@ -24,7 +24,7 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
             else:
                 entity.entity_type = EntityType.ARTIFACT
                 # Raise entity so it doesn't clip into the floor
-                header.position.y += 0.2
+                header.position.y += 0.3
                 entity.data = Container(
                     {
                         "header": header,
