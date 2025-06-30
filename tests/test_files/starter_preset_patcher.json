@@ -17,7 +17,8 @@
                             "artifact_id": 5
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Biodefense Chamber B": {
                     "pickups": [
@@ -28,23 +29,28 @@
                             "artifact_id": 7
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Helm Room": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Meditation Room": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Fan Room Alpha": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Fan Room Beta": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Synergy Core": {
                     "pickups": [
@@ -54,18 +60,13 @@
                             "item_type": 18
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Tetra Vista": {
                     "pickups": [],
                     "force_fields": [],
-                    "portals": [
-                        {
-                            "entity_id": 1,
-                            "target_index": 60,
-                            "entity_filename": "unit4_RM1_Ent.b"
-                        }
-                    ]
+                    "portals": []
                 },
                 "New Arrival Registration": {
                     "pickups": [
@@ -81,7 +82,8 @@
                             "artifact_id": 1
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Celestial Gateway": {
                     "pickups": [
@@ -92,7 +94,8 @@
                             "artifact_id": 0
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Data Shrine 01": {
                     "pickups": [
@@ -108,7 +111,8 @@
                             "artifact_id": 0
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Data Shrine 02": {
                     "pickups": [
@@ -129,7 +133,8 @@
                             "item_type": 18
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Data Shrine 03": {
                     "pickups": [
@@ -139,7 +144,8 @@
                             "item_type": 5
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Transfer Lock": {
                     "pickups": [
@@ -150,7 +156,8 @@
                             "artifact_id": 1
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Incubation Vault 01": {
                     "pickups": [
@@ -160,7 +167,8 @@
                             "item_type": 18
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Incubation Vault 02": {
                     "pickups": [
@@ -171,7 +179,8 @@
                             "artifact_id": 2
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Incubation Vault 03": {
                     "pickups": [
@@ -182,7 +191,8 @@
                             "artifact_id": 0
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Docking Bay": {
                     "pickups": [
@@ -198,15 +208,18 @@
                             "artifact_id": 2
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Stronghold Void A": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Stronghold Void B": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 }
             }
         },
@@ -214,7 +227,8 @@
             "levels": {
                 "Alimbic Cannon Control Room": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Biodefense Chamber B": {
                     "pickups": [
@@ -225,7 +239,8 @@
                             "artifact_id": 4
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Biodefense Chamber A": {
                     "pickups": [
@@ -236,7 +251,8 @@
                             "artifact_id": 6
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Echo Hall": {
                     "pickups": [
@@ -252,15 +268,18 @@
                             "item_type": 18
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Alimbic Gardens": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Thermal Vast": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Crash Site": {
                     "pickups": [
@@ -270,7 +289,8 @@
                             "item_type": 7
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Magma Drop": {
                     "pickups": [
@@ -281,7 +301,8 @@
                             "artifact_id": 1
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Piston Cave": {
                     "pickups": [
@@ -291,7 +312,8 @@
                             "item_type": 4
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Alinos Gateway": {
                     "pickups": [
@@ -301,7 +323,8 @@
                             "item_type": 10
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "High Ground": {
                     "pickups": [
@@ -317,7 +340,8 @@
                             "item_type": 6
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Alinos Perch": {
                     "pickups": [
@@ -327,7 +351,8 @@
                             "item_type": 18
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Council Chamber": {
                     "pickups": [
@@ -349,11 +374,13 @@
                             "artifact_id": 2
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Combat Hall": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Processor Core": {
                     "pickups": [
@@ -364,7 +391,8 @@
                             "artifact_id": 2
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Elder Passage": {
                     "pickups": [
@@ -375,15 +403,18 @@
                             "artifact_id": 1
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Stronghold Void B": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Stronghold Void A": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 }
             }
         },
@@ -398,7 +429,8 @@
                             "artifact_id": 2
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Biodefense Chamber B": {
                     "pickups": [
@@ -409,7 +441,8 @@
                             "artifact_id": 3
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Frost Labyrinth": {
                     "pickups": [
@@ -425,7 +458,8 @@
                             "artifact_id": 2
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Drip Moat": {
                     "pickups": [
@@ -435,11 +469,13 @@
                             "item_type": 9
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Arcterra Gateway": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Ice Hive": {
                     "pickups": [
@@ -472,13 +508,7 @@
                         }
                     ],
                     "force_fields": [],
-                    "portals": [
-                        {
-                            "entity_id": 162,
-                            "target_index": 32,
-                            "entity_filename": "unit2_C6_Ent.bi"
-                        }
-                    ]
+                    "portals": []
                 },
                 "Subterranean": {
                     "pickups": [
@@ -495,7 +525,8 @@
                             "artifact_id": 1
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Sic Transit": {
                     "pickups": [
@@ -510,7 +541,8 @@
                             "item_type": 18
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Sanctorus": {
                     "pickups": [
@@ -525,7 +557,8 @@
                             "item_type": 18
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Fault Line": {
                     "pickups": [
@@ -540,15 +573,18 @@
                             "item_type": 18
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Stronghold Void A": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Stronghold Void B": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 }
             }
         },
@@ -563,7 +599,8 @@
                             "artifact_id": 1
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Biodefense Chamber B": {
                     "pickups": [
@@ -574,15 +611,18 @@
                             "artifact_id": 0
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Bioweaponry Lab": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Ascension": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Cortex CPU": {
                     "pickups": [
@@ -598,11 +638,13 @@
                             "item_type": 4
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "VDO Gateway": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Weapons Complex": {
                     "pickups": [
@@ -617,7 +659,8 @@
                             "item_type": 18
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Fuel Stack": {
                     "pickups": [
@@ -634,7 +677,8 @@
                             "artifact_id": 2
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Stasis Bunker": {
                     "pickups": [
@@ -655,7 +699,8 @@
                             "artifact_id": 0
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Compression Chamber": {
                     "pickups": [
@@ -670,15 +715,18 @@
                             "item_type": 4
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Stronghold Void A": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Stronghold Void B": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 }
             }
         },
@@ -686,15 +734,18 @@
             "levels": {
                 "Gorea 1 Arena": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Gorea 2 Arena": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Oubliette Gateway": {
                     "pickups": [],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 },
                 "Oubliette Storage": {
                     "pickups": [
@@ -704,7 +755,8 @@
                             "item_type": 18
                         }
                     ],
-                    "force_fields": []
+                    "force_fields": [],
+                    "portals": []
                 }
             }
         }
