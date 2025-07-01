@@ -18,7 +18,8 @@
                 "missiles": {
                     "type": "integer",
                     "default": 5,
-                    "description": "The number of missiles to start with."
+                    "description": "The number of missiles to start with.",
+                    "maximum": 25
                 },
                 "ammo": {
                     "type": "integer",
