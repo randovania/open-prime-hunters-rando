@@ -3,8 +3,8 @@
     "type": "object",
     "properties": {
         "configuration_id": {
-            "type": "string",
-            "default": "",
+            "type": "integer",
+            "default": 0,
             "description": "Identifier of the seed. Used for calculating RNG."
         },
         "starting_items": {
