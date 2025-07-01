@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from construct import Container, ListContainer
@@ -41,5 +42,8 @@ class FileManager:
 
     def save_to_rom(self, output_path: Path) -> None:
         # Save and build all parsed entity files
+        logging.info("Finalizing all entity files")
         self.finalize_entity_files()
+
+        logging.info("Saving files to a new rom")
         self.rom.saveToFile(output_path)
