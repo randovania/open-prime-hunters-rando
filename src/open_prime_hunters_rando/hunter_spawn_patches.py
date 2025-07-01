@@ -1,3 +1,4 @@
+import logging
 import random
 
 from construct import Container
@@ -48,6 +49,7 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
     if not shuffle_hunter_colors and not shuffle_hunter_ids:
         return
 
+    logging.info("Modifying hunter spawns")
     random.seed(configuration["configuration_id"])
 
     if shuffle_hunter_colors:

@@ -1,9 +1,12 @@
+import logging
+
 from ndspy.rom import NintendoDSRom
 
 from open_prime_hunters_rando.version_checking import validate_rom
 
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
+    logging.info("Patching arm9.bin")
     init = validate_rom(rom)
     # Validate starting items
     starting_items = configuration["starting_items"]
