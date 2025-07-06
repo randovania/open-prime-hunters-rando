@@ -104,6 +104,59 @@ def _add_triggers(file_manager: FileManager, new_trigger: NewTrigger) -> None:
         trigger_entity_b.data.child_message = new_trigger.artifact_messages[2][1]
 
 
+class NewObject(NamedTuple):
+    area_name: str
+    room_name: str
+    active_layers: list[int]
+    position: tuple[int, int, int]
+    scan_id: int
+    scan_message_target: int
+    scan_message: Message
+    node_name: str = "rmMain"
+    up_vector_multiplier: int = 1
+
+
+new_objects = [
+    NewObject(
+        "Celestial Archives",
+        "Helm Room",
+        [0, 1, 2],
+        (1.450927734375, 4.257568359375, -34.5),
+        259,
+        8,
+        Message.UNLOCK,
+        "rmjump",
+        -1,
+    ),
+]
+
+
+def _add_objects(file_manager: FileManager, new_object: NewObject) -> None:
+    template_file = file_manager.get_entity_file("Celestial Archives", "Helm Room")
+    template_object = copy.deepcopy(template_file.get_entity(9).data)
+
+    entity_file = file_manager.get_entity_file(new_object.area_name, new_object.room_name)
+
+    # Get the new object
+    object_entity = entity_file.get_entity(entity_file.append_entity(template_object))
+
+    # Set the new data fields
+    object_entity.node_name = new_object.node_name
+
+    object_entity.data.header.position.x = new_object.position[0]
+    object_entity.data.header.position.y = new_object.position[1]
+    object_entity.data.header.position.z = new_object.position[2]
+
+    object_entity.data.header.up_vector.z *= new_object.up_vector_multiplier
+
+    for layer in new_object.active_layers:
+        object_entity.set_layer_state(layer, True)
+
+
 def add_new_entities(file_manager: FileManager) -> None:
+    # Add new trigger entities
     for new_trigger in new_triggers:
         _add_triggers(file_manager, new_trigger)
+    # Add new object entities
+    for new_object in new_objects:
+        _add_objects(file_manager, new_object)

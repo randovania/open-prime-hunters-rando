@@ -3,7 +3,8 @@
     "type": "object",
     "properties": {
         "configuration_id": {
-            "type": "string",
+            "type": "integer",
+            "default": 0,
             "description": "Identifier of the seed. Used for calculating RNG."
         },
         "starting_items": {
@@ -17,7 +18,8 @@
                 "missiles": {
                     "type": "integer",
                     "default": 5,
-                    "description": "The number of missiles to start with."
+                    "description": "The number of missiles to start with.",
+                    "maximum": 25
                 },
                 "ammo": {
                     "type": "integer",
@@ -100,7 +102,6 @@
         }
     },
     "required": [
-        "configuration_id",
         "starting_items",
         "areas"
     ],

@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 import keystone
@@ -22,6 +23,7 @@ def _read_asm_file(file: str) -> str:
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     arm9 = validate_rom(rom)
+    logging.info("Patching arm9.bin")
 
     starting_items = configuration["starting_items"]
     game_patches = configuration["game_patches"]
@@ -42,7 +44,7 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
         arm9["weapon_slots"]: NOP,  # Prevents deleting the weapons when changing Octoliths
         arm9["starting_ammo"]: bytes.fromhex(starting_ammo),  # Starting UA
         arm9["starting_energy"]: NOP,  # Normally loads value of etank (100)
-        arm9["starting_missiles"]: starting_items["missiles"].to_bytes(),  # Starting Missiles
+        arm9["starting_missiles"]: (starting_items["missiles"] * 10).to_bytes(),  # Starting Missiles
         arm9["reordered_instructions"]: create_asm_patch(
             reordered_instructions
         ),  # Changing R0 affects later instructions, so reorder
