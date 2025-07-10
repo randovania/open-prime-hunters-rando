@@ -1,9 +1,12 @@
+import logging
+
 from ndspy.rom import NintendoDSRom
 
 from open_prime_hunters_rando.version_checking import validate_rom
 
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
+    logging.info("Patching arm9.bin")
     init = validate_rom(rom)
     # Validate starting items
     starting_items = configuration["starting_items"]
@@ -33,7 +36,7 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
         init["weapon_slots"]: bytes.fromhex("00F020E3"),  # NOP to not delete the weapons when changing Octoliths
         init["starting_ammo"]: bytes.fromhex(starting_ammo),  # Starting UA
         init["starting_energy"]: bytes.fromhex("00F020E3"),  # NOP (Normally loads value of etank (100))
-        init["starting_missiles"]: starting_items["missiles"].to_bytes(),  # Starting Missiles
+        init["starting_missiles"]: (starting_items["missiles"] * 10).to_bytes(),  # Starting Missiles
         init["reordered_instructions"]: reordered_instructions,  # Changing R0 affects later instructions, so reorder
         init["unlock_planets"]: _unlock_planets(configuration["game_patches"]),  # Unlock planets from the start
         init["starting_energy_ptr"]: starting_energy,  # Starting energy - 1

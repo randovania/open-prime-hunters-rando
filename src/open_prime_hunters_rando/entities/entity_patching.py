@@ -1,3 +1,5 @@
+import logging
+
 from open_prime_hunters_rando.entities.door import patch_doors
 from open_prime_hunters_rando.entities.force_field import patch_force_fields
 from open_prime_hunters_rando.entities.pickup import patch_pickups
@@ -11,6 +13,8 @@ def patch_entities(file_manager: FileManager, configuration: dict[str, dict]) ->
             for room_name, entity_groups in level_config.items():
                 # Load the entity file for the room
                 entity_file = file_manager.get_entity_file(area_name, room_name)
+
+                logging.info(f"Patching entities in {area_name} - {room_name}")
 
                 # Modify entities
                 patch_pickups(entity_file, entity_groups["pickups"])
