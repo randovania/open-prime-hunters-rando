@@ -9,9 +9,10 @@ from open_prime_hunters_rando.level_data import get_data
 
 
 class FileManager:
-    def __init__(self, rom: NintendoDSRom):
+    def __init__(self, rom: NintendoDSRom, export_parsed_files: bool):
         self.rom = rom
         self.entity_files: dict[str, EntityFile] = {}
+        self.export_parsed_files = export_parsed_files
 
     def get_entity_file(self, area_name: str, room_name: str) -> EntityFile:
         level_data = get_data(area_name, room_name)
@@ -24,8 +25,9 @@ class FileManager:
         for file_name, entity_file in self.entity_files.items():
             self.rom.setFileByName(file_name, entity_file.build())
 
-            # # Uncomment to export parsed entity file
-            # self.export_entity_file(file_name, entity_file)
+            # Export parsed entity file
+            if self.export_parsed_files:
+                self.export_entity_file(file_name, entity_file)
 
     def export_entity_file(self, file_name: str, entity_file: EntityFile) -> None:
         to_export = Container(
