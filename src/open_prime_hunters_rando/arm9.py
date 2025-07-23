@@ -1,24 +1,9 @@
 import logging
-from pathlib import Path
 
-import keystone
 from ndspy.rom import NintendoDSRom
 
+from open_prime_hunters_rando.asm.asm_patching import NOP, create_asm_patch, read_asm_file
 from open_prime_hunters_rando.version_checking import validate_rom
-
-NOP = bytes.fromhex("00F020E3")
-
-asm_patches = Path(__file__).parent.joinpath("files", "asm_patches")
-
-
-def create_asm_patch(code: str) -> bytes:
-    assembler = keystone.Ks(keystone.KS_ARCH_ARM, keystone.KS_MODE_ARM + keystone.KS_MODE_LITTLE_ENDIAN)
-    encoding, count = assembler.asm(code)
-    return bytes(encoding)
-
-
-def _read_asm_file(file: str) -> str:
-    return asm_patches.joinpath(file).read_text()
 
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
@@ -36,7 +21,7 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
 
     starting_ammo = str(hex(starting_items["ammo"] * 10))[2:-1]
 
-    reordered_instructions = _read_asm_file("reordered_instructions.s")
+    reordered_instructions = read_asm_file("reordered_instructions.s")
 
     ARM9_PATCHES = {
         arm9["starting_octoliths"]: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths by changing R0
