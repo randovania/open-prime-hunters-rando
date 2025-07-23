@@ -240,6 +240,31 @@
                         "entity_filename"
                     ],
                     "default": []
+                },
+                "doors": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "entity_id": {
+                                "type": "integer",
+                                "description": "The id of the entity."
+                            },
+                            "palette_id": {
+                                "type": "integer",
+                                "description": "The weakness of door. Sealed doors can only be unlocked remotely.\nPower Beam, Volt Driver, Missile, Battlehammer, Imperialist, Judicator, Magmaul, Shock Coil, Omega Cannon, Sealed."
+                            },
+                            "locked": {
+                                "type": "boolean",
+                                "description": "Change if the door is locked or not. Must be set to True in order for the modified weakness to be active in game."
+                            }
+                        }
+                    },
+                    "required": [
+                        "entity_id",
+                        "palette_id"
+                    ],
+                    "default": []
                 }
             }
         }
