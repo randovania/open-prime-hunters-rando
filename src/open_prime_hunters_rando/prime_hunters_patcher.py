@@ -33,7 +33,7 @@ def validate(configuration: dict) -> None:
     DefaultValidatingDraft7Validator(_read_schema()).validate(configuration)
 
 
-def patch_rom(input_path: Path, output_path: Path, configuration: dict) -> None:
+def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_parsed_files: bool) -> None:
     LOG.info("Will patch files at %s", input_path)
 
     validate(configuration)
@@ -42,7 +42,7 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict) -> None:
     rom = DebugNintendoDsRom.fromFile(input_path)
 
     # Initialize the file manager
-    file_manager = FileManager(rom)
+    file_manager = FileManager(rom, export_parsed_files)
 
     # Modify main code file arm9.bin
     patch_arm9(rom, configuration)

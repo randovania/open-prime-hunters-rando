@@ -19,6 +19,9 @@ def create_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--input-json", type=Path, help="Path to the configuration json. If missing, it's read from standard input"
     )
+    parser.add_argument(
+        "--export-parsed-files", type=bool, default=False, help="If true, exports the parsed entity files to a folder."
+    )
     return parser
 
 
@@ -69,6 +72,7 @@ def main() -> None:
         args.input_path,
         args.output_path,
         configuration,
+        args.export_parsed_files,
     )
     end = time.time()
     print(f"Patcher took {end - start:.03f} seconds")
