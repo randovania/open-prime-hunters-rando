@@ -2,7 +2,6 @@ import logging
 from enum import Enum
 from pathlib import Path
 
-import construct
 from construct import Container, ListContainer
 from ndspy.rom import NintendoDSRom
 
@@ -23,10 +22,9 @@ class Language(Enum):
 class FileManager:
     def __init__(self, rom: NintendoDSRom, export_parsed_files: bool):
         self.rom = rom
-        self.entity_files: dict[str, EntityFile] = {}
         self.export_parsed_files = export_parsed_files
+        self.entity_files: dict[str, EntityFile] = {}
         self.string_tables: dict[str, StringTable] = {}
-        construct.lib.setGlobalPrintFullStrings(True)
 
     def get_entity_file(self, area_name: str, room_name: str) -> EntityFile:
         level_data = get_data(area_name, room_name)
@@ -52,8 +50,9 @@ class FileManager:
         for file_name, string_table in self.string_tables.items():
             self.rom.setFileByName(file_name, string_table.build())
 
-            # # Uncomment to export parsed string table
-            # self.export_string_table(file_name, string_table)
+            # Export parsed string tables
+            if self.export_parsed_files:
+                self.export_string_table(file_name, string_table)
 
     def export_entity_file(self, file_name: str, entity_file: EntityFile) -> None:
         to_export = Container(
