@@ -4,12 +4,9 @@
         "weapons": "00000101",
         "missiles": 0
     },
-    "hints": [
-        {
-            "string_id": "904L",
-            "text": "ALINOS OCTOLITHS\\OCTOLITH 1 is guarded by CRETAPHID V4. OCTOLITH 2 is guarded by SLENCH 3."
-        }
-    ],
+    "hints": {
+        "904L": "ALINOS OCTOLITHS\\OCTOLITH 1 is guarded by CRETAPHID V4. OCTOLITH 2 is guarded by SLENCH 3."
+    },
     "areas": {
         "Celestial Archives": {
             "levels": {

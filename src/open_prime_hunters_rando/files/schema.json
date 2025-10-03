@@ -101,24 +101,17 @@
             "default": {}
         },
         "hints": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "string_id": {
-                        "type": "string",
-                        "description": "The id of the string to modify."
-                    },
-                    "text": {
-                        "type": "string",
-                        "description": "The text of the string."
-                    }
+            "type": "object",
+            "properties": {
+                "string_id": {
+                    "type": "string",
+                    "description": "The id of the string to modify."
+                },
+                "text": {
+                    "type": "string",
+                    "description": "The text of the string."
                 }
-            },
-            "required": [
-                "string_id",
-                "text"
-            ]
+            }
         },
         "default": {}
     },
@@ -183,7 +176,6 @@
                                     "description": "The item type to change the entity into.",
                                     "minimum": 0,
                                     "maximum": 22
-
                                 }
                             },
                             "required": [
