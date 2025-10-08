@@ -100,11 +100,17 @@
             },
             "default": {}
         },
-        "hints": {
+        "string_tables": {
             "type": "object",
-            "patternProperties": {
-                ".*": {
-                    "type": "string"
+            "properties": {
+                "scan_log": {
+                    "type": "object",
+                    "description": "Modify the text of an entry in the ScanLog.",
+                    "patternProperties": {
+                        ".*": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         },

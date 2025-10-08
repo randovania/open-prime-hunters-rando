@@ -33,8 +33,8 @@ class FileManager:
             self.entity_files[file_name] = EntityFile.parse(self.rom.getFileByName(file_name))
         return self.entity_files[file_name]
 
-    def get_string_table(self, language: Language, string_table: str) -> StringTable:
-        file_name = f"{language.value}/{string_table}.bin"
+    def get_string_table(self, language: Language, string_table: StringTable) -> StringTable:
+        file_name = f"{language.value}/{string_table.value}.bin"
         if file_name not in self.string_tables:
             self.string_tables[file_name] = StringTable.parse(self.rom.getFileByName(file_name))
         return self.string_tables[file_name]
