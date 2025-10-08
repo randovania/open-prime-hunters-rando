@@ -102,14 +102,9 @@
         },
         "hints": {
             "type": "object",
-            "properties": {
-                "string_id": {
-                    "type": "string",
-                    "description": "The id of the string to modify."
-                },
-                "text": {
-                    "type": "string",
-                    "description": "The text of the string."
+            "patternProperties": {
+                ".*": {
+                    "type": "string"
                 }
             }
         },
