@@ -1,4 +1,4 @@
-// The following instructions have been reordered to support changing the value of R0 for starting Octoliths
+// To support starting with Octoliths (0x0205C53C in arm9.bin), the following instructions have been reordered so that the value of R0 can still be updated without affecting other instructions that depend on it.
 strb r0, [r4, 24h]
 strb r0, [r4, 26h]
 mov r0, #0

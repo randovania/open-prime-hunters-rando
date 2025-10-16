@@ -3,11 +3,11 @@ import logging
 from ndspy.rom import NintendoDSRom
 
 from open_prime_hunters_rando.asm.asm_patching import NOP, create_asm_patch, read_asm_file
-from open_prime_hunters_rando.version_checking import validate_rom
+from open_prime_hunters_rando.version_checking import detect_rom
 
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
-    arm9 = validate_rom(rom)
+    validated_rom = detect_rom(rom)
     logging.info("Patching arm9.bin")
 
     starting_items = configuration["starting_items"]
@@ -24,17 +24,17 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     reordered_instructions = read_asm_file("reordered_instructions.s")
 
     ARM9_PATCHES = {
-        arm9["starting_octoliths"]: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths by changing R0
-        arm9["starting_weapons"]: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
-        arm9["weapon_slots"]: NOP,  # Prevents deleting the weapons when changing Octoliths
-        arm9["starting_ammo"]: bytes.fromhex(starting_ammo),  # Starting UA
-        arm9["starting_energy"]: NOP,  # Normally loads value of etank (100)
-        arm9["starting_missiles"]: (starting_items["missiles"] * 10).to_bytes(),  # Starting Missiles
-        arm9["reordered_instructions"]: create_asm_patch(
+        validated_rom["starting_octoliths"]: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths (0-8)
+        validated_rom["starting_weapons"]: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
+        validated_rom["weapon_slots"]: NOP,  # Prevents deleting the weapons when changing Octoliths
+        validated_rom["starting_ammo"]: bytes.fromhex(starting_ammo),  # Starting Universal Ammo
+        validated_rom["starting_energy"]: NOP,  # Normally loads value of etank (100)
+        validated_rom["starting_missiles"]: (starting_items["missiles"] * 10).to_bytes(),  # Starting Missiles
+        validated_rom["reordered_instructions"]: create_asm_patch(
             reordered_instructions
         ),  # Changing R0 affects later instructions, so reorder
-        arm9["unlock_planets"]: _unlock_planets(game_patches["unlock_planets"]),  # Unlock planets from the start
-        arm9["starting_energy_ptr"]: starting_energy,  # Starting energy - 1,
+        validated_rom["unlock_planets"]: _unlock_planets(game_patches["unlock_planets"]),  # Unlock planets from start
+        validated_rom["starting_energy_ptr"]: starting_energy,  # Starting energy - 1,
     }
 
     # Decompress arm9.bin for editing
