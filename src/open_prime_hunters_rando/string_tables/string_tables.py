@@ -22,15 +22,15 @@ from open_prime_hunters_rando.constants import EnumAdapter
 
 class ScanIcon(enum.Enum):
     NONE = 0
-    BIOFORM = 16897
-    BIOFORM_BOSS = 16898
-    BIOFORM3 = 16899
-    EQUIPMENT = 17667
-    LORE = 19459
-    OBJECT = 20227
-    OBJECT2 = 22531
-    OBJECT3 = 28419
-    SWITCH = 30723
+    BIOFORM = 0x4201
+    BIOFORM_BOSS = 0x4202
+    BIOFORM3 = 0x4203
+    EQUIPMENT = 0x4503
+    LORE = 0x4C03
+    OBJECT = 0x4F03
+    OBJECT2 = 0x5803
+    OBJECT3 = 0x6F03
+    SWITCH = 0x7803
 
 
 ScanIconConstruct = EnumAdapter(ScanIcon, Int16ul)
