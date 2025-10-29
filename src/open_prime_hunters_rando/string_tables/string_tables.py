@@ -137,9 +137,6 @@ class StringEntry:
     def text(self, value: str) -> None:
         self._raw.text = value
 
-    def get_string_length(self) -> int:
-        return len(self.text)
-
 
 class StringTable:
     def __init__(self, raw: Container):
@@ -158,7 +155,8 @@ class StringTable:
 
         # remove unnecessary alignment bytes
         if self.strings:
-            to_strip = num_bytes_to_align(self.strings[-1].get_string_length())
+            to_strip = num_bytes_to_align(len(self.strings[-1].text))
+
             if to_strip:
                 data = data[:-to_strip]
 
