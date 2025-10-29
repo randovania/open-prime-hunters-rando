@@ -2,14 +2,17 @@ import logging
 
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.version_checking import validate_rom
+from open_prime_hunters_rando.asm.asm_patching import NOP, create_asm_patch, read_asm_file
+from open_prime_hunters_rando.version_checking import detect_rom
 
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
+    validated_rom = detect_rom(rom)
     logging.info("Patching arm9.bin")
-    init = validate_rom(rom)
-    # Validate starting items
+
     starting_items = configuration["starting_items"]
+    game_patches = configuration["game_patches"]
+    # Validate starting items
     _validate_starting_items(starting_items)
 
     etanks = starting_items["energy_tanks"]
@@ -18,28 +21,20 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
 
     starting_ammo = str(hex(starting_items["ammo"] * 10))[2:-1]
 
-    reordered_instructions = bytes.fromhex(
-        "2400C4E5"  # strb r0, [r4, 24h]
-        "2600C4E5"  # strb r0, [r4, 26h]
-        "0000A0E3"  # mov r0, #0
-        "0010A0E1"  # mov r1, r0
-        "0020A0E1"  # mov r2, r0
-        "0030A0E1"  # mov r3, r0
-        "BA90C4E1"  # strh sb, [r4, #0xa]
-        "BC80C4E1"  # strh r8, [r4, #0xc]
-        "BE70C4E1"  # strh r7, [r4, #0xe]
-    )
+    reordered_instructions = read_asm_file("reordered_instructions.s")
 
     ARM9_PATCHES = {
-        init["starting_octoliths"]: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths by changing R0
-        init["starting_weapons"]: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
-        init["weapon_slots"]: bytes.fromhex("00F020E3"),  # NOP to not delete the weapons when changing Octoliths
-        init["starting_ammo"]: bytes.fromhex(starting_ammo),  # Starting UA
-        init["starting_energy"]: bytes.fromhex("00F020E3"),  # NOP (Normally loads value of etank (100))
-        init["starting_missiles"]: (starting_items["missiles"] * 10).to_bytes(),  # Starting Missiles
-        init["reordered_instructions"]: reordered_instructions,  # Changing R0 affects later instructions, so reorder
-        init["unlock_planets"]: _unlock_planets(configuration["game_patches"]),  # Unlock planets from the start
-        init["starting_energy_ptr"]: starting_energy,  # Starting energy - 1
+        validated_rom["starting_octoliths"]: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths (0-8)
+        validated_rom["starting_weapons"]: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
+        validated_rom["weapon_slots"]: NOP,  # Prevents deleting the weapons when changing Octoliths
+        validated_rom["starting_ammo"]: bytes.fromhex(starting_ammo),  # Starting Universal Ammo
+        validated_rom["starting_energy"]: NOP,  # Normally loads value of etank (100)
+        validated_rom["starting_missiles"]: (starting_items["missiles"] * 10).to_bytes(),  # Starting Missiles
+        validated_rom["reordered_instructions"]: create_asm_patch(
+            reordered_instructions
+        ),  # Changing R0 affects later instructions, so reorder
+        validated_rom["unlock_planets"]: _unlock_planets(game_patches["unlock_planets"]),  # Unlock planets from start
+        validated_rom["starting_energy_ptr"]: starting_energy,  # Starting energy - 1,
     }
 
     # Decompress arm9.bin for editing
@@ -81,8 +76,7 @@ def _bitfield_to_hex(bitfield: str) -> int:
     return int(bitfield, 2).to_bytes()
 
 
-def _unlock_planets(game_patches: dict) -> int:
-    unlock_planets = game_patches["unlock_planets"]
+def _unlock_planets(unlock_planets: dict) -> int:
     planets = [
         unlock_planets["Arcterra"],  # Arcterra 1
         unlock_planets["Arcterra"],  # Arcterra 2
