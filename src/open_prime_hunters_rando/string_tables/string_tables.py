@@ -35,18 +35,16 @@ class ScanIcon(enum.Enum):
 
 ScanIconConstruct = EnumAdapter(ScanIcon, Int16ul)
 
-raw_string_entry = [
+StringEntryHeader = Struct(
     "string_id" / PaddedString(4, "ascii"),
     "_data_offset" / Int32ul,
     "_string_length" / Int16ul,
     "scan_icon" / ScanIconConstruct,
-]
-
-RawStringEntry = Struct(*raw_string_entry)
+)
 
 Strings = Struct(
-    *raw_string_entry,
-    "text" / Pointer(this._data_offset, PaddedString(this._string_length, "ascii")),
+    "header" / StringEntryHeader,
+    "text" / Pointer(this.header._data_offset, PaddedString(this.header._string_length, "ascii")),
 )
 
 StringTableHeader = Struct(
@@ -87,7 +85,7 @@ class StringTableAdapter(construct.Adapter):
         encoded.strings = ListContainer()
 
         offset = 8 if StringTableHeader.unk is not None else 4
-        offset += RawStringEntry.sizeof() * len(strings)
+        offset += StringEntryHeader.sizeof() * len(strings)
 
         for string_wrapper in strings:
             string = string_wrapper._raw
@@ -110,35 +108,18 @@ class StringEntry:
     def __repr__(self) -> str:
         return f"<String string_id={self.string_id}> text={self.text}"
 
-    def __eq__(self, value: Any) -> bool:
-        if not isinstance(value, StringEntry):
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, StringEntry):
             return False
-        if value.string_id != self.string_id:
-            return False
-
-        def check_container(container: dict, other: dict) -> bool:
-            for k in container.keys() | other.keys():
-                if k.startswith("_"):
-                    continue
-                if isinstance(container[k], dict):
-                    if not isinstance(other[k], dict):
-                        return False
-                    if not check_container(container[k], other[k]):
-                        return False
-                else:
-                    if container[k] != other[k]:
-                        return False
-            return True
-
-        return check_container(self._raw, value._raw)
+        return self.string_id == other.string_id and self.scan_icon == other.scan_icon and self.text == other.text
 
     @property
     def string_id(self) -> str:
-        return self._raw.string_id
+        return self._raw.header.string_id
 
     @string_id.setter
     def string_id(self, value: str) -> None:
-        self._raw.string_id = value
+        self._raw.header.string_id = value
 
     @property
     def scan_icon(self) -> ScanIcon:
@@ -156,9 +137,8 @@ class StringEntry:
     def text(self, value: str) -> None:
         self._raw.text = value
 
-    @property
-    def string_length(self) -> int:
-        return self._raw._string_length
+    def get_string_length(self) -> int:
+        return len(self.text)
 
 
 class StringTable:
@@ -178,7 +158,7 @@ class StringTable:
 
         # remove unnecessary alignment bytes
         if self.strings:
-            to_strip = num_bytes_to_align(self.strings[-1].string_length)
+            to_strip = num_bytes_to_align(self.strings[-1].get_string_length())
             if to_strip:
                 data = data[:-to_strip]
 
@@ -200,9 +180,7 @@ class StringTable:
         self._raw.strings = value
 
     def get_string(self, string_id: str) -> StringEntry:
-        for string in self.strings:
-            if string.string_id == string_id:
-                break
-        else:
-            raise ValueError(f"No entity with ID {string_id} found!")
+        string = next((string for string in self.strings if string.string_id == string_id), None)
+        if string is None:
+            raise ValueError(f"No string with ID {string_id} found!")
         return string
