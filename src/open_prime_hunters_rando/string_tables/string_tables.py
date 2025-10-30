@@ -5,8 +5,11 @@ from typing import Any, Self
 
 import construct
 from construct import (
+    Aligned,
     Array,
+    Byte,
     Container,
+    CString,
     If,
     Int16ul,
     Int32ul,
@@ -20,31 +23,30 @@ from construct import (
 from open_prime_hunters_rando.constants import EnumAdapter
 
 
-class ScanIcon(enum.Enum):
+class ScanCategory(enum.Enum):
     NONE = 0
-    BIOFORM = 0x4201
-    BIOFORM_BOSS = 0x4202
-    BIOFORM3 = 0x4203
-    EQUIPMENT = 0x4503
-    LORE = 0x4C03
-    OBJECT = 0x4F03
-    OBJECT2 = 0x5803
-    OBJECT3 = 0x6F03
-    SWITCH = 0x7803
+    BIOFORM = 0x42
+    EQUIPMENT = 0x45
+    LORE = 0x4C
+    OBJECT = 0x4F
+    OBJECT2 = 0x58
+    OBJECT3 = 0x6F
+    SWITCH = 0x78
 
 
-ScanIconConstruct = EnumAdapter(ScanIcon, Int16ul)
+ScanIconConstruct = EnumAdapter(ScanCategory, Byte)
 
 StringEntryHeader = Struct(
     "string_id" / PaddedString(4, "ascii"),
     "_data_offset" / Int32ul,
     "_string_length" / Int16ul,
-    "scan_icon" / ScanIconConstruct,
+    "scan_speed" / Byte,
+    "scan_category" / ScanIconConstruct,
 )
 
 Strings = Struct(
     "header" / StringEntryHeader,
-    "text" / Pointer(this.header._data_offset, PaddedString(this.header._string_length, "ascii")),
+    "text" / Pointer(this.header._data_offset, Aligned(4, CString("ascii"), pattern=b"\xbb")),
 )
 
 StringTableHeader = Struct(
@@ -111,7 +113,12 @@ class StringEntry:
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, StringEntry):
             return False
-        return self.string_id == other.string_id and self.scan_icon == other.scan_icon and self.text == other.text
+        return (
+            self.string_id == other.string_id
+            and self.scan_speed == other.scan_speed
+            and self.scan_category == other.scan_category
+            and self.text == other.text
+        )
 
     @property
     def string_id(self) -> str:
@@ -122,12 +129,20 @@ class StringEntry:
         self._raw.header.string_id = value
 
     @property
-    def scan_icon(self) -> ScanIcon:
-        return self._raw.scan_icon
+    def scan_speed(self) -> int:
+        return self._raw.header.scan_speed
 
-    @scan_icon.setter
-    def scan_icon(self, value: ScanIcon) -> None:
-        self._raw.scan_icon = value
+    @scan_speed.setter
+    def scan_speed(self, value: int) -> None:
+        self._raw.header.scan_speed = value
+
+    @property
+    def scan_category(self) -> ScanCategory:
+        return self._raw.header.scan_category
+
+    @scan_category.setter
+    def scan_category(self, value: ScanCategory) -> None:
+        self._raw.header.scan_category = value
 
     @property
     def text(self) -> str:
@@ -152,13 +167,6 @@ class StringTable:
     def build(self) -> bytes:
         # build
         data = StringTableAdapter().build(self._raw)
-
-        # remove unnecessary alignment bytes
-        if self.strings:
-            to_strip = num_bytes_to_align(len(self.strings[-1].text))
-
-            if to_strip:
-                data = data[:-to_strip]
 
         return data
 

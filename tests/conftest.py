@@ -3,8 +3,9 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from open_prime_hunters_rando.prime_hunters_patcher import DebugNintendoDsRom
 import pytest
+
+from open_prime_hunters_rando.prime_hunters_patcher import DebugNintendoDsRom
 
 _FAIL_INSTEAD_OF_SKIP = False
 
