@@ -33,17 +33,17 @@ ScanSpeedConstruct = EnumAdapter(ScanSpeed, Byte)
 
 
 class ScanCategory(enum.Enum):
-    NONE = 0
-    BIOFORM = 0x42
-    EQUIPMENT = 0x45
-    LORE = 0x4C
-    OBJECT = 0x4F
-    OBJECT2 = 0x58
-    OBJECT3 = 0x6F
-    SWITCH = 0x78
+    NONE = "\0"
+    BIOFORM = "B"
+    EQUIPMENT = "E"
+    LORE = "L"
+    OBJECT = "O"
+    OBJECT2 = "X"
+    OBJECT3 = "o"
+    SWITCH = "x"
 
 
-ScanIconConstruct = EnumAdapter(ScanCategory, Byte)
+ScanIconConstruct = EnumAdapter(ScanCategory, PaddedString(1, "ascii"))
 
 StringEntryHeader = Struct(
     "string_id" / PaddedString(4, "ascii"),
@@ -138,11 +138,11 @@ class StringEntry:
         self._raw.header.string_id = value
 
     @property
-    def scan_speed(self) -> int:
+    def scan_speed(self) -> ScanSpeed:
         return self._raw.header.scan_speed
 
     @scan_speed.setter
-    def scan_speed(self, value: int) -> None:
+    def scan_speed(self, value: ScanSpeed) -> None:
         self._raw.header.scan_speed = value
 
     @property
