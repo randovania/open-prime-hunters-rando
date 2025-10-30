@@ -23,6 +23,15 @@ from construct import (
 from open_prime_hunters_rando.constants import EnumAdapter
 
 
+class ScanSpeed(enum.Enum):
+    SLOW = 1
+    MEDIUM = 2
+    FAST = 3
+
+
+ScanSpeedConstruct = EnumAdapter(ScanSpeed, Byte)
+
+
 class ScanCategory(enum.Enum):
     NONE = 0
     BIOFORM = 0x42
@@ -40,7 +49,7 @@ StringEntryHeader = Struct(
     "string_id" / PaddedString(4, "ascii"),
     "_data_offset" / Int32ul,
     "_string_length" / Int16ul,
-    "scan_speed" / Byte,
+    "scan_speed" / ScanSpeedConstruct,
     "scan_category" / ScanIconConstruct,
 )
 
@@ -159,8 +168,8 @@ class StringTable:
 
     @classmethod
     def parse(cls, data: bytes) -> Self:
-        # align data to 4
-        data = bytes(data) + b"\0" * num_bytes_to_align(len(data))
+        # parse
+        data = bytes(data)
 
         return cls(StringTableAdapter().parse(data))
 
