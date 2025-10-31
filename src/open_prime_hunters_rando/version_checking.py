@@ -27,8 +27,9 @@ def detect_rom(rom: NintendoDSRom) -> dict:
 def _update_revision_offsets(revision_offset: int = 0) -> dict:
     # These addresses pertain to the StorySaveData
     # Use US addresses as a base, then add the offset difference based on region
+
+    # Addresses that are consistent across all revisions
     story_save_data_addresses: dict = {
-        # Addresses that are consistent across all revisions
         "missiles_per_tank": 0x0201A350,
         "ammo_per_tank": 0x0201A3AC,
     }
