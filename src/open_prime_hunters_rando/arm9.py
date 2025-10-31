@@ -1,9 +1,12 @@
 import logging
+from pathlib import Path
 
 from ndspy.rom import NintendoDSRom
 
 from open_prime_hunters_rando.asm.asm_patching import NOP, create_asm_patch, read_asm_file
 from open_prime_hunters_rando.version_checking import detect_rom
+
+asm_patches = Path(__file__).parent.joinpath("files", "asm_patches")
 
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
@@ -24,6 +27,12 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     reordered_instructions = read_asm_file("reordered_instructions.s")
 
     ARM9_PATCHES = {
+        validated_rom["missiles_per_tank"]: create_asm_patch(
+            f"add r2, r2, #{game_patches['missiles_per_tank'] * 10}"
+        ),  # Missiles per tank
+        validated_rom["ammo_per_tank"]: create_asm_patch(
+            f"add r2, r2, #{game_patches['ammo_per_tank'] * 10}"
+        ),  # UA per tank
         validated_rom["starting_octoliths"]: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths (0-8)
         validated_rom["starting_weapons"]: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
         validated_rom["weapon_slots"]: NOP,  # Prevents deleting the weapons when changing Octoliths
