@@ -24,6 +24,7 @@ from open_prime_hunters_rando.constants import EnumAdapter
 
 
 class ScanSpeed(enum.Enum):
+    NONE = 0
     SLOW = 1
     MEDIUM = 2
     FAST = 3
@@ -33,7 +34,7 @@ ScanSpeedConstruct = EnumAdapter(ScanSpeed, Byte)
 
 
 class ScanCategory(enum.Enum):
-    NONE = "\0"
+    NONE = ""
     BIOFORM = "B"
     EQUIPMENT = "E"
     LORE = "L"
@@ -43,14 +44,14 @@ class ScanCategory(enum.Enum):
     SWITCH = "x"
 
 
-ScanIconConstruct = EnumAdapter(ScanCategory, PaddedString(1, "ascii"))
+ScanCategoryConstruct = EnumAdapter(ScanCategory, PaddedString(1, "ascii"))
 
 StringEntryHeader = Struct(
     "string_id" / PaddedString(4, "ascii"),
     "_data_offset" / Int32ul,
     "_string_length" / Int16ul,
     "scan_speed" / ScanSpeedConstruct,
-    "scan_category" / ScanIconConstruct,
+    "scan_category" / ScanCategoryConstruct,
 )
 
 Strings = Struct(
