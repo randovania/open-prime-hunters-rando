@@ -64,7 +64,7 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
     patch_hunters(file_manager, configuration)
 
     # Patch string tables
-    patch_string_tables(file_manager, configuration["string_tables"])
+    patch_string_tables(file_manager, configuration)
 
     # Save all changes to a new rom
     file_manager.save_to_rom(output_path)

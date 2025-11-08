@@ -67,12 +67,12 @@
         "game_patches": {
             "type": "object",
             "properties": {
-                "missiles_per_tank": {
+                "missiles_per_expansion": {
                     "type": "integer",
                     "default": 10,
                     "maximum": 400
                 },
-                "ammo_per_tank": {
+                "ammo_per_expansion": {
                     "type": "integer",
                     "default": 30,
                     "maximum": 100,
