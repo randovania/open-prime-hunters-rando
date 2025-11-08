@@ -44,10 +44,10 @@ class ScanCategory(enum.Enum):
     SWITCH = "x"
 
 
-ScanCategoryConstruct = EnumAdapter(ScanCategory, PaddedString(1, "ascii"))
+ScanCategoryConstruct = EnumAdapter(ScanCategory, PaddedString(1, "utf-8"))
 
 StringEntryHeader = Struct(
-    "string_id" / PaddedString(4, "ascii"),
+    "string_id" / PaddedString(4, "utf-8"),
     "_data_offset" / Int32ul,
     "_string_length" / Int16ul,
     "scan_speed" / ScanSpeedConstruct,
@@ -56,7 +56,7 @@ StringEntryHeader = Struct(
 
 Strings = Struct(
     "header" / StringEntryHeader,
-    "text" / Pointer(this.header._data_offset, Aligned(4, CString("ascii"), pattern=b"\xbb")),
+    "text" / Pointer(this.header._data_offset, Aligned(4, CString("utf-8"), pattern=b"\xbb")),
 )
 
 StringTableHeader = Struct(

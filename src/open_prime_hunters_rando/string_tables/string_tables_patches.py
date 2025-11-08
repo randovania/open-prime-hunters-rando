@@ -32,8 +32,8 @@ def _patch_hints(file_manager: FileManager, hints: dict[str, str]) -> None:
 
 
 def _patch_pickups(file_manager: FileManager, game_patches: dict[str, int]) -> None:
-    ammo = game_patches.get("ammo_per_expansion")
-    missiles = game_patches.get("missiles_per_expansion")
+    ammo = game_patches["ammo_per_expansion"]
+    missiles = game_patches["missiles_per_expansion"]
 
     # No changes were made, so skip
     if ammo == 30 and missiles == 10:
@@ -44,16 +44,14 @@ def _patch_pickups(file_manager: FileManager, game_patches: dict[str, int]) -> N
 
     # UA Expansion
     ammo_pickup_string = game_messages.get_string("640M")
-    ammo_pickup_string.text = f"PUA EXPANSION FOUND\\your UNIVERSAL AMMO capacity is increased by {ammo} UNITS."
+    ammo_pickup_string.text = ammo_pickup_string.text.replace("30", f"{ammo}")
 
     ammo_scan_string = scan_log.get_string("420L")
-    ammo_scan_string.text = f"UA EXPANSION\\increases the UNIVERSAL AMMO capacity by {ammo} UNITS."
+    ammo_scan_string.text = ammo_scan_string.text.replace("30", f"{ammo}")
 
     # Missile Expansion
     missile_pickup_string = game_messages.get_string("300M")
-    missile_pickup_string.text = f"PMISSILE EXPANSION FOUND\\your MISSILE capacity is increased by {missiles} UNITS."
+    missile_pickup_string.text = missile_pickup_string.text.replace("10", f"{missiles}")
 
     missile_scan_string = scan_log.get_string("310L")
-    missile_scan_string.text = (
-        f"MISSILE EXPANSION\\increases the capacity of the ARM CANNON's arsenal by {missiles} MISSILES."
-    )
+    missile_scan_string.text = missile_scan_string.text.replace("10", f"{missiles}")
