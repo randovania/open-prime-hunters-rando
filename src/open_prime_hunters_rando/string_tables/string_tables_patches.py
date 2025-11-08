@@ -23,10 +23,9 @@ def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
         # FIXME: Japanese has parsing issues
         if language == Language.JAPANESE:
             continue
-        string_table_language = Language(language)
 
-        _patch_hints(file_manager, string_table_language, string_tables.get("scan_log", {}))
-        _patch_pickups(file_manager, string_table_language, configuration.get("game_patches", {}))
+        _patch_hints(file_manager, language, string_tables.get("scan_log", {}))
+        _patch_pickups(file_manager, language, configuration.get("game_patches", {}))
 
 
 def _patch_hints(file_manager: FileManager, language: Language, hints: dict[str, str]) -> None:
