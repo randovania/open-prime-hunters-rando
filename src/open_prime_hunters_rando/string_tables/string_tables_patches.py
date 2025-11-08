@@ -29,7 +29,7 @@ def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
 
 
 def _patch_hints(file_manager: FileManager, language: Language, hints: dict[str, str]) -> None:
-    scan_log = file_manager.get_string_table(Language(language), StringTables.SCAN_LOG)
+    scan_log = file_manager.get_string_table(language, StringTables.SCAN_LOG)
 
     for string_id, text in hints.items():
         string_entry = scan_log.get_string(string_id)
@@ -44,8 +44,8 @@ def _patch_pickups(file_manager: FileManager, language: Language, game_patches: 
     if ammo == 30 and missiles == 10:
         return
 
-    game_messages = file_manager.get_string_table(Language(language), StringTables.GAME_MESSAGES)
-    scan_log = file_manager.get_string_table(Language(language), StringTables.SCAN_LOG)
+    game_messages = file_manager.get_string_table(language, StringTables.GAME_MESSAGES)
+    scan_log = file_manager.get_string_table(language, StringTables.SCAN_LOG)
 
     # UA Expansion
     ammo_pickup_string = game_messages.get_string("640M")
