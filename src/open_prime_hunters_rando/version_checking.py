@@ -30,8 +30,8 @@ def _update_revision_offsets(revision_offset: int = 0) -> dict:
 
     # Addresses that are consistent across all revisions
     story_save_data_addresses: dict = {
-        "missiles_per_tank": 0x0201A350,
-        "ammo_per_tank": 0x0201A3AC,
+        "missiles_per_expansion": 0x0201A350,
+        "ammo_per_expansion": 0x0201A3AC,
     }
 
     # Addresses that are different across all revisisions
