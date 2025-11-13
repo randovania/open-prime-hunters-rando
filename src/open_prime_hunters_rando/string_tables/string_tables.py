@@ -71,9 +71,11 @@ StringTableConstruct = Struct(
 
 
 def num_bytes_to_align(length: int, modulus: int = 4) -> int:
-    if length % modulus > 0:
-        return modulus - (length % modulus)
-    return 0
+    alignment = length % modulus
+    if alignment > 0 and alignment < 4:
+        return modulus - (alignment)
+    else:
+        return modulus
 
 
 class StringTableAdapter(construct.Adapter):
@@ -96,15 +98,15 @@ class StringTableAdapter(construct.Adapter):
         # update sizes and offsets
         encoded.strings = ListContainer()
 
-        offset = 8 if StringTableHeader.unk is not None else 4
+        offset = 8 if encoded.header.unk is not None else 4
         offset += StringEntryHeader.sizeof() * len(strings)
 
         for string_wrapper in strings:
             string = string_wrapper._raw
 
             size = len(string_wrapper.text)
-            string._string_length = size
-            string._data_offset = offset
+            string.header._string_length = size
+            string.header._data_offset = offset
 
             offset += size + num_bytes_to_align(size)
 
@@ -175,6 +177,23 @@ class StringTable:
         return cls(StringTableAdapter().parse(data))
 
     def build(self) -> bytes:
+        # update amount of entries
+        self._raw.header.entries = len(self.strings)
+
+        # update offsets and string lengths
+        difference = 0
+        offset = 0
+        for i, string in enumerate(self.strings):
+            old_string_length = string._raw.header._string_length
+            new_string_length = len(string.text)
+            difference += new_string_length - old_string_length
+            string._raw.header._string_length = new_string_length
+            offset = string._raw.header._data_offset
+
+            if difference > 0 and i > 0:
+                offset += difference
+                string._raw.header._data_offset = offset
+
         # build
         data = StringTableAdapter().build(self._raw)
 
