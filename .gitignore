@@ -149,6 +149,7 @@ src/open_prime_hunters_rando/version.py
 open_prime_hunters_rando/__pycache__/prime_hunters_patcher.cpython-310.pyc
 src/open_prime_hunters_rando/entities/entity_files/
 src/open_prime_hunters_rando/string_tables/stringTables*
+src/open_prime_hunters_rando/frontend/text_files/
 
 # VSCode
 .vscode
