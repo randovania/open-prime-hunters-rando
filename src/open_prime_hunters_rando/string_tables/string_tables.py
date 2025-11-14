@@ -73,7 +73,7 @@ StringTableConstruct = Struct(
 def num_bytes_to_align(length: int, modulus: int = 4) -> int:
     alignment = length % modulus
     if 0 < alignment < 4:
-        return modulus - (alignment)
+        return modulus - alignment
     else:
         return modulus
 
