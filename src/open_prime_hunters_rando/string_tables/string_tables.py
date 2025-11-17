@@ -180,20 +180,6 @@ class StringTable:
         # update amount of entries
         self._raw.header.entries = len(self.strings)
 
-        # update offsets and string lengths
-        difference = 0
-        offset = 0
-        for i, string in enumerate(self.strings):
-            old_string_length = string._raw.header._string_length
-            new_string_length = len(string.text)
-            difference += new_string_length - old_string_length
-            string._raw.header._string_length = new_string_length
-            offset = string._raw.header._data_offset
-
-            if difference > 0 and i > 0:
-                offset += difference
-                string._raw.header._data_offset = offset
-
         # build
         data = StringTableAdapter().build(self._raw)
 
