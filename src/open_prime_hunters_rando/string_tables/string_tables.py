@@ -205,3 +205,19 @@ class StringTable:
         if string is None:
             raise ValueError(f"No string with ID {string_id} found!")
         return string
+
+    def get_group_max_string_id(self, string_group: str) -> str:
+        string_id = "100"
+        for string in self.strings:
+            if string.string_id[-1] == string_group:
+                string_id = string.string_id
+        return string_id
+
+    def append_string(self, string_group: str, template: StringEntry) -> str:
+        max_string_id = self.get_group_max_string_id(string_group)
+        new_id = int(max_string_id[::-1][1:]) + 1
+        new_string_id = str(new_id).zfill(3)[::-1] + string_group
+        new_string = copy.deepcopy(template)
+        new_string.string_id = new_string_id
+        self.strings.append(new_string)
+        return new_string_id
