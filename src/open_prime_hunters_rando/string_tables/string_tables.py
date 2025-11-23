@@ -205,3 +205,36 @@ class StringTable:
         if string is None:
             raise ValueError(f"No string with ID {string_id} found!")
         return string
+
+    def get_group_max_string_id(self, string_group: str) -> str:
+        string_id = "100"
+        for string in self.strings:
+            if string.string_id[-1] == string_group:
+                string_id = string.string_id[:-1]
+        return string_id
+
+    def reverse_string(self, string: str) -> str:
+        return string[::-1]
+
+    def append_string(self, string_group: str, template: StringEntry) -> None:
+        """
+        Strings of a similar type share a group, which is determined by a letter. eg, 'L'.
+        The String ID is a number combined with the group letter. eg, '320P'.
+        The first ID of every group always starts at '100', eg, '100M'.
+        String IDs are actually in reverse, so '100M' is actually string '001' of group 'M'.
+        """
+        # Calculate the max string id of that string group
+        max_string_id = self.get_group_max_string_id(string_group)
+
+        # Reverse the string and convert it to an int to increment the max value
+        new_max_id = str(int(self.reverse_string(max_string_id)) + 1)
+
+        # Reverse the string again so the game can use it
+        reversed_new_id = self.reverse_string(str(new_max_id).zfill(3))
+
+        # Assign the new string id to the newly copied string
+        new_string = copy.deepcopy(template)
+        new_string.string_id = reversed_new_id + string_group
+
+        # Add the new string to the string table
+        self.strings.append(new_string)
