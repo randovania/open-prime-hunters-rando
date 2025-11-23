@@ -41,23 +41,21 @@ def _patch_ammo(file_manager: FileManager, language: Language, ammo_sizes: dict[
     missiles = ammo_sizes["missile_expansion"]
     ua = ammo_sizes["ua_expansion"]
 
-    # No changes were made, so skip
-    if missiles == 10 and ua == 30:
-        return
-
     game_messages = file_manager.get_string_table(language, StringTables.GAME_MESSAGES)
     scan_log = file_manager.get_string_table(language, StringTables.SCAN_LOG)
 
     # Missile Expansion
-    missile_pickup_string = game_messages.get_string("300M")
-    missile_pickup_string.text = missile_pickup_string.text.replace("10", f"{missiles}")
+    if missiles != 10:
+        missile_pickup_string = game_messages.get_string("300M")
+        missile_pickup_string.text = missile_pickup_string.text.replace("10", f"{missiles}")
 
-    missile_scan_string = scan_log.get_string("310L")
-    missile_scan_string.text = missile_scan_string.text.replace("10", f"{missiles}")
+        missile_scan_string = scan_log.get_string("310L")
+        missile_scan_string.text = missile_scan_string.text.replace("10", f"{missiles}")
 
     # UA Expansion
-    ammo_pickup_string = game_messages.get_string("640M")
-    ammo_pickup_string.text = ammo_pickup_string.text.replace("30", f"{ua}")
+    if ua != 30:
+        ammo_pickup_string = game_messages.get_string("640M")
+        ammo_pickup_string.text = ammo_pickup_string.text.replace("30", f"{ua}")
 
-    ammo_scan_string = scan_log.get_string("420L")
-    ammo_scan_string.text = ammo_scan_string.text.replace("30", f"{ua}")
+        ammo_scan_string = scan_log.get_string("420L")
+        ammo_scan_string.text = ammo_scan_string.text.replace("30", f"{ua}")
