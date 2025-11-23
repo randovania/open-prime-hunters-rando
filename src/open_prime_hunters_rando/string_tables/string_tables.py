@@ -210,14 +210,25 @@ class StringTable:
         string_id = "100"
         for string in self.strings:
             if string.string_id[-1] == string_group:
-                string_id = string.string_id
+                string_id = string.string_id[:-1]
         return string_id
 
-    def append_string(self, string_group: str, template: StringEntry) -> str:
+    def reverse_string(self, string: str) -> str:
+        return string[::-1]
+
+    def append_string(self, string_group: str, template: StringEntry) -> None:
+        # Calculate the max string id of that string group
         max_string_id = self.get_group_max_string_id(string_group)
-        new_id = int(max_string_id[::-1][1:]) + 1
-        new_string_id = str(new_id).zfill(3)[::-1] + string_group
+
+        # Reverse the string and convert it to an int to increment the max value
+        new_max_id = str(int(self.reverse_string(max_string_id)) + 1)
+
+        # Reverse the string again so the game can use it
+        reversed_new_id = self.reverse_string(str(new_max_id).zfill(3))
+
+        # Assign the new string id to the newly copied string
         new_string = copy.deepcopy(template)
-        new_string.string_id = new_string_id
+        new_string.string_id = reversed_new_id + string_group
+
+        # Add the new string to the string table
         self.strings.append(new_string)
-        return new_string_id
