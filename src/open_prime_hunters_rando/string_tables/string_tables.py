@@ -216,7 +216,7 @@ class StringTable:
     def reverse_string(self, string: str) -> str:
         return string[::-1]
 
-    def append_string(self, string_group: str, template: StringEntry) -> str:
+    def append_string(self, string_group: str, template: StringEntry) -> StringEntry:
         """
         Strings of a similar type share a group, which is determined by a letter. eg, 'L'.
         The String ID is a number combined with the group letter. eg, '320P'.
