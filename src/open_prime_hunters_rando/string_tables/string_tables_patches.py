@@ -18,6 +18,7 @@ class StringTables(Enum):
 
 def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
     string_tables = configuration.get("string_tables", {})
+    ammo_sizes = configuration.get("ammo_sizes", {})
 
     for language in Language:
         # FIXME: Japanese has parsing issues
@@ -25,7 +26,7 @@ def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
             continue
 
         _patch_hints(file_manager, language, string_tables.get("scan_log", {}))
-        _patch_pickups(file_manager, language, configuration.get("game_patches", {}))
+        _patch_ammo(file_manager, language, ammo_sizes)
 
 
 def _patch_hints(file_manager: FileManager, language: Language, hints: dict[str, str]) -> None:
@@ -36,27 +37,25 @@ def _patch_hints(file_manager: FileManager, language: Language, hints: dict[str,
         string_entry.text = text
 
 
-def _patch_pickups(file_manager: FileManager, language: Language, game_patches: dict[str, int]) -> None:
-    ammo = game_patches["ammo_per_expansion"]
-    missiles = game_patches["missiles_per_expansion"]
-
-    # No changes were made, so skip
-    if ammo == 30 and missiles == 10:
-        return
+def _patch_ammo(file_manager: FileManager, language: Language, ammo_sizes: dict[str, int]) -> None:
+    missiles = ammo_sizes["missile_expansion"]
+    ua = ammo_sizes["ua_expansion"]
 
     game_messages = file_manager.get_string_table(language, StringTables.GAME_MESSAGES)
     scan_log = file_manager.get_string_table(language, StringTables.SCAN_LOG)
 
-    # UA Expansion
-    ammo_pickup_string = game_messages.get_string("640M")
-    ammo_pickup_string.text = ammo_pickup_string.text.replace("30", f"{ammo}")
-
-    ammo_scan_string = scan_log.get_string("420L")
-    ammo_scan_string.text = ammo_scan_string.text.replace("30", f"{ammo}")
-
     # Missile Expansion
-    missile_pickup_string = game_messages.get_string("300M")
-    missile_pickup_string.text = missile_pickup_string.text.replace("10", f"{missiles}")
+    if missiles != 10:
+        missile_pickup_string = game_messages.get_string("300M")
+        missile_pickup_string.text = missile_pickup_string.text.replace("10", f"{missiles}")
 
-    missile_scan_string = scan_log.get_string("310L")
-    missile_scan_string.text = missile_scan_string.text.replace("10", f"{missiles}")
+        missile_scan_string = scan_log.get_string("310L")
+        missile_scan_string.text = missile_scan_string.text.replace("10", f"{missiles}")
+
+    # UA Expansion
+    if ua != 30:
+        ammo_pickup_string = game_messages.get_string("640M")
+        ammo_pickup_string.text = ammo_pickup_string.text.replace("30", f"{ua}")
+
+        ammo_scan_string = scan_log.get_string("420L")
+        ammo_scan_string.text = ammo_scan_string.text.replace("30", f"{ua}")

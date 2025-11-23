@@ -15,6 +15,8 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
 
     starting_items = configuration["starting_items"]
     game_patches = configuration["game_patches"]
+    ammo_sizes = configuration["ammo_sizes"]
+
     # Validate starting items
     _validate_starting_items(starting_items)
 
@@ -28,10 +30,10 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
 
     ARM9_PATCHES = {
         validated_rom["missiles_per_expansion"]: create_asm_patch(
-            f"add r2, r2, #{game_patches['missiles_per_expansion'] * 10}"
+            f"add r2, r2, #{ammo_sizes['missile_expansion'] * 10}"
         ),  # Missiles per expansion
         validated_rom["ammo_per_expansion"]: create_asm_patch(
-            f"add r2, r2, #{game_patches['ammo_per_expansion'] * 10}"
+            f"add r2, r2, #{ammo_sizes['ua_expansion'] * 10}"
         ),  # UA per expansion
         validated_rom["starting_octoliths"]: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths (0-8)
         validated_rom["starting_weapons"]: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
