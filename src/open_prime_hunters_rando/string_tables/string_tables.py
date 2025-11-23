@@ -217,6 +217,12 @@ class StringTable:
         return string[::-1]
 
     def append_string(self, string_group: str, template: StringEntry) -> None:
+        """
+        Strings of a similar type share a group, which is determined by a letter. eg, 'L'.
+        The String ID is a number combined with the group letter. eg, '320P'.
+        The first ID of every group always starts at '100', eg, '100M'.
+        String IDs are actually in reverse, so '100M' is actually string '001' of group 'M'.
+        """
         # Calculate the max string id of that string group
         max_string_id = self.get_group_max_string_id(string_group)
 
