@@ -64,20 +64,27 @@
             "default": {},
             "additionalProperties": false
         },
-        "game_patches": {
+        "ammo_sizes": {
             "type": "object",
+            "description": "Configure the amount of ammo given by different sources.",
             "properties": {
-                "missiles_per_expansion": {
+                "missile_expansion": {
                     "type": "integer",
                     "default": 10,
                     "maximum": 400
                 },
-                "ammo_per_expansion": {
+                "ua_expansion": {
                     "type": "integer",
                     "default": 30,
                     "maximum": 100,
                     "multipleOf": 10
-                },
+                }
+            },
+            "default": {}
+        },
+        "game_patches": {
+            "type": "object",
+            "properties": {
                 "shuffle_hunter_colors": {
                     "type": "boolean",
                     "description": "Changes the colors of the hunters.",
