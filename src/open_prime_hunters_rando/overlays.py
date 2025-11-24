@@ -7,14 +7,14 @@ OVERLAY_MODIFICATIONS = {
     # Overlay 2 handles Models and Scan Data
     2: [
         {
-            # Assign the Missile Launcher scan entry to Affinity Weapon in the item_scan_id table
-            "offset": 0x01E272,
-            "value": 0x5.to_bytes(2, "little"),
-        },
-        {
             # Assign new Nothing scan entry to Nothing item (Cloak) in the item_scan_id table
             "offset": 0x01E26A,
             "value": 0x1DA.to_bytes(2, "little"),
+        },
+        {
+            # Assign the Missile Launcher scan entry to Affinity Weapon in the item_scan_id table
+            "offset": 0x01E272,
+            "value": 0x5.to_bytes(2, "little"),
         },
     ]
 }
