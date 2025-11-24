@@ -216,7 +216,7 @@ class StringTable:
     def reverse_string(self, string: str) -> str:
         return string[::-1]
 
-    def append_string(self, string_group: str, template: StringEntry) -> StringEntry:
+    def append_string(self, string_group: str, template: StringEntry) -> str:
         """
         Strings of a similar type share a group, which is determined by a letter. eg, 'L'.
         The String ID is a number combined with the group letter. eg, '320P'.
@@ -227,15 +227,15 @@ class StringTable:
         max_string_id = self.get_group_max_string_id(string_group)
 
         # Reverse the string and convert it to an int to increment the max value
-        new_max_id = str(int(self.reverse_string(max_string_id)) + 1)
+        reversed_new_id = str(int(self.reverse_string(max_string_id)) + 1)
 
         # Reverse the string again so the game can use it
-        reversed_new_id = self.reverse_string(str(new_max_id).zfill(3))
+        final_new_id = self.reverse_string(str(reversed_new_id).zfill(3)) + string_group
 
         # Assign the new string id to the newly copied string
         new_string = copy.deepcopy(template)
-        new_string.string_id = reversed_new_id + string_group
+        new_string.string_id = final_new_id
 
         # Add the new string to the string table
         self.strings.append(new_string)
-        return new_string
+        return final_new_id
