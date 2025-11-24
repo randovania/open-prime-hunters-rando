@@ -27,6 +27,7 @@ def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
 
         _patch_hints(file_manager, language, string_tables.get("scan_log", {}))
         _patch_ammo(file_manager, language, ammo_sizes)
+        _add_missile_launcher(file_manager, language, ammo_sizes)
 
 
 def _patch_hints(file_manager: FileManager, language: Language, hints: dict[str, str]) -> None:
@@ -59,3 +60,15 @@ def _patch_ammo(file_manager: FileManager, language: Language, ammo_sizes: dict[
 
         ammo_scan_string = scan_log.get_string("420L")
         ammo_scan_string.text = ammo_scan_string.text.replace("30", f"{ua}")
+
+
+def _add_missile_launcher(file_manager: FileManager, language: Language, ammo_sizes: dict[str, int]) -> None:
+    game_messages = file_manager.get_string_table(language, StringTables.GAME_MESSAGES)
+    template_string = game_messages.get_string("450M")
+    new_entry = game_messages.append_string("M", template_string)
+
+    missile_launcher = game_messages.get_string(new_entry)
+    missile_launcher.text = (
+        "PMISSILE LAUNCHER FOUND\\you've obtained the MISSILE LAUNCHER. "
+        f"your MISSILE capacity is increased by {ammo_sizes['missile_launcher']} UNITS."
+    )

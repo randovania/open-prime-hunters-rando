@@ -68,6 +68,11 @@
             "type": "object",
             "description": "Configure the amount of ammo given by different sources.",
             "properties": {
+                "missile_launcher": {
+                    "type": "integer",
+                    "default": 5,
+                    "maximum": 400
+                },
                 "missile_expansion": {
                     "type": "integer",
                     "default": 10,
