@@ -51,6 +51,7 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
         validated_rom["custom_missile_launcher"]: create_asm_patch(
             custom_missile_launcher
         ),  # Load instructions to create a custom Missile Launcher
+        validated_rom["custom_nothing"]: create_asm_patch(read_asm_file("nothing.s")),  # Add Nothing item
     }
 
     # Decompress arm9.bin for editing

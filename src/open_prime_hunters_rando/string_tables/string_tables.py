@@ -61,7 +61,7 @@ Strings = Struct(
 
 StringTableHeader = Struct(
     "entries" / Int32ul,
-    "unk" / If(this.entries > 255, Int32ul),
+    "size" / If(this.entries > 255, Int32ul),
 )
 
 StringTableConstruct = Struct(
@@ -98,7 +98,7 @@ class StringTableAdapter(construct.Adapter):
         # update sizes and offsets
         encoded.strings = ListContainer()
 
-        offset = 8 if encoded.header.unk is not None else 4
+        offset = 8 if encoded.header.size is not None else 4
         offset += StringEntryHeader.sizeof() * len(strings)
 
         for string_wrapper in strings:
@@ -179,6 +179,7 @@ class StringTable:
     def build(self) -> bytes:
         # update amount of entries
         self._raw.header.entries = len(self.strings)
+        self._raw.header.size = self._raw.header.entries * 12
 
         # build
         data = StringTableAdapter().build(self._raw)
@@ -216,7 +217,7 @@ class StringTable:
     def reverse_string(self, string: str) -> str:
         return string[::-1]
 
-    def append_string(self, string_group: str, template: StringEntry) -> str:
+    def append_string(self, string_group: str, template: StringEntry) -> StringEntry:
         """
         Strings of a similar type share a group, which is determined by a letter. eg, 'L'.
         The String ID is a number combined with the group letter. eg, '320P'.
@@ -238,4 +239,4 @@ class StringTable:
 
         # Add the new string to the string table
         self.strings.append(new_string)
-        return final_new_id
+        return new_string
