@@ -1,4 +1,14 @@
 b       =0x022E8000     // jump to unused space
+
+/*
+Register values
+R0: 21 (id value of Affinity Weapon)
+R1: #0
+R2: value of the ammo cap
+R8: ???
+R12: more ammo caps?
+*/
+
 // ammo caps
 add     r12, r8, #0x100
 ldrh    r2, [r12,#0x52]

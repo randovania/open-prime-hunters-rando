@@ -4,7 +4,7 @@ import ndspy.code
 from ndspy.rom import NintendoDSRom
 
 OVERLAY_MODIFICATIONS = {
-    # Models and Scan Data
+    # Overlay 2 handles Models and Scan Data
     2: [
         {
             # Assign the Missile Launcher scan entry to Affinity Weapon in the item_scan_id table
@@ -28,8 +28,8 @@ def patch_overlays(rom: NintendoDSRom) -> None:
             value = offset_value["value"]
             overlay.data[offset] = value
 
-    # Save the modified file
-    rom.files[overlay.fileID] = overlay.save(compress=True)
+        # Save the modified file
+        rom.files[overlay.fileID] = overlay.save(compress=True)
 
     # Save the overlays
     rom.arm9OverlayTable = ndspy.code.saveOverlayTable(overlays)
