@@ -87,6 +87,7 @@ def _add_scan_log_strings(file_manager: FileManager, language: Language) -> None
     custom_scan_logs: list = [
         "NOTHING\\a nothing item.",
     ]
+
     for custom_scan_log in custom_scan_logs:
         new_string = scan_log.append_string("L", template_string)
         new_string.text = custom_scan_log
