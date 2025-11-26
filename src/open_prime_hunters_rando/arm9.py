@@ -28,6 +28,8 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
 
     reordered_instructions = read_asm_file("reordered_instructions.s")
 
+    custom_missile_launcher = read_asm_file("missile_launcher.s").replace("#0x32", f"#{ammo_sizes['missile_launcher']}")
+
     ARM9_PATCHES = {
         validated_rom["missiles_per_expansion"]: create_asm_patch(
             f"add r2, r2, #{ammo_sizes['missile_expansion'] * 10}"
@@ -46,6 +48,9 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
         ),  # Changing R0 affects later instructions, so reorder
         validated_rom["unlock_planets"]: _unlock_planets(game_patches["unlock_planets"]),  # Unlock planets from start
         validated_rom["starting_energy_ptr"]: starting_energy,  # Starting energy - 1
+        validated_rom["custom_missile_launcher"]: create_asm_patch(
+            custom_missile_launcher
+        ),  # Load instructions to create a custom Missile Launcher
     }
 
     # Decompress arm9.bin for editing

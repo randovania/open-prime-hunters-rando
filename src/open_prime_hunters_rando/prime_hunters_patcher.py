@@ -11,6 +11,7 @@ from open_prime_hunters_rando.entities.entity_patching import patch_entities
 from open_prime_hunters_rando.escape_sequence_patches import patch_escape_sequences
 from open_prime_hunters_rando.file_manager import FileManager
 from open_prime_hunters_rando.hunter_spawn_patches import patch_hunters
+from open_prime_hunters_rando.overlays import patch_overlays
 from open_prime_hunters_rando.static_patches import static_patches
 from open_prime_hunters_rando.string_tables.string_tables_patches import patch_string_tables
 from open_prime_hunters_rando.validator_with_default import DefaultValidatingDraft7Validator
@@ -47,6 +48,9 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
 
     # Modify main code file arm9.bin
     patch_arm9(rom, configuration)
+
+    # Modify overlay files
+    patch_overlays(rom)
 
     # Static patches to rooms
     static_patches(file_manager)
