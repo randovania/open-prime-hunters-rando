@@ -1,10 +1,10 @@
-import logging
 import random
 
 from construct import Container
 
 from open_prime_hunters_rando.entities.entity_type import EnemyType, EntityFile, EntityType, Hunter
 from open_prime_hunters_rando.file_manager import FileManager
+from open_prime_hunters_rando.logger import LOG
 
 _ROOMS_WITH_HUNTERS = {
     "Alinos": {
@@ -49,7 +49,7 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
     if not shuffle_hunter_colors and not shuffle_hunter_ids:
         return
 
-    logging.info("Modifying hunter spawns")
+    LOG.info("Modifying hunter spawns")
     random.seed(configuration["configuration_id"])
 
     if shuffle_hunter_colors:

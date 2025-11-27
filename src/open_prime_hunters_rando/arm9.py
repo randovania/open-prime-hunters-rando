@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 
 from ndspy.rom import NintendoDSRom
@@ -11,7 +10,6 @@ asm_patches = Path(__file__).parent.joinpath("files", "asm_patches")
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     addresses = get_rom_save_data_addresses(rom)
-    logging.info("Patching arm9.bin")
 
     starting_items = configuration["starting_items"]
     game_patches = configuration["game_patches"]
