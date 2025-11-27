@@ -34,7 +34,7 @@ def patch_with_status_update(
         LOG.handlers.insert(0, new_handler)
         LOG.propagate = False
 
-        patch_rom(input_path, output_path, configuration)
+        patch_rom(input_path, output_path, configuration, export_parsed_files)
         if new_handler.count < total_logs:
             status_update(1, f"Done was {new_handler.count}")
 
