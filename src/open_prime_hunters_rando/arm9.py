@@ -10,7 +10,7 @@ asm_patches = Path(__file__).parent.joinpath("files", "asm_patches")
 
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
-    validated_rom = get_rom_save_data_addresses(rom)
+    addresses = get_rom_save_data_addresses(rom)
     logging.info("Patching arm9.bin")
 
     starting_items = configuration["starting_items"]
@@ -31,27 +31,27 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     custom_missile_launcher = read_asm_file("missile_launcher.s").replace("#0x32", f"#{ammo_sizes['missile_launcher']}")
 
     ARM9_PATCHES = {
-        validated_rom["missiles_per_expansion"]: create_asm_patch(
+        addresses.missiles_per_expansion: create_asm_patch(
             f"add r2, r2, #{ammo_sizes['missile_expansion'] * 10}"
         ),  # Missiles per expansion
-        validated_rom["ammo_per_expansion"]: create_asm_patch(
+        addresses.ammo_per_expansion: create_asm_patch(
             f"add r2, r2, #{ammo_sizes['ua_expansion'] * 10}"
         ),  # UA per expansion
-        validated_rom["starting_octoliths"]: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths (0-8)
-        validated_rom["starting_weapons"]: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
-        validated_rom["weapon_slots"]: NOP,  # Prevents deleting the weapons when changing Octoliths
-        validated_rom["starting_ammo"]: bytes.fromhex(starting_ammo),  # Starting Universal Ammo
-        validated_rom["starting_energy"]: NOP,  # Normally loads value of etank (100)
-        validated_rom["starting_missiles"]: (starting_items["missiles"] * 10).to_bytes(),  # Starting Missiles
-        validated_rom["reordered_instructions"]: create_asm_patch(
+        addresses.starting_octoliths: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths (0-8)
+        addresses.starting_weapons: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
+        addresses.weapon_slots: NOP,  # Prevents deleting the weapons when changing Octoliths
+        addresses.starting_ammo: bytes.fromhex(starting_ammo),  # Starting Universal Ammo
+        addresses.starting_energy: NOP,  # Normally loads value of etank (100)
+        addresses.starting_missiles: (starting_items["missiles"] * 10).to_bytes(),  # Starting Missiles
+        addresses.reordered_instructions: create_asm_patch(
             reordered_instructions
         ),  # Changing R0 affects later instructions, so reorder
-        validated_rom["unlock_planets"]: _unlock_planets(game_patches["unlock_planets"]),  # Unlock planets from start
-        validated_rom["starting_energy_ptr"]: starting_energy,  # Starting energy - 1
-        validated_rom["custom_missile_launcher"]: create_asm_patch(
+        addresses.unlock_planets: _unlock_planets(game_patches["unlock_planets"]),  # Unlock planets from start
+        addresses.starting_energy_ptr: starting_energy,  # Starting energy - 1
+        addresses.missile_launcher: create_asm_patch(
             custom_missile_launcher
         ),  # Load instructions to create a custom Missile Launcher
-        validated_rom["custom_nothing"]: create_asm_patch(read_asm_file("nothing.s")),  # Add Nothing item
+        addresses.nothing: create_asm_patch(read_asm_file("nothing.s")),  # Add Nothing item
     }
 
     # Decompress arm9.bin for editing
