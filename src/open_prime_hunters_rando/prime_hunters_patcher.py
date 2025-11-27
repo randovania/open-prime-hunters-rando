@@ -70,6 +70,9 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
     # Patch string tables
     patch_string_tables(file_manager, configuration)
 
+    # Remove later!
+    file_manager.get_metroidhunters_text_file("metroidhunters_text_en")
+
     # Save all changes to a new rom
     file_manager.save_to_rom(output_path)
 
