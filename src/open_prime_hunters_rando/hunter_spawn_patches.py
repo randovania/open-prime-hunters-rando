@@ -6,7 +6,7 @@ from open_prime_hunters_rando.entities.entity_type import EnemyType, EntityFile,
 from open_prime_hunters_rando.file_manager import FileManager
 from open_prime_hunters_rando.logger import LOG
 
-_ROOMS_WITH_HUNTERS = {
+ROOMS_WITH_HUNTERS: dict[str, dict[str, dict[int, int]]] = {
     "Alinos": {
         "Alinos Perch": {},
         "Combat Hall": {},
@@ -54,7 +54,7 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
 
     if shuffle_hunter_colors:
         hunter_colors = list(range(6))
-        _HUNTERS_TO_COLOR = {
+        hunters_to_color = {
             Hunter.SAMUS: random.choice(hunter_colors),
             Hunter.KANDEN: random.choice(hunter_colors),
             Hunter.TRACE: random.choice(hunter_colors),
@@ -66,7 +66,7 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
             Hunter.RANDOM: random.choice(hunter_colors),
         }
 
-    for area_name, room_names in _ROOMS_WITH_HUNTERS.items():
+    for area_name, room_names in ROOMS_WITH_HUNTERS.items():
         for room_name, encounter_type_entities in room_names.items():
             entity_file = file_manager.get_entity_file(area_name, room_name)
             for entity in entity_file.entities:
@@ -105,7 +105,7 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
                 if shuffle_hunter_colors:
                     # If enabled, change the hunter spawns to use a random color by hunter type (0-5)
                     fields = entity.data.fields
-                    fields.hunter_color = _HUNTERS_TO_COLOR.get(fields.hunter_id, 0)
+                    fields.hunter_color = hunters_to_color.get(fields.hunter_id, 0)
 
 
 def _patch_hunter_ids(hunter_data: Container, new_hunter_id: Hunter) -> None:

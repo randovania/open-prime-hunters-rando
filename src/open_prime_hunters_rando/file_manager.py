@@ -19,6 +19,19 @@ class Language(Enum):
     SPANISH = "stringTables_sp"
 
 
+class StringTables(Enum):
+    GAME_MESSAGES = "GameMessages"
+    HUD_MESSAGES_MP = "HudMessagesMP"
+    HUD_MESSAGES_SP = "HudMessagesSP"
+    HUD_MSGS_COMMON = "HudMsgsCommon"
+    LOCATION_NAMES = "LocationNames"
+    MB_BANNER = "MBBanner"
+    SCAN_LOG = "ScanLog"
+    SHIP_IN_SPACE = "ShipInSpace"
+    SHIP_ON_GROUND = "ShipOnGround"
+    WEAPON_NAMES = "WeaponNames"
+
+
 class FileManager:
     def __init__(self, rom: NintendoDSRom, export_parsed_files: bool):
         self.rom = rom
@@ -33,7 +46,7 @@ class FileManager:
             self.entity_files[file_name] = EntityFile.parse(self.rom.getFileByName(file_name))
         return self.entity_files[file_name]
 
-    def get_string_table(self, language: Language, string_table: StringTable) -> StringTable:
+    def get_string_table(self, language: Language, string_table: StringTables) -> StringTable:
         file_name = f"{language.value}/{string_table.value}.bin"
         if file_name not in self.string_tables:
             self.string_tables[file_name] = StringTable.parse(self.rom.getFileByName(file_name))

@@ -108,7 +108,7 @@ class NewObject(NamedTuple):
     area_name: str
     room_name: str
     active_layers: list[int]
-    position: tuple[int, int, int]
+    position: tuple[float, float, float]
     scan_id: int
     scan_message_target: int
     scan_message: Message

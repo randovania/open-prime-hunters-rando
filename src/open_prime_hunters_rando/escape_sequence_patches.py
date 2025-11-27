@@ -109,8 +109,8 @@ def _patch_specific_rooms(file_manager: FileManager) -> None:
     # Frost Labyrinth
     entity_file = file_manager.get_entity_file("Arcterra", "Frost Labyrinth")
 
-    force_field = entity_file.get_entity(5)
-    second_pass_door.set_layer_state(0, False)
+    tunnel_force_field = entity_file.get_entity(5)
+    tunnel_force_field.set_layer_state(0, False)
 
     # Arcterra Gateway
     entity_file = file_manager.get_entity_file("Arcterra", "Arcterra Gateway")
@@ -157,7 +157,7 @@ def _patch_specific_rooms(file_manager: FileManager) -> None:
 
 
 def _patch_both_escape_layers(file_manager: FileManager) -> None:
-    ROOMS_TO_PATCH = {
+    ROOMS_TO_PATCH: dict[str, dict[str, list[int]]] = {
         "Alinos": {
             "Alinos Gateway": [],
             "Alinos Perch": [],
