@@ -31,6 +31,7 @@ def _update_revision_offsets(revision_offset: int = 0) -> dict:
     # Addresses that are consistent across all revisions
     story_save_data_addresses: dict = {
         "custom_missile_launcher": 0x02019E94,
+        "custom_nothing": 0x0201A23C,
         "missiles_per_expansion": 0x0201A350,
         "ammo_per_expansion": 0x0201A3AC,
     }

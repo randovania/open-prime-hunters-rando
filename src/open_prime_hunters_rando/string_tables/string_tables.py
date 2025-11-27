@@ -61,7 +61,7 @@ Strings = Struct(
 
 StringTableHeader = Struct(
     "entries" / Int32ul,
-    "unk" / If(this.entries > 255, Int32ul),
+    "size" / If(this.entries > 255, Int32ul),
 )
 
 StringTableConstruct = Struct(
@@ -98,7 +98,7 @@ class StringTableAdapter(construct.Adapter):
         # update sizes and offsets
         encoded.strings = ListContainer()
 
-        offset = 8 if encoded.header.unk is not None else 4
+        offset = 8 if encoded.header.size is not None else 4
         offset += StringEntryHeader.sizeof() * len(strings)
 
         for string_wrapper in strings:
@@ -179,6 +179,7 @@ class StringTable:
     def build(self) -> bytes:
         # update amount of entries
         self._raw.header.entries = len(self.strings)
+        self._raw.header.size = self._raw.header.entries * 12
 
         # build
         data = StringTableAdapter().build(self._raw)
@@ -206,36 +207,35 @@ class StringTable:
             raise ValueError(f"No string with ID {string_id} found!")
         return string
 
-    def get_group_max_string_id(self, string_group: str) -> str:
-        string_id = "100"
+    def get_max_string_for_group(self, string_group: str) -> StringEntry:
         for string in self.strings:
-            if string.string_id[-1] == string_group:
-                string_id = string.string_id[:-1]
-        return string_id
+            if string.string_id[-1] != string_group:
+                break
+        return string
 
     def reverse_string(self, string: str) -> str:
         return string[::-1]
 
-    def append_string(self, string_group: str, template: StringEntry) -> str:
+    def append_string(self, string_group: str) -> StringEntry:
         """
         Strings of a similar type share a group, which is determined by a letter. eg, 'L'.
         The String ID is a number combined with the group letter. eg, '320P'.
         The first ID of every group always starts at '100', eg, '100M'.
         String IDs are actually in reverse, so '100M' is actually string '001' of group 'M'.
         """
-        # Calculate the max string id of that string group
-        max_string_id = self.get_group_max_string_id(string_group)
+        # Calculate the max string id of a string group and return the string
+        max_string = self.get_max_string_for_group(string_group)
 
         # Reverse the string and convert it to an int to increment the max value
-        reversed_new_id = str(int(self.reverse_string(max_string_id)) + 1)
+        reversed_new_id = str(int(self.reverse_string(max_string.string_id[:-1])) + 1)
 
         # Reverse the string again so the game can use it
         final_new_id = self.reverse_string(str(reversed_new_id).zfill(3)) + string_group
 
         # Assign the new string id to the newly copied string
-        new_string = copy.deepcopy(template)
+        new_string = copy.deepcopy(max_string)
         new_string.string_id = final_new_id
 
         # Add the new string to the string table
         self.strings.append(new_string)
-        return final_new_id
+        return new_string
