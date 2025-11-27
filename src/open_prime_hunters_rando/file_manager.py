@@ -1,4 +1,3 @@
-import logging
 from enum import Enum
 from pathlib import Path
 
@@ -7,6 +6,7 @@ from ndspy.rom import NintendoDSRom
 
 from open_prime_hunters_rando.entities.entity_type import EntityFile
 from open_prime_hunters_rando.level_data import get_data
+from open_prime_hunters_rando.logger import LOG
 from open_prime_hunters_rando.string_tables.string_tables import StringTable
 
 
@@ -83,8 +83,8 @@ class FileManager:
 
     def save_to_rom(self, output_path: Path) -> None:
         # Save and build all parsed entity files and string tables
-        logging.info("Finalizing all parsed files")
+        LOG.info("Finalizing all parsed files")
         self.finalize_parsed_files()
 
-        logging.info("Saving files to a new rom")
+        LOG.info("Saving files to a new rom")
         self.rom.saveToFile(output_path)

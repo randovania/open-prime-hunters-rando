@@ -1,5 +1,3 @@
-import logging
-
 import ndspy.code
 from ndspy.rom import NintendoDSRom
 
@@ -23,7 +21,6 @@ OVERLAY_MODIFICATIONS: dict[int, list[dict[str, int]]] = {
 def patch_overlays(rom: NintendoDSRom) -> None:
     # Load the overlays
     overlays = rom.loadArm9Overlays()
-    logging.info("Patching overlays")
 
     # Modify the overlays
     for overlay_id, offset_values in OVERLAY_MODIFICATIONS.items():
