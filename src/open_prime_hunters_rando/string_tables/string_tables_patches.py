@@ -65,7 +65,6 @@ def _patch_ammo(file_manager: FileManager, language: Language, ammo_sizes: dict[
 
 def _add_game_messages_strings(file_manager: FileManager, language: Language, missile_launcher_ammo: int) -> None:
     game_messages = file_manager.get_string_table(language, StringTables.GAME_MESSAGES)
-    template_string = game_messages.get_string("100M")
 
     custom_game_messages: list = [
         (
@@ -76,18 +75,17 @@ def _add_game_messages_strings(file_manager: FileManager, language: Language, mi
     ]
 
     for custom_game_message in custom_game_messages:
-        new_string = game_messages.append_string("M", template_string)
+        new_string = game_messages.append_string("M")
         new_string.text = custom_game_message
 
 
 def _add_scan_log_strings(file_manager: FileManager, language: Language) -> None:
     scan_log = file_manager.get_string_table(language, StringTables.SCAN_LOG)
-    template_string = scan_log.get_string("100L")
 
     custom_scan_logs: list = [
         "NOTHING\\a nothing item.",
     ]
 
     for custom_scan_log in custom_scan_logs:
-        new_string = scan_log.append_string("L", template_string)
+        new_string = scan_log.append_string("L")
         new_string.text = custom_scan_log

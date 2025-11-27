@@ -2,6 +2,7 @@
 Register values at the start of the snippet
 R0: 17 (id value of Cloak)
 R4: Bool value of 1 (part of processing)
+R8: ???
 R6: #0
 */
 
