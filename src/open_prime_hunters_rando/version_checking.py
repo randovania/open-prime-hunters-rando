@@ -10,7 +10,7 @@ class Revision(Enum):
     AMHK = b"AMHK"
 
 
-def detect_rom(rom: NintendoDSRom) -> dict:
+def get_rom_save_data_addresses(rom: NintendoDSRom) -> dict:
     # Validate the rom
     id_code = rom.idCode
     match id_code:
@@ -25,11 +25,10 @@ def detect_rom(rom: NintendoDSRom) -> dict:
 
 
 def _update_revision_offsets(revision_offset: int = 0) -> dict:
-    # These addresses pertain to the StorySaveData
     # Use US addresses as a base, then add the offset difference based on region
 
     # Addresses that are consistent across all revisions
-    story_save_data_addresses: dict = {
+    all_addresses: dict = {
         "custom_missile_launcher": 0x02019E94,
         "custom_nothing": 0x0201A23C,
         "missiles_per_expansion": 0x0201A350,
@@ -49,5 +48,5 @@ def _update_revision_offsets(revision_offset: int = 0) -> dict:
         "starting_energy_ptr": 0x0205C720,
     }
     for field, address in revision_addresses.items():
-        story_save_data_addresses[field] = address + revision_offset
-    return story_save_data_addresses
+        all_addresses[field] = address + revision_offset
+    return all_addresses
