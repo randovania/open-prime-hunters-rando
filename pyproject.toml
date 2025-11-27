@@ -85,13 +85,22 @@ files = [
 follow_imports = "silent"
 disallow_untyped_defs = true
 local_partial_types = true
-ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "tests.*"
 disallow_untyped_defs = false
 check_untyped_defs = true
 disable_error_code = "method-assign"
+
+[[tool.mypy.overrides]]
+# any dependencies which we do not control but are missing types go here
+# not too much can be done about these, so they're not the end of the world
+# dependencies we DO control should use `type: ignore[import-untyped]`
+module = [
+    "construct.*",
+    "keystone.*",
+]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 minversion = "6.0"
