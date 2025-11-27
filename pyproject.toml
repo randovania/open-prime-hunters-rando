@@ -85,6 +85,7 @@ files = [
 follow_imports = "silent"
 disallow_untyped_defs = true
 local_partial_types = true
+exclude = "build/"
 
 [[tool.mypy.overrides]]
 module = "tests.*"
