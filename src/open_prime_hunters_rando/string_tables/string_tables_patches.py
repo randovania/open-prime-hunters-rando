@@ -1,6 +1,7 @@
 from enum import Enum
 
 from open_prime_hunters_rando.file_manager import FileManager, Language
+from open_prime_hunters_rando.string_tables.string_tables import ScanCategory, ScanSpeed
 
 
 class StringTables(Enum):
@@ -83,9 +84,15 @@ def _add_scan_log_strings(file_manager: FileManager, language: Language) -> None
     scan_log = file_manager.get_string_table(language, StringTables.SCAN_LOG)
 
     custom_scan_logs: list = [
-        "NOTHING\\a nothing item.",
+        {
+            "text": "NOTHING\\a nothing item.",
+            "scan_speed": ScanSpeed.FAST,
+            "scan_category": ScanCategory.EQUIPMENT,
+        },
     ]
 
     for custom_scan_log in custom_scan_logs:
         new_string = scan_log.append_string("L")
-        new_string.text = custom_scan_log
+        new_string.text = custom_scan_log["text"]
+        new_string.scan_speed = custom_scan_log["scan_speed"]
+        new_string.scan_category = custom_scan_log["scan_category"]
