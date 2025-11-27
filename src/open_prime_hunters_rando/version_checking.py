@@ -19,7 +19,7 @@ class SaveStoryAddresses:
         self.ammo_per_expansion = 0x0201A3AC
 
         # Addresses that are different across revisions (Using US as a base)
-        self.starting_octolith = 0x0205C4E8 + revision_offset
+        self.starting_octoliths = 0x0205C4E8 + revision_offset
         self.starting_weapons = 0x0205C4F0 + revision_offset
         self.weapon_slots = 0x0205C500 + revision_offset
         self.starting_ammo = 0x0205C514 + revision_offset

@@ -37,7 +37,7 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
         addresses.ammo_per_expansion: create_asm_patch(
             f"add r2, r2, #{ammo_sizes['ua_expansion'] * 10}"
         ),  # UA per expansion
-        addresses.starting_octolith: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths (0-8)
+        addresses.starting_octoliths: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths (0-8)
         addresses.starting_weapons: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
         addresses.weapon_slots: NOP,  # Prevents deleting the weapons when changing Octoliths
         addresses.starting_ammo: bytes.fromhex(starting_ammo),  # Starting Universal Ammo
