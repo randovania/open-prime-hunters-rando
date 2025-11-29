@@ -53,6 +53,13 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
     LOG.info("Patching overlays")
     patch_overlays(rom)
 
+    # Patch entities
+    patch_entities(file_manager, configuration["areas"])
+
+    # Add new entities
+    LOG.info("Adding new entities")
+    add_new_entities(file_manager)
+
     # Static patches to rooms
     LOG.info("Patching rooms")
     static_patches(file_manager)
@@ -60,13 +67,6 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
     # Patch escape sequences
     LOG.info("Removing escape sequences")
     patch_escape_sequences(file_manager)
-
-    # Patch entities
-    patch_entities(file_manager, configuration["areas"])
-
-    # Add new entities
-    LOG.info("Adding new entities")
-    add_new_entities(file_manager)
 
     # Patch Hunter Spawns
     patch_hunters(file_manager, configuration)
