@@ -179,7 +179,10 @@ class StringTable:
     def build(self) -> bytes:
         # update amount of entries
         self._raw.header.entries = len(self.strings)
-        self._raw.header.size = self._raw.header.entries * 12
+
+        # update header size for ScanLog
+        if self._raw.header.size is not None:
+            self._raw.header.size = self._raw.header.entries * 12
 
         # build
         data = StringTableAdapter().build(self._raw)
