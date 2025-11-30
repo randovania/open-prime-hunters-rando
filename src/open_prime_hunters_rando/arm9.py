@@ -87,11 +87,11 @@ def _validate_starting_items(starting_items: dict) -> None:
         raise ValueError(f"Starting ammo must be 400 or less! Got {starting_items['ammo']}")
 
 
-def _bitfield_to_hex(bitfield: str) -> int:
+def _bitfield_to_hex(bitfield: str) -> bytes:
     return int(bitfield, 2).to_bytes()
 
 
-def _unlock_planets(unlock_planets: dict) -> int:
+def _unlock_planets(unlock_planets: dict) -> bytes:
     planets = [
         unlock_planets["Arcterra"],  # Arcterra 1
         unlock_planets["Arcterra"],  # Arcterra 2

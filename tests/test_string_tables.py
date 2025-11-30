@@ -1,7 +1,7 @@
 import pytest
 
+from open_prime_hunters_rando.file_manager import StringTables
 from open_prime_hunters_rando.string_tables.string_tables import StringTable
-from open_prime_hunters_rando.string_tables.string_tables_patches import StringTables
 
 all_string_tables = [
     StringTables.GAME_MESSAGES.value,

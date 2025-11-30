@@ -1,20 +1,5 @@
-from enum import Enum
-
-from open_prime_hunters_rando.file_manager import FileManager, Language
+from open_prime_hunters_rando.file_manager import FileManager, Language, StringTables
 from open_prime_hunters_rando.string_tables.string_tables import ScanCategory, ScanSpeed
-
-
-class StringTables(Enum):
-    GAME_MESSAGES = "GameMessages"
-    HUD_MESSAGES_MP = "HudMessagesMP"
-    HUD_MESSAGES_SP = "HudMessagesSP"
-    HUD_MSGS_COMMON = "HudMsgsCommon"
-    LOCATION_NAMES = "LocationNames"
-    MB_BANNER = "MBBanner"
-    SCAN_LOG = "ScanLog"
-    SHIP_IN_SPACE = "ShipInSpace"
-    SHIP_ON_GROUND = "ShipOnGround"
-    WEAPON_NAMES = "WeaponNames"
 
 
 def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:

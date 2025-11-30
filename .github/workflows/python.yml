@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - '*'
+      - 'main'
     tags:
       - '*'
 
@@ -23,7 +23,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.10"
+          python-version: "3.12"
      
       - name: Install Python packages
         run: python -m pip install --upgrade pip setuptools build
@@ -39,6 +39,68 @@ jobs:
         with:
           name: python-package-distributions
           path: dist
+
+  test:
+    needs:
+      - build
+      
+    runs-on: ubuntu-latest
+    name: Test Python ${{ matrix.python.version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python:
+          - {version: '3.12', wheel: 'cp312-cp312'}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python.version }}
+
+      - name: Download all the dists
+        uses: actions/download-artifact@v5
+        with:
+          name: python-package-distributions
+          path: dist/
+            
+      - name: Install Python packages
+        run: python -m pip install --upgrade pip pytest
+
+      - name: install built wheel
+        run: python -m pip install dist/*.whl
+        shell: bash
+
+      - name: test
+        run: python -m pytest tests
+
+  starter_preset_patcher:
+    runs-on: self-hosted
+    needs:
+      - build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - name: Create venv
+        run: python -m venv venv
+
+      - name: Install Python packages
+        run: venv/bin/python -m pip install --upgrade pip setuptools
+
+      - name: Install
+        run: venv/bin/python -m pip install -e .
+
+      - name: Export
+        run:
+          venv/bin/python -m open_prime_hunters_rando --input-path "$PRIME_HUNTERS_PATH" --output-path export/ --input-json tests/test_files/starter_preset_patcher.json --export-parsed-files False
 
   mypy:
     runs-on: 'ubuntu-latest'

@@ -28,6 +28,8 @@ def patch_overlays(rom: NintendoDSRom) -> None:
         for offset_value in offset_values:
             offset = offset_value["offset"]
             value = offset_value["value"].to_bytes(2, "little")
+            overlay.data = bytearray(overlay.data)
+            # Edit the offset with the new bytes
             overlay.data[offset : offset + len(value)] = value
 
         # Save the modified file
