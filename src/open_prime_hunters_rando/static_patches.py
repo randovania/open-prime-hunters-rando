@@ -1,4 +1,4 @@
-from open_prime_hunters_rando.entities.entity_type import DoorType, Message
+from open_prime_hunters_rando.entities.enum import DoorType, Message
 from open_prime_hunters_rando.file_manager import FileManager
 
 
@@ -28,7 +28,7 @@ def _disable_boss_force_fields(file_manager: FileManager) -> None:
             entity.set_layer_state(0, False)
             entity.set_layer_state(3, False)
         else:
-            entity.data.active = False
+            entity.force_field_data().active = False
 
 
 def _disable_message_prompts(file_manager: FileManager) -> None:
@@ -43,32 +43,33 @@ def _disable_message_prompts(file_manager: FileManager) -> None:
         for room_name, message_prompts in room_names.items():
             entity_file = file_manager.get_entity_file(area_name, room_name)
             for message_prompt in message_prompts:
-                entity = entity_file.get_entity(message_prompt)
-                entity.data.active = False
+                entity = entity_file.get_entity(message_prompt).trigger_volume_data()
+                entity.active = False
 
 
 def _disable_new_arrival_registration_cutscenes(file_manager: FileManager) -> None:
     entity_file = file_manager.get_entity_file("Celestial Archives", "New Arrival Registration")
 
     # Disable the first force field cutscene and force field, scans are now always active
-    trigger_volume = entity_file.get_entity(34)
-    trigger_volume.data.parent_id = 0
+    trigger_volume = entity_file.get_entity(34).trigger_volume_data()
+    trigger_volume.parent_id = 0
 
     # Disable the cutscene for deactivating the shield
-    shield_key = entity_file.get_entity(49)
-    shield_key.data.notify_entity_id = 31
-    shield_key.data.collected_message = Message.SET_ACTIVE
+    shield_key = entity_file.get_entity(49).item_spawn_data()
+    shield_key.notify_entity_id = 31
+    shield_key.collected_message = Message.SET_ACTIVE
 
     # Disable the second force field cutscene by linking directly to the Greater Ithrak enemy spawn
-    artifact = entity_file.get_entity(19)
-    artifact.data.message1_target = 53
-    artifact.data.message1 = Message.TRIGGER
+    artifact = entity_file.get_entity(19).artifact_data()
+    artifact.message1_target = 53
+    artifact.message1 = Message.TRIGGER
 
 
 def _remove_elder_passage_top_lock_and_force_field(file_manager: FileManager) -> None:
     entity_file = file_manager.get_entity_file("Alinos", "Elder Passage")
-    trigger_volume = entity_file.get_entity(25)
-    trigger_volume.data.parent_message = Message.NONE
+
+    trigger_volume = entity_file.get_entity(25).trigger_volume_data()
+    trigger_volume.parent_message = Message.NONE
 
     force_field = entity_file.get_entity(39)
     force_field.set_layer_state(0, False)
@@ -77,45 +78,45 @@ def _remove_elder_passage_top_lock_and_force_field(file_manager: FileManager) ->
 
 def _disable_alimbic_garden_cutscene(file_manager: FileManager) -> None:
     entity_file = file_manager.get_entity_file("Alinos", "Alimbic Gardens")
-    trigger_volume = entity_file.get_entity(7)
-    trigger_volume.data.active = False
+    trigger_volume = entity_file.get_entity(7).trigger_volume_data()
+    trigger_volume.active = False
 
 
 def _disable_fault_line_imperialist_cutscene(file_manager: FileManager) -> None:
     entity_file = file_manager.get_entity_file("Arcterra", "Fault Line")
-    imperialist = entity_file.get_entity(46)
-    imperialist.data.notify_entity_id = 0
-    imperialist.data.collected_message = Message.NONE
+    imperialist = entity_file.get_entity(46).item_spawn_data()
+    imperialist.notify_entity_id = 0
+    imperialist.collected_message = Message.NONE
 
 
 def _patch_sic_transit_inner_door(file_manager: FileManager) -> None:
     entity_file = file_manager.get_entity_file("Arcterra", "Sic Transit")
-    door = entity_file.get_entity(24)
-    door.data.door_type = DoorType.THIN
+    door = entity_file.get_entity(24).door_data()
+    door.door_type = DoorType.THIN
 
 
 def _lock_fault_line_magmaul_door(file_manager: FileManager) -> None:
     # The door from Sic Transit is a Magmaul door but not locked in game
     entity_file = file_manager.get_entity_file("Arcterra", "Fault Line")
-    door = entity_file.get_entity(31)
-    door.data.locked = True
+    door = entity_file.get_entity(31).door_data()
+    door.locked = True
 
 
 def _fix_incubation_vault_03_portal_spawn(file_manager: FileManager) -> None:
     # The portal from Docking Bay to Incubation Vault 03 spawned Samus at the room spawn and not at the portal
     entity_file = file_manager.get_entity_file("Celestial Archives", "Docking Bay")
-    portal = entity_file.get_entity(7)
-    portal.data.target_index = 27
+    portal = entity_file.get_entity(7).teleporter_data()
+    portal.target_index = 27
 
 
 def _disable_helm_room_scan_door_cutscenes(file_manager: FileManager) -> None:
     entity_file = file_manager.get_entity_file("Celestial Archives", "Helm Room")
 
     # Scan object that unlocks the door
-    object = entity_file.get_entity(9)
-    object.data.scan_message_target = 8
-    object.data.scan_message = Message.UNLOCK
+    object = entity_file.get_entity(9).object_data()
+    object.scan_message_target = 8
+    object.scan_message = Message.UNLOCK
 
     # Trigger activates the cutscene showing the door
     trigger = entity_file.get_entity(17)
-    trigger.data.active = False
+    trigger.trigger_volume_data().active = False

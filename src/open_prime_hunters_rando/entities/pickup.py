@@ -1,6 +1,7 @@
 from construct import Container
 
-from open_prime_hunters_rando.entities.entity_type import EntityFile, EntityType, ItemType
+from open_prime_hunters_rando.entities.entity_type import EntityFile
+from open_prime_hunters_rando.entities.enum import EntityType, ItemType
 
 
 def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
@@ -9,9 +10,9 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
         new_entity_type = EntityType(pickup["entity_type"])
 
         entity = entity_file.get_entity(entity_id)
-        header = entity.data.header
 
-        old_entity_data = entity.data
+        old_item_spawn_data = entity.item_spawn_data()
+        old_artifact_data = entity.artifact_data()
         old_entity_type = entity.entity_type
 
         # Update ItemSpawn entities
@@ -19,29 +20,31 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
         if old_entity_type == EntityType.ITEM_SPAWN:
             # Entity is still ItemSpawn
             if new_entity_type == EntityType.ITEM_SPAWN:
-                entity.data.item_type = ItemType(pickup["item_type"])
+                entity.item_spawn_data().item_type = ItemType(pickup["item_type"])
             # Entity is now Artifact
             else:
                 entity.entity_type = EntityType.ARTIFACT
                 # Raise entity so it doesn't clip into the floor
-                header.position.y += 0.3
+                entity.position.y += 0.3
                 entity.data = Container(
                     {
-                        "header": header,
+                        "header": entity.header,
                         "model_id": pickup["model_id"],
                         "artifact_id": pickup["artifact_id"],
-                        "active": old_entity_data.enabled,
-                        "has_base": old_entity_data.has_base,
-                        "message1_target": old_entity_data.notify_entity_id,
+                        "active": old_item_spawn_data.enabled,
+                        "has_base": old_item_spawn_data.has_base,
+                        "message1_target": old_item_spawn_data.notify_entity_id,
                         "_padding1": 0,
-                        "message1": old_entity_data.collected_message,
+                        "message1": old_item_spawn_data.collected_message,
                         "message2_target": 0,
                         "_padding2": 0,
                         "message2": 0,
                         "message3_target": 0,
                         "_padding3": 0,
                         "message3": 0,
-                        "linked_entity_id": -1 if old_entity_data.parent_id == 65535 else old_entity_data.parent_id,
+                        "linked_entity_id": -1
+                        if old_item_spawn_data.parent_id == 65535
+                        else old_item_spawn_data.parent_id,
                     }
                 )
 
@@ -50,28 +53,28 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
         else:
             # Entity is still Artifact
             if new_entity_type == EntityType.ARTIFACT:
-                entity.data.model_id = pickup["model_id"]
-                entity.data.artifact_id = pickup["artifact_id"]
+                entity.artifact_data().model_id = pickup["model_id"]
+                entity.artifact_data().artifact_id = pickup["artifact_id"]
             # Entity is now ItemSpawn
             else:
                 entity.entity_type = EntityType.ITEM_SPAWN
                 # Only lower entity if it had a base prior to avoid entity clipping into the floor in shields
-                if old_entity_data.has_base:
-                    header.position.y -= 0.3
+                if old_artifact_data.has_base:
+                    entity.position.y -= 0.3
                 entity.data = Container(
                     {
-                        "header": header,
+                        "header": entity.header,
                         "parent_id": 65535,
                         "item_type": ItemType(pickup["item_type"]),
-                        "enabled": old_entity_data.active,
-                        "has_base": old_entity_data.has_base,
+                        "enabled": old_artifact_data.active,
+                        "has_base": old_artifact_data.has_base,
                         "always_active": False,
                         "_padding": 0,
                         "max_spawn_count": 1,
                         "spawn_interval": 0,
                         "spawn_delay": 0,
-                        "notify_entity_id": old_entity_data.message1_target,
-                        "collected_message": old_entity_data.message1,
+                        "notify_entity_id": old_artifact_data.message1_target,
+                        "collected_message": old_artifact_data.message1,
                         "collected_message_param1": 0,
                         "collected_message_param2": 0,
                     }

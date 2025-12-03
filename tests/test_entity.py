@@ -3,7 +3,8 @@ import itertools
 import pytest
 from construct import Container
 
-from open_prime_hunters_rando.entities.entity_type import Entity, EntityFile, EntityType
+from open_prime_hunters_rando.entities.entity_type import Entity, EntityFile
+from open_prime_hunters_rando.entities.enum import EntityType
 from open_prime_hunters_rando.level_data import (
     ALINOS,
     ARCTERRA,
