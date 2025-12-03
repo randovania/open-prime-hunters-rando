@@ -1,48 +1,9 @@
 from __future__ import annotations
 
-from typing import IO, TYPE_CHECKING, Any, SupportsIndex
-
-import construct
-from construct import Adapter, Construct, Container, Enum, Int32ub
+from typing import TYPE_CHECKING, SupportsIndex
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
-
-
-class EnumAdapter(Adapter):
-    def __init__(self, enum_class: Any, subcon: Any = Int32ub) -> None:
-        super().__init__(Enum(subcon, enum_class))
-        self._enum_class = enum_class
-
-    def _decode(self, obj: str, context: Container, path: str) -> Enum | str:
-        try:
-            return self._enum_class[obj]
-        except KeyError:
-            return obj
-
-    def _encode(self, obj: Enum, context: Container, path: str) -> str | Enum:
-        if isinstance(obj, self._enum_class):
-            return obj.name
-        return obj
-
-
-class ErrorWithMessage(Construct):
-    def __init__(self, message: str, error: type[construct.ConstructError] = construct.ExplicitError) -> None:
-        super().__init__()
-        self.message = message
-        self.flagbuildnone = True
-        self.error = error
-
-    def _parse(self, stream: IO[bytes], context: Any, path: str) -> None:
-        message = construct.evaluate(self.message, context)
-        raise self.error(f"Error field was activated during parsing with error {message}", path=path)
-
-    def _build(self, obj: None, stream: IO[bytes], context: Any, path: str) -> int:
-        message = construct.evaluate(self.message, context)
-        raise self.error(f"Error field was activated during building with error {message}", path=path)
-
-    def _sizeof(self, context: Container, path: str) -> int:
-        raise construct.SizeofError("Error does not have size, because it interrupts parsing and building", path=path)
 
 
 class Vec2:

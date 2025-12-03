@@ -1,5 +1,4 @@
 import copy
-import math
 import typing
 from collections.abc import Collection, Iterator
 from typing import Any, Self
@@ -29,7 +28,7 @@ from construct import (
     this,
 )
 
-from open_prime_hunters_rando.constants import EnumAdapter, Vec3
+from open_prime_hunters_rando.entities.adapters import ColorRgbAdapter, EnumAdapter, FixedAdapter
 from open_prime_hunters_rando.entities.entity_types.area_volume import AreaVolume
 from open_prime_hunters_rando.entities.entity_types.artifact import Artifact
 from open_prime_hunters_rando.entities.entity_types.camera_sequence import CameraSequence
@@ -64,22 +63,9 @@ from open_prime_hunters_rando.entities.enum import (
     TriggerVolumeType,
     VolumeType,
 )
+from open_prime_hunters_rando.entities.vec import Vec3
 
 EntityTypeConstruct = EnumAdapter(EntityType, Int16ul)
-
-
-class FixedAdapter(construct.Adapter):
-    """Fixed-point number with 12-bit fractional part"""
-
-    def __init__(self) -> None:
-        super().__init__(construct.Int32sl)
-
-    def _decode(self, obj: int, context: dict, path: str) -> float:
-        return float(obj) / 4096
-
-    def _encode(self, obj: float, context: dict, path: str) -> int:
-        return math.floor(obj * 4096)
-
 
 Fixed = FixedAdapter()
 
@@ -545,20 +531,6 @@ DefenseNodeEntityData = Struct(
     "header" / EntityDataHeader,
     "volume" / RawCollisionVolume,
 )
-
-
-class ColorRgbAdapter(construct.Adapter):
-    """RGB for LightSource Entities"""
-
-    def __init__(self) -> None:
-        super().__init__(construct.Byte)
-
-    def _decode(self, obj: int, context: dict, path: str) -> float:
-        return float(obj) / 255
-
-    def _encode(self, obj: float, context: dict, path: str) -> int:
-        return math.floor(obj * 255)
-
 
 ColorRgb = Struct(
     "red" / ColorRgbAdapter(),
