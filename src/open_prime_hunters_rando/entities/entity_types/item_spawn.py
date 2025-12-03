@@ -1,6 +1,6 @@
 from construct import Container
 
-from open_prime_hunters_rando.entities.entity_type import ItemType, Message
+from open_prime_hunters_rando.entities.enum import ItemType, Message
 
 
 class ItemSpawn:

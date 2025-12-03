@@ -1,7 +1,7 @@
 from construct import Container
 
 from open_prime_hunters_rando.constants import Vec3
-from open_prime_hunters_rando.entities.entity_type import TriggerVolumeFlags, VolumeType
+from open_prime_hunters_rando.entities.enum import TriggerVolumeFlags, VolumeType
 
 
 class JumpPad:

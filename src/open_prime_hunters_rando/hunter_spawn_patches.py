@@ -1,7 +1,8 @@
 import random
 
-from open_prime_hunters_rando.entities.entity_type import EnemyType, EntityFile, EntityType, Hunter
+from open_prime_hunters_rando.entities.entity_type import EntityFile
 from open_prime_hunters_rando.entities.entity_types.enemy_spawn import HunterSpawnField
+from open_prime_hunters_rando.entities.enum import EnemyType, EntityType, Hunter
 from open_prime_hunters_rando.file_manager import FileManager
 from open_prime_hunters_rando.logger import LOG
 

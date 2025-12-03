@@ -1,7 +1,7 @@
 from construct import Container
 
 from open_prime_hunters_rando.constants import Vec3, Vec4
-from open_prime_hunters_rando.entities.entity_type import ItemType, Message, PlatformFlags
+from open_prime_hunters_rando.entities.enum import ItemType, Message, PlatformFlags
 
 
 class Platform:

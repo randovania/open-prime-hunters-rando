@@ -1,5 +1,4 @@
 import copy
-import enum
 import math
 import typing
 from collections.abc import Collection, Iterator
@@ -50,29 +49,21 @@ from open_prime_hunters_rando.entities.entity_types.player_spawn import PlayerSp
 from open_prime_hunters_rando.entities.entity_types.point_module import PointModule
 from open_prime_hunters_rando.entities.entity_types.teleporter import Teleporter
 from open_prime_hunters_rando.entities.entity_types.trigger_volume import TriggerVolume
-
-
-class EntityType(enum.Enum):
-    PLATFORM = 0
-    OBJECT = 1
-    PLAYER_SPAWN = 2
-    DOOR = 3
-    ITEM_SPAWN = 4
-    ENEMY_SPAWN = 6
-    TRIGGER_VOLUME = 7
-    AREA_VOLUME = 8
-    JUMP_PAD = 9
-    POINT_MODULE = 10  # unused
-    MORPH_CAMERA = 11
-    OCTOLITH_FLAG = 12
-    FLAG_BASE = 13
-    TELEPORTER = 14
-    DEFENSE_NODE = 15
-    LIGHT_SOURCE = 16
-    ARTIFACT = 17
-    CAMERA_SEQUENCE = 18
-    FORCE_FIELD = 19
-
+from open_prime_hunters_rando.entities.enum import (
+    DoorType,
+    EnemyType,
+    EntityType,
+    Hunter,
+    ItemType,
+    Message,
+    ObjectEffectFlags,
+    ObjectFlags,
+    PaletteId,
+    PlatformFlags,
+    TriggerVolumeFlags,
+    TriggerVolumeType,
+    VolumeType,
+)
 
 EntityTypeConstruct = EnumAdapter(EntityType, Int16ul)
 
@@ -115,121 +106,7 @@ EntityDataHeader = Struct(
     "facing_vector" / Vector3Fx,
 )
 
-
-class Message(enum.Enum):
-    NONE = 0
-    SET_ACTIVE = 5
-    DESTROYED = 6
-    DAMAGE = 7
-    TRIGGER = 9
-    UPDATE_MUSIC = 12
-    GRAVITY = 15
-    UNLOCK = 16
-    LOCK = 17
-    ACTIVATE = 18
-    COMPLETE = 19
-    IMPACT = 20
-    DEATH = 21
-    UNUSED_22 = 22
-    SHIP_HATCH = 23
-    UNUSED_24 = 24
-    UNUSED_25 = 25
-    SHOW_PROMPT = 26
-    SHOW_WARNING = 27
-    SHOW_OVERLAY = 28
-    MOVE_ITEM_SPAWNER = 29
-    SET_CAM_SEQ_AI = 30
-    PLAYER_COLLIDE_WITH = 31
-    BEAM_COLLIDE_WITH = 32
-    UNLOCK_CONNECTORS = 33
-    LOCK_CONNECTORS = 34
-    PREVENT_FORM_SWITCH = 35
-    UNKNOWN_36 = 36
-    SET_TRIGGER_STATE = 42
-    CLEAR_TRIGGER_STATE = 43
-    PLATFORM_WAKEUP = 44
-    PLATFORM_SLEEP = 45
-    DRIP_MOAT_PLATFORM = 46
-    ACTIVATE_TURRET = 48
-    DECREASE_TURRET_LIGHTS = 49
-    INCREASE_TURRET_LIGHTS = 50
-    DEACTIVATE_TURRET = 51
-    SET_BEAM_REFLECTION = 52
-    SET_PLATFORM_INDEX = 53
-    PLAY_SFX_SCRIPT = 54
-    UNLOCK_OUBLIETTE = 56
-    CHECKPOINT = 57
-    ESCAPE_UPDATE1 = 58
-    SET_SEEK_PLAYER_Y = 59
-    LOAD_OUBLIETTE = 60
-    ESCAPE_UPDATE2 = 61
-
-
 MessageConstruct = EnumAdapter(Message, Int32ul)
-
-
-class PlatformFlags(enum.IntFlag):
-    NONE = 0x0
-    HAZARD = 0x1
-    CONTACT_DAMAGE = 0x2
-    BEAM_SPAWNER = 0x4
-    BEAM_COL_EFFECT = 0x8
-    DAMAGE_REFLECT1 = 0x10
-    DAMAGE_REFLECT2 = 0x20
-    STANDING_COL_ONLY = 0x40
-    START_SLEEP = 0x80
-    SLEEP_AT_END = 0x100
-    DRIP_MOAT = 0x200
-    SKIP_NODE_REF = 0x400
-    DRAW_IF_NODE_REF = 0x800
-    DRAW_ALWAYS = 0x1000
-    HIDE_ON_SLEEP = 0x2000
-    SYLUX_SHIP = 0x4000
-    BIT15 = 0x8000
-    BEAM_REFLECTION = 0x10000
-    USE_ROOM_STATE = 0x20000
-    BEAM_TARGET = 0x40000
-    SAMUS_SHIP = 0x80000
-    BREAKABLE = 0x100000
-    PERSIST_ROOM_STATE = 0x200000
-    NO_BEAM_IF_CULL = 0x400000
-    NO_RECOIL = 0x800000
-    BIT24 = 0x1000000
-    BIT25 = 0x2000000
-    BIT26 = 0x4000000
-    BIT27 = 0x8000000
-    BIT28 = 0x10000000
-    BIT29 = 0x20000000
-    BIT30 = 0x40000000
-    BIT31 = 0x80000000
-
-
-class ItemType(enum.Enum):
-    NONE = -1
-    HEALTH_MEDIUM = 0
-    HEALTH_SMALL = 1
-    HEALTH_BIG = 2
-    DOUBLE_DAMAGE = 3
-    ENERGY_TANK = 4
-    VOLT_DRIVER = 5
-    MISSILE_EXPANSION = 6
-    BATTLEHAMMER = 7
-    IMPERIALIST = 8
-    JUDICATOR = 9
-    MAGMAUL = 10
-    SHOCK_COIL = 11
-    OMEGA_CANNON = 12
-    UA_SMALL = 13
-    UA_BIG = 14
-    MISSILE_SMALL = 15
-    MISSILE_BIG = 16
-    CLOAK = 17
-    UA_EXPANSION = 18
-    ARTIFACT_KEY = 19
-    DEATHALT = 20
-    AFFINITY_WEAPON = 21
-    PICK_WPN_MISSILE = 22
-
 
 ItemTypeConstruct = EnumAdapter(ItemType, Int32sl)
 
@@ -308,35 +185,6 @@ PlatformEntityData = Struct(
     "lifetime_message4_param2" / Int32sl,
 )
 
-
-class ObjectFlags(enum.IntFlag):
-    NONE = 0x0
-    STATE_BIT0 = 0x1
-    STATE_BIT1 = 0x2
-    STATE = 0x3
-    NO_ANIMATION = 0x4
-    ENTITY_LINKED = 0x8
-    IS_VISIBLE = 0x10
-
-
-class ObjectEffectFlags(enum.IntFlag):
-    NONE = 0x0
-    USE_EFFECT_VOLUME = 0x1
-    USE_EFFECT_OFFSET = 0x2
-    REPEAT_SCAN_MESSAGE = 0x4
-    WEAPON_ZOOM = 0x8
-    ATTACH_EFFECT = 0x10
-    DESTROY_EFFECT = 0x20
-    ALWAYS_UPDATE_EFFECT = 0x40
-    UNKNOWN = 0x8000
-
-
-class VolumeType(enum.Enum):
-    BOX = 0
-    CYLINDER = 1
-    SPHERE = 2
-
-
 volume_types = {
     VolumeType.BOX: Struct(
         "box_vector1" / Vector3Fx,
@@ -390,27 +238,6 @@ PlayerSpawnEntityData = Struct(
     "team_index" / Byte,
 )
 
-
-class DoorType(enum.Enum):
-    STANDARD = 0
-    MORPH_BALL = 1
-    BOSS = 2
-    THIN = 3
-
-
-class PaletteId(enum.Enum):
-    POWER_BEAM = 0
-    VOLT_DRIVER = 1
-    MISSILE = 2
-    BATTLEHAMMER = 3
-    IMPERIALIST = 4
-    JUDICATOR = 5
-    MAGMAUL = 6
-    SHOCK_COIL = 7
-    OMEGA_CANNON = 8
-    LOCKED = 9
-
-
 PaletteIdConstruct = EnumAdapter(PaletteId, Int32ul)
 
 DoorEntityData = Struct(
@@ -445,79 +272,9 @@ ItemSpawnEntityData = Struct(
     "collected_message_param2" / Int32ul,
 )
 
-
-class EnemyType(enum.Enum):
-    WAR_WASP = 0
-    ZOOMER = 1
-    TEMROID = 2
-    PETRASYL1 = 3
-    PETRASYL2 = 4
-    PETRASYL3 = 5
-    PETRASYL4 = 6
-    UNKNOWN_7 = 7  # unused
-    UNKNOWN_8 = 8  # unused
-    UNKNOWN_9 = 9  # unused
-    BARBED_WAR_WASP = 10
-    SHRIEKBAT = 11
-    GEEMER = 12
-    UNKNOWN_13 = 13  # unused
-    UNKNOWN_14 = 14  # unused
-    UNKNOWN_15 = 15  # unused
-    BLASTCAP = 16
-    UNKNOWN_17 = 17  # unused
-    ALIMBIC_TURRET = 18
-    CRETAPHID = 19
-    CRETAPHID_EYE = 20
-    CRETAPHID_CRYSTAL = 21
-    UNKNOWN_22 = 22  # unused (Cretaphid-related)
-    PSYCHO_BIT1 = 23
-    GOREA1_A = 24
-    GOREA_HEAD = 25
-    GOREA_ARM = 26
-    GOREA_LEG = 27
-    GOREA1_B = 28
-    GOREA_SEAL_SPHERE1 = 29
-    TROCRA = 30
-    GOREA2 = 31
-    GOREA_SEAL_SPHERE2 = 32
-    GOREA_METEOR = 33
-    PSYCHO_BIT2 = 34  # unused
-    VOLDRUM2 = 35
-    VOLDRUM1 = 36
-    QUADTROID = 37
-    CRASH_PILLAR = 38
-    FIRE_SPAWN = 39
-    SPAWNER = 40
-    SLENCH = 41
-    SLENCH_SHIELD = 42
-    SLENCH_NEST = 43
-    SLENCH_SYNAPSE = 44
-    SLENCH_TURRET = 45
-    LESSER_ITHRAK = 46
-    GREATER_ITHRAK = 47
-    HUNTER = 48
-    FORCE_FIELD_LOCK = 49
-    HIT_ZONE = 50  # used by 39/46/47
-    CARNIVOROUS_PLANT = 51
-
-
 EnemyTypeConstruct = EnumAdapter(EnemyType, Byte)
 
-
-class Hunter(enum.Enum):
-    SAMUS = 0
-    KANDEN = 1
-    TRACE = 2
-    SYLUX = 3
-    NOXUS = 4
-    SPIRE = 5
-    WEAVEL = 6
-    GUARDIAN = 7
-    RANDOM = 8
-
-
 HunterConstruct = EnumAdapter(Hunter, Int32ul)
-
 
 WarWaspSpawnField = Struct(
     "volume0" / RawCollisionVolume,
@@ -529,7 +286,6 @@ WarWaspSpawnField = Struct(
     "_padding2" / Int16ul,
     "movement_type" / Int32ul,
 )
-
 
 EnemySpawnField0 = Struct(
     "volume0" / RawCollisionVolume,
@@ -617,7 +373,6 @@ EnemySpawnField12 = Struct(
     "field3" / Int32ul,
 )
 
-
 enemy_to_spawn_field = {
     EnemyType.ZOOMER: EnemySpawnField0,
     EnemyType.GEEMER: EnemySpawnField0,
@@ -649,7 +404,6 @@ enemy_to_spawn_field = {
     EnemyType.GOREA1_A: EnemySpawnField11,
     EnemyType.GOREA2: EnemySpawnField12,
 }
-
 
 EnemySpawnEntityData = Struct(
     "header" / EntityDataHeader,
@@ -683,32 +437,6 @@ EnemySpawnEntityData = Struct(
     "item_type" / ItemTypeConstruct,
 )
 
-
-class TriggerVolumeType(enum.Enum):
-    VOLUME = 0
-    THRESHOLD = 1
-    RELAY = 2
-    AUTOMATIC = 3
-    STATE_BITS = 4
-
-
-class TriggerVolumeFlags(enum.IntFlag):
-    NONE = 0x0
-    POWER_BEAM = 0x1
-    VOLT_DRIVER = 0x2
-    MISSILE = 0x4
-    BATTLEHAMMER = 0x8
-    IMPERIALIST = 0x10
-    JUDICATOR = 0x20
-    MAGMAUL = 0x40
-    SHOCK_COIL = 0x80
-    BEAM_CHARGED = 0x100
-    PLAYER_BIPED = 0x200
-    PLAYER_ALT = 0x400
-    BIT_11 = 0x800  # unused
-    INCLUDE_BOTS = 0x1000
-
-
 TriggerVolumeFlagsConstruct = construct.FlagsEnum(Int32ul, TriggerVolumeFlags)
 
 TriggerVolumeEntityData = Struct(
@@ -736,7 +464,6 @@ TriggerVolumeEntityData = Struct(
     "child_message_param1" / Int32sl,
     "child_message_param2" / Int32sl,
 )
-
 
 AreaVolumeEntityData = Struct(
     "header" / EntityDataHeader,

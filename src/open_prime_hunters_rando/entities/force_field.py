@@ -1,4 +1,5 @@
-from open_prime_hunters_rando.entities.entity_type import EntityFile, PaletteId
+from open_prime_hunters_rando.entities.entity_type import EntityFile
+from open_prime_hunters_rando.entities.enum import PaletteId
 
 
 def patch_force_fields(entity_file: EntityFile, force_fields: list) -> None:

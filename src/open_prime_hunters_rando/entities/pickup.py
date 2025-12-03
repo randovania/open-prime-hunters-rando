@@ -1,6 +1,7 @@
 from construct import Container
 
-from open_prime_hunters_rando.entities.entity_type import EntityFile, EntityType, ItemType
+from open_prime_hunters_rando.entities.entity_type import EntityFile
+from open_prime_hunters_rando.entities.enum import EntityType, ItemType
 
 
 def patch_pickups(entity_file: EntityFile, pickups: list) -> None:

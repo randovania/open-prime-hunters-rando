@@ -1,4 +1,4 @@
-from open_prime_hunters_rando.entities.entity_type import DoorType, Message
+from open_prime_hunters_rando.entities.enum import DoorType, Message
 from open_prime_hunters_rando.file_manager import FileManager
 
 

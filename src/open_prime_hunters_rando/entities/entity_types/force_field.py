@@ -1,6 +1,6 @@
 from construct import Container
 
-from open_prime_hunters_rando.entities.entity_type import PaletteId
+from open_prime_hunters_rando.entities.enum import PaletteId
 
 
 class ForceField:
