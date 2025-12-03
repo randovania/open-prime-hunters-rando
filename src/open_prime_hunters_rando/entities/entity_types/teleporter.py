@@ -1,6 +1,6 @@
 from construct import Container
 
-from open_prime_hunters_rando.entities.vec import Vec3
+from open_prime_hunters_rando.common import Vec3
 
 
 class Teleporter:

@@ -28,7 +28,7 @@ from construct import (
     this,
 )
 
-from open_prime_hunters_rando.entities.adapters import ColorRgbAdapter, EnumAdapter, FixedAdapter
+from open_prime_hunters_rando.common import ColorRgbAdapter, EnumAdapter, FixedAdapter, Vec3
 from open_prime_hunters_rando.entities.entity_types.area_volume import AreaVolume
 from open_prime_hunters_rando.entities.entity_types.artifact import Artifact
 from open_prime_hunters_rando.entities.entity_types.camera_sequence import CameraSequence
@@ -63,7 +63,6 @@ from open_prime_hunters_rando.entities.enum import (
     TriggerVolumeType,
     VolumeType,
 )
-from open_prime_hunters_rando.entities.vec import Vec3
 
 EntityTypeConstruct = EnumAdapter(EntityType, Int16ul)
 
