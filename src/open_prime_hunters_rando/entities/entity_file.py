@@ -1,0 +1,172 @@
+import copy
+import typing
+from collections.abc import Iterator
+from typing import Any, Self
+
+import construct
+from construct import Container, Int16ul, Int32ul, ListContainer, RepeatUntil, Struct
+
+from open_prime_hunters_rando.entities.entity_type import (
+    Entity,
+    EntityEntry,
+    RawEntityEntry,
+)
+from open_prime_hunters_rando.entities.entity_type_class_mapping import entity_type_to_class
+
+
+def num_bytes_to_align(length: int, modulus: int = 4) -> int:
+    if length % modulus > 0:
+        return modulus - (length % modulus)
+    return 0
+
+
+EntityFileHeader = Struct(
+    "version" / Int32ul,
+    "layer_counts" / Int16ul[16],
+)
+
+
+EntityFileConstruct = Struct(
+    "header" / EntityFileHeader,
+    "entities" / RepeatUntil(lambda entity, lst, ctx: entity._data_offset == 0, EntityEntry),
+)
+
+
+class EntityAdapter(construct.Adapter):
+    def __init__(self) -> None:
+        super().__init__(EntityFileConstruct)
+
+    def _decode(self, obj: Container, context: Container, path: str) -> Container:
+        decoded = copy.deepcopy(obj)
+
+        # remove empty entry
+        decoded.entities.pop()
+
+        # wrap entities
+        decoded.entities = ListContainer(
+            [entity_type_to_class[entity._entity_type](entity) for entity in decoded.entities]
+        )
+
+        return decoded
+
+    def _encode(self, obj: Container, context: Container, path: str) -> Container:
+        encoded = copy.deepcopy(obj)
+
+        entities = typing.cast("list[Entity]", encoded.entities)
+
+        # update sizes and offsets
+        encoded.entities = ListContainer()
+
+        offset = EntityFileHeader.sizeof()
+        offset += RawEntityEntry.sizeof() * (len(entities) + 1)
+
+        for entity_wrapper in entities:
+            entity = entity_wrapper._raw
+
+            size = entity_wrapper.size
+            entity._size = size
+            entity._data_offset = offset
+
+            offset += size + num_bytes_to_align(size)
+
+            encoded.entities.append(entity)
+
+        # add empty entry
+        encoded.entities.append(
+            Container(
+                {
+                    "node_name": "",
+                    "layer_state": [False] * 16,
+                    "_size": 0,
+                    "_data_offset": 0,
+                }
+            )
+        )
+
+        return encoded
+
+
+class EntityFile:
+    def __init__(self, raw: Container):
+        self._raw = raw
+
+    @classmethod
+    def parse(cls, data: bytes) -> Self:
+        # align data to 4
+        data = bytes(data) + b"\0" * num_bytes_to_align(len(data))
+
+        return cls(EntityAdapter().parse(data))
+
+    def build(self) -> bytes:
+        # update layer counts
+        for i in range(16):
+            self._raw.header.layer_counts[i] = len(list(self.entities_for_layer(i)))
+
+        # build
+        data = EntityAdapter().build(self._raw)
+
+        # remove unnecessary alignment bytes
+        if self.entities:
+            to_strip = num_bytes_to_align(self.entities[-1].size)
+            if to_strip:
+                data = data[:-to_strip]
+
+        return data
+
+    def __eq__(self, value: Any) -> bool:
+        return isinstance(value, EntityFile) and self.version == value.version and self.entities == value.entities
+
+    @property
+    def version(self) -> int:
+        return self._raw.header.version
+
+    def entities_for_layer(self, layer: int) -> Iterator[Entity]:
+        for entity in self.entities:
+            if entity.layer_state(layer):
+                yield entity
+
+    @property
+    def entities(self) -> list[Entity]:
+        return self._raw.entities
+
+    @entities.setter
+    def entities(self, value: list[Entity]) -> None:
+        self._raw.entities = value
+
+    def get_entity[T: Entity](self, entity_id: int, type_hint: type[T] = Entity) -> T:
+        entity_idx = 0
+        for entity in self.entities:
+            if entity.size == 0:
+                continue
+            if entity.entity_id == entity_id:
+                break
+            entity_idx += 1
+        else:
+            raise ValueError(f"No entity with ID {entity_id} found!")
+
+        assert isinstance(entity, type_hint)
+        return entity
+
+    def get_max_entity_id(self) -> int:
+        entity_id = 0
+        for entity in self.entities:
+            if entity.entity_id > entity_id:
+                entity_id = entity.entity_id
+        return entity_id
+
+    def append_entity(self, template: Entity) -> int:
+        new_entity_id = self.get_max_entity_id() + 1
+        template.entity_id = new_entity_id
+        self.entities.append(entity_type_to_class[template.entity_type].create_from_template(template))
+        self.entities[-1].data = template.data
+        return new_entity_id
+
+    def replace_entity(self, entity_id: int, new_entity: Entity) -> None:
+        index = next((i for i, entity in enumerate(self.entities) if entity.entity_id == entity_id), None)
+        if index is None:
+            raise ValueError(f"No entity with ID {entity_id} found!")
+        new_entity.entity_id = entity_id
+        old_entity = self.entities[index]
+        new_entity.node_name = old_entity.node_name
+        new_entity._raw.layer_state = old_entity._raw.layer_state
+        self.entities[index] = new_entity

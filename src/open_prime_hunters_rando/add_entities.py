@@ -1,8 +1,14 @@
 import copy
-from typing import NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
 
+from open_prime_hunters_rando.entities.entity_types.item_spawn import ItemSpawn
+from open_prime_hunters_rando.entities.entity_types.object import Object
+from open_prime_hunters_rando.entities.entity_types.trigger_volume import TriggerVolume
 from open_prime_hunters_rando.entities.enum import EntityType, Message
 from open_prime_hunters_rando.file_manager import FileManager
+
+if TYPE_CHECKING:
+    from open_prime_hunters_rando.entities.entity_type import Entity
 
 
 class NewTrigger(NamedTuple):
@@ -50,18 +56,18 @@ new_triggers = [
 
 def _add_triggers(file_manager: FileManager, new_trigger: NewTrigger) -> None:
     template_file = file_manager.get_entity_file("Alinos", "High Ground")
-    template_trigger = copy.deepcopy(template_file.get_entity(37))
-    template_trigger.trigger_volume_data().active = False
+    template_trigger = copy.deepcopy(template_file.get_entity(37, TriggerVolume))
+    template_trigger.active = False
 
     entity_file = file_manager.get_entity_file(new_trigger.area_name, new_trigger.room_name)
-    artifact_entity = entity_file.get_entity(new_trigger.artifact_id)
+    artifact_entity: Entity = entity_file.get_entity(new_trigger.artifact_id)
 
     # Only add new triggers if the entity is an ItemSpawn
     if artifact_entity.entity_type == EntityType.ARTIFACT:
         return
 
     # Get the new trigger
-    trigger_entity = entity_file.get_entity(entity_file.append_entity(template_trigger))
+    trigger_entity = entity_file.get_entity(entity_file.append_entity(template_trigger), TriggerVolume)
     trigger_entity.node_name = new_trigger.node_name
     trigger_entity.position = artifact_entity.position
 
@@ -69,50 +75,49 @@ def _add_triggers(file_manager: FileManager, new_trigger: NewTrigger) -> None:
         trigger_entity.set_layer_state(layer, True)
 
     # Update the ItemSpawn to activate the trigger
-    new_item_spawn_data = artifact_entity.item_spawn_data()
-    new_item_spawn_data.notify_entity_id = trigger_entity.entity_id
-    new_item_spawn_data.collected_message = Message.ACTIVATE
-
-    trigger_entity_data = trigger_entity.trigger_volume_data()
+    assert isinstance(artifact_entity, ItemSpawn)
+    artifact_entity.notify_entity_id = trigger_entity.entity_id
+    artifact_entity.collected_message = Message.ACTIVATE
 
     # Send the first message from the Artifact
-    trigger_entity_data.parent_id = new_trigger.artifact_messages[0][0]
-    trigger_entity_data.parent_message = new_trigger.artifact_messages[0][1]
+    trigger_entity.parent_id = new_trigger.artifact_messages[0][0]
+    trigger_entity.parent_message = new_trigger.artifact_messages[0][1]
 
     num_messages = len(new_trigger.artifact_messages)
 
     if num_messages == 2:
         # Send the second message from the Artifact
-        trigger_entity_data.child_id = new_trigger.artifact_messages[1][0]
-        trigger_entity_data.child_message = new_trigger.artifact_messages[1][1]
+        trigger_entity.child_id = new_trigger.artifact_messages[1][0]
+        trigger_entity.child_message = new_trigger.artifact_messages[1][1]
     elif num_messages == 3:
         # Create a second trigger
-        trigger_entity_b = entity_file.get_entity(entity_file.append_entity(copy.deepcopy(template_trigger)))
+        trigger_entity_b = entity_file.get_entity(
+            entity_file.append_entity(copy.deepcopy(template_trigger)), TriggerVolume
+        )
 
         # Activate the second trigger
-        trigger_entity_data.child_id = trigger_entity_b.entity_id
-        trigger_entity_data.child_message = Message.ACTIVATE
+        trigger_entity.child_id = trigger_entity_b.entity_id
+        trigger_entity.child_message = Message.ACTIVATE
 
         trigger_entity_b.node_name = new_trigger.node_name
-        trigger_entity_b_data = trigger_entity_b.trigger_volume_data()
 
         for layer in new_trigger.active_layers:
             trigger_entity_b.set_layer_state(layer, True)
 
         # Send the second message from the Artifact
-        trigger_entity_b_data.parent_id = new_trigger.artifact_messages[1][0]
-        trigger_entity_b_data.parent_message = new_trigger.artifact_messages[1][1]
+        trigger_entity_b.parent_id = new_trigger.artifact_messages[1][0]
+        trigger_entity_b.parent_message = new_trigger.artifact_messages[1][1]
 
         # Send the third message from the Artifact
-        trigger_entity_b_data.child_id = new_trigger.artifact_messages[2][0]
-        trigger_entity_b_data.child_message = new_trigger.artifact_messages[2][1]
+        trigger_entity_b.child_id = new_trigger.artifact_messages[2][0]
+        trigger_entity_b.child_message = new_trigger.artifact_messages[2][1]
 
 
 class NewObject(NamedTuple):
     area_name: str
     room_name: str
     active_layers: list[int]
-    position: tuple[int, int, int]
+    position: tuple[float, float, float]
     scan_id: int
     scan_message_target: int
     scan_message: Message
@@ -137,12 +142,12 @@ new_objects = [
 
 def _add_objects(file_manager: FileManager, new_object: NewObject) -> None:
     template_file = file_manager.get_entity_file("Celestial Archives", "Helm Room")
-    template_object = copy.deepcopy(template_file.get_entity(9))
+    template_object = copy.deepcopy(template_file.get_entity(9, Object))
 
     entity_file = file_manager.get_entity_file(new_object.area_name, new_object.room_name)
 
     # Get the new object
-    object_entity = entity_file.get_entity(entity_file.append_entity(template_object))
+    object_entity = entity_file.get_entity(entity_file.append_entity(template_object), Object)
 
     # Set the new data fields
     object_entity.node_name = new_object.node_name

@@ -1,6 +1,4 @@
-import copy
-import typing
-from collections.abc import Collection, Iterator
+from collections.abc import Collection
 from typing import Any, Self
 
 import construct
@@ -21,33 +19,13 @@ from construct import (
     Peek,
     Pointer,
     Rebuild,
-    RepeatUntil,
     StopIf,
     Struct,
     Switch,
     this,
 )
 
-from open_prime_hunters_rando.common import ColorRgbAdapter, EnumAdapter, FixedAdapter, Vec3
-from open_prime_hunters_rando.entities.entity_types.area_volume import AreaVolume
-from open_prime_hunters_rando.entities.entity_types.artifact import Artifact
-from open_prime_hunters_rando.entities.entity_types.camera_sequence import CameraSequence
-from open_prime_hunters_rando.entities.entity_types.defense_node import DefenseNode
-from open_prime_hunters_rando.entities.entity_types.door import Door
-from open_prime_hunters_rando.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.entities.entity_types.flag_base import FlagBase
-from open_prime_hunters_rando.entities.entity_types.force_field import ForceField
-from open_prime_hunters_rando.entities.entity_types.item_spawn import ItemSpawn
-from open_prime_hunters_rando.entities.entity_types.jump_pad import JumpPad
-from open_prime_hunters_rando.entities.entity_types.light_source import LightSource
-from open_prime_hunters_rando.entities.entity_types.morph_camera import MorphCamera
-from open_prime_hunters_rando.entities.entity_types.object import Object
-from open_prime_hunters_rando.entities.entity_types.octolith_flag import OctolithFlag
-from open_prime_hunters_rando.entities.entity_types.platform import Platform
-from open_prime_hunters_rando.entities.entity_types.player_spawn import PlayerSpawn
-from open_prime_hunters_rando.entities.entity_types.point_module import PointModule
-from open_prime_hunters_rando.entities.entity_types.teleporter import Teleporter
-from open_prime_hunters_rando.entities.entity_types.trigger_volume import TriggerVolume
+from open_prime_hunters_rando.common import EnumAdapter, FixedPoint, Rgb01, Vec3
 from open_prime_hunters_rando.entities.enum import (
     DoorType,
     EnemyType,
@@ -66,19 +44,17 @@ from open_prime_hunters_rando.entities.enum import (
 
 EntityTypeConstruct = EnumAdapter(EntityType, Int16ul)
 
-Fixed = FixedAdapter()
-
 Vector3Fx = Struct(
-    "x" / Fixed,
-    "y" / Fixed,
-    "z" / Fixed,
+    "x" / FixedPoint,
+    "y" / FixedPoint,
+    "z" / FixedPoint,
 )
 
 Vector4Fx = Struct(
-    "x" / Fixed,
-    "y" / Fixed,
-    "z" / Fixed,
-    "w" / Fixed,
+    "x" / FixedPoint,
+    "y" / FixedPoint,
+    "z" / FixedPoint,
+    "w" / FixedPoint,
 )
 
 DecodedString = PaddedString(16, "ascii")
@@ -110,8 +86,8 @@ PlatformEntityData = Struct(
     "positions" / Vector3Fx[10],
     "rotations" / Vector4Fx[10],
     "position_offset" / Vector3Fx,
-    "forward_speed" / Fixed,
-    "backward_speed" / Fixed,
+    "forward_speed" / FixedPoint,
+    "backward_speed" / FixedPoint,
     "portal_name" / DecodedString,
     "movement_type" / Int32ul,
     "for_cutscene" / Int32ul,
@@ -176,19 +152,19 @@ volume_types = {
         "box_vector2" / Vector3Fx,
         "box_vector3" / Vector3Fx,
         "box_position" / Vector3Fx,
-        "box_dot1" / Fixed,
-        "box_dot2" / Fixed,
-        "box_dot3" / Fixed,
+        "box_dot1" / FixedPoint,
+        "box_dot2" / FixedPoint,
+        "box_dot3" / FixedPoint,
     ),
     VolumeType.CYLINDER: Struct(
         "cylinder_vector" / Vector3Fx,
         "cylinder_position" / Vector3Fx,
-        "cylinder_radius" / Fixed,
-        "cylinder_dot" / Fixed,
+        "cylinder_radius" / FixedPoint,
+        "cylinder_dot" / FixedPoint,
     ),
     VolumeType.SPHERE: Struct(
         "sphere_position" / Vector3Fx,
-        "sphere_radius" / Fixed,
+        "sphere_radius" / FixedPoint,
     ),
 }
 
@@ -279,7 +255,7 @@ EnemySpawnField0 = Struct(
     "volume3" / RawCollisionVolume,
 )
 EnemySpawnField1 = Struct(
-    "war_wasp" / WarWaspSpawnField,
+    "data" / WarWaspSpawnField,
     "_padding1" / Int16ul,
     "_padding2" / Int16ul,
 )
@@ -348,9 +324,9 @@ EnemySpawnField10 = Struct(
 )
 EnemySpawnField11 = Struct(
     "sphere1_position" / Vector3Fx,
-    "sphere1_radius" / Fixed,
+    "sphere1_radius" / FixedPoint,
     "sphere2_position" / Vector3Fx,
-    "sphere2_radius" / Fixed,
+    "sphere2_radius" / FixedPoint,
 )
 EnemySpawnField12 = Struct(
     "field1" / Vector3Fx,
@@ -407,8 +383,8 @@ EnemySpawnEntityData = Struct(
     "cooldown_time" / Int16ul,
     "initial_cooldown" / Int16ul,
     "_padding3" / Int16ul,
-    "active_distance" / Fixed,
-    "enemy_active_distance" / Fixed,
+    "active_distance" / FixedPoint,
+    "enemy_active_distance" / FixedPoint,
     "node_name" / DecodedString,
     "entity_id1" / Int16sl,
     "_padding4" / Int16ul,
@@ -479,7 +455,7 @@ JumpPadEntityData = Struct(
     "_unused" / Int32ul,
     "volume" / RawCollisionVolume,
     "beam_vector" / Vector3Fx,
-    "speed" / Fixed,
+    "speed" / FixedPoint,
     "control_lock_time" / Int16ul,
     "cooldown_time" / Int16ul,
     "active" / Flag,
@@ -532,9 +508,9 @@ DefenseNodeEntityData = Struct(
 )
 
 ColorRgb = Struct(
-    "red" / ColorRgbAdapter(),
-    "green" / ColorRgbAdapter(),
-    "blue" / ColorRgbAdapter(),
+    "red" / Rgb01,
+    "green" / Rgb01,
+    "blue" / Rgb01,
 )
 
 LightSourceEntityData = Struct(
@@ -587,8 +563,8 @@ CameraSequenceEntityData = Struct(
 ForceFieldEntityData = Struct(
     "header" / EntityDataHeader,
     "type" / PaletteIdConstruct,
-    "width" / Fixed,
-    "height" / Fixed,
+    "width" / FixedPoint,
+    "height" / FixedPoint,
     "active" / Flag,
 )
 
@@ -630,81 +606,13 @@ EntityEntry = Struct(
     "data" / Pointer(this._data_offset, Aligned(4, Switch(this._entity_type, types_to_construct))),
 )
 
-EntityFileHeader = Struct(
-    "version" / Int32ul,
-    "layer_counts" / Int16ul[16],
-)
-
-EntityFileConstruct = Struct(
-    "header" / EntityFileHeader,
-    "entities" / RepeatUntil(lambda entity, lst, ctx: entity._data_offset == 0, EntityEntry),
-)
-
-
-def num_bytes_to_align(length: int, modulus: int = 4) -> int:
-    if length % modulus > 0:
-        return modulus - (length % modulus)
-    return 0
-
-
-class EntityAdapter(construct.Adapter):
-    def __init__(self) -> None:
-        super().__init__(EntityFileConstruct)
-
-    def _decode(self, obj: Container, context: Container, path: str) -> Container:
-        decoded = copy.deepcopy(obj)
-
-        # remove empty entry
-        decoded.entities.pop()
-
-        # wrap entities
-        decoded.entities = ListContainer([Entity(entity) for entity in decoded.entities])
-
-        return decoded
-
-    def _encode(self, obj: Container, context: Container, path: str) -> Container:
-        encoded = copy.deepcopy(obj)
-
-        entities = typing.cast("list[Entity]", encoded.entities)
-
-        # update sizes and offsets
-        encoded.entities = ListContainer()
-
-        offset = EntityFileHeader.sizeof()
-        offset += RawEntityEntry.sizeof() * (len(entities) + 1)
-
-        for entity_wrapper in entities:
-            entity = entity_wrapper._raw
-
-            size = entity_wrapper.size
-            entity._size = size
-            entity._data_offset = offset
-
-            offset += size + num_bytes_to_align(size)
-
-            encoded.entities.append(entity)
-
-        # add empty entry
-        encoded.entities.append(
-            Container(
-                {
-                    "node_name": "",
-                    "layer_state": [False] * 16,
-                    "_size": 0,
-                    "_data_offset": 0,
-                }
-            )
-        )
-
-        return encoded
-
 
 class Entity:
     def __init__(self, raw: Container) -> None:
         self._raw = raw
 
     @classmethod
-    def create(
+    def create_from_template(
         cls, data: Container, node_name: str = "rmMain", active_layers: Collection[int] = tuple(range(16))
     ) -> Self:
         layer_state = [False] * 16
@@ -720,6 +628,35 @@ class Entity:
                 }
             )
         )
+
+    @classmethod
+    def cls_entity_type(cls) -> EntityType:
+        raise NotImplementedError
+
+    @classmethod
+    def create_header(
+        cls,
+        position: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
+        up_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
+        facing_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
+    ) -> Container:
+        return Container(
+            {
+                "entity_type": cls.cls_entity_type(),
+                "position": Container(position),
+                "up_vector": Container(up_vector),
+                "facing_vector": Container(facing_vector),
+            }
+        )
+
+    @classmethod
+    def create(
+        cls,
+        position: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
+        up_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
+        facing_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
+    ) -> Self:
+        raise NotImplementedError
 
     def __repr__(self) -> str:
         return f"<Entity type={self.entity_type} id={self.entity_id}>"
@@ -830,133 +767,3 @@ class Entity:
     @property
     def size(self) -> int:
         return self.type_construct.sizeof()
-
-    def platform_data(self) -> Platform:
-        return Platform(self.data)
-
-    def object_data(self) -> Object:
-        return Object(self.data)
-
-    def player_spawn_data(self) -> PlayerSpawn:
-        return PlayerSpawn(self.data)
-
-    def door_data(self) -> Door:
-        return Door(self.data)
-
-    def item_spawn_data(self) -> ItemSpawn:
-        return ItemSpawn(self.data)
-
-    def enemy_spawn_data(self) -> EnemySpawn:
-        return EnemySpawn(self.data)
-
-    def trigger_volume_data(self) -> TriggerVolume:
-        return TriggerVolume(self.data)
-
-    def area_volume_data(self) -> AreaVolume:
-        return AreaVolume(self.data)
-
-    def jump_pad_data(self) -> JumpPad:
-        return JumpPad(self.data)
-
-    def point_module_data(self) -> PointModule:
-        return PointModule(self.data)
-
-    def morph_camera_data(self) -> MorphCamera:
-        return MorphCamera(self.data)
-
-    def octolith_flag_data(self) -> OctolithFlag:
-        return OctolithFlag(self.data)
-
-    def flag_base_data(self) -> FlagBase:
-        return FlagBase(self.data)
-
-    def teleporter_data(self) -> Teleporter:
-        return Teleporter(self.data)
-
-    def defense_node_data(self) -> DefenseNode:
-        return DefenseNode(self.data)
-
-    def light_source_data(self) -> LightSource:
-        return LightSource(self.data)
-
-    def artifact_data(self) -> Artifact:
-        return Artifact(self.data)
-
-    def camera_sequence_data(self) -> CameraSequence:
-        return CameraSequence(self.data)
-
-    def force_field_data(self) -> ForceField:
-        return ForceField(self.data)
-
-
-class EntityFile:
-    def __init__(self, raw: Container):
-        self._raw = raw
-
-    @classmethod
-    def parse(cls, data: bytes) -> Self:
-        # align data to 4
-        data = bytes(data) + b"\0" * num_bytes_to_align(len(data))
-
-        return cls(EntityAdapter().parse(data))
-
-    def build(self) -> bytes:
-        # update layer counts
-        for i in range(16):
-            self._raw.header.layer_counts[i] = len(list(self.entities_for_layer(i)))
-
-        # build
-        data = EntityAdapter().build(self._raw)
-
-        # remove unnecessary alignment bytes
-        if self.entities:
-            to_strip = num_bytes_to_align(self.entities[-1].size)
-            if to_strip:
-                data = data[:-to_strip]
-
-        return data
-
-    def __eq__(self, value: Any) -> bool:
-        return isinstance(value, EntityFile) and self.version == value.version and self.entities == value.entities
-
-    @property
-    def version(self) -> int:
-        return self._raw.header.version
-
-    def entities_for_layer(self, layer: int) -> Iterator[Entity]:
-        for entity in self.entities:
-            if entity.layer_state(layer):
-                yield entity
-
-    @property
-    def entities(self) -> list[Entity]:
-        return self._raw.entities
-
-    @entities.setter
-    def entities(self, value: list[Entity]) -> None:
-        self._raw.entities = value
-
-    def get_entity(self, entity_id: int) -> Entity:
-        entity_idx = 0
-        for entity in self.entities:
-            if entity.size == 0:
-                continue
-            if entity.entity_id == entity_id:
-                break
-            entity_idx += 1
-        else:
-            raise ValueError(f"No entity with ID {entity_id} found!")
-        return entity
-
-    def get_max_entity_id(self) -> int:
-        entity_id = 0
-        for entity in self.entities:
-            if entity.entity_id > entity_id:
-                entity_id = entity.entity_id
-        return entity_id
-
-    def append_entity(self, template: Entity) -> int:
-        new_entity_id = self.get_max_entity_id() + 1
-        template.entity_id = new_entity_id
-        self.entities.append(Entity.create(template))
-        return new_entity_id

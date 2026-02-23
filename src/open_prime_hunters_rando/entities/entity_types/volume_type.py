@@ -1,13 +1,11 @@
 from construct import Container
 
 from open_prime_hunters_rando.common import Vec3
+from open_prime_hunters_rando.entities.entity_type import Entity
 from open_prime_hunters_rando.entities.enum import VolumeType
 
 
-class BoxVolumeType:
-    def __init__(self, raw: Container) -> None:
-        self._raw = raw
-
+class BoxVolumeType(Entity):
     @property
     def box_vector1(self) -> Vec3:
         return self._raw.data.box_vector1

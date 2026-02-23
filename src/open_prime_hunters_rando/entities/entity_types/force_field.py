@@ -1,40 +1,36 @@
-from construct import Container
-
+from open_prime_hunters_rando.entities.entity_type import Entity
 from open_prime_hunters_rando.entities.enum import PaletteId
 
 
-class ForceField:
-    def __init__(self, raw: Container) -> None:
-        self._raw = raw
-
+class ForceField(Entity):
     @property
     def type(self) -> PaletteId:
-        return self._raw.type
+        return self._raw.data.type
 
     @type.setter
     def type(self, value: PaletteId) -> None:
-        self._raw.type = value
+        self._raw.data.type = value
 
     @property
     def width(self) -> float:
-        return self._raw.width
+        return self._raw.data.width
 
     @width.setter
     def width(self, value: float) -> None:
-        self._raw.width = value
+        self._raw.data.width = value
 
     @property
     def height(self) -> float:
-        return self._raw.height
+        return self._raw.data.height
 
     @height.setter
     def height(self, value: float) -> None:
-        self._raw.height = value
+        self._raw.data.height = value
 
     @property
     def active(self) -> bool:
-        return self._raw.active
+        return self._raw.data.active
 
     @active.setter
     def active(self, value: bool) -> None:
-        self._raw.active = value
+        self._raw.data.active = value

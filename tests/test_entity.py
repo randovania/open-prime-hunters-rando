@@ -3,7 +3,8 @@ import itertools
 import pytest
 from construct import Container
 
-from open_prime_hunters_rando.entities.entity_type import Entity, EntityFile
+from open_prime_hunters_rando.entities.entity_file import EntityFile
+from open_prime_hunters_rando.entities.entity_type import Entity
 from open_prime_hunters_rando.entities.enum import EntityType
 from open_prime_hunters_rando.level_data import (
     ALINOS,
@@ -44,7 +45,7 @@ def test_compare_entity_file(entity_file):
 def test_add_entity(entity_file):
     parsed = EntityFile.parse(entity_file)
     parsed.entities.append(
-        Entity.create(
+        Entity.create_from_template(
             Container(
                 {
                     "header": Container(

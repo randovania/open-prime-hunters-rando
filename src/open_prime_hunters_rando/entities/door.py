@@ -1,4 +1,5 @@
-from open_prime_hunters_rando.entities.entity_type import EntityFile
+from open_prime_hunters_rando.entities.entity_file import EntityFile
+from open_prime_hunters_rando.entities.entity_types.door import Door
 from open_prime_hunters_rando.entities.enum import DoorType, PaletteId
 
 
@@ -7,7 +8,7 @@ def patch_doors(entity_file: EntityFile, doors: list, room_name: str) -> None:
         entity_id = door["entity_id"]
         palette_id = PaletteId(door["palette_id"])
 
-        entity = entity_file.get_entity(entity_id).door_data()
+        entity = entity_file.get_entity(entity_id, Door)
 
         # Break if trying to change weakness of Morph Ball or Boss doors
         if entity.door_type not in (DoorType.STANDARD, DoorType.THIN):

@@ -1,7 +1,12 @@
-from construct import Container
+from typing import TYPE_CHECKING
 
-from open_prime_hunters_rando.entities.entity_type import EntityFile
-from open_prime_hunters_rando.entities.enum import EntityType, ItemType
+from open_prime_hunters_rando.entities.entity_file import EntityFile
+from open_prime_hunters_rando.entities.entity_types.artifact import Artifact
+from open_prime_hunters_rando.entities.entity_types.item_spawn import ItemSpawn
+from open_prime_hunters_rando.entities.enum import EntityType, ItemType, Message
+
+if TYPE_CHECKING:
+    from open_prime_hunters_rando.entities.entity_type import Entity
 
 
 def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
@@ -9,73 +14,66 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
         entity_id = pickup["entity_id"]
         new_entity_type = EntityType(pickup["entity_type"])
 
-        entity = entity_file.get_entity(entity_id)
-
-        old_item_spawn_data = entity.item_spawn_data()
-        old_artifact_data = entity.artifact_data()
-        old_entity_type = entity.entity_type
+        entity: Entity = entity_file.get_entity(entity_id)
 
         # Update ItemSpawn entities
         # Entity was ItemSpawn
-        if old_entity_type == EntityType.ITEM_SPAWN:
+        if entity.entity_type == EntityType.ITEM_SPAWN:
+            assert isinstance(entity, ItemSpawn)
             # Entity is still ItemSpawn
             if new_entity_type == EntityType.ITEM_SPAWN:
-                entity.item_spawn_data().item_type = ItemType(pickup["item_type"])
-            # Entity is now Artifact
+                entity.item_type = ItemType(pickup["item_type"])
             else:
-                entity.entity_type = EntityType.ARTIFACT
-                # Raise entity so it doesn't clip into the floor
-                entity.position.y += 0.3
-                entity.data = Container(
-                    {
-                        "header": entity.header,
-                        "model_id": pickup["model_id"],
-                        "artifact_id": pickup["artifact_id"],
-                        "active": old_item_spawn_data.enabled,
-                        "has_base": old_item_spawn_data.has_base,
-                        "message1_target": old_item_spawn_data.notify_entity_id,
-                        "_padding1": 0,
-                        "message1": old_item_spawn_data.collected_message,
-                        "message2_target": 0,
-                        "_padding2": 0,
-                        "message2": 0,
-                        "message3_target": 0,
-                        "_padding3": 0,
-                        "message3": 0,
-                        "linked_entity_id": -1
-                        if old_item_spawn_data.parent_id == 65535
-                        else old_item_spawn_data.parent_id,
-                    }
+                # Entity is now Artifact
+                entity_file.replace_entity(
+                    entity_id,
+                    Artifact.create(
+                        position=entity.position,
+                        up_vector=entity.up_vector,
+                        facing_vector=entity.facing_vector,
+                        model_id=pickup["model_id"],
+                        artifact_id=pickup["artifact_id"],
+                        active=entity.enabled,
+                        has_base=entity.has_base,
+                        message1_target=entity.notify_entity_id,
+                        message1=entity.collected_message,
+                        message2_target=0,
+                        message2=Message.NONE,
+                        message3_target=0,
+                        message3=Message.NONE,
+                        linked_entity_id=-1 if entity.parent_id == 65535 else entity.parent_id,
+                    ),
                 )
-
         # Update Artifact Entities
         # Entity was Artifact
         else:
+            assert isinstance(entity, Artifact)
             # Entity is still Artifact
             if new_entity_type == EntityType.ARTIFACT:
-                entity.artifact_data().model_id = pickup["model_id"]
-                entity.artifact_data().artifact_id = pickup["artifact_id"]
-            # Entity is now ItemSpawn
+                entity.model_id = pickup["model_id"]
+                entity.artifact_id = pickup["artifact_id"]
             else:
-                entity.entity_type = EntityType.ITEM_SPAWN
+                # Entity is now ItemSpawn
                 # Only lower entity if it had a base prior to avoid entity clipping into the floor in shields
-                if old_artifact_data.has_base:
+                if entity.has_base:
                     entity.position.y -= 0.3
-                entity.data = Container(
-                    {
-                        "header": entity.header,
-                        "parent_id": 65535,
-                        "item_type": ItemType(pickup["item_type"]),
-                        "enabled": old_artifact_data.active,
-                        "has_base": old_artifact_data.has_base,
-                        "always_active": False,
-                        "_padding": 0,
-                        "max_spawn_count": 1,
-                        "spawn_interval": 0,
-                        "spawn_delay": 0,
-                        "notify_entity_id": old_artifact_data.message1_target,
-                        "collected_message": old_artifact_data.message1,
-                        "collected_message_param1": 0,
-                        "collected_message_param2": 0,
-                    }
+                entity_file.replace_entity(
+                    entity_id,
+                    ItemSpawn.create(
+                        position=entity.position,
+                        up_vector=entity.up_vector,
+                        facing_vector=entity.facing_vector,
+                        parent_id=65535,
+                        item_type=ItemType(pickup["item_type"]),
+                        enabled=entity.active,
+                        has_base=entity.has_base,
+                        always_active=False,
+                        max_spawn_count=1,
+                        spawn_interval=0,
+                        spawn_delay=0,
+                        notify_entity_id=entity.message1_target,
+                        collected_message=entity.message1,
+                        collected_message_param1=0,
+                        collected_message_param2=0,
+                    ),
                 )

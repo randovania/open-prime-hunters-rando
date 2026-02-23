@@ -1,4 +1,5 @@
-from open_prime_hunters_rando.entities.entity_type import EntityFile
+from open_prime_hunters_rando.entities.entity_file import EntityFile
+from open_prime_hunters_rando.entities.entity_types.teleporter import Teleporter
 from open_prime_hunters_rando.level_data import ALL_PORTAL_FILENAMES
 
 
@@ -7,7 +8,7 @@ def patch_portals(entity_file: EntityFile, portals: list, room_name: str) -> Non
         entity_id = portal["entity_id"]
         filename: str = portal["entity_filename"]
 
-        entity = entity_file.get_entity(entity_id).teleporter_data()
+        entity = entity_file.get_entity(entity_id, Teleporter)
 
         # target_index is the load_index of the desination portal
         entity.target_index = portal["target_index"]

@@ -1,5 +1,18 @@
-from open_prime_hunters_rando.entities.enum import DoorType, Message
+from typing import TYPE_CHECKING
+
+from open_prime_hunters_rando.entities.entity_types.area_volume import AreaVolume
+from open_prime_hunters_rando.entities.entity_types.artifact import Artifact
+from open_prime_hunters_rando.entities.entity_types.door import Door
+from open_prime_hunters_rando.entities.entity_types.force_field import ForceField
+from open_prime_hunters_rando.entities.entity_types.item_spawn import ItemSpawn
+from open_prime_hunters_rando.entities.entity_types.object import Object
+from open_prime_hunters_rando.entities.entity_types.teleporter import Teleporter
+from open_prime_hunters_rando.entities.entity_types.trigger_volume import TriggerVolume
+from open_prime_hunters_rando.entities.enum import DoorType, EntityType, Message
 from open_prime_hunters_rando.file_manager import FileManager
+
+if TYPE_CHECKING:
+    from open_prime_hunters_rando.entities.entity_type import Entity
 
 
 def static_patches(file_manager: FileManager) -> None:
@@ -23,12 +36,12 @@ def _disable_boss_force_fields(file_manager: FileManager) -> None:
     ]
     for area_name, room_name, force_field in boss_force_fields:
         entity_file = file_manager.get_entity_file(area_name, room_name)
-        entity = entity_file.get_entity(force_field)
+        entity = entity_file.get_entity(force_field, ForceField)
         if entity.entity_id == 10:
             entity.set_layer_state(0, False)
             entity.set_layer_state(3, False)
         else:
-            entity.force_field_data().active = False
+            entity.active = False
 
 
 def _disable_message_prompts(file_manager: FileManager) -> None:
@@ -43,7 +56,11 @@ def _disable_message_prompts(file_manager: FileManager) -> None:
         for room_name, message_prompts in room_names.items():
             entity_file = file_manager.get_entity_file(area_name, room_name)
             for message_prompt in message_prompts:
-                entity = entity_file.get_entity(message_prompt).trigger_volume_data()
+                entity: Entity = entity_file.get_entity(message_prompt)
+                if entity.entity_type == EntityType.AREA_VOLUME:
+                    assert isinstance(entity, AreaVolume)
+                else:
+                    assert isinstance(entity, TriggerVolume)
                 entity.active = False
 
 
@@ -51,16 +68,16 @@ def _disable_new_arrival_registration_cutscenes(file_manager: FileManager) -> No
     entity_file = file_manager.get_entity_file("Celestial Archives", "New Arrival Registration")
 
     # Disable the first force field cutscene and force field, scans are now always active
-    trigger_volume = entity_file.get_entity(34).trigger_volume_data()
+    trigger_volume = entity_file.get_entity(34, TriggerVolume)
     trigger_volume.parent_id = 0
 
     # Disable the cutscene for deactivating the shield
-    shield_key = entity_file.get_entity(49).item_spawn_data()
+    shield_key = entity_file.get_entity(49, ItemSpawn)
     shield_key.notify_entity_id = 31
     shield_key.collected_message = Message.SET_ACTIVE
 
     # Disable the second force field cutscene by linking directly to the Greater Ithrak enemy spawn
-    artifact = entity_file.get_entity(19).artifact_data()
+    artifact = entity_file.get_entity(19, Artifact)
     artifact.message1_target = 53
     artifact.message1 = Message.TRIGGER
 
@@ -68,44 +85,44 @@ def _disable_new_arrival_registration_cutscenes(file_manager: FileManager) -> No
 def _remove_elder_passage_top_lock_and_force_field(file_manager: FileManager) -> None:
     entity_file = file_manager.get_entity_file("Alinos", "Elder Passage")
 
-    trigger_volume = entity_file.get_entity(25).trigger_volume_data()
+    trigger_volume = entity_file.get_entity(25, TriggerVolume)
     trigger_volume.parent_message = Message.NONE
 
-    force_field = entity_file.get_entity(39)
+    force_field = entity_file.get_entity(39, ForceField)
     force_field.set_layer_state(0, False)
     force_field.set_layer_state(3, False)
 
 
 def _disable_alimbic_garden_cutscene(file_manager: FileManager) -> None:
     entity_file = file_manager.get_entity_file("Alinos", "Alimbic Gardens")
-    trigger_volume = entity_file.get_entity(7).trigger_volume_data()
+    trigger_volume = entity_file.get_entity(7, TriggerVolume)
     trigger_volume.active = False
 
 
 def _disable_fault_line_imperialist_cutscene(file_manager: FileManager) -> None:
     entity_file = file_manager.get_entity_file("Arcterra", "Fault Line")
-    imperialist = entity_file.get_entity(46).item_spawn_data()
+    imperialist = entity_file.get_entity(46, ItemSpawn)
     imperialist.notify_entity_id = 0
     imperialist.collected_message = Message.NONE
 
 
 def _patch_sic_transit_inner_door(file_manager: FileManager) -> None:
     entity_file = file_manager.get_entity_file("Arcterra", "Sic Transit")
-    door = entity_file.get_entity(24).door_data()
+    door = entity_file.get_entity(24, Door)
     door.door_type = DoorType.THIN
 
 
 def _lock_fault_line_magmaul_door(file_manager: FileManager) -> None:
     # The door from Sic Transit is a Magmaul door but not locked in game
     entity_file = file_manager.get_entity_file("Arcterra", "Fault Line")
-    door = entity_file.get_entity(31).door_data()
+    door = entity_file.get_entity(31, Door)
     door.locked = True
 
 
 def _fix_incubation_vault_03_portal_spawn(file_manager: FileManager) -> None:
     # The portal from Docking Bay to Incubation Vault 03 spawned Samus at the room spawn and not at the portal
     entity_file = file_manager.get_entity_file("Celestial Archives", "Docking Bay")
-    portal = entity_file.get_entity(7).teleporter_data()
+    portal = entity_file.get_entity(7, Teleporter)
     portal.target_index = 27
 
 
@@ -113,10 +130,10 @@ def _disable_helm_room_scan_door_cutscenes(file_manager: FileManager) -> None:
     entity_file = file_manager.get_entity_file("Celestial Archives", "Helm Room")
 
     # Scan object that unlocks the door
-    object = entity_file.get_entity(9).object_data()
+    object = entity_file.get_entity(9, Object)
     object.scan_message_target = 8
     object.scan_message = Message.UNLOCK
 
     # Trigger activates the cutscene showing the door
-    trigger = entity_file.get_entity(17)
-    trigger.trigger_volume_data().active = False
+    trigger = entity_file.get_entity(17, TriggerVolume)
+    trigger.active = False

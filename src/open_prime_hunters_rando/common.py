@@ -23,30 +23,23 @@ class EnumAdapter(construct.Adapter):
         return obj
 
 
-class FixedAdapter(construct.Adapter):
-    """Fixed-point number with 12-bit fractional part"""
-
-    def __init__(self) -> None:
-        super().__init__(construct.Int32sl)
-
-    def _decode(self, obj: int, context: dict, path: str) -> float:
-        return float(obj) / 4096
-
-    def _encode(self, obj: float, context: dict, path: str) -> int:
-        return math.floor(obj * 4096)
-
-
-class ColorRgbAdapter(construct.Adapter):
-    """RGB for LightSource Entities"""
-
-    def __init__(self) -> None:
-        super().__init__(construct.Byte)
+class _FixedPointAdapter(construct.Adapter):
+    def __init__(self, subcon: construct.Subconstruct, divisor: int):
+        super().__init__(subcon)
+        self.divisor = divisor
 
     def _decode(self, obj: int, context: dict, path: str) -> float:
-        return float(obj) / 255
+        return float(obj) / self.divisor
 
     def _encode(self, obj: float, context: dict, path: str) -> int:
-        return math.floor(obj * 255)
+        return math.floor(obj * self.divisor)
+
+
+FixedPoint = _FixedPointAdapter(construct.Int32sl, 4096)
+"""Fixed-point number with 12-bit fractional part"""
+
+Rgb01 = _FixedPointAdapter(construct.Byte, 255)
+"""8-bit number within the interval [0.0, 1.0]"""
 
 
 class ErrorWithMessage(construct.Construct):

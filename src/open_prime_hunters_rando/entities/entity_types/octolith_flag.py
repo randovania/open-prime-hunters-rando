@@ -1,14 +1,11 @@
-from construct import Container
+from open_prime_hunters_rando.entities.entity_type import Entity
 
 
-class OctolithFlag:
-    def __init__(self, raw: Container) -> None:
-        self._raw = raw
-
+class OctolithFlag(Entity):
     @property
     def team_id(self) -> int:
-        return self._raw.team_id
+        return self._raw.data.team_id
 
     @team_id.setter
     def team_id(self, value: int) -> None:
-        self._raw.team_id = value
+        self._raw.data.team_id = value
