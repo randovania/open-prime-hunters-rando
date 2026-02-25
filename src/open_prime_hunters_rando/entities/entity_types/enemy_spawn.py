@@ -1,65 +1,7 @@
 from construct import Container
 
-from open_prime_hunters_rando.entities.entity_type import Entity
-
-# from open_prime_hunters_rando.entities.entity_types.enemy_spawn_fields.carnivorous_plant import (
-#     CarnivorousPlantSpawnField,
-# )
-# from open_prime_hunters_rando.entities.entity_types.enemy_spawn_fields.common_enemy1_slench import (
-#     CommonEnemy1SlenchSpawnField,
-# )
-# from open_prime_hunters_rando.entities.entity_types.enemy_spawn_fields.common_enemy2_fire_spawn import (
-#     CommonEnemy2FireSpawnSpawnField,
-# )
-# from open_prime_hunters_rando.entities.entity_types.enemy_spawn_fields.cretaphid_greater_ithrak import (
-#     CreatphidGreaterIthrakSpawnField,
-# )
-# from open_prime_hunters_rando.entities.entity_types.enemy_spawn_fields.gorea1 import Gorea1SpawnField
-# from open_prime_hunters_rando.entities.entity_types.enemy_spawn_fields.gorea2 import Gorea2SpawnField
-# from open_prime_hunters_rando.entities.entity_types.enemy_spawn_fields.hunter import HunterSpawnField
-# from open_prime_hunters_rando.entities.entity_types.enemy_spawn_fields.petrasyl234 import Petrasyl234SpawnField
-# from open_prime_hunters_rando.entities.entity_types.enemy_spawn_fields.shriek_bat import ShriekBatSpawnField
-# from open_prime_hunters_rando.entities.entity_types.enemy_spawn_fields.slench_turret import SlenchTurretSpawnField
-# from open_prime_hunters_rando.entities.entity_types.enemy_spawn_fields.temroid_petrasyl1 import (
-#     TemroidPetrsyl1SpawnField,
-# )
-# from open_prime_hunters_rando.entities.entity_types.enemy_spawn_fields.war_wasp import (
-#     BarbedWarWaspSpawnField,
-#     WarWaspSpawnField,
-# )
+from open_prime_hunters_rando.entities.entity import Entity
 from open_prime_hunters_rando.entities.enum import EnemyType, ItemType, Message
-
-# enemy_spawn_field_to_class = {
-#     EnemyType.ZOOMER: CommonEnemy1SlenchSpawnField,
-#     EnemyType.GEEMER: CommonEnemy1SlenchSpawnField,
-#     EnemyType.BLASTCAP: CommonEnemy1SlenchSpawnField,
-#     EnemyType.QUADTROID: CommonEnemy1SlenchSpawnField,
-#     EnemyType.CRASH_PILLAR: CommonEnemy1SlenchSpawnField,
-#     EnemyType.SLENCH: CommonEnemy1SlenchSpawnField,
-#     EnemyType.LESSER_ITHRAK: CommonEnemy1SlenchSpawnField,
-#     EnemyType.TROCRA: CommonEnemy1SlenchSpawnField,
-#     EnemyType.VOLDRUM2: CommonEnemy1SlenchSpawnField,
-#     EnemyType.WAR_WASP: WarWaspSpawnField,
-#     EnemyType.SHRIEKBAT: ShriekBatSpawnField,
-#     EnemyType.TEMROID: TemroidPetrsyl1SpawnField,
-#     EnemyType.PETRASYL1: TemroidPetrsyl1SpawnField,
-#     EnemyType.PETRASYL2: Petrasyl234SpawnField,
-#     EnemyType.PETRASYL3: Petrasyl234SpawnField,
-#     EnemyType.PETRASYL4: Petrasyl234SpawnField,
-#     EnemyType.CRETAPHID: CreatphidGreaterIthrakSpawnField,
-#     EnemyType.GREATER_ITHRAK: CreatphidGreaterIthrakSpawnField,
-#     EnemyType.ALIMBIC_TURRET: CommonEnemy2FireSpawnSpawnField,
-#     EnemyType.PSYCHO_BIT1: CommonEnemy2FireSpawnSpawnField,
-#     EnemyType.PSYCHO_BIT2: CommonEnemy2FireSpawnSpawnField,
-#     EnemyType.VOLDRUM1: CommonEnemy2FireSpawnSpawnField,
-#     EnemyType.FIRE_SPAWN: CommonEnemy2FireSpawnSpawnField,
-#     EnemyType.CARNIVOROUS_PLANT: CarnivorousPlantSpawnField,
-#     EnemyType.BARBED_WAR_WASP: BarbedWarWaspSpawnField,
-#     EnemyType.HUNTER: HunterSpawnField,
-#     EnemyType.SLENCH_TURRET: SlenchTurretSpawnField,
-#     EnemyType.GOREA1_A: Gorea1SpawnField,
-#     EnemyType.GOREA2: Gorea2SpawnField,
-# }
 
 
 class EnemySpawn(Entity):

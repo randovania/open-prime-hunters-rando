@@ -6,7 +6,7 @@ from open_prime_hunters_rando.entities.entity_types.item_spawn import ItemSpawn
 from open_prime_hunters_rando.entities.enum import EntityType, ItemType, Message
 
 if TYPE_CHECKING:
-    from open_prime_hunters_rando.entities.entity_type import Entity
+    from open_prime_hunters_rando.entities.entity import Entity
 
 
 def patch_pickups(entity_file: EntityFile, pickups: list) -> None:

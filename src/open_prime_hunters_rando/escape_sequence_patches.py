@@ -12,7 +12,7 @@ from open_prime_hunters_rando.entities.entity_types.trigger_volume import Trigge
 from open_prime_hunters_rando.file_manager import FileManager
 
 if TYPE_CHECKING:
-    from open_prime_hunters_rando.entities.entity_type import Entity
+    from open_prime_hunters_rando.entities.entity import Entity
 
 
 def patch_escape_sequences(file_manager: FileManager) -> None:

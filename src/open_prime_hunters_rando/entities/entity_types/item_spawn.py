@@ -3,7 +3,7 @@ import typing
 from construct.lib import Container
 
 from open_prime_hunters_rando.common import Vec3
-from open_prime_hunters_rando.entities.entity_type import Entity
+from open_prime_hunters_rando.entities.entity import Entity
 from open_prime_hunters_rando.entities.enum import EntityType, ItemType, Message
 
 

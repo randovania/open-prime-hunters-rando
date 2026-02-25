@@ -1,4 +1,4 @@
-from open_prime_hunters_rando.entities.entity_type import Entity
+from open_prime_hunters_rando.entities.entity import Entity
 
 
 class PointModule(Entity):

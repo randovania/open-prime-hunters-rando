@@ -6,12 +6,31 @@ from typing import Any, Self
 import construct
 from construct import Container, Int16ul, Int32ul, ListContainer, RepeatUntil, Struct
 
-from open_prime_hunters_rando.entities.entity_type import (
+from open_prime_hunters_rando.entities.entity import (
     Entity,
     EntityEntry,
     RawEntityEntry,
 )
-from open_prime_hunters_rando.entities.entity_type_class_mapping import entity_type_to_class
+from open_prime_hunters_rando.entities.entity_types.area_volume import AreaVolume
+from open_prime_hunters_rando.entities.entity_types.artifact import Artifact
+from open_prime_hunters_rando.entities.entity_types.camera_sequence import CameraSequence
+from open_prime_hunters_rando.entities.entity_types.defense_node import DefenseNode
+from open_prime_hunters_rando.entities.entity_types.door import Door
+from open_prime_hunters_rando.entities.entity_types.enemy_spawn import EnemySpawn
+from open_prime_hunters_rando.entities.entity_types.flag_base import FlagBase
+from open_prime_hunters_rando.entities.entity_types.force_field import ForceField
+from open_prime_hunters_rando.entities.entity_types.item_spawn import ItemSpawn
+from open_prime_hunters_rando.entities.entity_types.jump_pad import JumpPad
+from open_prime_hunters_rando.entities.entity_types.light_source import LightSource
+from open_prime_hunters_rando.entities.entity_types.morph_camera import MorphCamera
+from open_prime_hunters_rando.entities.entity_types.object import Object
+from open_prime_hunters_rando.entities.entity_types.octolith_flag import OctolithFlag
+from open_prime_hunters_rando.entities.entity_types.platform import Platform
+from open_prime_hunters_rando.entities.entity_types.player_spawn import PlayerSpawn
+from open_prime_hunters_rando.entities.entity_types.point_module import PointModule
+from open_prime_hunters_rando.entities.entity_types.teleporter import Teleporter
+from open_prime_hunters_rando.entities.entity_types.trigger_volume import TriggerVolume
+from open_prime_hunters_rando.entities.enum import EntityType
 
 
 def num_bytes_to_align(length: int, modulus: int = 4) -> int:
@@ -30,6 +49,29 @@ EntityFileConstruct = Struct(
     "header" / EntityFileHeader,
     "entities" / RepeatUntil(lambda entity, lst, ctx: entity._data_offset == 0, EntityEntry),
 )
+
+
+entity_type_to_class: dict[EntityType, type[Entity]] = {
+    EntityType.PLATFORM: Platform,
+    EntityType.OBJECT: Object,
+    EntityType.PLAYER_SPAWN: PlayerSpawn,
+    EntityType.DOOR: Door,
+    EntityType.ITEM_SPAWN: ItemSpawn,
+    EntityType.ENEMY_SPAWN: EnemySpawn,
+    EntityType.TRIGGER_VOLUME: TriggerVolume,
+    EntityType.AREA_VOLUME: AreaVolume,
+    EntityType.JUMP_PAD: JumpPad,
+    EntityType.POINT_MODULE: PointModule,
+    EntityType.MORPH_CAMERA: MorphCamera,
+    EntityType.OCTOLITH_FLAG: OctolithFlag,
+    EntityType.FLAG_BASE: FlagBase,
+    EntityType.TELEPORTER: Teleporter,
+    EntityType.DEFENSE_NODE: DefenseNode,
+    EntityType.LIGHT_SOURCE: LightSource,
+    EntityType.ARTIFACT: Artifact,
+    EntityType.CAMERA_SEQUENCE: CameraSequence,
+    EntityType.FORCE_FIELD: ForceField,
+}
 
 
 class EntityAdapter(construct.Adapter):

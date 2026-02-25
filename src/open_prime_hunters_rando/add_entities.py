@@ -8,7 +8,7 @@ from open_prime_hunters_rando.entities.enum import EntityType, Message
 from open_prime_hunters_rando.file_manager import FileManager
 
 if TYPE_CHECKING:
-    from open_prime_hunters_rando.entities.entity_type import Entity
+    from open_prime_hunters_rando.entities.entity import Entity
 
 
 class NewTrigger(NamedTuple):
