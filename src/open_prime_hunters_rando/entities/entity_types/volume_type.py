@@ -1,11 +1,46 @@
-from construct import Container
+import enum
 
-from open_prime_hunters_rando.common import Vec3
-from open_prime_hunters_rando.entities.entity import Entity
-from open_prime_hunters_rando.entities.enum import VolumeType
+import construct
+from construct import Construct, Container, Int32ul, Padded, Struct, Switch
+
+from open_prime_hunters_rando.common import EnumAdapter, FixedPoint, Vec3
+from open_prime_hunters_rando.entities.entity_file import Vector3Fx
 
 
-class BoxVolumeType(Entity):
+class VolumeType(enum.Enum):
+    BOX = 0
+    CYLINDER = 1
+    SPHERE = 2
+
+
+volume_types = {
+    VolumeType.BOX: Struct(
+        "box_vector1" / Vector3Fx,
+        "box_vector2" / Vector3Fx,
+        "box_vector3" / Vector3Fx,
+        "box_position" / Vector3Fx,
+        "box_dot1" / FixedPoint,
+        "box_dot2" / FixedPoint,
+        "box_dot3" / FixedPoint,
+    ),
+    VolumeType.CYLINDER: Struct(
+        "cylinder_vector" / Vector3Fx,
+        "cylinder_position" / Vector3Fx,
+        "cylinder_radius" / FixedPoint,
+        "cylinder_dot" / FixedPoint,
+    ),
+    VolumeType.SPHERE: Struct(
+        "sphere_position" / Vector3Fx,
+        "sphere_radius" / FixedPoint,
+    ),
+}
+RawCollisionVolume = Struct(
+    "type" / EnumAdapter(VolumeType, Int32ul),
+    "data" / Padded(60, Switch(construct.this.type, volume_types)),
+)
+
+
+class BoxVolumeType:
     @property
     def box_vector1(self) -> Vec3:
         return self._raw.data.box_vector1
@@ -121,9 +156,13 @@ class SphereVolumeType:
         self._raw.data.sphere_radius = value
 
 
-class VolumeType:
+class VolumeTypeCommon:
     def __init__(self, raw: Container) -> None:
         self._raw = raw
+
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return RawCollisionVolume
 
     @property
     def type(self) -> VolumeType:

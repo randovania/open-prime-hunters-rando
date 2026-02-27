@@ -1,7 +1,21 @@
+from construct import Byte, Construct, Struct
+
 from open_prime_hunters_rando.entities.entity import Entity
+from open_prime_hunters_rando.entities.entity_file import EntityDataHeader
+
+PlayerSpawnEntityData = Struct(
+    "header" / EntityDataHeader,
+    "availability" / Byte,
+    "active" / Byte,
+    "team_index" / Byte,
+)
 
 
 class PlayerSpawn(Entity):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return PlayerSpawnEntityData
+
     @property
     def availability(self) -> int:
         return self._raw.data.availability

@@ -1,5 +1,5 @@
 from open_prime_hunters_rando.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.entities.enum import VolumeType
+from open_prime_hunters_rando.entities.enum import VolumeTypeCommon
 
 
 class SlenchTurretSpawnField(EnemySpawn):
@@ -19,11 +19,11 @@ class SlenchTurretSpawnField(EnemySpawn):
     def enemy_version(self, value: int) -> None:
         self._raw.data.enemy_version = value
 
-    def get_volume0(self) -> VolumeType:
-        return VolumeType(self._raw.data.volume0)
+    def get_volume0(self) -> VolumeTypeCommon:
+        return VolumeTypeCommon(self._raw.data.volume0)
 
-    def get_volume1(self) -> VolumeType:
-        return VolumeType(self._raw.data.volume1)
+    def get_volume1(self) -> VolumeTypeCommon:
+        return VolumeTypeCommon(self._raw.data.volume1)
 
     @property
     def index(self) -> int:

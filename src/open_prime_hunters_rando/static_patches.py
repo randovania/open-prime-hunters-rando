@@ -2,13 +2,13 @@ from typing import TYPE_CHECKING
 
 from open_prime_hunters_rando.entities.entity_types.area_volume import AreaVolume
 from open_prime_hunters_rando.entities.entity_types.artifact import Artifact
-from open_prime_hunters_rando.entities.entity_types.door import Door
+from open_prime_hunters_rando.entities.entity_types.door import Door, DoorType
 from open_prime_hunters_rando.entities.entity_types.force_field import ForceField
 from open_prime_hunters_rando.entities.entity_types.item_spawn import ItemSpawn
 from open_prime_hunters_rando.entities.entity_types.object import Object
 from open_prime_hunters_rando.entities.entity_types.teleporter import Teleporter
 from open_prime_hunters_rando.entities.entity_types.trigger_volume import TriggerVolume
-from open_prime_hunters_rando.entities.enum import DoorType, EntityType, Message
+from open_prime_hunters_rando.entities.enum import EntityType, Message
 from open_prime_hunters_rando.file_manager import FileManager
 
 if TYPE_CHECKING:

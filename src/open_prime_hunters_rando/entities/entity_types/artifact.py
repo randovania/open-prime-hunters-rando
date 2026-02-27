@@ -1,13 +1,37 @@
 import typing
 
+from construct import Byte, Construct, Flag, Int16sl, Int16ul, Struct
 from construct.lib import Container
 
 from open_prime_hunters_rando.common import Vec3
 from open_prime_hunters_rando.entities.entity import Entity
+from open_prime_hunters_rando.entities.entity_file import EntityDataHeader, MessageConstruct
 from open_prime_hunters_rando.entities.enum import EntityType, Message
+
+ArtifactEntityData = Struct(
+    "header" / EntityDataHeader,
+    "model_id" / Byte,
+    "artifact_id" / Byte,
+    "active" / Flag,
+    "has_base" / Flag,
+    "message1_target" / Int16sl,
+    "_padding1" / Int16ul,
+    "message1" / MessageConstruct,
+    "message2_target" / Int16sl,
+    "_padding2" / Int16ul,
+    "message2" / MessageConstruct,
+    "message3_target" / Int16sl,
+    "_padding3" / Int16ul,
+    "message3" / MessageConstruct,
+    "linked_entity_id" / Int16sl,
+)
 
 
 class Artifact(Entity):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return ArtifactEntityData
+
     @property
     def model_id(self) -> int:
         return self._raw.data.model_id

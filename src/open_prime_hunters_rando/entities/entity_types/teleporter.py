@@ -1,8 +1,28 @@
+from construct import Byte, Construct, Flag, Int16ul, PaddedString, Struct
+
 from open_prime_hunters_rando.common import Vec3
 from open_prime_hunters_rando.entities.entity import Entity
+from open_prime_hunters_rando.entities.entity_file import DecodedString, EntityDataHeader, Vector3Fx
+
+TeleporterEntityData = Struct(
+    "header" / EntityDataHeader,
+    "load_index" / Byte,
+    "target_index" / Byte,
+    "artifact_id" / Byte,
+    "active" / Flag,
+    "invisible" / Flag,
+    "entity_filename" / PaddedString(15, "ascii"),
+    "_unused" / Int16ul[2],
+    "target_position" / Vector3Fx,
+    "node_name" / DecodedString,
+)
 
 
 class Teleporter(Entity):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return TeleporterEntityData
+
     @property
     def load_index(self) -> int:
         return self._raw.data.load_index

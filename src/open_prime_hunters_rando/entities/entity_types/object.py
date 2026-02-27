@@ -1,9 +1,65 @@
-from open_prime_hunters_rando.common import Vec3
+import enum
+
+import construct
+from construct import Byte, Int16sl, Int16ul, Int32sl, Int32ul, Struct, Vec3
+
 from open_prime_hunters_rando.entities.entity import Entity
-from open_prime_hunters_rando.entities.enum import Message, ObjectEffectFlags, ObjectFlags, VolumeType
+from open_prime_hunters_rando.entities.entity_file import (
+    EntityDataHeader,
+    MessageConstruct,
+    Vector3Fx,
+)
+from open_prime_hunters_rando.entities.entity_types.volume_type import RawCollisionVolume, VolumeTypeCommon
+from open_prime_hunters_rando.entities.enum import Message
+
+
+class ObjectFlags(enum.IntFlag):
+    NONE = 0x0
+    STATE_BIT0 = 0x1
+    STATE_BIT1 = 0x2
+    STATE = 0x3
+    NO_ANIMATION = 0x4
+    ENTITY_LINKED = 0x8
+    IS_VISIBLE = 0x10
+
+
+class ObjectEffectFlags(enum.IntFlag):
+    NONE = 0x0
+    USE_EFFECT_VOLUME = 0x1
+    USE_EFFECT_OFFSET = 0x2
+    REPEAT_SCAN_MESSAGE = 0x4
+    WEAPON_ZOOM = 0x8
+    ATTACH_EFFECT = 0x10
+    DESTROY_EFFECT = 0x20
+    ALWAYS_UPDATE_EFFECT = 0x40
+    UNKNOWN = 0x8000
+
+
+ObjectEntityData = Struct(
+    "header" / EntityDataHeader,
+    "flags" / construct.FlagsEnum(Byte, ObjectFlags),
+    "_padding1" / Byte,
+    "_padding2" / Int16ul,
+    "effect_flags" / construct.FlagsEnum(Int32ul, ObjectEffectFlags),
+    "model_id" / Int32sl,
+    "linked_entity" / Int16sl,
+    "scan_id" / Int16ul,
+    "scan_message_target" / Int16sl,
+    "_padding3" / Int16ul,
+    "scan_message" / MessageConstruct,
+    "effect_id" / Int32sl,
+    "effect_interval" / Int32ul,
+    "effect_on_inverals" / Int32ul,
+    "effect_position_offset" / Vector3Fx,
+    "volume" / RawCollisionVolume,
+)
 
 
 class Object(Entity):
+    @classmethod
+    def type_construct(cls) -> construct.Construct:
+        return ObjectEntityData
+
     def flags(self, flag: ObjectFlags) -> bool:
         return self._raw.data.flags[flag.name]
 
@@ -88,5 +144,5 @@ class Object(Entity):
     def effect_position_offset(self, value: Vec3) -> None:
         self._raw.data.effect_position_offset = value
 
-    def get_volume(self) -> VolumeType:
-        return VolumeType(self._raw.data.volume)
+    def get_volume(self) -> VolumeTypeCommon:
+        return VolumeTypeCommon(self._raw.data.volume)

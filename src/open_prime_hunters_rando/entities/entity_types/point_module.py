@@ -1,7 +1,21 @@
+from construct import Construct, Flag, Int16sl, Struct
+
 from open_prime_hunters_rando.entities.entity import Entity
+from open_prime_hunters_rando.entities.entity_file import EntityDataHeader
+
+PointModuleEntityData = Struct(
+    "header" / EntityDataHeader,
+    "next_id" / Int16sl,
+    "prev_id" / Int16sl,
+    "active" / Flag,
+)
 
 
 class PointModule(Entity):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return PointModule
+
     @property
     def next_id(self) -> int:
         return self._raw.data.next_id

@@ -1,5 +1,5 @@
 from open_prime_hunters_rando.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.entities.entity_types.volume_type import VolumeType
+from open_prime_hunters_rando.entities.entity_types.volume_type import VolumeTypeCommon
 
 
 class CarnivorousPlantSpawnField(EnemySpawn):
@@ -27,5 +27,5 @@ class CarnivorousPlantSpawnField(EnemySpawn):
     def enemy_subtype(self, value: int) -> None:
         self._raw.data.enemy_subtype = value
 
-    def get_volume0(self) -> VolumeType:
-        return VolumeType(self._raw.data.volume0)
+    def get_volume0(self) -> VolumeTypeCommon:
+        return VolumeTypeCommon(self._raw.data.volume0)

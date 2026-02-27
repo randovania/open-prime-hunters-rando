@@ -1,8 +1,33 @@
+from construct import Byte, Construct, Flag, Int16sl, Int16ul, Int32sl, Struct
+
 from open_prime_hunters_rando.entities.entity import Entity
+from open_prime_hunters_rando.entities.entity_file import EntityDataHeader, MessageConstruct
 from open_prime_hunters_rando.entities.enum import Message
+
+CameraSequenceEntityData = Struct(
+    "header" / EntityDataHeader,
+    "sequence_id" / Byte,
+    "handoff" / Flag,
+    "loop" / Flag,
+    "block_input" / Flag,
+    "force_alt_form" / Flag,
+    "force_biped_form" / Flag,
+    "delay_frames" / Int16ul,
+    "player_id1" / Byte,
+    "player_id2" / Byte,
+    "entity1" / Int16sl,
+    "entity2" / Int16sl,
+    "end_message_target_id" / Int16sl,
+    "end_message" / MessageConstruct,
+    "end_message_param" / Int32sl,
+)
 
 
 class CameraSequence(Entity):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return CameraSequenceEntityData
+
     @property
     def sequence_id(self) -> int:
         return self._raw.data.sequence_id

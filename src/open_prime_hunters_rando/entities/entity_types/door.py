@@ -1,8 +1,40 @@
+import enum
+
+from construct import Byte, Construct, Flag, Int32ul, Struct
+
+from open_prime_hunters_rando.common import EnumAdapter
 from open_prime_hunters_rando.entities.entity import Entity
-from open_prime_hunters_rando.entities.enum import DoorType, PaletteId
+from open_prime_hunters_rando.entities.entity_file import DecodedString, EntityDataHeader, PaletteIdConstruct
+from open_prime_hunters_rando.entities.enum import PaletteId
+
+
+class DoorType(enum.Enum):
+    STANDARD = 0
+    MORPH_BALL = 1
+    BOSS = 2
+    THIN = 3
+
+
+DoorEntityData = Struct(
+    "header" / EntityDataHeader,
+    "node_name" / DecodedString,
+    "palette_id" / PaletteIdConstruct,
+    "door_type" / EnumAdapter(DoorType, Int32ul),
+    "connector_id" / Int32ul,
+    "target_layer_id" / Byte,
+    "locked" / Flag,
+    "out_connector_id" / Byte,
+    "out_loader_id" / Byte,
+    "entity_file_name" / DecodedString,
+    "room_name" / DecodedString,
+)
 
 
 class Door(Entity):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return DoorEntityData
+
     @property
     def node_name(self) -> str:
         return self._raw.data.node_name

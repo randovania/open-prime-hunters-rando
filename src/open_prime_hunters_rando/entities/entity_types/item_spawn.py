@@ -1,13 +1,36 @@
 import typing
 
+from construct import Byte, Construct, Flag, Int16sl, Int16ul, Int32sl, Int32ul, Struct
 from construct.lib import Container
 
 from open_prime_hunters_rando.common import Vec3
 from open_prime_hunters_rando.entities.entity import Entity
+from open_prime_hunters_rando.entities.entity_file import EntityDataHeader, ItemTypeConstruct, MessageConstruct
 from open_prime_hunters_rando.entities.enum import EntityType, ItemType, Message
+
+ItemSpawnEntityData = Struct(
+    "header" / EntityDataHeader,
+    "parent_id" / Int32sl,
+    "item_type" / ItemTypeConstruct,
+    "enabled" / Flag,
+    "has_base" / Flag,
+    "always_active" / Flag,
+    "_padding" / Byte,
+    "max_spawn_count" / Int16ul,
+    "spawn_interval" / Int16ul,
+    "spawn_delay" / Int16ul,
+    "notify_entity_id" / Int16sl,
+    "collected_message" / MessageConstruct,
+    "collected_message_param1" / Int32ul,
+    "collected_message_param2" / Int32ul,
+)
 
 
 class ItemSpawn(Entity):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return ItemSpawnEntityData
+
     @property
     def parent_id(self) -> int:
         return self._raw.data.parent_id

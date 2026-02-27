@@ -1,10 +1,48 @@
+from construct import Byte, Construct, Flag, Int16sl, Int16ul, Int32sl, Int32ul, Struct
+
 from open_prime_hunters_rando.entities.entity import Entity
-from open_prime_hunters_rando.entities.enum import Message, TriggerVolumeFlags, VolumeType
+from open_prime_hunters_rando.entities.entity_file import (
+    EntityDataHeader,
+    MessageConstruct,
+)
+from open_prime_hunters_rando.entities.entity_types.trigger_volume import (
+    TriggerVolumeFlags,
+    TriggerVolumeFlagsConstruct,
+)
+from open_prime_hunters_rando.entities.entity_types.volume_type import RawCollisionVolume, VolumeTypeCommon
+from open_prime_hunters_rando.entities.enum import Message
+
+AreaVolumeEntityData = Struct(
+    "header" / EntityDataHeader,
+    "volume" / RawCollisionVolume,
+    "_unused1" / Int16ul,
+    "active" / Flag,
+    "always_active" / Flag,
+    "allow_mulitple" / Flag,
+    "message_delay" / Byte,
+    "_unused2" / Int16ul,
+    "inside_message" / MessageConstruct,
+    "inside_message_param1" / Int32sl,
+    "inside_message_param2" / Int32sl,
+    "parent_id" / Int16sl,
+    "_padding3" / Int16ul,
+    "exit_message" / MessageConstruct,
+    "exit_message_param1" / Int32sl,
+    "exit_message_param2" / Int32sl,
+    "child_id" / Int16sl,
+    "cooldown" / Int16ul,
+    "priority" / Int32ul,
+    "trigger_flags" / TriggerVolumeFlagsConstruct,
+)
 
 
 class AreaVolume(Entity):
-    def get_volume(self) -> VolumeType:
-        return VolumeType(self._raw.data.volume)
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return AreaVolumeEntityData
+
+    def get_volume(self) -> VolumeTypeCommon:
+        return VolumeTypeCommon(self._raw.data.volume)
 
     @property
     def active(self) -> bool:

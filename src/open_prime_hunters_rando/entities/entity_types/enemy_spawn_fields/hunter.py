@@ -1,5 +1,18 @@
+import enum
+
 from open_prime_hunters_rando.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.entities.enum import Hunter
+
+
+class Hunter(enum.Enum):
+    SAMUS = 0
+    KANDEN = 1
+    TRACE = 2
+    SYLUX = 3
+    NOXUS = 4
+    SPIRE = 5
+    WEAVEL = 6
+    GUARDIAN = 7
+    RANDOM = 8
 
 
 class HunterSpawnField(EnemySpawn):

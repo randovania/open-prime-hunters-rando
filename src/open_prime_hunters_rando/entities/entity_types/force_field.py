@@ -1,8 +1,24 @@
+from construct import Construct, Flag, Struct
+
+from open_prime_hunters_rando.common import FixedPoint
 from open_prime_hunters_rando.entities.entity import Entity
+from open_prime_hunters_rando.entities.entity_file import EntityDataHeader, PaletteIdConstruct
 from open_prime_hunters_rando.entities.enum import PaletteId
+
+ForceFieldEntityData = Struct(
+    "header" / EntityDataHeader,
+    "type" / PaletteIdConstruct,
+    "width" / FixedPoint,
+    "height" / FixedPoint,
+    "active" / Flag,
+)
 
 
 class ForceField(Entity):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return ForceFieldEntityData
+
     @property
     def type(self) -> PaletteId:
         return self._raw.data.type

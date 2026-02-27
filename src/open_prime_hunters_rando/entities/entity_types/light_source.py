@@ -1,11 +1,35 @@
-from open_prime_hunters_rando.common import Vec3
+from construct import Construct, Flag, Struct
+
+from open_prime_hunters_rando.common import Rgb01, Vec3
 from open_prime_hunters_rando.entities.entity import Entity
-from open_prime_hunters_rando.entities.enum import VolumeType
+from open_prime_hunters_rando.entities.entity_file import EntityDataHeader, Vector3Fx
+from open_prime_hunters_rando.entities.entity_types.volume_type import RawCollisionVolume, VolumeTypeCommon
+
+ColorRgb = Struct(
+    "red" / Rgb01,
+    "green" / Rgb01,
+    "blue" / Rgb01,
+)
+
+LightSourceEntityData = Struct(
+    "header" / EntityDataHeader,
+    "volume" / RawCollisionVolume,
+    "light1_enabled" / Flag,
+    "light1_color" / ColorRgb,
+    "light1_vector" / Vector3Fx,
+    "light2_enabled" / Flag,
+    "light2_color" / ColorRgb,
+    "light2_vector" / Vector3Fx,
+)
 
 
 class LightSource(Entity):
-    def get_volume(self) -> VolumeType:
-        return VolumeType(self._raw.data.volume)
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return LightSourceEntityData
+
+    def get_volume(self) -> VolumeTypeCommon:
+        return VolumeTypeCommon(self._raw.data.volume)
 
     @property
     def light1_enabled(self) -> bool:

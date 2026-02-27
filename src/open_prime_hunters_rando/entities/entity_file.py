@@ -4,13 +4,30 @@ from collections.abc import Iterator
 from typing import Any, Self
 
 import construct
-from construct import Container, Int16ul, Int32ul, ListContainer, RepeatUntil, Struct
-
-from open_prime_hunters_rando.entities.entity import (
-    Entity,
-    EntityEntry,
-    RawEntityEntry,
+from construct import (
+    Aligned,
+    BitsSwapped,
+    Bitwise,
+    Container,
+    Flag,
+    Int16sl,
+    Int16ul,
+    Int32sl,
+    Int32ul,
+    ListContainer,
+    PaddedString,
+    Peek,
+    Pointer,
+    Rebuild,
+    RepeatUntil,
+    StopIf,
+    Struct,
+    Switch,
+    this,
 )
+
+from open_prime_hunters_rando.common import EnumAdapter, FixedPoint
+from open_prime_hunters_rando.entities.entity import Entity
 from open_prime_hunters_rando.entities.entity_types.area_volume import AreaVolume
 from open_prime_hunters_rando.entities.entity_types.artifact import Artifact
 from open_prime_hunters_rando.entities.entity_types.camera_sequence import CameraSequence
@@ -30,26 +47,43 @@ from open_prime_hunters_rando.entities.entity_types.player_spawn import PlayerSp
 from open_prime_hunters_rando.entities.entity_types.point_module import PointModule
 from open_prime_hunters_rando.entities.entity_types.teleporter import Teleporter
 from open_prime_hunters_rando.entities.entity_types.trigger_volume import TriggerVolume
-from open_prime_hunters_rando.entities.enum import EntityType
-
-
-def num_bytes_to_align(length: int, modulus: int = 4) -> int:
-    if length % modulus > 0:
-        return modulus - (length % modulus)
-    return 0
-
-
-EntityFileHeader = Struct(
-    "version" / Int32ul,
-    "layer_counts" / Int16ul[16],
+from open_prime_hunters_rando.entities.enum import (
+    EntityType,
+    ItemType,
+    Message,
+    PaletteId,
 )
 
+EntityTypeConstruct = EnumAdapter(EntityType, Int16ul)
 
-EntityFileConstruct = Struct(
-    "header" / EntityFileHeader,
-    "entities" / RepeatUntil(lambda entity, lst, ctx: entity._data_offset == 0, EntityEntry),
+Vector3Fx = Struct(
+    "x" / FixedPoint,
+    "y" / FixedPoint,
+    "z" / FixedPoint,
 )
 
+Vector4Fx = Struct(
+    "x" / FixedPoint,
+    "y" / FixedPoint,
+    "z" / FixedPoint,
+    "w" / FixedPoint,
+)
+
+DecodedString = PaddedString(16, "ascii")
+
+EntityDataHeader = Struct(
+    "entity_type" / EntityTypeConstruct,
+    "entity_id" / Int16sl,
+    "position" / Vector3Fx,
+    "up_vector" / Vector3Fx,
+    "facing_vector" / Vector3Fx,
+)
+
+MessageConstruct = EnumAdapter(Message, Int32ul)
+
+ItemTypeConstruct = EnumAdapter(ItemType, Int32sl)
+
+PaletteIdConstruct = EnumAdapter(PaletteId, Int32ul)
 
 entity_type_to_class: dict[EntityType, type[Entity]] = {
     EntityType.PLATFORM: Platform,
@@ -72,6 +106,40 @@ entity_type_to_class: dict[EntityType, type[Entity]] = {
     EntityType.CAMERA_SEQUENCE: CameraSequence,
     EntityType.FORCE_FIELD: ForceField,
 }
+
+raw_entry_fields = [
+    "node_name" / DecodedString,
+    "layer_state" / BitsSwapped(Bitwise(Flag[16])),
+    "_size" / Int16ul,
+    "_data_offset" / Int32ul,
+]
+
+RawEntityEntry = Struct(*raw_entry_fields)
+
+entity_type_to_construct = {etype: entity_type_to_class[etype].type_construct() for etype in EntityType}
+
+EntityEntry = Struct(
+    *raw_entry_fields,
+    StopIf(this._data_offset == 0),
+    "_entity_type" / Rebuild(Peek(Pointer(this._data_offset, EntityTypeConstruct)), this.data.header.entity_type),
+    "data" / Pointer(this._data_offset, Aligned(4, Switch(this._entity_type, entity_type_to_construct))),
+)
+
+EntityFileHeader = Struct(
+    "version" / Int32ul,
+    "layer_counts" / Int16ul[16],
+)
+
+EntityFileConstruct = Struct(
+    "header" / EntityFileHeader,
+    "entities" / RepeatUntil(lambda entity, lst, ctx: entity._data_offset == 0, EntityEntry),
+)
+
+
+def num_bytes_to_align(length: int, modulus: int = 4) -> int:
+    if length % modulus > 0:
+        return modulus - (length % modulus)
+    return 0
 
 
 class EntityAdapter(construct.Adapter):

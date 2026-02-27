@@ -1,9 +1,41 @@
-from open_prime_hunters_rando.common import Vec3
+from construct import Byte, Construct, Flag, Int16ul, Int32sl, Int32ul, Struct
+
+from open_prime_hunters_rando.common import FixedPoint, Vec3
 from open_prime_hunters_rando.entities.entity import Entity
-from open_prime_hunters_rando.entities.enum import TriggerVolumeFlags, VolumeType
+from open_prime_hunters_rando.entities.entity_file import (
+    EntityDataHeader,
+    Vector3Fx,
+)
+from open_prime_hunters_rando.entities.entity_types.trigger_volume import (
+    TriggerVolumeFlags,
+    TriggerVolumeFlagsConstruct,
+)
+from open_prime_hunters_rando.entities.entity_types.volume_type import RawCollisionVolume
+from open_prime_hunters_rando.entities.enum import VolumeTypeCommon
+
+JumpPadEntityData = Struct(
+    "header" / EntityDataHeader,
+    "parent_id" / Int32sl,
+    "_unused" / Int32ul,
+    "volume" / RawCollisionVolume,
+    "beam_vector" / Vector3Fx,
+    "speed" / FixedPoint,
+    "control_lock_time" / Int16ul,
+    "cooldown_time" / Int16ul,
+    "active" / Flag,
+    "_padding1" / Byte,
+    "_padding2" / Int16ul,
+    "model_id" / Int32ul,
+    "beam_type" / Int32ul,
+    "trigger_flags" / TriggerVolumeFlagsConstruct,
+)
 
 
 class JumpPad(Entity):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return JumpPadEntityData
+
     @property
     def parent_id(self) -> int:
         return self._raw.data.parent_id
@@ -12,8 +44,8 @@ class JumpPad(Entity):
     def parent_id(self, value: int) -> None:
         self._raw.data.parent_id = value
 
-    def get_volume(self) -> VolumeType:
-        return VolumeType(self._raw.data.volume)
+    def get_volume(self) -> VolumeTypeCommon:
+        return VolumeTypeCommon(self._raw.data.volume)
 
     @property
     def beam_vector(self) -> Vec3:

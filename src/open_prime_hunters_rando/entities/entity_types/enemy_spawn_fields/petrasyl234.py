@@ -1,11 +1,11 @@
 from open_prime_hunters_rando.common import Vec3
 from open_prime_hunters_rando.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.entities.enum import VolumeType
+from open_prime_hunters_rando.entities.enum import VolumeTypeCommon
 
 
 class Petrasyl234SpawnField(EnemySpawn):
-    def get_volume0(self) -> VolumeType:
-        return VolumeType(self._raw.data.volume0)
+    def get_volume0(self) -> VolumeTypeCommon:
+        return VolumeTypeCommon(self._raw.data.volume0)
 
     @property
     def position(self) -> Vec3:
