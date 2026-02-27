@@ -1,8 +1,8 @@
 import copy
 from typing import NamedTuple
 
-from open_prime_hunters_rando.entities.entity_type import EntityType, Message
-from open_prime_hunters_rando.file_manager import FileManager
+from open_prime_hunters_rando.parsing.formats.entities.entity_type import EntityType, Message
+from open_prime_hunters_rando.parsing.file_manager import FileManager
 
 
 class NewTrigger(NamedTuple):

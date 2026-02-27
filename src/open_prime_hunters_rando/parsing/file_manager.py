@@ -4,10 +4,10 @@ from pathlib import Path
 from construct import Container, ListContainer
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.entities.entity_type import EntityFile
-from open_prime_hunters_rando.level_data import get_data
+from open_prime_hunters_rando.parsing.formats.entities.entity_type import EntityFile
+from open_prime_hunters_rando.parsing.level_data import get_data
 from open_prime_hunters_rando.logger import LOG
-from open_prime_hunters_rando.string_tables.string_tables import StringTable
+from open_prime_hunters_rando.parsing.formats.string_tables import StringTable
 
 
 class Language(Enum):

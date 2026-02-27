@@ -1,4 +1,4 @@
-from open_prime_hunters_rando.file_manager import FileManager
+from open_prime_hunters_rando.parsing.file_manager import FileManager
 
 
 def patch_escape_sequences(file_manager: FileManager) -> None:

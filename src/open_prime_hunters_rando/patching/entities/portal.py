@@ -1,5 +1,5 @@
-from open_prime_hunters_rando.entities.entity_type import EntityFile
-from open_prime_hunters_rando.level_data import ALL_PORTAL_FILENAMES
+from open_prime_hunters_rando.parsing.formats.entities.entity_type import EntityFile
+from open_prime_hunters_rando.parsing.level_data import ALL_PORTAL_FILENAMES
 
 
 def patch_portals(entity_file: EntityFile, portals: list, room_name: str) -> None:

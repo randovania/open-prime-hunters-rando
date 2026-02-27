@@ -20,7 +20,7 @@ from construct import (
     this,
 )
 
-from open_prime_hunters_rando.constants import EnumAdapter
+from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
 
 
 class ScanSpeed(enum.Enum):
