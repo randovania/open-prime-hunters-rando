@@ -2,8 +2,8 @@ import random
 
 from construct import Container
 
-from open_prime_hunters_rando.entities.entity_type import EnemyType, EntityFile, EntityType, Hunter
-from open_prime_hunters_rando.file_manager import FileManager
+from open_prime_hunters_rando.parsing.formats.entities.entity_type import EnemyType, EntityFile, EntityType, Hunter
+from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.logger import LOG
 
 _ROOMS_WITH_HUNTERS = {
