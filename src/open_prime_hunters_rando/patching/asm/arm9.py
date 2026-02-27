@@ -2,10 +2,10 @@ from pathlib import Path
 
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.asm.asm_patching import NOP, create_asm_patch, read_asm_file
-from open_prime_hunters_rando.version_checking import get_rom_save_data_addresses
+from open_prime_hunters_rando.patching.asm.asm_patching import NOP, create_asm_patch, read_asm_file
+from open_prime_hunters_rando.patching.version_checking import get_rom_save_data_addresses
 
-asm_patches = Path(__file__).parent.joinpath("files", "asm_patches")
+asm_patches = Path(__file__).parent.joinpath("patches")
 
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:

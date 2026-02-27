@@ -1,7 +1,7 @@
 from enum import Enum
 
-from open_prime_hunters_rando.file_manager import FileManager, Language
-from open_prime_hunters_rando.string_tables.string_tables import ScanCategory, ScanSpeed
+from open_prime_hunters_rando.parsing.file_manager import FileManager, Language
+from open_prime_hunters_rando.parsing.formats.string_tables import ScanCategory, ScanSpeed
 
 
 class StringTables(Enum):
