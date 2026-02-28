@@ -1,12 +1,16 @@
 import enum
 
-import construct
 from construct import Byte, Construct, Flag, Int16sl, Int16ul, Int32sl, Int32ul, Struct
 
 from open_prime_hunters_rando.common import EnumAdapter
+from open_prime_hunters_rando.parsing.common_types.volume import (
+    RawCollisionVolume,
+    TriggerVolumeFlags,
+    TriggerVolumeFlagsConstruct,
+    VolumeTypeCommon,
+)
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityDataHeader, MessageConstruct
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.volume_type import RawCollisionVolume, VolumeTypeCommon
 from open_prime_hunters_rando.parsing.formats.entities.enum import Message
 
 
@@ -18,24 +22,6 @@ class TriggerVolumeType(enum.Enum):
     STATE_BITS = 4
 
 
-class TriggerVolumeFlags(enum.IntFlag):
-    NONE = 0x0
-    POWER_BEAM = 0x1
-    VOLT_DRIVER = 0x2
-    MISSILE = 0x4
-    BATTLEHAMMER = 0x8
-    IMPERIALIST = 0x10
-    JUDICATOR = 0x20
-    MAGMAUL = 0x40
-    SHOCK_COIL = 0x80
-    BEAM_CHARGED = 0x100
-    PLAYER_BIPED = 0x200
-    PLAYER_ALT = 0x400
-    BIT_11 = 0x800  # unused
-    INCLUDE_BOTS = 0x1000
-
-
-TriggerVolumeFlagsConstruct = construct.FlagsEnum(Int32ul, TriggerVolumeFlags)
 TriggerVolumeEntityData = Struct(
     "header" / EntityDataHeader,
     "subtype" / EnumAdapter(TriggerVolumeType, Int32ul),

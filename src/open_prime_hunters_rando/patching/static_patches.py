@@ -1,5 +1,5 @@
-from open_prime_hunters_rando.parsing.formats.entities.entity_type import DoorType, Message
 from open_prime_hunters_rando.parsing.file_manager import FileManager
+from open_prime_hunters_rando.parsing.formats.entities.entity_type import DoorType, Message
 
 
 def static_patches(file_manager: FileManager) -> None:
@@ -25,8 +25,8 @@ def _disable_boss_force_fields(file_manager: FileManager) -> None:
         entity_file = file_manager.get_entity_file(area_name, room_name)
         entity = entity_file.get_entity(force_field)
         if entity.entity_id == 10:
-            entity.set_layer_state(0, False)
-            entity.set_layer_state(3, False)
+            entity.layer_state[0] = False
+            entity.layer_state[3] = False
         else:
             entity.data.active = False
 
@@ -71,8 +71,8 @@ def _remove_elder_passage_top_lock_and_force_field(file_manager: FileManager) ->
     trigger_volume.data.parent_message = Message.NONE
 
     force_field = entity_file.get_entity(39)
-    force_field.set_layer_state(0, False)
-    force_field.set_layer_state(3, False)
+    force_field.layer_state[0] = False
+    force_field.layer_state[3] = False
 
 
 def _disable_alimbic_garden_cutscene(file_manager: FileManager) -> None:

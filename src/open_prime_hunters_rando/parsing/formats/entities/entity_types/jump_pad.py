@@ -1,6 +1,7 @@
 from construct import Byte, Construct, Flag, Int16ul, Int32sl, Int32ul, Struct
 
 from open_prime_hunters_rando.common import FixedPoint, Vec3
+from open_prime_hunters_rando.parsing.common_types.volume import RawCollisionVolume
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import (
     EntityDataHeader,
@@ -10,7 +11,6 @@ from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volu
     TriggerVolumeFlags,
     TriggerVolumeFlagsConstruct,
 )
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.volume_type import RawCollisionVolume
 from open_prime_hunters_rando.parsing.formats.entities.enum import VolumeTypeCommon
 
 JumpPadEntityData = Struct(

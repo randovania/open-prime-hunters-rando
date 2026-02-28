@@ -1,11 +1,10 @@
 from construct import Byte, Construct, Flag, Int16sl, Int16ul, Int32sl, Struct
 
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
-from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityDataHeader, MessageConstruct
+from open_prime_hunters_rando.parsing.formats.entities.entity_file import MessageConstruct
 from open_prime_hunters_rando.parsing.formats.entities.enum import Message
 
 CameraSequenceEntityData = Struct(
-    "header" / EntityDataHeader,
     "sequence_id" / Byte,
     "handoff" / Flag,
     "loop" / Flag,

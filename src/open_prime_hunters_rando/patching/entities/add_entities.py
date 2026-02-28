@@ -1,8 +1,8 @@
 import copy
 from typing import NamedTuple
 
-from open_prime_hunters_rando.parsing.formats.entities.base_entity import EntityType, Message
 from open_prime_hunters_rando.parsing.file_manager import FileManager
+from open_prime_hunters_rando.parsing.formats.entities.base_entity import EntityType, Message
 
 
 class NewTrigger(NamedTuple):
@@ -66,7 +66,7 @@ def _add_triggers(file_manager: FileManager, new_trigger: NewTrigger) -> None:
     trigger_entity.data.header.position = artifact_entity.data.header.position
 
     for layer in new_trigger.active_layers:
-        trigger_entity.set_layer_state(layer, True)
+        trigger_entity.layer_state[layer] = True
 
     # Update the ItemSpawn to activate the trigger
     artifact_entity.data.notify_entity_id = trigger_entity.entity_id
@@ -93,7 +93,7 @@ def _add_triggers(file_manager: FileManager, new_trigger: NewTrigger) -> None:
         trigger_entity_b.node_name = new_trigger.node_name
 
         for layer in new_trigger.active_layers:
-            trigger_entity_b.set_layer_state(layer, True)
+            trigger_entity_b.layer_state[layer] = True
 
         # Send the second message from the Artifact
         trigger_entity_b.data.parent_id = new_trigger.artifact_messages[1][0]
@@ -150,7 +150,7 @@ def _add_objects(file_manager: FileManager, new_object: NewObject) -> None:
     object_entity.data.header.up_vector.z *= new_object.up_vector_multiplier
 
     for layer in new_object.active_layers:
-        object_entity.set_layer_state(layer, True)
+        object_entity.layer_state[layer] = True
 
 
 def add_new_entities(file_manager: FileManager) -> None:

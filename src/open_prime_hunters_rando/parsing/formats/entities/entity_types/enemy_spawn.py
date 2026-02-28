@@ -4,6 +4,7 @@ import construct
 from construct import Byte, Construct, Container, Flag, Int16sl, Int16ul, Int32sl, Int32ul, Padded, Struct, Switch
 
 from open_prime_hunters_rando.common import EnumAdapter, FixedPoint
+from open_prime_hunters_rando.parsing.common_types.volume import RawCollisionVolume
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import (
     DecodedString,
@@ -13,7 +14,6 @@ from open_prime_hunters_rando.parsing.formats.entities.entity_file import (
     Vector3Fx,
 )
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.hunter import Hunter
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.volume_type import RawCollisionVolume
 from open_prime_hunters_rando.parsing.formats.entities.enum import ItemType, Message
 
 

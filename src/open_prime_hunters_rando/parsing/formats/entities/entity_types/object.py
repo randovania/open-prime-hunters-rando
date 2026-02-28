@@ -3,13 +3,13 @@ import enum
 import construct
 from construct import Byte, Int16sl, Int16ul, Int32sl, Int32ul, Struct, Vec3
 
+from open_prime_hunters_rando.parsing.common_types.volume import RawCollisionVolume, VolumeTypeCommon
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import (
     EntityDataHeader,
     MessageConstruct,
     Vector3Fx,
 )
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.volume_type import RawCollisionVolume, VolumeTypeCommon
 from open_prime_hunters_rando.parsing.formats.entities.enum import Message
 
 

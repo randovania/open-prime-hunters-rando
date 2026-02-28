@@ -12,10 +12,8 @@ from construct import (
     Flag,
     Int16sl,
     Int16ul,
-    Int32sl,
     Int32ul,
     ListContainer,
-    PaddedString,
     Peek,
     Pointer,
     Rebuild,
@@ -26,50 +24,17 @@ from construct import (
     this,
 )
 
-from open_prime_hunters_rando.common import EnumAdapter, FixedPoint
+from open_prime_hunters_rando.common import EnumAdapter
+from open_prime_hunters_rando.entities.entity_types import entity_type_to_class
+from open_prime_hunters_rando.parsing.common_types import DecodedString
+from open_prime_hunters_rando.parsing.common_types.vectors import Vector3Fx
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.area_volume import AreaVolume
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.camera_sequence import CameraSequence
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.defense_node import DefenseNode
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.door import Door
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.flag_base import FlagBase
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.jump_pad import JumpPad
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.light_source import LightSource
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.morph_camera import MorphCamera
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.object import Object
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.octolith_flag import OctolithFlag
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.platform import Platform
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.player_spawn import PlayerSpawn
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.point_module import PointModule
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.teleporter import Teleporter
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import TriggerVolume
 from open_prime_hunters_rando.parsing.formats.entities.enum import (
     EntityType,
-    ItemType,
-    Message,
-    PaletteId,
 )
 
 EntityTypeConstruct = EnumAdapter(EntityType, Int16ul)
 
-Vector3Fx = Struct(
-    "x" / FixedPoint,
-    "y" / FixedPoint,
-    "z" / FixedPoint,
-)
-
-Vector4Fx = Struct(
-    "x" / FixedPoint,
-    "y" / FixedPoint,
-    "z" / FixedPoint,
-    "w" / FixedPoint,
-)
-
-DecodedString = PaddedString(16, "ascii")
 
 EntityDataHeader = Struct(
     "entity_type" / EntityTypeConstruct,
@@ -78,34 +43,6 @@ EntityDataHeader = Struct(
     "up_vector" / Vector3Fx,
     "facing_vector" / Vector3Fx,
 )
-
-MessageConstruct = EnumAdapter(Message, Int32ul)
-
-ItemTypeConstruct = EnumAdapter(ItemType, Int32sl)
-
-PaletteIdConstruct = EnumAdapter(PaletteId, Int32ul)
-
-entity_type_to_class: dict[EntityType, type[Entity]] = {
-    EntityType.PLATFORM: Platform,
-    EntityType.OBJECT: Object,
-    EntityType.PLAYER_SPAWN: PlayerSpawn,
-    EntityType.DOOR: Door,
-    EntityType.ITEM_SPAWN: ItemSpawn,
-    EntityType.ENEMY_SPAWN: EnemySpawn,
-    EntityType.TRIGGER_VOLUME: TriggerVolume,
-    EntityType.AREA_VOLUME: AreaVolume,
-    EntityType.JUMP_PAD: JumpPad,
-    EntityType.POINT_MODULE: PointModule,
-    EntityType.MORPH_CAMERA: MorphCamera,
-    EntityType.OCTOLITH_FLAG: OctolithFlag,
-    EntityType.FLAG_BASE: FlagBase,
-    EntityType.TELEPORTER: Teleporter,
-    EntityType.DEFENSE_NODE: DefenseNode,
-    EntityType.LIGHT_SOURCE: LightSource,
-    EntityType.ARTIFACT: Artifact,
-    EntityType.CAMERA_SEQUENCE: CameraSequence,
-    EntityType.FORCE_FIELD: ForceField,
-}
 
 raw_entry_fields = [
     "node_name" / DecodedString,
@@ -122,7 +59,17 @@ EntityEntry = Struct(
     *raw_entry_fields,
     StopIf(this._data_offset == 0),
     "_entity_type" / Rebuild(Peek(Pointer(this._data_offset, EntityTypeConstruct)), this.data.header.entity_type),
-    "data" / Pointer(this._data_offset, Aligned(4, Switch(this._entity_type, entity_type_to_construct))),
+    "data"
+    / Pointer(
+        this._data_offset,
+        Aligned(
+            4,
+            Struct(
+                "header" / EntityDataHeader,
+                "fields" / Switch(this._._entity_type, entity_type_to_construct),
+            ),
+        ),
+    ),
 )
 
 EntityFileHeader = Struct(
@@ -232,7 +179,7 @@ class EntityFile:
 
     def entities_for_layer(self, layer: int) -> Iterator[Entity]:
         for entity in self.entities:
-            if entity.layer_state(layer):
+            if entity.layer_state[layer]:
                 yield entity
 
     @property

@@ -1,5 +1,5 @@
+from open_prime_hunters_rando.parsing.common_types.volume import VolumeTypeCommon
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.volume_type import VolumeTypeCommon
 
 
 class CarnivorousPlantSpawnField(EnemySpawn):

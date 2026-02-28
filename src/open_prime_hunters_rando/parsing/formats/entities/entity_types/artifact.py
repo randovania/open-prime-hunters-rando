@@ -1,27 +1,23 @@
 import typing
 
-from construct import Byte, Construct, Flag, Int16sl, Int16ul, Struct
-from construct.lib import Container
+from construct import Byte, Construct, Flag, Int16sl, Padded, Struct
 
 from open_prime_hunters_rando.common import Vec3
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
-from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityDataHeader, MessageConstruct
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
+from open_prime_hunters_rando.parsing.formats.entities.entity_file import MessageConstruct
 from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, Message
 
 ArtifactEntityData = Struct(
-    "header" / EntityDataHeader,
     "model_id" / Byte,
     "artifact_id" / Byte,
     "active" / Flag,
     "has_base" / Flag,
-    "message1_target" / Int16sl,
-    "_padding1" / Int16ul,
+    "message1_target" / Padded(4, Int16sl),
     "message1" / MessageConstruct,
-    "message2_target" / Int16sl,
-    "_padding2" / Int16ul,
+    "message2_target" / Padded(4, Int16sl),
     "message2" / MessageConstruct,
-    "message3_target" / Int16sl,
-    "_padding3" / Int16ul,
+    "message3_target" / Padded(4, Int16sl),
     "message3" / MessageConstruct,
     "linked_entity_id" / Int16sl,
 )
@@ -32,93 +28,22 @@ class Artifact(Entity):
     def type_construct(cls) -> Construct:
         return ArtifactEntityData
 
-    @property
-    def model_id(self) -> int:
-        return self._raw.data.model_id
+    model_id = field(int)
+    artifact_id = field(int)
 
-    @model_id.setter
-    def model_id(self, value: int) -> None:
-        self._raw.data.model_id = value
+    active = field(bool)
+    has_base = field(bool)
 
-    @property
-    def artifact_id(self) -> int:
-        return self._raw.data.artifact_id
+    message1_target = field(int)
+    message1 = field(Message)
 
-    @artifact_id.setter
-    def artifact_id(self, value: int) -> None:
-        self._raw.data.artifact_id = value
+    message2_target = field(int)
+    message2 = field(Message)
 
-    @property
-    def active(self) -> bool:
-        return self._raw.data.active
+    message3_target = field(int)
+    message3 = field(Message)
 
-    @active.setter
-    def active(self, value: bool) -> None:
-        self._raw.data.active = value
-
-    @property
-    def has_base(self) -> bool:
-        return self._raw.data.has_base
-
-    @has_base.setter
-    def has_base(self, value: bool) -> None:
-        self._raw.data.has_base = value
-
-    @property
-    def message1_target(self) -> int:
-        return self._raw.data.message1_target
-
-    @message1_target.setter
-    def message1_target(self, value: int) -> None:
-        self._raw.data.message1_target = value
-
-    @property
-    def message1(self) -> Message:
-        return self._raw.data.message1
-
-    @message1.setter
-    def message1(self, value: Message) -> None:
-        self._raw.data.message1 = value
-
-    @property
-    def message2_target(self) -> int:
-        return self._raw.data.message2_target
-
-    @message2_target.setter
-    def message2_target(self, value: int) -> None:
-        self._raw.data.message2_target = value
-
-    @property
-    def message2(self) -> Message:
-        return self._raw.data.message2
-
-    @message2.setter
-    def message2(self, value: Message) -> None:
-        self._raw.data.message2 = value
-
-    @property
-    def message3_target(self) -> int:
-        return self._raw.data.message3_target
-
-    @message3_target.setter
-    def message3_target(self, value: int) -> None:
-        self._raw.data.message3_target = value
-
-    @property
-    def message3(self) -> Message:
-        return self._raw.data.message3
-
-    @message3.setter
-    def message3(self, value: Message) -> None:
-        self._raw.data.message3 = value
-
-    @property
-    def linked_entity_id(self) -> int:
-        return self._raw.data.linked_entity_id
-
-    @linked_entity_id.setter
-    def linked_entity_id(self, value: int) -> None:
-        self._raw.data.linked_entity_id = value
+    linked_entity_id = field(int)
 
     @classmethod
     def cls_entity_type(cls) -> EntityType:
@@ -127,6 +52,9 @@ class Artifact(Entity):
     @classmethod
     def create(
         cls,
+        node_name: str = "",
+        layer_state: typing.Sequence[bool] = (False,) * 16,
+        entity_id: int = -1,
         position: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
         up_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
         facing_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
@@ -142,23 +70,24 @@ class Artifact(Entity):
         message3: Message = Message.NONE,
         linked_entity_id: int = 0,
     ) -> typing.Self:
-        data = Container(
-            {
-                "header": cls.create_header(position, up_vector, facing_vector),
-                "model_id": model_id,
-                "artifact_id": artifact_id,
-                "active": active,
-                "has_base": has_base,
-                "message1_target": message1_target,
-                "_padding1": 0,
-                "message1": message1,
-                "message2_target": message2_target,
-                "_padding2": 0,
-                "message2": message2,
-                "message3_target": message3_target,
-                "_padding3": 0,
-                "message3": message3,
-                "linked_entity_id": linked_entity_id,
-            }
+        obj = super().create(
+            node_name,
+            layer_state,
+            entity_id,
+            position,
+            up_vector,
+            facing_vector,
         )
-        return cls(Container({"data": data}))
+        obj.model_id = model_id
+        obj.artifact_id = artifact_id
+        obj.active = active
+        obj.has_base = has_base
+        obj.message1 = message1
+        obj.message1_target = message1_target
+        obj.message2 = message2
+        obj.message2_target = message2_target
+        obj.message3 = message3
+        obj.message3_target = message3_target
+        obj.linked_entity_id = linked_entity_id
+
+        return obj

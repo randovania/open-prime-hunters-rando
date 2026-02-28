@@ -1,9 +1,9 @@
 from construct import Construct, Flag, Struct
 
 from open_prime_hunters_rando.common import Rgb01, Vec3
+from open_prime_hunters_rando.parsing.common_types.volume import RawCollisionVolume, VolumeTypeCommon
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityDataHeader, Vector3Fx
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.volume_type import RawCollisionVolume, VolumeTypeCommon
 
 ColorRgb = Struct(
     "red" / Rgb01,

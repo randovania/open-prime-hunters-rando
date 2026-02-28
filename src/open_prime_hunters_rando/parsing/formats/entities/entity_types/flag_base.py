@@ -1,8 +1,8 @@
 from construct import Construct, Int32ul, Struct
 
+from open_prime_hunters_rando.parsing.common_types.volume import RawCollisionVolume, VolumeTypeCommon
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityDataHeader
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.volume_type import RawCollisionVolume, VolumeTypeCommon
 
 FlagBaseEntityData = Struct(
     "header" / EntityDataHeader,
