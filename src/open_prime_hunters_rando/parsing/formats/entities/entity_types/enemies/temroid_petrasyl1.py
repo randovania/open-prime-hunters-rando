@@ -14,7 +14,7 @@ TemroidPetrasyllEntityData = Struct(
 )
 
 
-class TemroidPetrasyl1(EnemyFields):
+class TemroidPetrasyl1(EnemyFields, default_field_location="raw"):
     @classmethod
     def type_construct(cls) -> Construct:
         return TemroidPetrasyllEntityData

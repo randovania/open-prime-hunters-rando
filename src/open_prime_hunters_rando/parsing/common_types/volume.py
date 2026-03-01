@@ -9,7 +9,7 @@ from construct import Adapter, Container, Int32ul, Padded, Struct, Switch
 from open_prime_hunters_rando.parsing.common_types import FixedPoint
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3
 from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
-from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import FieldsMixin, field
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import Vector3Fx
 
 
@@ -89,9 +89,7 @@ class _CollisionVolume(Adapter):
 CollisionVolume: _CollisionVolume = _CollisionVolume()
 
 
-class BaseVolumeType:
-    _default_field_location = "data"
-
+class BaseVolumeType(FieldsMixin, default_field_location="data"):
     def __init__(self, raw: Container) -> None:
         self._raw = raw
 
@@ -102,7 +100,7 @@ class BaseVolumeType:
         return cls(Container({"data": Container({"fields": Container()})}))
 
 
-class BoxVolumeType(BaseVolumeType):
+class BoxVolumeType(BaseVolumeType, default_field_location="data"):
     box_vector1 = field(Vec3)
     box_vector2 = field(Vec3)
     box_vector3 = field(Vec3)
@@ -141,7 +139,7 @@ class BoxVolumeType(BaseVolumeType):
         return box
 
 
-class CylinderVolumeType(BaseVolumeType):
+class CylinderVolumeType(BaseVolumeType, default_field_location="data"):
     cylinder_vector = field(Vec3)
     cylinder_position = field(Vec3)
     cylinder_radius = field(float)
@@ -167,7 +165,7 @@ class CylinderVolumeType(BaseVolumeType):
         return cylinder
 
 
-class SphereVolumeType(BaseVolumeType):
+class SphereVolumeType(BaseVolumeType, default_field_location="data"):
     sphere_position = field(Vec3)
     sphere_radius = field(float)
 

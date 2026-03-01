@@ -54,7 +54,7 @@ EnemySpawnEntityData = Struct(
 class EnemySpawn(Entity):
     def __init__(self, raw: Container) -> None:
         super().__init__(raw)
-        self.fields = enemy_type_to_class[self.enemy_type](self.fields_raw)
+        self._fields = None
 
     @classmethod
     def type_construct(cls) -> Construct:
@@ -63,7 +63,17 @@ class EnemySpawn(Entity):
     enemy_type = field(EnemyType)
 
     fields_raw = field(Container)
-    fields: EnemyFields
+
+    @property
+    def fields(self) -> EnemyFields:
+        if self._fields is None:
+            self._fields = enemy_type_to_class[self.enemy_type](self.fields_raw)
+        return self._fields
+
+    @fields.setter
+    def fields(self, value: EnemyFields) -> None:
+        self.fields_raw = value._raw
+        self._fields = value
 
     linked_entity_id = field(int)
 

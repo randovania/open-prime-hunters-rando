@@ -13,7 +13,7 @@ CretaphidGreaterIthrakEntityData = Struct(
 )
 
 
-class CretaphidGreaterIthrak(EnemyFields):
+class CretaphidGreaterIthrak(EnemyFields, default_field_location="raw"):
     @classmethod
     def type_construct(cls) -> Construct:
         return CretaphidGreaterIthrakEntityData

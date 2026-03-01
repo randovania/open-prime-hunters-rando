@@ -13,7 +13,7 @@ SlenchTurretEntityData = Struct(
 )
 
 
-class SlenchTurret(EnemyFields):
+class SlenchTurret(EnemyFields, default_field_location="raw"):
     @classmethod
     def type_construct(cls) -> Construct:
         return SlenchTurretEntityData

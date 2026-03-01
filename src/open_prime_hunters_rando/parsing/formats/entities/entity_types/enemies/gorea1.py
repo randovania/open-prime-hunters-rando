@@ -13,7 +13,7 @@ Gorea1EntityData = Struct(
 )
 
 
-class Gorea1(EnemyFields):
+class Gorea1(EnemyFields, default_field_location="raw"):
     @classmethod
     def type_construct(cls) -> Construct:
         return Gorea1EntityData

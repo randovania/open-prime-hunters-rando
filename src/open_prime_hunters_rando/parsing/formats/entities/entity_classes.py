@@ -1,14 +1,40 @@
 from __future__ import annotations
 
-import typing
-from typing import TYPE_CHECKING, Literal, Protocol
+from typing import TYPE_CHECKING, ClassVar, Literal
 
 if TYPE_CHECKING:
     from construct import Container
 
 
-class CanHaveField(Protocol):
+class FieldsMixin:
     _raw: Container
+    _fields: ClassVar[tuple[tuple[str, EntityField], ...]] = ()
+
+    def __init_subclass__(cls, default_field_location: FieldLocation = "fields", **kwargs) -> None:
+        super().__init_subclass__(**kwargs)
+
+        for name, field in cls._fields:
+            if field.location is None:
+                field.location = default_field_location
+
+    def __repr__(self) -> str:
+        field_reprs = [f"{name}={getattr(self, name)}" for name, field in self.__class__._fields]
+        return f"<{self.__class__.__name__} {' '.join(field_reprs)}>"
+
+    def __str__(self) -> str:
+        field_strs = [f"    {name} = {str(getattr(self, name))}" for name, field in self.__class__._fields]
+        lines = [f"{self.__class__.__name__}:", *field_strs]
+        return "\n".join(lines)
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, self.__class__):
+            return False
+
+        for field_name, field in self.__class__._fields:
+            if getattr(self, field_name, None) != getattr(other, field_name, None):
+                return False
+
+        return True
 
 
 type FieldLocation = Literal["raw", "data", "header", "fields"]
@@ -31,17 +57,12 @@ class EntityField[T]:
     ):
         self.location = location
 
-    def __set_name__(self, owner: type[CanHaveField], name: str) -> None:
+    def __set_name__(self, owner: type[FieldsMixin], name: str) -> None:
         self.name = name
 
-        if hasattr(owner, "_fields"):
-            fields = typing.cast("dict[str, EntityField]", owner._fields)
-            fields[name] = self
+        owner._fields += ((name, self),)
 
-        if self.location is None:
-            self.location = getattr(owner, "_default_field_location", "fields")
-
-    def _data(self, obj: CanHaveField) -> Container:
+    def _data(self, obj: FieldsMixin) -> Container:
         if self.location == "raw":
             return obj._raw
         if self.location == "data":
@@ -51,19 +72,22 @@ class EntityField[T]:
         if self.location == "fields":
             return obj._raw.data.fields
 
-    def __get__(self, obj: CanHaveField | None, owner: type[CanHaveField] | None = None) -> T:
+    def __get__(self, obj: FieldsMixin | None, owner: type[FieldsMixin] | None = None) -> T:
         if obj is None:
             raise AttributeError(
                 f"Cannot access field '{self.name}' on class {owner} (must be accessed on an instance)"
             )
         return getattr(self._data(obj), self.name)
 
-    def __set__(self, obj: CanHaveField, value: T) -> None:
+    def __set__(self, obj: FieldsMixin, value: T) -> None:
         setattr(self._data(obj), self.name, value)
+
+    def __repr__(self) -> str:
+        return f"<{self.__class__} location='{self.location}'>"
 
 
 def field[T](
     type_hint: type[T],
-    location: FieldLocation = "fields",
+    location: FieldLocation | None = None,
 ) -> EntityField[T]:
     return EntityField[T](location)

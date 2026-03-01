@@ -12,7 +12,7 @@ CarnvirousPlantEntityData = Struct(
 )
 
 
-class CarnivorousPlant(EnemyFields):
+class CarnivorousPlant(EnemyFields, default_field_location="raw"):
     @classmethod
     def type_construct(cls) -> Construct:
         return CarnvirousPlantEntityData

@@ -14,7 +14,7 @@ CommonEnemy2FireSpawnEntityData = Struct(
 )
 
 
-class CommonEnemy2FireSpawn(EnemyFields):
+class CommonEnemy2FireSpawn(EnemyFields, default_field_location="raw"):
     @classmethod
     def type_construct(cls) -> Construct:
         return CommonEnemy2FireSpawnEntityData

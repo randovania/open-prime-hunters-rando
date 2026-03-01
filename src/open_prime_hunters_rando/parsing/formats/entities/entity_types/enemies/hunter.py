@@ -34,7 +34,7 @@ HunterEntityData = Struct(
 )
 
 
-class Hunter(EnemyFields):
+class Hunter(EnemyFields, default_field_location="raw"):
     @classmethod
     def type_construct(cls) -> Construct:
         return HunterEntityData

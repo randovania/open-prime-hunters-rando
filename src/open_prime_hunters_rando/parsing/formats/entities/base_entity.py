@@ -1,22 +1,16 @@
 from collections.abc import Collection, Sequence
-from typing import ClassVar, Self
+from typing import Self
 
 from construct import Construct, Container, ListContainer
 
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3
-from open_prime_hunters_rando.parsing.formats.entities.entity_classes import EntityField, field
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import FieldsMixin, field
 from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType
 
 
-class Entity:
-    _fields: ClassVar[dict[str, EntityField]] = {}
-
+class Entity(FieldsMixin):
     def __init__(self, raw: Container) -> None:
         self._raw = raw
-
-    def __init_subclass__(cls) -> None:
-        # give each subclass a unique list
-        cls._fields = dict(Entity._fields)
 
     node_name = field(str, "raw")
 
@@ -88,19 +82,6 @@ class Entity:
         entity.facing_vector = Vec3(*facing_vector)
 
         return entity
-
-    def __repr__(self) -> str:
-        return f"<Entity type={self.entity_type} id={self.entity_id}>"
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, self.__class__):
-            return False
-
-        for field_name in self._fields.keys():
-            if getattr(self, field_name, None) != getattr(other, field_name, None):
-                return False
-
-        return True
 
     @classmethod
     def type_construct(cls) -> Construct:

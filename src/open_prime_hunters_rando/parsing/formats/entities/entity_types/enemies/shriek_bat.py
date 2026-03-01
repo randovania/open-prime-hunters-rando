@@ -13,7 +13,7 @@ ShriekBatEntityData = Struct(
 )
 
 
-class ShriekBat(EnemyFields):
+class ShriekBat(EnemyFields, default_field_location="raw"):
     @classmethod
     def type_construct(cls) -> Construct:
         return ShriekBatEntityData

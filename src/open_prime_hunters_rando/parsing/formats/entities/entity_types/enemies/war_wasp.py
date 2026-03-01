@@ -21,7 +21,7 @@ BarbedWarWaspEntityData = Struct(
 )
 
 
-class WarWasp(EnemyFields):
+class WarWasp(EnemyFields, default_field_location="raw"):
     @classmethod
     def type_construct(cls) -> Construct:
         return WarWaspEntityData
@@ -37,7 +37,7 @@ class WarWasp(EnemyFields):
     movement_type = field(int)
 
 
-class BarbedWarWasp(WarWasp):
+class BarbedWarWasp(WarWasp, default_field_location="raw"):
     @classmethod
     def type_construct(cls) -> Construct:
         return BarbedWarWaspEntityData

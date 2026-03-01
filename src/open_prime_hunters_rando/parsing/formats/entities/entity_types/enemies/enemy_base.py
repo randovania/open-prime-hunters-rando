@@ -3,6 +3,8 @@ from typing import Self
 
 from construct import Construct, Container
 
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import FieldsMixin
+
 
 class EnemyType(enum.Enum):
     WAR_WASP = 0
@@ -59,9 +61,7 @@ class EnemyType(enum.Enum):
     CARNIVOROUS_PLANT = 51
 
 
-class EnemyFields:
-    _default_field_location = "raw"
-
+class EnemyFields(FieldsMixin, default_field_location="raw"):
     def __init__(self, raw: Container) -> None:
         self._raw = raw
 
