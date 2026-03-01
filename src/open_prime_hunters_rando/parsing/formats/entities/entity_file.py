@@ -249,11 +249,10 @@ class EntityFile:
                 entity_id = entity.entity_id
         return entity_id
 
-    def append_entity(self, template: Entity) -> int:
+    def append_entity(self, new_entity: Entity) -> int:
         new_entity_id = self.get_max_entity_id() + 1
-        template.entity_id = new_entity_id
-        self.entities.append(entity_type_to_class[template.entity_type].create_from_template(template))
-        self.entities[-1].data = template.data
+        new_entity.entity_id = new_entity_id
+        self.entities.append(new_entity)
         return new_entity_id
 
     def replace_entity(self, entity_id: int, new_entity: Entity) -> None:
@@ -263,5 +262,5 @@ class EntityFile:
         new_entity.entity_id = entity_id
         old_entity = self.entities[index]
         new_entity.node_name = old_entity.node_name
-        new_entity._raw.layer_state = old_entity._raw.layer_state
+        new_entity.layer_state = old_entity.layer_state
         self.entities[index] = new_entity

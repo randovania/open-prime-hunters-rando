@@ -68,7 +68,7 @@ class Object(Entity):
 
     effect_id = field(int)
     effect_interval = field(int)
-    effect_on_inverals = field()
+    effect_on_inverals = field(int)
     effect_position_offset = field(Vec3)
 
     volume = field(BaseVolumeType)

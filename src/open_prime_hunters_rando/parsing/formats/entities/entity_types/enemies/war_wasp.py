@@ -6,12 +6,12 @@ from open_prime_hunters_rando.parsing.formats.entities.entity_classes import fie
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.enemy_base import EnemyFields
 
 WarWaspEntityData = Struct(
-    "volume1" / Padded(64, CollisionVolume),
+    "volume1" / CollisionVolume,
     "volume2" / CollisionVolume,
     "volume3" / CollisionVolume,
     "movement_vectors" / Vector3Fx[16],
     "position_count" / Padded(4, Byte),
-    "movement_type" / Padded(8, Int32ul),
+    "movement_type" / Int32ul,
 )
 
 BarbedWarWaspEntityData = Struct(

@@ -15,7 +15,10 @@ from open_prime_hunters_rando.parsing.common_types import DecodedString, FixedPo
 from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies import enemy_type_to_class
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies import (
+    enemy_type_to_class,
+    enemy_type_to_construct,
+)
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.enemy_base import EnemyFields, EnemyType
 from open_prime_hunters_rando.parsing.formats.entities.enum import ItemType, Message
 
@@ -24,7 +27,7 @@ EnemyTypeConstruct = EnumAdapter(EnemyType, Byte)
 
 EnemySpawnEntityData = Struct(
     "enemy_type" / Padded(4, EnemyTypeConstruct),
-    "fields_raw" / Padded(400, Switch(construct.this.enemy_type, enemy_type_to_class)),
+    "fields_raw" / Padded(400, Switch(construct.this.enemy_type, enemy_type_to_construct)),
     "linked_entity_id" / Int16sl,
     "spawn_limit" / Byte,
     "spawn_total" / Byte,

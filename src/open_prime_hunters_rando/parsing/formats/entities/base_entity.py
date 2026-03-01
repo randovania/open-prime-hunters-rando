@@ -83,9 +83,9 @@ class Entity:
         entity.entity_type = cls.cls_entity_type()
         entity.entity_id = entity_id
 
-        entity.position = Vec3(position)
-        entity.up_vector = Vec3(up_vector)
-        entity.facing_vector = Vec3(facing_vector)
+        entity.position = Vec3(*position)
+        entity.up_vector = Vec3(*up_vector)
+        entity.facing_vector = Vec3(*facing_vector)
 
         return entity
 

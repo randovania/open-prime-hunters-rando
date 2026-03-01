@@ -1,4 +1,4 @@
-from open_prime_hunters_rando.parsing.formats.entities.entity_type import EntityFile
+from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.level_data import ALL_PORTAL_FILENAMES
 
 

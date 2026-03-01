@@ -1,24 +1,9 @@
 from collections.abc import Iterator
-from typing import SupportsIndex
+from typing import Self, SupportsIndex
 
-from construct import ExprSymmetricAdapter, Struct
+from construct import Adapter, Construct, Container, Struct
 
 from open_prime_hunters_rando.parsing.common_types import FixedPoint
-
-_Vector3Fx = Struct(
-    "x" / FixedPoint,
-    "y" / FixedPoint,
-    "z" / FixedPoint,
-)
-Vector3Fx = ExprSymmetricAdapter(_Vector3Fx, lambda obj, ctx: Vec3(obj.x, obj.y, obj.z))
-
-_Vector4Fx = Struct(
-    "x" / FixedPoint,
-    "y" / FixedPoint,
-    "z" / FixedPoint,
-    "w" / FixedPoint,
-)
-Vector4Fx = ExprSymmetricAdapter(_Vector4Fx, lambda obj, ctx: Vec4(obj.x, obj.y, obj.z, obj.w))
 
 
 class Vec2:
@@ -112,3 +97,46 @@ class Vec4(Vec3):
     @a.setter
     def a(self, value: float) -> None:
         self.w = value
+
+
+class VectorAdapter[T: Vec2](Adapter):
+    def __init__(self, subcon: Construct, vec_type: type[T], fields: tuple[str, ...]):
+        super().__init__(subcon)
+        self.vec_type = vec_type
+        self.fields = fields
+
+    @classmethod
+    def for_n(cls, n: int) -> Self:
+        match n:
+            case 2:
+                fields = ("x", "y")
+                vec_type = Vec2
+            case 3:
+                fields = ("x", "y", "z")
+                vec_type = Vec3
+            case 4:
+                fields = ("x", "y", "z", "w")
+                vec_type = Vec4
+            case _:
+                raise ValueError(f"Invalid vector length {n}")
+
+        return cls(
+            Struct(
+                *(field_name / FixedPoint for field_name in fields),
+            ),
+            vec_type,
+            fields,
+        )
+
+    def _decode(self, obj: Container, context: Container, path: str) -> T:
+        return self.vec_type(*(obj[i] for i in self.fields))
+
+    def _encode(self, obj: T, context: Container, path: str) -> Container:
+        container = Container()
+        for i in self.fields:
+            container[i] = getattr(obj, i)
+        return container
+
+
+Vector3Fx = VectorAdapter.for_n(3)
+Vector4Fx = VectorAdapter.for_n(4)

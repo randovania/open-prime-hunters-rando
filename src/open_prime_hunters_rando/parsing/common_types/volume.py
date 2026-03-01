@@ -62,11 +62,11 @@ volume_types = {
 }
 _RawCollisionVolume = Struct(
     "volume_type" / EnumAdapter(VolumeType, Int32ul),
-    "data" / Padded(60, Switch(construct.this.type, volume_types)),
+    "data" / Padded(60, Switch(construct.this.volume_type, volume_types)),
 )
 
 
-class CollisionVolume(Adapter):
+class _CollisionVolume(Adapter):
     def __init__(self):
         super().__init__(_RawCollisionVolume)
 
@@ -83,6 +83,9 @@ class CollisionVolume(Adapter):
 
     def _encode(self, obj: VolumeType, context: Container, path: str) -> Container:
         return obj._raw
+
+
+CollisionVolume = _CollisionVolume()
 
 
 class BaseVolumeType:

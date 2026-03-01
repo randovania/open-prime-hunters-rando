@@ -33,6 +33,7 @@ __all__ = [
     "WarWasp",
     "BarbedWarWasp",
     "enemy_type_to_class",
+    "enemy_type_to_construct",
 ]
 
 enemy_type_to_class: dict[EnemyType, type[EnemyFields]] = {
