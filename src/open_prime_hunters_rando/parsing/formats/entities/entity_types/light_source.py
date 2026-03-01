@@ -2,7 +2,7 @@ from construct import Construct, Flag, Struct
 
 from open_prime_hunters_rando.parsing.common_types import Rgb01
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3, Vector3Fx
-from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, RawCollisionVolume
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, CollisionVolume
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
 
@@ -13,7 +13,7 @@ ColorRgb = Struct(
 )
 
 LightSourceEntityData = Struct(
-    "volume" / RawCollisionVolume,
+    "volume" / CollisionVolume,
     "light1_enabled" / Flag,
     "light1_color" / ColorRgb,
     "light1_vector" / Vector3Fx,

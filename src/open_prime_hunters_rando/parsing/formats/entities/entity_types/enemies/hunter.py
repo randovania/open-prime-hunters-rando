@@ -4,10 +4,10 @@ from construct import Byte, Construct, Int16ul, Int32ul, Struct
 
 from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.enemy_base import EnemyFields
 
 
-class Hunter(enum.Enum):
+class HunterType(enum.Enum):
     SAMUS = 0
     KANDEN = 1
     TRACE = 2
@@ -19,7 +19,7 @@ class Hunter(enum.Enum):
     RANDOM = 8
 
 
-HunterConstruct = EnumAdapter(Hunter, Int32ul)
+HunterConstruct = EnumAdapter(HunterType, Int32ul)
 
 
 HunterEntityData = Struct(
@@ -34,12 +34,12 @@ HunterEntityData = Struct(
 )
 
 
-class HunterSpawnField(BaseEnemySpawn):
+class Hunter(EnemyFields):
     @classmethod
     def type_construct(cls) -> Construct:
         return HunterEntityData
 
-    hunter_id = field(Hunter)
+    hunter_id = field(HunterType)
 
     encounter_type = field(int)
 

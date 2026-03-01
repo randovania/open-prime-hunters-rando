@@ -1,19 +1,19 @@
 from construct import Construct, Int32ul, Struct
 
-from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, RawCollisionVolume
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, CollisionVolume
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.enemy_base import EnemyFields
 
 CretaphidGreaterIthrakEntityData = Struct(
     "enemy_subtype" / Int32ul,
-    "volume1" / RawCollisionVolume,
-    "volume2" / RawCollisionVolume,
-    "volume3" / RawCollisionVolume,
-    "volume4" / RawCollisionVolume,
+    "volume1" / CollisionVolume,
+    "volume2" / CollisionVolume,
+    "volume3" / CollisionVolume,
+    "volume4" / CollisionVolume,
 )
 
 
-class CreatphidGreaterIthrakSpawnField(BaseEnemySpawn):
+class CretaphidGreaterIthrak(EnemyFields):
     @classmethod
     def type_construct(cls) -> Construct:
         return CretaphidGreaterIthrakEntityData

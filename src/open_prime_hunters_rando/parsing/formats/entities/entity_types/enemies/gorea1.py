@@ -3,7 +3,7 @@ from construct import Construct, Struct
 from open_prime_hunters_rando.parsing.common_types import FixedPoint
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3, Vector3Fx
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.enemy_base import EnemyFields
 
 Gorea1EntityData = Struct(
     "sphere1_position" / Vector3Fx,
@@ -13,7 +13,7 @@ Gorea1EntityData = Struct(
 )
 
 
-class Gorea1SpawnField(BaseEnemySpawn):
+class Gorea1(EnemyFields):
     @classmethod
     def type_construct(cls) -> Construct:
         return Gorea1EntityData

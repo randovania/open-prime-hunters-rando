@@ -5,7 +5,7 @@ from construct import Construct, Flag, Int16sl, Int16ul, Int32sl, Int32ul, Padde
 from open_prime_hunters_rando.parsing.common_types import MessageConstruct
 from open_prime_hunters_rando.parsing.common_types.volume import (
     BaseVolumeType,
-    RawCollisionVolume,
+    CollisionVolume,
     TriggerVolumeFlags,
     TriggerVolumeFlagsConstruct,
 )
@@ -25,7 +25,7 @@ class TriggerVolumeType(enum.Enum):
 
 TriggerVolumeEntityData = Struct(
     "subtype" / EnumAdapter(TriggerVolumeType, Int32ul),
-    "volume" / RawCollisionVolume,
+    "volume" / CollisionVolume,
     "_unused" / Int16ul,
     "active" / Flag,
     "always_active" / Flag,

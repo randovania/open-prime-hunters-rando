@@ -3,7 +3,7 @@ from construct import Byte, Construct, Flag, Int16sl, Int16ul, Int32sl, Int32ul,
 from open_prime_hunters_rando.parsing.common_types import MessageConstruct
 from open_prime_hunters_rando.parsing.common_types.volume import (
     BaseVolumeType,
-    RawCollisionVolume,
+    CollisionVolume,
 )
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
@@ -14,7 +14,7 @@ from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volu
 from open_prime_hunters_rando.parsing.formats.entities.enum import Message
 
 AreaVolumeEntityData = Struct(
-    "volume" / RawCollisionVolume,
+    "volume" / CollisionVolume,
     "_unused1" / Int16ul,
     "active" / Flag,
     "always_active" / Flag,

@@ -1,14 +1,14 @@
 from construct import Byte, Construct, Int32ul, Padded, Struct
 
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3, Vector3Fx
-from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, RawCollisionVolume
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, CollisionVolume
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.enemy_base import EnemyFields
 
 WarWaspEntityData = Struct(
-    "volume1" / Padded(64, RawCollisionVolume),
-    "volume2" / RawCollisionVolume,
-    "volume3" / RawCollisionVolume,
+    "volume1" / Padded(64, CollisionVolume),
+    "volume2" / CollisionVolume,
+    "volume3" / CollisionVolume,
     "movement_vectors" / Vector3Fx[16],
     "position_count" / Padded(4, Byte),
     "movement_type" / Padded(8, Int32ul),
@@ -21,7 +21,7 @@ BarbedWarWaspEntityData = Struct(
 )
 
 
-class WarWaspSpawnField(BaseEnemySpawn):
+class WarWasp(EnemyFields):
     @classmethod
     def type_construct(cls) -> Construct:
         return WarWaspEntityData
@@ -37,7 +37,7 @@ class WarWaspSpawnField(BaseEnemySpawn):
     movement_type = field(int)
 
 
-class BarbedWarWaspSpawnField(WarWaspSpawnField):
+class BarbedWarWasp(WarWasp):
     @classmethod
     def type_construct(cls) -> Construct:
         return BarbedWarWaspEntityData

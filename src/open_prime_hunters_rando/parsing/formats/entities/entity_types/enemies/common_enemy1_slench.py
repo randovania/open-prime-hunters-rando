@@ -1,18 +1,18 @@
 from construct import Construct, Struct
 
-from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, RawCollisionVolume
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, CollisionVolume
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.enemy_base import EnemyFields
 
 CommonEnemy1SlenchEntityData = Struct(
-    "volume1" / RawCollisionVolume,
-    "volume2" / RawCollisionVolume,
-    "volume3" / RawCollisionVolume,
-    "volume4" / RawCollisionVolume,
+    "volume1" / CollisionVolume,
+    "volume2" / CollisionVolume,
+    "volume3" / CollisionVolume,
+    "volume4" / CollisionVolume,
 )
 
 
-class CommonEnemy1SlenchSpawnField(BaseEnemySpawn):
+class CommonEnemy1Slench(EnemyFields):
     @classmethod
     def type_construct(cls) -> Construct:
         return CommonEnemy1SlenchEntityData

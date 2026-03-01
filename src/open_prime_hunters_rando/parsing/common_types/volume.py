@@ -60,18 +60,15 @@ volume_types = {
         "sphere_radius" / FixedPoint,
     ),
 }
-RawCollisionVolume = Struct(
+_RawCollisionVolume = Struct(
     "volume_type" / EnumAdapter(VolumeType, Int32ul),
-    "data"
-    / Struct(
-        "fields" / Padded(60, Switch(construct.this.type, volume_types)),
-    ),
+    "data" / Padded(60, Switch(construct.this.type, volume_types)),
 )
 
 
 class CollisionVolume(Adapter):
     def __init__(self):
-        super().__init__(RawCollisionVolume)
+        super().__init__(_RawCollisionVolume)
 
     def _decode(self, obj: Container, context: Container, path: str) -> VolumeType:
         match obj.volume_type:
@@ -89,6 +86,8 @@ class CollisionVolume(Adapter):
 
 
 class BaseVolumeType:
+    _default_field_location = "data"
+
     def __init__(self, raw: Container) -> None:
         self._raw = raw
 

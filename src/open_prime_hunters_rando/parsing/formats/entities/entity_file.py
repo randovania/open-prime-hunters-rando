@@ -33,7 +33,7 @@ from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact imp
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.camera_sequence import CameraSequence
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.defense_node import DefenseNode
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.door import Door
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.flag_base import FlagBase
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
@@ -75,7 +75,7 @@ entity_type_to_class: dict[EntityType, type[Entity]] = {
     EntityType.PLAYER_SPAWN: PlayerSpawn,
     EntityType.DOOR: Door,
     EntityType.ITEM_SPAWN: ItemSpawn,
-    EntityType.ENEMY_SPAWN: BaseEnemySpawn,
+    EntityType.ENEMY_SPAWN: EnemySpawn,
     EntityType.TRIGGER_VOLUME: TriggerVolume,
     EntityType.AREA_VOLUME: AreaVolume,
     EntityType.JUMP_PAD: JumpPad,

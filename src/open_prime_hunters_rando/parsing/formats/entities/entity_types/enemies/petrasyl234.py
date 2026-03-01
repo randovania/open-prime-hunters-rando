@@ -1,12 +1,12 @@
 from construct import Construct, Int32sl, Int32ul, Struct
 
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3, Vector3Fx
-from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, RawCollisionVolume
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, CollisionVolume
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.enemy_base import EnemyFields
 
 Petrasyl234EntityData = Struct(
-    "volume" / RawCollisionVolume,
+    "volume" / CollisionVolume,
     "_unused" / Int32ul[4],
     "position" / Vector3Fx,
     "weave_offset" / Int32ul,
@@ -14,7 +14,7 @@ Petrasyl234EntityData = Struct(
 )
 
 
-class Petrasyl234SpawnField(BaseEnemySpawn):
+class Petrasyl234(EnemyFields):
     @classmethod
     def type_construct(cls) -> Construct:
         return Petrasyl234EntityData

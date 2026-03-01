@@ -1,4 +1,6 @@
-from open_prime_hunters_rando.parsing.formats.entities.entity_type import DoorType, EntityFile, PaletteId
+from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.door import DoorType
+from open_prime_hunters_rando.parsing.formats.entities.enum import PaletteId
 
 
 def patch_doors(entity_file: EntityFile, doors: list, room_name: str) -> None:

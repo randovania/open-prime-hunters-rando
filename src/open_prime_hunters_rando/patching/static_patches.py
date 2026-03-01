@@ -1,5 +1,6 @@
 from open_prime_hunters_rando.parsing.file_manager import FileManager
-from open_prime_hunters_rando.parsing.formats.entities.entity_type import DoorType, Message
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.door import DoorType
+from open_prime_hunters_rando.parsing.formats.entities.enum import Message
 
 
 def static_patches(file_manager: FileManager) -> None:

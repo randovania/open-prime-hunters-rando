@@ -11,7 +11,7 @@ class CanHaveField(Protocol):
     _raw: Container
 
 
-type FieldLocation = Literal["raw", "header", "fields"]
+type FieldLocation = Literal["raw", "data", "header", "fields"]
 
 
 class EntityField[T]:
@@ -27,19 +27,25 @@ class EntityField[T]:
 
     def __init__(
         self,
-        location: FieldLocation = "fields",
+        location: FieldLocation | None = None,
     ):
         self.location = location
 
     def __set_name__(self, owner: type[CanHaveField], name: str) -> None:
         self.name = name
+
         if hasattr(owner, "_fields"):
             fields = typing.cast("dict[str, EntityField]", owner._fields)
             fields[name] = self
 
+        if self.location is None:
+            self.location = getattr(owner, "_default_field_location", "fields")
+
     def _data(self, obj: CanHaveField) -> Container:
         if self.location == "raw":
             return obj._raw
+        if self.location == "data":
+            return obj._raw.data
         if self.location == "header":
             return obj._raw.data.header
         if self.location == "fields":

@@ -1,19 +1,19 @@
 from construct import Construct, Int32sl, Int32ul, Struct
 
-from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, RawCollisionVolume
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, CollisionVolume
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.enemy_base import EnemyFields
 
 SlenchTurretEntityData = Struct(
     "enemy_subtype" / Int32ul,
     "enemy_version" / Int32ul,
-    "volume1" / RawCollisionVolume,
-    "volume2" / RawCollisionVolume,
+    "volume1" / CollisionVolume,
+    "volume2" / CollisionVolume,
     "index" / Int32sl,
 )
 
 
-class SlenchTurretSpawnField(BaseEnemySpawn):
+class SlenchTurret(EnemyFields):
     @classmethod
     def type_construct(cls) -> Construct:
         return SlenchTurretEntityData
