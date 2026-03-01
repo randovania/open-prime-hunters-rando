@@ -24,14 +24,30 @@ from construct import (
     this,
 )
 
-from open_prime_hunters_rando.common import EnumAdapter
-from open_prime_hunters_rando.entities.entity_types import entity_type_to_class
 from open_prime_hunters_rando.parsing.common_types import DecodedString
 from open_prime_hunters_rando.parsing.common_types.vectors import Vector3Fx
+from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
-from open_prime_hunters_rando.parsing.formats.entities.enum import (
-    EntityType,
-)
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.area_volume import AreaVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.camera_sequence import CameraSequence
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.defense_node import DefenseNode
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.door import Door
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.flag_base import FlagBase
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.jump_pad import JumpPad
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.light_source import LightSource
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.morph_camera import MorphCamera
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.object import Object
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.octolith_flag import OctolithFlag
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.platform import Platform
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.player_spawn import PlayerSpawn
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.point_module import PointModule
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.teleporter import Teleporter
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import TriggerVolume
+from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType
 
 EntityTypeConstruct = EnumAdapter(EntityType, Int16ul)
 
@@ -53,7 +69,29 @@ raw_entry_fields = [
 
 RawEntityEntry = Struct(*raw_entry_fields)
 
-entity_type_to_construct = {etype: entity_type_to_class[etype].type_construct() for etype in EntityType}
+entity_type_to_class: dict[EntityType, type[Entity]] = {
+    EntityType.PLATFORM: Platform,
+    EntityType.OBJECT: Object,
+    EntityType.PLAYER_SPAWN: PlayerSpawn,
+    EntityType.DOOR: Door,
+    EntityType.ITEM_SPAWN: ItemSpawn,
+    EntityType.ENEMY_SPAWN: BaseEnemySpawn,
+    EntityType.TRIGGER_VOLUME: TriggerVolume,
+    EntityType.AREA_VOLUME: AreaVolume,
+    EntityType.JUMP_PAD: JumpPad,
+    EntityType.POINT_MODULE: PointModule,
+    EntityType.MORPH_CAMERA: MorphCamera,
+    EntityType.OCTOLITH_FLAG: OctolithFlag,
+    EntityType.FLAG_BASE: FlagBase,
+    EntityType.TELEPORTER: Teleporter,
+    EntityType.DEFENSE_NODE: DefenseNode,
+    EntityType.LIGHT_SOURCE: LightSource,
+    EntityType.ARTIFACT: Artifact,
+    EntityType.CAMERA_SEQUENCE: CameraSequence,
+    EntityType.FORCE_FIELD: ForceField,
+}
+
+entity_type_to_construct = {etype: eclass.type_construct() for etype, eclass in entity_type_to_class.items()}
 
 EntityEntry = Struct(
     *raw_entry_fields,

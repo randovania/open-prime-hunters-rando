@@ -1,6 +1,10 @@
 import enum
 
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
+from construct import Byte, Construct, Int16ul, Int32ul, Struct
+
+from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
 
 
 class Hunter(enum.Enum):
@@ -15,67 +19,36 @@ class Hunter(enum.Enum):
     RANDOM = 8
 
 
-class HunterSpawnField(EnemySpawn):
-    @property
-    def hunter_id(self) -> Hunter:
-        return self._raw.data.hunter_id
+HunterConstruct = EnumAdapter(Hunter, Int32ul)
 
-    @hunter_id.setter
-    def hunter_id(self, value: Hunter) -> None:
-        self._raw.data.hunter_id = value
 
-    @property
-    def encounter_type(self) -> int:
-        return self._raw.data.encounter_type
+HunterEntityData = Struct(
+    "hunter_id" / HunterConstruct,
+    "encounter_type" / Int32ul,
+    "hunter_weapon" / Int32ul,
+    "hunter_health" / Int16ul,
+    "hunter_health_max" / Int16ul,
+    "field6" / Int16ul,  # set in AI data
+    "hunter_color" / Byte,
+    "hunter_chance" / Byte,
+)
 
-    @encounter_type.setter
-    def encounter_type(self, value: int) -> None:
-        self._raw.data.encounter_type = value
 
-    @property
-    def hunter_weapon(self) -> int:
-        return self._raw.data.hunter_weapon
+class HunterSpawnField(BaseEnemySpawn):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return HunterEntityData
 
-    @hunter_weapon.setter
-    def hunter_weapon(self, value: int) -> None:
-        self._raw.data.hunter_weapon = value
+    hunter_id = field(Hunter)
 
-    @property
-    def hunter_health(self) -> int:
-        return self._raw.data.hunter_health
+    encounter_type = field(int)
 
-    @hunter_health.setter
-    def hunter_health(self, value: int) -> None:
-        self._raw.data.hunter_health = value
+    hunter_weapon = field(int)
+    hunter_health = field(int)
+    hunter_health_max = field(int)
 
-    @property
-    def hunter_health_max(self) -> int:
-        return self._raw.data.hunter_health_max
+    field6 = field(int)
 
-    @hunter_health_max.setter
-    def hunter_health_max(self, value: int) -> None:
-        self._raw.data.hunter_health_max = value
+    hunter_color = field(int)
 
-    @property
-    def field(self) -> int:
-        return self._raw.data.field
-
-    @field.setter
-    def field(self, value: int) -> None:
-        self._raw.data.field = value
-
-    @property
-    def hunter_color(self) -> int:
-        return self._raw.data.hunter_color
-
-    @hunter_color.setter
-    def hunter_color(self, value: int) -> None:
-        self._raw.data.hunter_color = value
-
-    @property
-    def hunter_chance(self) -> int:
-        return self._raw.data.hunter_chance
-
-    @hunter_chance.setter
-    def hunter_chance(self, value: int) -> None:
-        self._raw.data.hunter_chance = value
+    hunter_chance = field(int)

@@ -1,21 +1,19 @@
 import typing
 
-from construct import Byte, Construct, Flag, Int16sl, Int16ul, Int32sl, Int32ul, Struct
-from construct.lib import Container
+from construct import Construct, Flag, Int16sl, Int16ul, Int32sl, Int32ul, Padded, Struct
 
-from open_prime_hunters_rando.common import Vec3
+from open_prime_hunters_rando.parsing.common_types import ItemTypeConstruct, MessageConstruct
+from open_prime_hunters_rando.parsing.common_types.vectors import Vec3
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
-from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityDataHeader, ItemTypeConstruct, MessageConstruct
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
 from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, ItemType, Message
 
 ItemSpawnEntityData = Struct(
-    "header" / EntityDataHeader,
     "parent_id" / Int32sl,
     "item_type" / ItemTypeConstruct,
     "enabled" / Flag,
     "has_base" / Flag,
-    "always_active" / Flag,
-    "_padding" / Byte,
+    "always_active" / Padded(2, Flag),
     "max_spawn_count" / Int16ul,
     "spawn_interval" / Int16ul,
     "spawn_delay" / Int16ul,
@@ -31,101 +29,21 @@ class ItemSpawn(Entity):
     def type_construct(cls) -> Construct:
         return ItemSpawnEntityData
 
-    @property
-    def parent_id(self) -> int:
-        return self._raw.data.parent_id
+    parent_id = field(int)
+    item_type = field(int)
 
-    @parent_id.setter
-    def parent_id(self, value: int) -> None:
-        self._raw.data.parent_id = value
+    enabled = field(bool)
+    has_base = field(bool)
+    always_active = field(bool)
 
-    @property
-    def item_type(self) -> ItemType:
-        return self._raw.data.item_type
+    max_spawn_count = field(int)
+    spawn_interval = field(int)
+    spawn_delay = field(int)
 
-    @item_type.setter
-    def item_type(self, value: ItemType) -> None:
-        self._raw.data.item_type = value
-
-    @property
-    def enabled(self) -> bool:
-        return self._raw.data.enabled
-
-    @enabled.setter
-    def enabled(self, value: bool) -> None:
-        self._raw.data.enabled = value
-
-    @property
-    def has_base(self) -> bool:
-        return self._raw.data.has_base
-
-    @has_base.setter
-    def has_base(self, value: bool) -> None:
-        self._raw.data.has_base = value
-
-    @property
-    def always_active(self) -> bool:
-        return self._raw.data.always_active
-
-    @always_active.setter
-    def always_active(self, value: bool) -> None:
-        self._raw.data.always_active = value
-
-    @property
-    def max_spawn_count(self) -> int:
-        return self._raw.data.max_spawn_count
-
-    @max_spawn_count.setter
-    def max_spawn_count(self, value: int) -> None:
-        self._raw.data.max_spawn_count = value
-
-    @property
-    def spawn_interval(self) -> int:
-        return self._raw.data.spawn_interval
-
-    @spawn_interval.setter
-    def spawn_interval(self, value: int) -> None:
-        self._raw.data.spawn_interval = value
-
-    @property
-    def spawn_delay(self) -> int:
-        return self._raw.data.spawn_delay
-
-    @spawn_delay.setter
-    def spawn_delay(self, value: int) -> None:
-        self._raw.data.spawn_delay = value
-
-    @property
-    def notify_entity_id(self) -> int:
-        return self._raw.data.notify_entity_id
-
-    @notify_entity_id.setter
-    def notify_entity_id(self, value: int) -> None:
-        self._raw.data.notify_entity_id = value
-
-    @property
-    def collected_message(self) -> Message:
-        return self._raw.data.collected_message
-
-    @collected_message.setter
-    def collected_message(self, value: Message) -> None:
-        self._raw.data.collected_message = value
-
-    @property
-    def collected_message_param1(self) -> int:
-        return self._raw.data.collected_message_param1
-
-    @collected_message_param1.setter
-    def collected_message_param1(self, value: int) -> None:
-        self._raw.data.collected_message_param1 = value
-
-    @property
-    def collected_message_param2(self) -> int:
-        return self._raw.data.collected_message_param2
-
-    @collected_message_param2.setter
-    def collected_message_param2(self, value: int) -> None:
-        self._raw.data.collected_message_param2 = value
+    notify_entity_id = field(int)
+    collected_message = field(Message)
+    collected_message_param1 = field(int)
+    collected_message_param2 = field(int)
 
     @classmethod
     def cls_entity_type(cls) -> EntityType:
@@ -134,6 +52,9 @@ class ItemSpawn(Entity):
     @classmethod
     def create(
         cls,
+        node_name: str = "",
+        layer_state: typing.Sequence[bool] = (False,) * 16,
+        entity_id: int = -1,
         position: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
         up_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
         facing_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
@@ -150,22 +71,25 @@ class ItemSpawn(Entity):
         collected_message_param1: int = 0,
         collected_message_param2: int = 0,
     ) -> typing.Self:
-        data = Container(
-            {
-                "header": cls.create_header(position, up_vector, facing_vector),
-                "parent_id": parent_id,
-                "item_type": item_type,
-                "enabled": enabled,
-                "has_base": has_base,
-                "always_active": always_active,
-                "_padding": 0,
-                "max_spawn_count": max_spawn_count,
-                "spawn_interval": spawn_interval,
-                "spawn_delay": spawn_delay,
-                "notify_entity_id": notify_entity_id,
-                "collected_message": collected_message,
-                "collected_message_param1": collected_message_param1,
-                "collected_message_param2": collected_message_param2,
-            }
+        obj = super().create(
+            node_name,
+            layer_state,
+            entity_id,
+            position,
+            up_vector,
+            facing_vector,
         )
-        return cls(Container({"data": data}))
+        obj.parent_id = parent_id
+        obj.item_type = item_type
+        obj.enabled = enabled
+        obj.has_base = has_base
+        obj.always_active = always_active
+        obj.max_spawn_count = max_spawn_count
+        obj.spawn_interval = spawn_interval
+        obj.spawn_delay = spawn_delay
+        obj.notify_entity_id = notify_entity_id
+        obj.collected_message = collected_message
+        obj.collected_message_param1 = collected_message_param1
+        obj.collected_message_param2 = collected_message_param2
+
+        return obj

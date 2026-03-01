@@ -1,32 +1,28 @@
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.parsing.formats.entities.enum import VolumeTypeCommon
+from construct import Construct, Int32ul, Struct
+
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, RawCollisionVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+
+CommonEnemy2FireSpawnEntityData = Struct(
+    "enemy_subtype" / Int32ul,
+    "enemy_version" / Int32ul,
+    "volume1" / RawCollisionVolume,
+    "volume2" / RawCollisionVolume,
+    "volume3" / RawCollisionVolume,
+    "volume4" / RawCollisionVolume,
+)
 
 
-class CommonEnemy2FireSpawnSpawnField(EnemySpawn):
-    @property
-    def enemy_subtype(self) -> int:
-        return self._raw.data.enemy_subtype
+class CommonEnemy2FireSpawnSpawnField(BaseEnemySpawn):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return CommonEnemy2FireSpawnEntityData
 
-    @enemy_subtype.setter
-    def enemy_subtype(self, value: int) -> None:
-        self._raw.data.enemy_subtype = value
+    enemy_subtype = field(int)
+    enemy_version = field(int)
 
-    @property
-    def enemy_version(self) -> int:
-        return self._raw.data.enemy_version
-
-    @enemy_version.setter
-    def enemy_version(self, value: int) -> None:
-        self._raw.data.enemy_version = value
-
-    def get_volume0(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume0)
-
-    def get_volume1(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume1)
-
-    def get_volume2(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume2)
-
-    def get_volume3(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume3)
+    volume1 = field(BaseVolumeType)
+    volume2 = field(BaseVolumeType)
+    volume3 = field(BaseVolumeType)
+    volume4 = field(BaseVolumeType)

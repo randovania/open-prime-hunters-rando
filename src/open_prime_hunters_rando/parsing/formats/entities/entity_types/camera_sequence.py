@@ -1,7 +1,8 @@
 from construct import Byte, Construct, Flag, Int16sl, Int16ul, Int32sl, Struct
 
+from open_prime_hunters_rando.parsing.common_types import MessageConstruct
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
-from open_prime_hunters_rando.parsing.formats.entities.entity_file import MessageConstruct
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
 from open_prime_hunters_rando.parsing.formats.entities.enum import Message
 
 CameraSequenceEntityData = Struct(
@@ -27,114 +28,23 @@ class CameraSequence(Entity):
     def type_construct(cls) -> Construct:
         return CameraSequenceEntityData
 
-    @property
-    def sequence_id(self) -> int:
-        return self._raw.data.sequence_id
+    sequence_id = field(int)
 
-    @sequence_id.setter
-    def sequence_id(self, value: int) -> None:
-        self._raw.data.sequence_id = value
+    handoff = field(bool)
+    loop = field(bool)
+    block_input = field(bool)
 
-    @property
-    def handoff(self) -> bool:
-        return self._raw.data.handoff
+    force_alt_form = field(bool)
+    force_biped_form = field(bool)
 
-    @handoff.setter
-    def handoff(self, value: bool) -> None:
-        self._raw.data.handoff = value
+    delay_frames = field(int)
 
-    @property
-    def loop(self) -> bool:
-        return self._raw.data.loop
+    player_id1 = field(int)
+    player_id2 = field(int)
 
-    @loop.setter
-    def loop(self, value: bool) -> None:
-        self._raw.data.loop = value
+    entity1 = field(int)
+    entity2 = field(int)
 
-    @property
-    def block_input(self) -> bool:
-        return self._raw.data.block_input
-
-    @block_input.setter
-    def block_input(self, value: bool) -> None:
-        self._raw.data.block_input = value
-
-    @property
-    def force_alt_form(self) -> bool:
-        return self._raw.data.force_alt_form
-
-    @force_alt_form.setter
-    def force_alt_form(self, value: bool) -> None:
-        self._raw.data.force_alt_form = value
-
-    @property
-    def force_biped_form(self) -> bool:
-        return self._raw.data.force_biped_form
-
-    @force_biped_form.setter
-    def force_biped_form(self, value: bool) -> None:
-        self._raw.data.force_biped_form = value
-
-    @property
-    def delay_frames(self) -> int:
-        return self._raw.data.delay_frames
-
-    @delay_frames.setter
-    def delay_frames(self, value: int) -> None:
-        self._raw.data.delay_frames = value
-
-    @property
-    def player_id1(self) -> int:
-        return self._raw.data.player_id1
-
-    @player_id1.setter
-    def player_id1(self, value: int) -> None:
-        self._raw.data.player_id1 = value
-
-    @property
-    def player_id2(self) -> int:
-        return self._raw.data.player_id2
-
-    @player_id2.setter
-    def player_id2(self, value: int) -> None:
-        self._raw.data.player_id2 = value
-
-    @property
-    def entity1(self) -> int:
-        return self._raw.data.entity1
-
-    @entity1.setter
-    def entity1(self, value: int) -> None:
-        self._raw.data.entity1 = value
-
-    @property
-    def entity2(self) -> int:
-        return self._raw.data.entity2
-
-    @entity2.setter
-    def entity2(self, value: int) -> None:
-        self._raw.data.entity2 = value
-
-    @property
-    def end_message_target_id(self) -> int:
-        return self._raw.data.end_message_target_id
-
-    @end_message_target_id.setter
-    def end_message_target_id(self, value: int) -> None:
-        self._raw.data.end_message_target_id = value
-
-    @property
-    def end_message(self) -> Message:
-        return self._raw.data.end_message
-
-    @end_message.setter
-    def end_message(self, value: Message) -> None:
-        self._raw.data.end_message = value
-
-    @property
-    def end_message_param(self) -> int:
-        return self._raw.data.end_message_param
-
-    @end_message_param.setter
-    def end_message_param(self, value: int) -> None:
-        self._raw.data.end_message_param = value
+    end_message_target_id = field(int)
+    end_message = field(Message)
+    end_message_param = field(int)

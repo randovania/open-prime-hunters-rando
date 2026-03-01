@@ -1,22 +1,26 @@
-from open_prime_hunters_rando.common import Vec3
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.parsing.formats.entities.enum import VolumeTypeCommon
+from construct import Construct, Struct
+
+from open_prime_hunters_rando.parsing.common_types.vectors import Vec3, Vector3Fx
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, RawCollisionVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+
+ShriekBatEntityData = Struct(
+    "volume1" / RawCollisionVolume,
+    "path_vector" / Vector3Fx,
+    "volume2" / RawCollisionVolume,
+    "volume3" / RawCollisionVolume,
+)
 
 
-class ShriekBatSpawnField(EnemySpawn):
-    def get_volume0(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume0)
+class ShriekBatSpawnField(BaseEnemySpawn):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return ShriekBatEntityData
 
-    @property
-    def path_vector(self) -> Vec3:
-        return self._raw.data.path_vector
+    volume1 = field(BaseVolumeType)
 
-    @path_vector.setter
-    def path_vector(self, value: Vec3) -> None:
-        self._raw.data.path_vector = value
+    path_vector = field(Vec3)
 
-    def get_volume1(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume1)
-
-    def get_volume2(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume2)
+    volume2 = field(BaseVolumeType)
+    volume3 = field(BaseVolumeType)

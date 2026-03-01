@@ -1,56 +1,46 @@
-from open_prime_hunters_rando.common import Vec3
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.parsing.formats.entities.enum import VolumeTypeCommon
+from construct import Byte, Construct, Int32ul, Padded, Struct
+
+from open_prime_hunters_rando.parsing.common_types.vectors import Vec3, Vector3Fx
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, RawCollisionVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+
+WarWaspEntityData = Struct(
+    "volume1" / Padded(64, RawCollisionVolume),
+    "volume2" / RawCollisionVolume,
+    "volume3" / RawCollisionVolume,
+    "movement_vectors" / Vector3Fx[16],
+    "position_count" / Padded(4, Byte),
+    "movement_type" / Padded(8, Int32ul),
+)
+
+BarbedWarWaspEntityData = Struct(
+    "enemy_subtype" / Int32ul,
+    "enemy_version" / Int32ul,
+    "data" / WarWaspEntityData,
+)
 
 
-class WarWaspSpawnField(EnemySpawn):
-    def get_volume0(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume0)
+class WarWaspSpawnField(BaseEnemySpawn):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return WarWaspEntityData
 
-    def get_volume1(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume1)
+    volume1 = field(BaseVolumeType)
+    volume2 = field(BaseVolumeType)
+    volume3 = field(BaseVolumeType)
 
-    def get_volume2(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume2)
+    movement_vectors = field([list[Vec3]])
 
-    @property
-    def movement_vectors(self) -> list[Vec3]:
-        return self._raw.data.movement_vectors
+    position_count = field(int)
 
-    @movement_vectors.setter
-    def movement_vectors(self, value: list[Vec3]) -> None:
-        self._raw.data.movement_vectors = value
-
-    @property
-    def position_count(self) -> int:
-        return self._raw.data.position_count
-
-    @position_count.setter
-    def position_count(self, value: int) -> None:
-        self._raw.data.position_count = value
-
-    @property
-    def movement_type(self) -> int:
-        return self._raw.data.movement_type
-
-    @movement_type.setter
-    def movement_type(self, value: int) -> None:
-        self._raw.data.movement_type = value
+    movement_type = field(int)
 
 
 class BarbedWarWaspSpawnField(WarWaspSpawnField):
-    @property
-    def enemy_subtype(self) -> int:
-        return self._raw.data.enemy_subtype
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return BarbedWarWaspEntityData
 
-    @enemy_subtype.setter
-    def enemy_subtype(self, value: int) -> None:
-        self._raw.data.enemy_subtype = value
-
-    @property
-    def enemy_version(self) -> int:
-        return self._raw.data.enemy_version
-
-    @enemy_version.setter
-    def enemy_version(self, value: int) -> None:
-        self._raw.data.enemy_version = value
+    enemy_subtype = field(int)
+    enemy_version = field(int)

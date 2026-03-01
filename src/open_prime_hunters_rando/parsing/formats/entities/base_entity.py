@@ -3,12 +3,11 @@ from typing import ClassVar, Self
 
 from construct import Construct, Container, ListContainer
 
-from open_prime_hunters_rando.common import Vec3
-from open_prime_hunters_rando.parsing.formats.entities.entity_classes import EntityField, entity_class, field
+from open_prime_hunters_rando.parsing.common_types.vectors import Vec3
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import EntityField, field
 from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType
 
 
-@entity_class
 class Entity:
     _fields: ClassVar[dict[str, EntityField]] = {}
 

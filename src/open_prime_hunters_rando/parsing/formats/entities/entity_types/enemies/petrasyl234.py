@@ -1,32 +1,28 @@
-from open_prime_hunters_rando.common import Vec3
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.parsing.formats.entities.enum import VolumeTypeCommon
+from construct import Construct, Int32sl, Int32ul, Struct
+
+from open_prime_hunters_rando.parsing.common_types.vectors import Vec3, Vector3Fx
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, RawCollisionVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+
+Petrasyl234EntityData = Struct(
+    "volume" / RawCollisionVolume,
+    "_unused" / Int32ul[4],
+    "position" / Vector3Fx,
+    "weave_offset" / Int32ul,
+    "field5" / Int32sl,
+)
 
 
-class Petrasyl234SpawnField(EnemySpawn):
-    def get_volume0(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume0)
+class Petrasyl234SpawnField(BaseEnemySpawn):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return Petrasyl234EntityData
 
-    @property
-    def position(self) -> Vec3:
-        return self._raw.data.position
+    volume = field(BaseVolumeType)
 
-    @position.setter
-    def position(self, value: Vec3) -> None:
-        self._raw.data.position = value
+    position = field(Vec3)
 
-    @property
-    def weave_offset(self) -> int:
-        return self._raw.data.weave_offset
+    weave_offset = field(int)
 
-    @weave_offset.setter
-    def weave_offset(self, value: int) -> None:
-        self._raw.data.weave_offset = value
-
-    @property
-    def field(self) -> int:
-        return self._raw.data.field
-
-    @field.setter
-    def field(self, value: int) -> None:
-        self._raw.data.field = value
+    field5 = field(int)

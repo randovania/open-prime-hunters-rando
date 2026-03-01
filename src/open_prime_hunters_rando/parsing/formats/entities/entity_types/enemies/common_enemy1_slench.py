@@ -1,16 +1,23 @@
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.parsing.formats.entities.enum import VolumeTypeCommon
+from construct import Construct, Struct
+
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, RawCollisionVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+
+CommonEnemy1SlenchEntityData = Struct(
+    "volume1" / RawCollisionVolume,
+    "volume2" / RawCollisionVolume,
+    "volume3" / RawCollisionVolume,
+    "volume4" / RawCollisionVolume,
+)
 
 
-class CommonEnemy1SlenchSpawnField(EnemySpawn):
-    def get_volume0(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume0)
+class CommonEnemy1SlenchSpawnField(BaseEnemySpawn):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return CommonEnemy1SlenchEntityData
 
-    def get_volume1(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume1)
-
-    def get_volume2(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume2)
-
-    def get_volume3(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume3)
+    volume1 = field(BaseVolumeType)
+    volume2 = field(BaseVolumeType)
+    volume3 = field(BaseVolumeType)
+    volume4 = field(BaseVolumeType)

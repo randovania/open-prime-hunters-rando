@@ -1,34 +1,27 @@
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.parsing.formats.entities.enum import VolumeTypeCommon
+from construct import Construct, Int32sl, Int32ul, Struct
+
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, RawCollisionVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+
+SlenchTurretEntityData = Struct(
+    "enemy_subtype" / Int32ul,
+    "enemy_version" / Int32ul,
+    "volume1" / RawCollisionVolume,
+    "volume2" / RawCollisionVolume,
+    "index" / Int32sl,
+)
 
 
-class SlenchTurretSpawnField(EnemySpawn):
-    @property
-    def enemy_subtype(self) -> int:
-        return self._raw.data.enemy_subtype
+class SlenchTurretSpawnField(BaseEnemySpawn):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return SlenchTurretEntityData
 
-    @enemy_subtype.setter
-    def enemy_subtype(self, value: int) -> None:
-        self._raw.data.enemy_subtype = value
+    enemy_subtype = field(int)
+    enemy_version = field(int)
 
-    @property
-    def enemy_version(self) -> int:
-        return self._raw.data.enemy_version
+    volume1 = field(BaseVolumeType)
+    volume2 = field(BaseVolumeType)
 
-    @enemy_version.setter
-    def enemy_version(self, value: int) -> None:
-        self._raw.data.enemy_version = value
-
-    def get_volume0(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume0)
-
-    def get_volume1(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume1)
-
-    @property
-    def index(self) -> int:
-        return self._raw.data.index
-
-    @index.setter
-    def index(self, value: int) -> None:
-        self._raw.data.index = value
+    index = field(int)

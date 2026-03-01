@@ -1,24 +1,26 @@
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.parsing.formats.entities.enum import VolumeTypeCommon
+from construct import Construct, Int32ul, Struct
+
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, RawCollisionVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+
+CretaphidGreaterIthrakEntityData = Struct(
+    "enemy_subtype" / Int32ul,
+    "volume1" / RawCollisionVolume,
+    "volume2" / RawCollisionVolume,
+    "volume3" / RawCollisionVolume,
+    "volume4" / RawCollisionVolume,
+)
 
 
-class CreatphidGreaterIthrakSpawnField(EnemySpawn):
-    @property
-    def enemy_subtype(self) -> int:
-        return self._raw.data.enemy_subtype
+class CreatphidGreaterIthrakSpawnField(BaseEnemySpawn):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return CretaphidGreaterIthrakEntityData
 
-    @enemy_subtype.setter
-    def enemy_subtype(self, value: int) -> None:
-        self._raw.data.enemy_subtype = value
+    enemy_subtype = field(int)
 
-    def get_volume0(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume0)
-
-    def get_volume1(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume1)
-
-    def get_volume2(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume2)
-
-    def get_volume3(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume3)
+    volume1 = field(BaseVolumeType)
+    volume2 = field(BaseVolumeType)
+    volume3 = field(BaseVolumeType)
+    volume4 = field(BaseVolumeType)

@@ -4,14 +4,14 @@ from pathlib import Path
 
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.patching.entities.add_entities import add_new_entities
+from open_prime_hunters_rando.logger import LOG
+from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.patching.asm.arm9 import patch_arm9
+from open_prime_hunters_rando.patching.asm.overlays import patch_overlays
+from open_prime_hunters_rando.patching.entities.add_entities import add_new_entities
 from open_prime_hunters_rando.patching.entities.entity_patching import patch_entities
 from open_prime_hunters_rando.patching.escape_sequence_patches import patch_escape_sequences
-from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.patching.hunter_spawn_patches import patch_hunters
-from open_prime_hunters_rando.logger import LOG
-from open_prime_hunters_rando.patching.asm.overlays import patch_overlays
 from open_prime_hunters_rando.patching.static_patches import static_patches
 from open_prime_hunters_rando.patching.string_tables_patches import patch_string_tables
 from open_prime_hunters_rando.validator_with_default import DefaultValidatingDraft7Validator

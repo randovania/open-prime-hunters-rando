@@ -6,7 +6,9 @@ from typing import Self
 import construct
 from construct import Adapter, Container, Int32ul, Padded, Struct, Switch
 
-from open_prime_hunters_rando.common import EnumAdapter, FixedPoint, Vec3
+from open_prime_hunters_rando.parsing.common_types import FixedPoint
+from open_prime_hunters_rando.parsing.common_types.vectors import Vec3
+from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import Vector3Fx
 

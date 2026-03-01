@@ -1,32 +1,27 @@
-from open_prime_hunters_rando.common import Vec3
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
-from open_prime_hunters_rando.parsing.formats.entities.enum import VolumeTypeCommon
+from construct import Construct, Int32ul, Struct
+
+from open_prime_hunters_rando.parsing.common_types.vectors import Vec3, Vector3Fx
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, RawCollisionVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import BaseEnemySpawn
+
+TemroidPetrasyllEntityData = Struct(
+    "volume" / RawCollisionVolume,
+    "_unused" / Int32ul[7],
+    "facing" / Vector3Fx,
+    "position" / Vector3Fx,
+    "idle_range" / Vector3Fx,
+)
 
 
-class TemroidPetrsyl1SpawnField(EnemySpawn):
-    def get_volume0(self) -> VolumeTypeCommon:
-        return VolumeTypeCommon(self._raw.data.volume0)
+class TemroidPetrsyl1SpawnField(BaseEnemySpawn):
+    @classmethod
+    def type_construct(cls) -> Construct:
+        return TemroidPetrasyllEntityData
 
-    @property
-    def facing(self) -> Vec3:
-        return self._raw.data.facing
+    volume = field(BaseVolumeType)
 
-    @facing.setter
-    def facing(self, value: Vec3) -> None:
-        self._raw.data.facing = value
+    facing = field(Vec3)
+    position = field(Vec3)
 
-    @property
-    def position(self) -> Vec3:
-        return self._raw.data.position
-
-    @position.setter
-    def position(self, value: Vec3) -> None:
-        self._raw.data.position = value
-
-    @property
-    def idle_range(self) -> Vec3:
-        return self._raw.data.idle_range
-
-    @idle_range.setter
-    def idle_range(self, value: Vec3) -> None:
-        self._raw.data.idle_range = value
+    idle_range = field(Vec3)

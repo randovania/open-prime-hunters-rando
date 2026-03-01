@@ -1,9 +1,8 @@
 from construct import Construct, Flag, Struct
 
-from open_prime_hunters_rando.common import FixedPoint
+from open_prime_hunters_rando.parsing.common_types import FixedPoint, PaletteIdConstruct
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
-from open_prime_hunters_rando.parsing.formats.entities.entity_file import PaletteIdConstruct
 from open_prime_hunters_rando.parsing.formats.entities.enum import PaletteId
 
 ForceFieldEntityData = Struct(
