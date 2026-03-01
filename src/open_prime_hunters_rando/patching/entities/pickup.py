@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
+
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
 from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, ItemType
+
+if TYPE_CHECKING:
+    from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 
 
 def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
@@ -9,7 +14,8 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
         entity_id = pickup["entity_id"]
         new_entity_type = EntityType(pickup["entity_type"])
 
-        entity = entity_file.get_entity(entity_id)
+        entity: Entity = entity_file.get_entity(entity_id)
+        new_entity: Entity
 
         # Update ItemSpawn entities
         # Entity was ItemSpawn

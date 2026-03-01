@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING
+
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.area_volume import AreaVolume
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact
@@ -8,6 +10,9 @@ from open_prime_hunters_rando.parsing.formats.entities.entity_types.object impor
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.teleporter import Teleporter
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import TriggerVolume
 from open_prime_hunters_rando.parsing.formats.entities.enum import Message
+
+if TYPE_CHECKING:
+    from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 
 
 def static_patches(file_manager: FileManager) -> None:
@@ -51,7 +56,7 @@ def _disable_message_prompts(file_manager: FileManager) -> None:
         for room_name, message_prompts in room_names.items():
             entity_file = file_manager.get_entity_file(area_name, room_name)
             for message_prompt in message_prompts:
-                entity = entity_file.get_entity(message_prompt)
+                entity: Entity = entity_file.get_entity(message_prompt)
                 assert isinstance(entity, TriggerVolume | AreaVolume)
                 entity.active = False
 

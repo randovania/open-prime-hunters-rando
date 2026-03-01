@@ -228,7 +228,11 @@ class EntityFile:
     def entities(self, value: list[Entity]) -> None:
         self._raw.entities = value
 
-    def get_entity[T: Entity](self, entity_id: int, type_hint: type[T] = Entity) -> T:
+    def get_entity[T: Entity](
+        self,
+        entity_id: int,
+        type_hint: type[T] = Entity,  # type: ignore[assignment]
+    ) -> T:
         entity_idx = 0
         for entity in self.entities:
             if entity.size == 0:

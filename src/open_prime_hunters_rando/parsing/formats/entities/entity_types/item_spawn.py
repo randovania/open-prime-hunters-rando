@@ -30,7 +30,7 @@ class ItemSpawn(Entity):
         return ItemSpawnEntityData
 
     parent_id = field(int)
-    item_type = field(int)
+    item_type = field(ItemType)
 
     enabled = field(bool)
     has_base = field(bool)

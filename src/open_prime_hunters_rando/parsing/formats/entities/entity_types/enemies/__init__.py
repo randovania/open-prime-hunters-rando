@@ -1,3 +1,5 @@
+from construct import Construct
+
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.carnivorous_plant import CarnivorousPlant
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.common_enemy1_slench import (
     CommonEnemy1Slench,
@@ -68,4 +70,6 @@ enemy_type_to_class: dict[EnemyType, type[EnemyFields]] = {
     EnemyType.GOREA2: Gorea2,
 }
 
-enemy_type_to_construct = {etype: eclass.type_construct() for etype, eclass in enemy_type_to_class.items()}
+enemy_type_to_construct: dict[EnemyType, Construct] = {
+    etype: eclass.type_construct() for etype, eclass in enemy_type_to_class.items()
+}

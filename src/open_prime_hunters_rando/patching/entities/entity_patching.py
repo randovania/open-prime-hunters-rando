@@ -1,9 +1,9 @@
+from open_prime_hunters_rando.logger import LOG
+from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.patching.entities.door import patch_doors
 from open_prime_hunters_rando.patching.entities.force_field import patch_force_fields
 from open_prime_hunters_rando.patching.entities.pickup import patch_pickups
 from open_prime_hunters_rando.patching.entities.portal import patch_portals
-from open_prime_hunters_rando.parsing.file_manager import FileManager
-from open_prime_hunters_rando.logger import LOG
 
 
 def patch_entities(file_manager: FileManager, configuration: dict[str, dict]) -> None:

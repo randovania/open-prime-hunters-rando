@@ -47,7 +47,7 @@ src = ["src"]
 select = [
     "E", "F", "W", "C90", "I", "UP", "C4",
     "RSE",
-    "TCH",
+    "TC",
     "PTH",
     "COM818", "COM819",
     "ISC",

@@ -28,7 +28,7 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
 
     custom_missile_launcher = read_asm_file("missile_launcher.s").replace("#0x32", f"#{ammo_sizes['missile_launcher']}")
 
-    ARM9_PATCHES = {
+    ARM9_PATCHES: dict[int, bytes] = {
         addresses.missiles_per_expansion: create_asm_patch(
             f"add r2, r2, #{ammo_sizes['missile_expansion'] * 10}"
         ),  # Missiles per expansion
@@ -87,11 +87,11 @@ def _validate_starting_items(starting_items: dict) -> None:
         raise ValueError(f"Starting ammo must be 400 or less! Got {starting_items['ammo']}")
 
 
-def _bitfield_to_hex(bitfield: str) -> int:
+def _bitfield_to_hex(bitfield: str) -> bytes:
     return int(bitfield, 2).to_bytes()
 
 
-def _unlock_planets(unlock_planets: dict) -> int:
+def _unlock_planets(unlock_planets: dict) -> bytes:
     planets = [
         unlock_planets["Arcterra"],  # Arcterra 1
         unlock_planets["Arcterra"],  # Arcterra 2

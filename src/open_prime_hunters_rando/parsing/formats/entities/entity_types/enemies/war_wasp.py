@@ -30,7 +30,7 @@ class WarWasp(EnemyFields):
     volume2 = field(BaseVolumeType)
     volume3 = field(BaseVolumeType)
 
-    movement_vectors = field([list[Vec3]])
+    movement_vectors = field(list[Vec3])
 
     position_count = field(int)
 

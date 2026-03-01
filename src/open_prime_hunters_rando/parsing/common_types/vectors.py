@@ -99,14 +99,16 @@ class Vec4(Vec3):
         self.w = value
 
 
-class VectorAdapter[T: Vec2](Adapter):
-    def __init__(self, subcon: Construct, vec_type: type[T], fields: tuple[str, ...]):
+class VectorAdapter(Adapter):
+    def __init__(self, subcon: Construct, vec_type: type[Vec2], fields: tuple[str, ...]):
         super().__init__(subcon)
         self.vec_type = vec_type
         self.fields = fields
 
     @classmethod
     def for_n(cls, n: int) -> Self:
+        fields: tuple[str, ...]
+        vec_type: type[Vec2]
         match n:
             case 2:
                 fields = ("x", "y")
@@ -128,15 +130,15 @@ class VectorAdapter[T: Vec2](Adapter):
             fields,
         )
 
-    def _decode(self, obj: Container, context: Container, path: str) -> T:
+    def _decode(self, obj: Container, context: Container, path: str) -> Vec2:
         return self.vec_type(*(obj[i] for i in self.fields))
 
-    def _encode(self, obj: T, context: Container, path: str) -> Container:
+    def _encode(self, obj: Vec2, context: Container, path: str) -> Container:
         container = Container()
         for i in self.fields:
             container[i] = getattr(obj, i)
         return container
 
 
-Vector3Fx = VectorAdapter.for_n(3)
-Vector4Fx = VectorAdapter.for_n(4)
+Vector3Fx: VectorAdapter = VectorAdapter.for_n(3)
+Vector4Fx: VectorAdapter = VectorAdapter.for_n(4)

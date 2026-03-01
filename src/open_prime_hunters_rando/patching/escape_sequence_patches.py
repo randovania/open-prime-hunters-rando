@@ -1,4 +1,5 @@
 from open_prime_hunters_rando.parsing.file_manager import FileManager
+from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 
 
 def patch_escape_sequences(file_manager: FileManager) -> None:
@@ -24,7 +25,7 @@ def _disable_escape_triggers(file_manager: FileManager) -> None:
                 escape_triggers = [5, 16]
 
             for escape_trigger in escape_triggers:
-                entity = entity_file.get_entity(escape_trigger)
+                entity = entity_file.get_entity(escape_trigger, Entity)
                 entity.layer_state[1] = False
 
 
@@ -51,7 +52,7 @@ def _remove_disabled_portals(file_manager: FileManager) -> None:
         for room_name, portal_entities in room_names.items():
             entity_file = file_manager.get_entity_file(area_name, room_name)
             for portal_entity in portal_entities:
-                entity = entity_file.get_entity(portal_entity)
+                entity = entity_file.get_entity(portal_entity, Entity)
                 entity.layer_state[1] = False
 
 
@@ -59,28 +60,28 @@ def _patch_specific_rooms(file_manager: FileManager) -> None:
     # High Ground
     entity_file = file_manager.get_entity_file("Alinos", "High Ground")
 
-    first_pass_bottom_door = entity_file.get_entity(15)
+    first_pass_bottom_door = entity_file.get_entity(15, Entity)
     first_pass_bottom_door.layer_state[3] = True
 
     second_pass_bottom_doors = [56, 72]
     for door in second_pass_bottom_doors:
-        entity = entity_file.get_entity(door)
+        entity = entity_file.get_entity(door, Entity)
         for layer in range(1, 4):
             entity.layer_state[layer] = False
 
     force_fields = [74, 77]
-    for force_field in force_fields:
-        entity = entity_file.get_entity(force_field)
+    for force_field_id in force_fields:
+        entity = entity_file.get_entity(force_field_id, Entity)
         entity.layer_state[3] = True
 
     portals = [57, 58]
     for portal in portals:
-        entity = entity_file.get_entity(portal)
+        entity = entity_file.get_entity(portal, Entity)
         entity.layer_state[3] = True
 
     hunters = [85, 95]
     for hunter in hunters:
-        entity = entity_file.get_entity(hunter)
+        entity = entity_file.get_entity(hunter, Entity)
         entity.layer_state[1] = True
 
     # Elder Passage
@@ -88,76 +89,76 @@ def _patch_specific_rooms(file_manager: FileManager) -> None:
 
     second_pass_doors = [11, 18]
     for door in second_pass_doors:
-        entity = entity_file.get_entity(door)
+        entity = entity_file.get_entity(door, Entity)
         for layer in range(1, 3):
             entity.layer_state[layer] = False
 
     # Alinos Perch
     entity_file = file_manager.get_entity_file("Alinos", "Alinos Perch")
 
-    second_pass_door = entity_file.get_entity(5)
+    second_pass_door = entity_file.get_entity(5, Entity)
     second_pass_door.layer_state[1] = False
     second_pass_door.layer_state[2] = False
 
     # Data Shrine 01
     entity_file = file_manager.get_entity_file("Celestial Archives", "Data Shrine 01")
 
-    second_pass_door = entity_file.get_entity(37)
+    second_pass_door = entity_file.get_entity(37, Entity)
     second_pass_door.layer_state[1] = False
     second_pass_door.layer_state[2] = False
 
     # Frost Labyrinth
     entity_file = file_manager.get_entity_file("Arcterra", "Frost Labyrinth")
 
-    force_field = entity_file.get_entity(5)
-    second_pass_door.layer_state[0] = False
+    force_field = entity_file.get_entity(5, Entity)
+    force_field.layer_state[0] = False
 
     # Arcterra Gateway
     entity_file = file_manager.get_entity_file("Arcterra", "Arcterra Gateway")
 
     # Landing camera
-    camera_sequence = entity_file.get_entity(36)
+    camera_sequence = entity_file.get_entity(36, Entity)
     camera_sequence.layer_state[1] = True
     camera_sequence.layer_state[2] = True
 
     # Teleporter triggers
     trigger_volumes = [5, 39]
     for trigger_volume in trigger_volumes:
-        entity = entity_file.get_entity(trigger_volume)
+        entity = entity_file.get_entity(trigger_volume, Entity)
         entity.layer_state[1] = True
 
     # Ice Hive
     entity_file = file_manager.get_entity_file("Arcterra", "Ice Hive")
 
-    entrance_jump_pad = entity_file.get_entity(65)
+    entrance_jump_pad = entity_file.get_entity(65, Entity)
     entrance_jump_pad.layer_state[1] = False
     entrance_jump_pad.layer_state[2] = False
 
     # Sic Transit
     entity_file = file_manager.get_entity_file("Arcterra", "Sic Transit")
 
-    first_pass_inner_door = entity_file.get_entity(24)
+    first_pass_inner_door = entity_file.get_entity(24, Entity)
     first_pass_inner_door.layer_state[1] = True
     first_pass_inner_door.layer_state[2] = True
 
-    second_pass_inner_door = entity_file.get_entity(11)
+    second_pass_inner_door = entity_file.get_entity(11, Entity)
     second_pass_inner_door.layer_state[1] = False
     second_pass_inner_door.layer_state[2] = False
 
-    artifact = entity_file.get_entity(35)
+    artifact = entity_file.get_entity(35, Entity)
     artifact.layer_state[1] = True
     artifact.layer_state[2] = True
 
     # Fault Line
     entity_file = file_manager.get_entity_file("Arcterra", "Fault Line")
 
-    knocked_down_pillar = entity_file.get_entity(13)
+    knocked_down_pillar = entity_file.get_entity(13, Entity)
     knocked_down_pillar.layer_state[1] = False
     knocked_down_pillar.layer_state[2] = False
 
 
 def _patch_both_escape_layers(file_manager: FileManager) -> None:
-    ROOMS_TO_PATCH = {
+    ROOMS_TO_PATCH: dict[str, dict[str, list[int]]] = {
         "Alinos": {
             "Alinos Gateway": [],
             "Alinos Perch": [],
