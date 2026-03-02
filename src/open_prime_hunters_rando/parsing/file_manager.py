@@ -9,7 +9,14 @@ from construct import Container, ListContainer
 from open_prime_hunters_rando.logger import LOG
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.string_tables import StringTable
-from open_prime_hunters_rando.parsing.level_data import get_data
+from open_prime_hunters_rando.parsing.level_data import (
+    ALINOS,
+    ARCTERRA,
+    CELESTIAL_ARCHIVES,
+    OUBLIETTE,
+    VESPER_DEFENSE_OUTPOST,
+    get_data,
+)
 
 if TYPE_CHECKING:
     from ndspy.rom import NintendoDSRom
@@ -47,6 +54,11 @@ class FileManager:
         return self.string_tables[file_name]
 
     def finalize_parsed_files(self) -> None:
+        for room_name, level_data in (
+            ALINOS | CELESTIAL_ARCHIVES | VESPER_DEFENSE_OUTPOST | ARCTERRA | OUBLIETTE
+        ).items():
+            self.get_entity_file(level_data.area_name, room_name)
+
         for file_name, entity_file in self.entity_files.items():
             self.rom.setFileByName(file_name, entity_file.build())
 
@@ -69,7 +81,7 @@ class FileManager:
             }
         )
 
-        export_path = Path(__file__).parent.joinpath("entities", "entity_files")
+        export_path = Path(__file__).parent.parent.joinpath("exported_files", "entity_files")
         export_path.mkdir(parents=True, exist_ok=True)
         with Path.open(export_path / f"{file_name[16:-4]}.txt", "w") as f:
             f.write(str(to_export))
@@ -83,7 +95,7 @@ class FileManager:
         )
 
         language, string_table_file = file_name.split("/")
-        export_path = Path(__file__).parent.joinpath(f"string_tables/{language}")
+        export_path = Path(__file__).parent.parent.joinpath("exported_files", f"string_tables/{language}")
         export_path.mkdir(parents=True, exist_ok=True)
         with Path.open(export_path / f"{string_table_file[:-4]}.txt", "w") as f:
             f.write(str(to_export))

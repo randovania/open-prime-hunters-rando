@@ -158,7 +158,7 @@ class EntityAdapter(construct.Adapter):
         for entity_wrapper in entities:
             entity = entity_wrapper._raw
 
-            size = entity_wrapper.size
+            size = entity_wrapper.size + EntityDataHeader.sizeof()
             entity._size = size
             entity._data_offset = offset
 
@@ -259,7 +259,7 @@ class EntityFile:
         self.entities.append(new_entity)
         return new_entity_id
 
-    def replace_entity(self, entity_id: int, new_entity: Entity) -> None:
+    def replace_entity(self, entity_id: int, new_entity: Entity, keep_old_transform: bool = True) -> None:
         index = next((i for i, entity in enumerate(self.entities) if entity.entity_id == entity_id), None)
         if index is None:
             raise ValueError(f"No entity with ID {entity_id} found!")
@@ -267,4 +267,10 @@ class EntityFile:
         old_entity = self.entities[index]
         new_entity.node_name = old_entity.node_name
         new_entity.layer_state = old_entity.layer_state
+
+        if keep_old_transform:
+            new_entity.position = old_entity.position
+            new_entity.up_vector = old_entity.up_vector
+            new_entity.facing_vector = old_entity.facing_vector
+
         self.entities[index] = new_entity

@@ -26,6 +26,9 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
 
             # Entity is now Artifact
             else:
+                # Raise entity so it doesn't clip into the floor
+                entity.position.y += 0.3
+
                 new_entity = Artifact.create(
                     model_id=pickup["model_id"],
                     artifact_id=pickup["artifact_id"],
@@ -35,8 +38,6 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
                     message1=entity.collected_message,
                     linked_entity_id=(-1 if entity.parent_id == 65535 else entity.parent_id),
                 )
-                # Raise entity so it doesn't clip into the floor
-                new_entity.position.y += 0.3
 
                 entity_file.replace_entity(entity_id, new_entity)
 
@@ -52,6 +53,10 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
 
             # Entity is now ItemSpawn
             else:
+                # Only lower entity if it had a base prior to avoid entity clipping into the floor in shields
+                if entity.has_base:
+                    entity.position.y -= 0.3
+
                 new_entity = ItemSpawn.create(
                     item_type=ItemType(pickup["item_type"]),
                     enabled=entity.active,
@@ -59,9 +64,5 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
                     notify_entity_id=entity.message1_target,
                     collected_message=entity.message1,
                 )
-
-                # Only lower entity if it had a base prior to avoid entity clipping into the floor in shields
-                if entity.has_base:
-                    new_entity.position.y -= 0.3
 
                 entity_file.replace_entity(entity_id, new_entity)
