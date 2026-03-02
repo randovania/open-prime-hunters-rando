@@ -1,4 +1,4 @@
-from collections.abc import Collection, Sequence
+from collections.abc import Sequence
 from typing import Self
 
 from construct import Construct, Container, ListContainer
@@ -26,24 +26,6 @@ class Entity(FieldsMixin):
     position = field(Vec3, "header")
     up_vector = field(Vec3, "header")
     facing_vector = field(Vec3, "header")
-
-    @classmethod
-    def create_from_template(
-        cls, data: Container, node_name: str = "rmMain", active_layers: Collection[int] = tuple(range(16))
-    ) -> Self:
-        layer_state = [False] * 16
-        for layer in active_layers:
-            layer_state[layer] = False
-
-        return cls(
-            Container(
-                {
-                    "node_name": node_name,
-                    "layer_state": ListContainer(layer_state),
-                    "data": data,
-                }
-            )
-        )
 
     @classmethod
     def cls_entity_type(cls) -> EntityType:
