@@ -74,7 +74,7 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
             for entity in entity_file.entities:
                 if not isinstance(entity, EnemySpawn):
                     continue
-                if not isinstance(entity.fields, Hunter):
+                if not isinstance(entity.enemy_fields, Hunter):
                     continue
 
                 if shuffle_hunter_ids:
@@ -82,8 +82,8 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
                     if room_name == "High Ground" and entity.entity_id in [21, 60]:
                         elder_passage = file_manager.get_entity_file("Alinos", "Elder Passage")
                         spire_data = elder_passage.get_entity(9, EnemySpawn)
-                        assert isinstance(spire_data.fields, Hunter)
-                        new_hunter_id = spire_data.fields.hunter_id
+                        assert isinstance(spire_data.enemy_fields, Hunter)
+                        new_hunter_id = spire_data.enemy_fields.hunter_id
                     # Spawning a Guardian causes a crash in Data Shrine 03 "Kanden" spawn
                     elif room_name == "Data Shrine 02" and entity.entity_id == 12:
                         new_hunter_id = HunterType(random.choice(list(range(1, 7))))
@@ -91,8 +91,8 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
                     elif room_name == "Data Shrine 03" and entity.entity_id == 3:
                         data_shrine_02 = file_manager.get_entity_file("Celestial Archives", "Data Shrine 02")
                         kanden_data = data_shrine_02.get_entity(12, EnemySpawn)
-                        assert isinstance(kanden_data.fields, Hunter)
-                        new_hunter_id = kanden_data.fields.hunter_id
+                        assert isinstance(kanden_data.enemy_fields, Hunter)
+                        new_hunter_id = kanden_data.enemy_fields.hunter_id
                     # TODO: Figure out why Weapons Complex crashes when shuffling the hunters
                     elif room_name == "Weapons Complex":
                         continue
@@ -100,7 +100,7 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
                         # If enabled, generate a new hunter id (1-7) and modify the entity
                         new_hunter_id = HunterType(random.choice(list(range(1, 8))))
 
-                    hunter_data = entity.fields
+                    hunter_data = entity.enemy_fields
                     # Only modify the hunter fields if the hunter id is different
                     if hunter_data.hunter_id != new_hunter_id:
                         _patch_hunter_ids(hunter_data, new_hunter_id)
@@ -108,7 +108,7 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
 
                 if shuffle_hunter_colors:
                     # If enabled, change the hunter spawns to use a random color by hunter type (0-5)
-                    entity.fields.hunter_color = _HUNTERS_TO_COLOR.get(entity.fields.hunter_id, 0)
+                    entity.enemy_fields.hunter_color = _HUNTERS_TO_COLOR.get(entity.enemy_fields.hunter_id, 0)
 
 
 def _patch_hunter_ids(hunter_data: Container, new_hunter_id: HunterType) -> None:
@@ -126,5 +126,5 @@ def _patch_encounter_types(entity_file: EntityFile, encounter_type_entities: dic
     # Handle certain hunter spawns not functioning properly
     for entity_id, encounter_type in encounter_type_entities.items():
         entity = entity_file.get_entity(entity_id, EnemySpawn)
-        assert isinstance(entity.fields, Hunter)
-        entity.fields.encounter_type = encounter_type
+        assert isinstance(entity.enemy_fields, Hunter)
+        entity.enemy_fields.encounter_type = encounter_type

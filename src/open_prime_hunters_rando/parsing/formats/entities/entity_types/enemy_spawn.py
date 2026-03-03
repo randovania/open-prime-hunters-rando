@@ -27,7 +27,7 @@ EnemyTypeConstruct = EnumAdapter(EnemyType, Byte)
 
 EnemySpawnEntityData = Struct(
     "enemy_type" / Padded(4, EnemyTypeConstruct),
-    "fields_raw" / Padded(400, Switch(construct.this.enemy_type, enemy_type_to_construct)),
+    "enemy_fields_raw" / Padded(400, Switch(construct.this.enemy_type, enemy_type_to_construct)),
     "linked_entity_id" / Int16sl,
     "spawn_limit" / Byte,
     "spawn_total" / Byte,
@@ -54,7 +54,7 @@ EnemySpawnEntityData = Struct(
 class EnemySpawn(Entity):
     def __init__(self, raw: Container) -> None:
         super().__init__(raw)
-        self._fields = None
+        self._enemy_fields: EnemyFields | None = None
 
     @classmethod
     def type_construct(cls) -> Construct:
@@ -62,18 +62,18 @@ class EnemySpawn(Entity):
 
     enemy_type = field(EnemyType)
 
-    fields_raw = field(Container)
+    enemy_fields_raw = field(Container)
 
     @property
-    def fields(self) -> EnemyFields:
-        if self._fields is None:
-            self._fields = enemy_type_to_class[self.enemy_type](self.fields_raw)
-        return self._fields
+    def enemy_fields(self) -> EnemyFields:
+        if self._enemy_fields is None:
+            self._enemy_fields = enemy_type_to_class[self.enemy_type](self.enemy_fields_raw)
+        return self._enemy_fields
 
-    @fields.setter
-    def fields(self, value: EnemyFields) -> None:
-        self.fields_raw = value._raw
-        self._fields = value
+    @enemy_fields.setter
+    def enemy_fields(self, value: EnemyFields) -> None:
+        self.enemy_fields_raw = value._raw
+        self._enemy_fields = value
 
     linked_entity_id = field(int)
 

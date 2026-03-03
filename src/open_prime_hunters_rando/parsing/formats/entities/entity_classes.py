@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, ClassVar, Literal
+from typing import TYPE_CHECKING, Any, ClassVar, Literal
 
 if TYPE_CHECKING:
     from construct import Container
@@ -10,7 +10,7 @@ class FieldsMixin:
     _raw: Container
     _fields: ClassVar[tuple[tuple[str, EntityField], ...]] = ()
 
-    def __init_subclass__(cls, default_field_location: FieldLocation = "fields", **kwargs) -> None:
+    def __init_subclass__(cls, default_field_location: FieldLocation = "fields", **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
 
         for name, field in cls._fields:
