@@ -9,14 +9,7 @@ from construct import Container, ListContainer
 from open_prime_hunters_rando.logger import LOG
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.string_tables import StringTable
-from open_prime_hunters_rando.parsing.level_data import (
-    ALINOS,
-    ARCTERRA,
-    CELESTIAL_ARCHIVES,
-    OUBLIETTE,
-    VESPER_DEFENSE_OUTPOST,
-    get_data,
-)
+from open_prime_hunters_rando.parsing.level_data import get_data
 
 if TYPE_CHECKING:
     from ndspy.rom import NintendoDSRom
@@ -54,11 +47,6 @@ class FileManager:
         return self.string_tables[file_name]
 
     def finalize_parsed_files(self) -> None:
-        for room_name, level_data in (
-            ALINOS | CELESTIAL_ARCHIVES | VESPER_DEFENSE_OUTPOST | ARCTERRA | OUBLIETTE
-        ).items():
-            self.get_entity_file(level_data.area_name, room_name)
-
         for file_name, entity_file in self.entity_files.items():
             self.rom.setFileByName(file_name, entity_file.build())
 

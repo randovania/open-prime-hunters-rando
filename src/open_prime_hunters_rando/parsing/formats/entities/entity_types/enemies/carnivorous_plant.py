@@ -4,7 +4,7 @@ from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType,
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.enemy_base import EnemyFields
 
-CarnvirousPlantEntityData = Struct(
+CarnivorousPlantEntityData = Struct(
     "enemy_health" / Int16ul,
     "enemy_damage" / Int16ul,
     "enemy_subtype" / Int32ul,
@@ -15,7 +15,7 @@ CarnvirousPlantEntityData = Struct(
 class CarnivorousPlant(EnemyFields, default_field_location="raw"):
     @classmethod
     def type_construct(cls) -> Construct:
-        return CarnvirousPlantEntityData
+        return CarnivorousPlantEntityData
 
     enemy_health = field(int)
     enemy_damage = field(int)
