@@ -61,7 +61,7 @@ Strings = Struct(
 )
 
 TextConstruct = Struct(
-    "unk" / Int32ul[2517],
+    "header" / Int32ul[2517],
     "strings" / Strings,
 )
 

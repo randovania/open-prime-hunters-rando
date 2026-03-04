@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from enum import Enum
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from construct import Container, ListContainer
 
@@ -25,6 +25,9 @@ class Language(Enum):
     ITALIAN = "stringTables_it"
     JAPANESE = "stringTables_jp"
     SPANISH = "stringTables_sp"
+
+
+type ExportedFormat = Literal["entity_files", "string_tables", "text_files"]
 
 
 class FileManager:
@@ -76,6 +79,11 @@ class FileManager:
             if self.export_parsed_files:
                 self.export_metroidhunters_text_file(file_name, metroidhunters_text_file)
 
+    def _set_export_path(self, format_to_be_exported: ExportedFormat) -> Path:
+        export_path = Path(__file__).parent.parent.joinpath("exported_files", f"{format_to_be_exported}")
+        export_path.mkdir(parents=True, exist_ok=True)
+        return export_path
+
     def export_entity_file(self, file_name: str, entity_file: EntityFile) -> None:
         to_export = Container(
             {
@@ -84,9 +92,7 @@ class FileManager:
             }
         )
 
-        export_path = Path(__file__).parent.parent.joinpath("exported_files", "entity_files")
-        export_path.mkdir(parents=True, exist_ok=True)
-        with Path.open(export_path / f"{file_name[16:-4]}.txt", "w") as f:
+        with Path.open(self._set_export_path("entity_files") / f"{file_name[16:-4]}.txt", "w") as f:
             f.write(str(to_export))
 
     def export_string_table(self, file_name: str, string_table: StringTable) -> None:
@@ -98,22 +104,18 @@ class FileManager:
         )
 
         language, string_table_file = file_name.split("/")
-        export_path = Path(__file__).parent.parent.joinpath("exported_files", f"string_tables/{language}")
-        export_path.mkdir(parents=True, exist_ok=True)
-        with Path.open(export_path / f"{string_table_file[:-4]}.txt", "w") as f:
+        with Path.open(self._set_export_path(f"string_tables/{language}") / f"{string_table_file[:-4]}.txt", "w") as f:
             f.write(str(to_export))
 
     def export_metroidhunters_text_file(self, file_name: str, metroidhunters_text_file: MetroidHuntersTextFile) -> None:
         to_export = Container(
             {
-                "unk": metroidhunters_text_file._raw.unk,
+                "header": metroidhunters_text_file._raw.header,
                 "strings": metroidhunters_text_file._raw.strings,
             }
         )
 
-        export_path = Path(__file__).parent.parent.joinpath("exported_files", "text_files")
-        export_path.mkdir(parents=True, exist_ok=True)
-        with Path.open(export_path / f"{file_name[9:-4]}.txt", "w") as f:
+        with Path.open(self._set_export_path("text_files") / f"{file_name[9:-4]}.txt", "w") as f:
             f.write(str(to_export))
 
     def save_to_rom(self, output_path: Path) -> None:
