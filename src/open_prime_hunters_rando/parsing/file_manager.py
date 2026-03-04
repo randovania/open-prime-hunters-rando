@@ -8,6 +8,7 @@ from construct import Container, ListContainer
 
 from open_prime_hunters_rando.logger import LOG
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
+from open_prime_hunters_rando.parsing.formats.metroidhunters_text import MetroidHuntersTextFile
 from open_prime_hunters_rando.parsing.formats.string_tables import StringTable
 from open_prime_hunters_rando.parsing.level_data import get_data
 
@@ -15,8 +16,6 @@ if TYPE_CHECKING:
     from ndspy.rom import NintendoDSRom
 
     from open_prime_hunters_rando.patching.string_tables_patches import StringTables
-
-from open_prime_hunters_rando.frontend.metroidhunters_text import MetroidHuntersTextFile
 
 
 class Language(Enum):
@@ -112,7 +111,7 @@ class FileManager:
             }
         )
 
-        export_path = Path(__file__).parent.joinpath("frontend", "text_files")
+        export_path = Path(__file__).parent.parent.joinpath("exported_files", "text_files")
         export_path.mkdir(parents=True, exist_ok=True)
         with Path.open(export_path / f"{file_name[9:-4]}.txt", "w") as f:
             f.write(str(to_export))
