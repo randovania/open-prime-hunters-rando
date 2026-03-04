@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import keystone
+import keystone  # type: ignore[import-untyped]
 
 NOP = bytes.fromhex("00F020E3")
 

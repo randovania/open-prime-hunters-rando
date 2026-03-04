@@ -1,9 +1,10 @@
 import itertools
 
 import pytest
-from construct import Container
 
-from open_prime_hunters_rando.parsing.formats.entities.entity_type import Entity, EntityFile, EntityType
+from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.door import Door, DoorType
+from open_prime_hunters_rando.parsing.formats.entities.enum import PaletteId
 from open_prime_hunters_rando.parsing.level_data import (
     ALINOS,
     ARCTERRA,
@@ -40,26 +41,27 @@ def test_compare_entity_file(entity_file):
     assert parsed == EntityFile.parse(built)
 
 
-def test_add_entity(entity_file):
-    parsed = EntityFile.parse(entity_file)
-    parsed.entities.append(
-        Entity.create(
-            Container(
-                {
-                    "header": Container(
-                        {
-                            "entity_type": EntityType.OCTOLITH_FLAG,
-                            "entity_id": 0,
-                            "position": {"x": 0.0, "y": 0.0, "z": 0.0},
-                            "up_vector": {"x": 0.0, "y": 0.0, "z": 0.0},
-                            "facing_vector": {"x": 0.0, "y": 0.0, "z": 0.0},
-                        }
-                    ),
-                    "team_id": 0,
-                }
-            )
-        )
+def test_create_new_entity(entity_file):
+    new_entity = Door.create(
+        port_name="port_rmMain",
+        palette_id=PaletteId.SHOCK_COIL,
+        door_type=DoorType.THIN,
+        connector_id=255,
+        target_layer_id=12,
+        locked=True,
+        out_connector_id=10,
+        out_loader_id=4,
+        entity_file_name="Unit1_Land_Ent",
+        room_name="rmMain",
     )
+
+    parsed = EntityFile.parse(entity_file)
+    max_entity_id = parsed.get_max_entity_id()
+    parsed.replace_entity(max_entity_id, new_entity)
+
+    replaced_entity = parsed.get_entity(max_entity_id, Door)
+
+    assert new_entity == replaced_entity
 
     built = EntityFile.build(parsed)
     assert parsed == EntityFile.parse(built)

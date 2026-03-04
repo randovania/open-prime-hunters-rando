@@ -28,7 +28,7 @@ def patch_overlays(rom: NintendoDSRom) -> None:
         for offset_value in offset_values:
             offset = offset_value["offset"]
             value = offset_value["value"].to_bytes(2, "little")
-            overlay.data[offset : offset + len(value)] = value
+            overlay.data[offset : offset + len(value)] = value  # type: ignore[index]
 
         # Save the modified file
         rom.files[overlay.fileID] = overlay.save(compress=True)

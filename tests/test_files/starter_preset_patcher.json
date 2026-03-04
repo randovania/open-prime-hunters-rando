@@ -333,13 +333,13 @@
                 "High Ground": {
                     "pickups": [
                         {
-                            "entity_id": 24,
+                            "entity_id": 80,
                             "entity_type": 17,
                             "model_id": 0,
                             "artifact_id": 1
                         },
                         {
-                            "entity_id": 80,
+                            "entity_id": 24,
                             "entity_type": 4,
                             "item_type": 6
                         }

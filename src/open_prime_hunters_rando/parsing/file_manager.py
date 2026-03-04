@@ -1,13 +1,20 @@
+from __future__ import annotations
+
 from enum import Enum
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from construct import Container, ListContainer
-from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.parsing.formats.entities.entity_type import EntityFile
-from open_prime_hunters_rando.parsing.level_data import get_data
 from open_prime_hunters_rando.logger import LOG
+from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.string_tables import StringTable
+from open_prime_hunters_rando.parsing.level_data import get_data
+
+if TYPE_CHECKING:
+    from ndspy.rom import NintendoDSRom
+
+    from open_prime_hunters_rando.patching.string_tables_patches import StringTables
 
 
 class Language(Enum):
@@ -33,7 +40,7 @@ class FileManager:
             self.entity_files[file_name] = EntityFile.parse(self.rom.getFileByName(file_name))
         return self.entity_files[file_name]
 
-    def get_string_table(self, language: Language, string_table: StringTable) -> StringTable:
+    def get_string_table(self, language: Language, string_table: StringTables) -> StringTable:
         file_name = f"{language.value}/{string_table.value}.bin"
         if file_name not in self.string_tables:
             self.string_tables[file_name] = StringTable.parse(self.rom.getFileByName(file_name))
@@ -62,7 +69,7 @@ class FileManager:
             }
         )
 
-        export_path = Path(__file__).parent.joinpath("entities", "entity_files")
+        export_path = Path(__file__).parent.parent.joinpath("exported_files", "entity_files")
         export_path.mkdir(parents=True, exist_ok=True)
         with Path.open(export_path / f"{file_name[16:-4]}.txt", "w") as f:
             f.write(str(to_export))
@@ -76,7 +83,7 @@ class FileManager:
         )
 
         language, string_table_file = file_name.split("/")
-        export_path = Path(__file__).parent.joinpath(f"string_tables/{language}")
+        export_path = Path(__file__).parent.parent.joinpath("exported_files", f"string_tables/{language}")
         export_path.mkdir(parents=True, exist_ok=True)
         with Path.open(export_path / f"{string_table_file[:-4]}.txt", "w") as f:
             f.write(str(to_export))
