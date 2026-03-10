@@ -467,8 +467,10 @@ def get_data(area_name: str, room_name: str) -> LevelData:
             return CONNECTORS[room_name]
 
 
-ALL_PORTAL_FILENAMES = {
+ALL_AREAS = [ALINOS, CELESTIAL_ARCHIVES, VESPER_DEFENSE_OUTPOST, ARCTERRA, OUBLIETTE]
+ALL_PORTAL_FILENAMES = [
     portal_filename
-    for level_data in (ALINOS | CELESTIAL_ARCHIVES | VESPER_DEFENSE_OUTPOST | ARCTERRA | OUBLIETTE).values()
+    for area in ALL_AREAS
+    for level_data in area.values()
     if (portal_filename := level_data.portal_filename) is not None
-}
+]
