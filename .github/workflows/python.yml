@@ -186,4 +186,4 @@ jobs:
 
       - name: Publish 📦 to PyPI
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
-        uses: pypa/gh-action-pypi-publish@release/
+        uses: pypa/gh-action-pypi-publish@release/v1
