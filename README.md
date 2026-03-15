@@ -15,7 +15,3 @@ With a JSON file:
 
 ## Development
 This repository uses [pre-commit](https://pre-commit.com/).
-```
-pip install pre-commit
-pre-commit install
-```

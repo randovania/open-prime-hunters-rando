@@ -29,7 +29,7 @@ file = "README.md"
 content-type = "text/markdown"
 
 [project.urls]
-Homepage = "https://github.com/dyceron/open-prime-hunters-rando"
+Homepage = "https://github.com/randovania/open-prime-hunters-rando"
 
 # Entry Points for PyInstaller
 [project.entry-points.pyinstaller40]
@@ -75,7 +75,8 @@ max-complexity = 25
 typing = [
     "types-jsonschema",
     "types-pyinstaller",
-    "mypy"
+    "mypy",
+    "pre-commit",
 ]
 
 [tool.mypy]
