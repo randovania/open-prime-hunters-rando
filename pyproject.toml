@@ -77,6 +77,10 @@ typing = [
     "types-pyinstaller",
     "mypy",
     "pre-commit",
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest-xdist",
 ]
 
 [tool.mypy]
