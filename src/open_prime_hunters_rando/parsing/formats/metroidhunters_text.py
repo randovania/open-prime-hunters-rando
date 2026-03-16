@@ -28,7 +28,7 @@ TextEntryHeader = Struct(
 )
 
 TextFileConstruct = Struct(
-    "strings" / RepeatUntil(lambda entity, lst, ctx: entity.data_offset == 0, TextEntryHeader),
+    "strings" / RepeatUntil(lambda string, lst, ctx: string.data_offset == 0, TextEntryHeader),
 )
 
 
@@ -46,6 +46,9 @@ class MetroidHuntersTextFileAdapter(construct.Adapter):
 
     def _decode(self, obj: Container, context: Container, path: str) -> Container:
         decoded = copy.deepcopy(obj)
+
+        # remove empty entry
+        decoded.strings.pop()
 
         # wrap strings
         decoded.strings = ListContainer([TextEntry(string) for string in decoded.strings])
@@ -75,6 +78,22 @@ class MetroidHuntersTextFileAdapter(construct.Adapter):
             string_offset += size + num_bytes_to_align(size)
 
             encoded.strings.append(string)
+
+        # add empty entry
+        encoded.strings.append(
+            Container(
+                {
+                    "data_offset": 0,
+                    "data": Container(
+                        {
+                            "string_offset": ListContainer([2520, 2520]),
+                            "string_length": ListContainer([2544, 0]),
+                            "text": "T'",
+                        }
+                    ),
+                }
+            )
+        )
 
         return encoded
 
