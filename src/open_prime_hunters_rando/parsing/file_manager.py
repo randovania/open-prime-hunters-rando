@@ -110,8 +110,7 @@ class FileManager:
     def export_metroidhunters_text_file(self, file_name: str, metroidhunters_text_file: MetroidHuntersTextFile) -> None:
         to_export = Container(
             {
-                "header": metroidhunters_text_file._raw.header,
-                "strings": metroidhunters_text_file._raw.strings,
+                "strings": ListContainer([e._raw for e in metroidhunters_text_file.strings]),
             }
         )
 
