@@ -16,19 +16,19 @@ from construct import (
     this,
 )
 
-TextEntryData = Struct(
+StringEntryData = Struct(
     "string_offset" / Int32ul[2],
     "string_length" / Int16ul[2],
     "text" / Pointer(this.string_offset[0], Aligned(4, CString("utf8"), pattern=b"\xbb")),
 )
 
-TextEntryHeader = Struct(
+StringEntryHeader = Struct(
     "data_offset" / Int32ul,
-    "data" / Pointer(this.data_offset, TextEntryData),
+    "data" / Pointer(this.data_offset, StringEntryData),
 )
 
 TextFileConstruct = Struct(
-    "strings" / RepeatUntil(lambda string, lst, ctx: string.data_offset == 0, TextEntryHeader),
+    "strings" / RepeatUntil(lambda string, lst, ctx: string.data_offset == 0, StringEntryHeader),
 )
 
 
@@ -51,14 +51,14 @@ class MetroidHuntersTextFileAdapter(construct.Adapter):
         decoded.strings.pop()
 
         # wrap strings
-        decoded.strings = ListContainer([TextEntry(string) for string in decoded.strings])
+        decoded.strings = ListContainer([StringEntry(string) for string in decoded.strings])
 
         return decoded
 
     def _encode(self, obj: Container, context: Container, path: str) -> Container:
         encoded = copy.deepcopy(obj)
 
-        strings = typing.cast("list[TextEntry]", encoded.strings)
+        strings = typing.cast("list[StringEntry]", encoded.strings)
 
         # update sizes and offsets
         encoded.strings = ListContainer()
@@ -66,10 +66,10 @@ class MetroidHuntersTextFileAdapter(construct.Adapter):
         data_offset = 2520
         string_offset = 10068
 
-        for text_wrapper in strings:
-            string = text_wrapper._raw
+        for string_wrapper in strings:
+            string = string_wrapper._raw
 
-            size = len(text_wrapper.text)
+            size = len(string_wrapper.text)
             string.data_offset = data_offset
             string.data.string_offset = ListContainer([string_offset, string_offset])
             string.data.string_length = ListContainer([size, size])
@@ -98,14 +98,21 @@ class MetroidHuntersTextFileAdapter(construct.Adapter):
         return encoded
 
 
-class TextEntry:
+class StringEntry:
     def __init__(self, raw: Container) -> None:
         self._raw = raw
 
+    def __repr__(self) -> str:
+        return f"<String data_offset={self.data_offset}> text={self.text}"
+
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, TextEntry):
+        if not isinstance(other, StringEntry):
             return False
-        return self.text == other.text
+        return self.data_offset == other.data_offset and self.text == other.text
+
+    @property
+    def data_offset(self) -> int:
+        return self._raw.data_offset
 
     @property
     def text(self) -> str:
@@ -137,9 +144,15 @@ class MetroidHuntersTextFile:
         return isinstance(value, MetroidHuntersTextFile) and self.strings == value.strings
 
     @property
-    def strings(self) -> list[TextEntry]:
+    def strings(self) -> list[StringEntry]:
         return self._raw.strings
 
     @strings.setter
-    def strings(self, value: list[TextEntry]) -> None:
+    def strings(self, value: list[StringEntry]) -> None:
         self._raw.strings = value
+
+    def get_string(self, data_offset: int) -> StringEntry:
+        string = next((string for string in self.strings if string.data_offset == data_offset), None)
+        if string is None:
+            raise ValueError(f"No string with data offset {data_offset} found!")
+        return string

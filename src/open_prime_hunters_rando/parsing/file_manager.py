@@ -51,7 +51,7 @@ class FileManager:
             self.string_tables[file_name] = StringTable.parse(self.rom.getFileByName(file_name))
         return self.string_tables[file_name]
 
-    def get_metroidhunters_text_file(self, text_file: MetroidHuntersTextFile) -> None:
+    def get_metroidhunters_text_file(self, text_file: MetroidHuntersTextFile) -> MetroidHuntersTextFile:
         file_name = f"frontend/{text_file}.bin"
         if file_name not in self.metroidhunters_text_files:
             self.metroidhunters_text_files[file_name] = MetroidHuntersTextFile.parse(self.rom.getFileByName(file_name))
@@ -79,8 +79,8 @@ class FileManager:
             if self.export_parsed_files:
                 self.export_metroidhunters_text_file(file_name, metroidhunters_text_file)
 
-    def _set_export_path(self, format_to_be_exported: ExportedFormat) -> Path:
-        export_path = Path(__file__).parent.parent.joinpath("exported_files", f"{format_to_be_exported}")
+    def _set_export_path(self, format_to_be_exported: ExportedFormat, language: str = "") -> Path:
+        export_path = Path(__file__).parent.parent.joinpath("exported_files", f"{format_to_be_exported}" + language)
         export_path.mkdir(parents=True, exist_ok=True)
         return export_path
 
@@ -104,7 +104,9 @@ class FileManager:
         )
 
         language, string_table_file = file_name.split("/")
-        with Path.open(self._set_export_path(f"string_tables/{language}") / f"{string_table_file[:-4]}.txt", "w") as f:
+        with Path.open(
+            self._set_export_path("string_tables", f"/{language}") / f"{string_table_file[:-4]}.txt", "w"
+        ) as f:
             f.write(str(to_export))
 
     def export_metroidhunters_text_file(self, file_name: str, metroidhunters_text_file: MetroidHuntersTextFile) -> None:
