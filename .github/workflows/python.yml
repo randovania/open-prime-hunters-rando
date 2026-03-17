@@ -68,7 +68,7 @@ jobs:
           python-version: ${{ matrix.python.version }}
             
       - name: install
-        run: uv sync --frozen --extra test
+        run: uv sync --frozen --extra dev
 
       - name: run pytest
         run: uv run pytest --cov open_prime_hunters_rando --cov-report=xml tests
@@ -100,7 +100,7 @@ jobs:
           enable-cache: true
 
       - name: install
-        run: uv sync --frozen --extra test
+        run: uv sync --frozen --extra dev
 
       - name: Export
         run:
@@ -129,7 +129,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install Python packages
-        run: uv sync --frozen --extra
+        run: uv sync --frozen --extra dev
 
       - name: Run Mypy
         run: uv run mypy .

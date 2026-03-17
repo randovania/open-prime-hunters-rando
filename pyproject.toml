@@ -72,12 +72,10 @@ extend-ignore = [
 max-complexity = 25
 
 [project.optional-dependencies]
-typing = [
+dev = [
     "types-jsonschema",
     "types-pyinstaller",
     "mypy",
-]
-test = [
     "pre-commit",
     "pytest",
     "pytest-cov",
