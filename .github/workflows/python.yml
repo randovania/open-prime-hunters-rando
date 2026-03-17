@@ -132,7 +132,7 @@ jobs:
         run: uv sync --frozen --extra dev
 
       - name: Run Mypy
-        run: uv run mypy .
+        run: uv run mypy --install-types
 
       - name: Mypy on modified files
         uses: tsuyoshicho/action-mypy@v5
