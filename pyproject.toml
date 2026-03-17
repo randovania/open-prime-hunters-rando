@@ -76,6 +76,8 @@ typing = [
     "types-jsonschema",
     "types-pyinstaller",
     "mypy",
+]
+test = [
     "pre-commit",
     "pytest",
     "pytest-cov",
