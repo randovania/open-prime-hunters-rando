@@ -14,6 +14,7 @@ from open_prime_hunters_rando.patching.escape_sequence_patches import patch_esca
 from open_prime_hunters_rando.patching.hunter_spawn_patches import patch_hunters
 from open_prime_hunters_rando.patching.static_patches import static_patches
 from open_prime_hunters_rando.patching.string_tables_patches import patch_string_tables
+from open_prime_hunters_rando.patching.text_patches import patch_text_files
 from open_prime_hunters_rando.validator_with_default import DefaultValidatingDraft7Validator
 
 T = typing.TypeVar("T")
@@ -74,6 +75,10 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
     # Patch string tables
     LOG.info("Patching string tables")
     patch_string_tables(file_manager, configuration)
+
+    # Patch frontend text files
+    LOG.info("Patching frontend text files")
+    patch_text_files(file_manager, configuration)
 
     # Save all changes to a new rom
     file_manager.save_to_rom(output_path)

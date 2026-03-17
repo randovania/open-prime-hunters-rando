@@ -9,6 +9,9 @@
             "904L": "ALINOS OCTOLITHS\\OCTOLITH 1 is guarded by CRETAPHID V4. OCTOLITH 2 is guarded by SLENCH 3."
         }
     },
+    "text_patches": {
+        "patcher_version": "Open Prime Hunters Rando v0.2.0"
+    },
     "areas": {
         "Celestial Archives": {
             "levels": {

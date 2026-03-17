@@ -9,7 +9,6 @@ all_text_files = [
     "metroidhunters_text_es",
     "metroidhunters_text_fr",
     "metroidhunters_text_it",
-    # "metroidhunters_text_jp", # FIXME: Does not parse
 ]
 
 
