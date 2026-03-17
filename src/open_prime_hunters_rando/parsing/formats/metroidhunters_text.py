@@ -12,19 +12,17 @@ from construct import (
     ListContainer,
     Pointer,
     RepeatUntil,
+    StopIf,
     Struct,
     this,
 )
 
-StringEntryData = Struct(
-    "string_offset" / Int32ul[2],
-    "string_length" / Int16ul[2],
-    "text" / Pointer(this.string_offset[0], Aligned(4, CString("utf8"), pattern=b"\xbb")),
-)
-
 StringEntryHeader = Struct(
     "data_offset" / Int32ul,
-    "data" / Pointer(this.data_offset, StringEntryData),
+    StopIf(this.data_offset == 0),
+    "_string_offset" / Pointer(this.data_offset, Int32ul[2]),
+    "_string_length" / Pointer(this.data_offset + 8, Int16ul[2]),
+    "text" / Pointer(this._string_offset[0], Aligned(4, CString("utf-8"), pattern=b"\xbb")),
 )
 
 TextFileConstruct = Struct(
@@ -64,18 +62,21 @@ class MetroidHuntersTextFileAdapter(construct.Adapter):
         encoded.strings = ListContainer()
 
         data_offset = 2520
-        string_offset = 10068
+        _string_offset = 10068
 
         for string_wrapper in strings:
             string = string_wrapper._raw
 
             size = len(string_wrapper.text)
+            if string._string_length[0] > size:
+                size = string._string_length[0]
+
             string.data_offset = data_offset
-            string.data.string_offset = ListContainer([string_offset, string_offset])
-            string.data.string_length = ListContainer([size, size])
+            string._string_offset = ListContainer([_string_offset, _string_offset])
+            string._string_length = ListContainer([size, size])
 
             data_offset += 12
-            string_offset += size + num_bytes_to_align(size)
+            _string_offset += size + num_bytes_to_align(size)
 
             encoded.strings.append(string)
 
@@ -84,13 +85,9 @@ class MetroidHuntersTextFileAdapter(construct.Adapter):
             Container(
                 {
                     "data_offset": 0,
-                    "data": Container(
-                        {
-                            "string_offset": ListContainer([2520, 2520]),
-                            "string_length": ListContainer([2544, 0]),
-                            "text": "T'",
-                        }
-                    ),
+                    "_string_offset": ListContainer([2520, 2532]),
+                    "_string_length": ListContainer([2544, 0]),
+                    "text": "T'",
                 }
             )
         )
@@ -116,11 +113,11 @@ class StringEntry:
 
     @property
     def text(self) -> str:
-        return self._raw.data.text
+        return self._raw.text
 
     @text.setter
     def text(self, value: str) -> None:
-        self._raw.data.text = value
+        self._raw.text = value
 
 
 class MetroidHuntersTextFile:
