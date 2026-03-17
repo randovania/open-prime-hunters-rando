@@ -1,6 +1,8 @@
 from enum import Enum
 
 from open_prime_hunters_rando.parsing.file_manager import FileManager
+from open_prime_hunters_rando.parsing.formats.metroidhunters_text import MetroidHuntersTextFile
+from open_prime_hunters_rando.version import version
 
 
 class MetroidHuntersTextFiles(Enum):
@@ -13,11 +15,18 @@ class MetroidHuntersTextFiles(Enum):
     SPANISH = "metroidhunters_text_es"
 
 
-def patch_text_files(file_manager: FileManager, configuration: dict) -> None:
+def patch_text_files(file_manager: FileManager, text_patches: dict) -> None:
     for language in MetroidHuntersTextFiles:
         # FIXME: Japanese has parsing issues
         if language == MetroidHuntersTextFiles.JAPANESE:
             continue
 
-        file_select_screen = file_manager.get_metroidhunters_text_file(language.value)
-        file_select_screen.get_string(6792).text = configuration["text_patches"]["patcher_version"]
+        patcher_version = "Open Prime Hunters Randomizer v" + f"{text_patches.get('patcher_version', version)}"
+        assert isinstance(patcher_version, str)
+
+        _add_patcher_version(file_manager, language.value, patcher_version)
+
+
+def _add_patcher_version(file_manager: FileManager, text_file: MetroidHuntersTextFile, patcher_version: str) -> None:
+    file_select_screen = file_manager.get_metroidhunters_text_file(text_file)
+    file_select_screen.get_string(6792).text = patcher_version

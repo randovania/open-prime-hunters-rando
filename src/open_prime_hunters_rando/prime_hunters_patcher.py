@@ -78,7 +78,7 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
 
     # Patch frontend text files
     LOG.info("Patching frontend text files")
-    patch_text_files(file_manager, configuration)
+    patch_text_files(file_manager, configuration.get("text_patches", {}))
 
     # Save all changes to a new rom
     file_manager.save_to_rom(output_path)
