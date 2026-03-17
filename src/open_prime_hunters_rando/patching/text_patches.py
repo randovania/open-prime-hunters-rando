@@ -21,7 +21,7 @@ def patch_text_files(file_manager: FileManager, text_patches: dict) -> None:
         if language == MetroidHuntersTextFiles.JAPANESE:
             continue
 
-        patcher_version = "Open Prime Hunters Randomizer v" + f"{text_patches.get('patcher_version', version)}"
+        patcher_version = "Open Prime Hunters Randomizer\nv" + f"{text_patches.get('patcher_version', version)}"
         assert isinstance(patcher_version, str)
 
         _add_patcher_version(file_manager, language.value, patcher_version)
