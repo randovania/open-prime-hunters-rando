@@ -102,6 +102,5 @@ local_partial_types = true
 # dependencies we DO control should use `type: ignore[import-untyped]`
 module = [
     "construct.*",
-    "ndspy.*",
 ]
 ignore_missing_imports = true
