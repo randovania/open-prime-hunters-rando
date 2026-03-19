@@ -104,7 +104,7 @@ jobs:
 
       - name: Export
         run:
-          uv run open_prime_hunters_rando --input-path "$PRIME_HUNTERS_PATH" --output-path export/ --input-json tests/test_files/starter_preset_patcher.json
+          uv run python -m open_prime_hunters_rando --input-path "$PRIME_HUNTERS_PATH" --output-path export/ --input-json tests/test_files/starter_preset_patcher.json
 
   mypy:
     runs-on: 'ubuntu-latest'
