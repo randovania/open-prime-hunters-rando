@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - '*'
+      - main
     tags:
       - '*'
 
@@ -20,30 +20,27 @@ jobs:
           fetch-depth: 0
           submodules: 'recursive'
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.10.2"
+          enable-cache: true
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.10"
-     
-      - name: Install Python packages
-        run: python -m pip install --upgrade pip setuptools build
+          python-version: "3.12"
 
-      - name: build wheel
-        run: python -m build --wheel
+      - name: build
+        run: uv build
 
-      - name: build sdist
-        run: python -m build --sdist
-      
       - name: Store the packages
         uses: actions/upload-artifact@v7
         with:
           name: python-package-distributions
           path: dist
   
-  test:
-    needs:
-      - build
-      
+  test:      
     runs-on: ubuntu-latest
     name: Test Python ${{ matrix.python.version }}
     strategy:
@@ -55,27 +52,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.10.2"
+          enable-cache: true
 
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python.version }}
-
-      - name: Download all the dists
-        uses: actions/download-artifact@v8
-        with:
-          name: python-package-distributions
-          path: dist/
             
-      - name: Install Python packages
-        run: python -m pip install --upgrade pip pytest pytest-cov
+      - name: install
+        run: uv sync --frozen --extra dev
 
-      - name: install built wheel
-        run: python -m pip install dist/*.whl
-        shell: bash
-
-      - name: test
-        run: python -m pytest --cov open_prime_hunters_rando --cov-report=xml tests
+      - name: run pytest
+        run: uv run pytest --cov open_prime_hunters_rando --cov-report=xml tests
 
       - name: codecov
         uses: codecov/codecov-action@v5
@@ -85,9 +81,33 @@ jobs:
           fail_ci_if_error: false
           files: ./coverage.xml
 
+  starter_preset_patcher:
+    runs-on: self-hosted
+    needs:
+      - build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.10.2"
+          enable-cache: true
+
+      - name: install
+        run: uv sync --frozen --extra dev
+
+      - name: Export
+        run:
+          uv run python -m open_prime_hunters_rando --input-path "$PRIME_HUNTERS_PATH" --output-path export/ --input-json tests/test_files/starter_preset_patcher.json
+
   mypy:
     runs-on: 'ubuntu-latest'
-
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -97,41 +117,33 @@ jobs:
       - name: Workaround for worktree config
         run: git config --unset-all extensions.worktreeConfig || true
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.10.2"
+          enable-cache: true
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-          cache: "pip"
 
       - name: Install Python packages
-        run: python -m pip install .[typing]
+        run: uv sync --frozen --extra dev
 
-      - name: Mypy on modified files
-        uses: tsuyoshicho/action-mypy@v5
-        with:
-          github_token: ${{ secrets.github_token }}
-          # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
-          reporter: github-check
-          setup_method: install
-          fail_on_error: false
-
-      - name: Mypy on required files
-        uses: tsuyoshicho/action-mypy@v5
-        with:
-          github_token: ${{ secrets.github_token }}
-          # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
-          reporter: github-check
-          setup_method: install
-          target: --config-file=pyproject.toml
-          fail_on_error: true
+      - name: Run Mypy
+        run: uv run mypy --install-types
 
   pypi:
     runs-on: 'ubuntu-latest'
     needs:
+      - build
       - test
+      - starter_preset_patcher
 
     permissions:
       id-token: write
+      contents: write
 
     steps:
       - name: Download all the dists
@@ -145,6 +157,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
+          attestations: false
 
       - name: Create GitHub release
         uses: svenstaro/upload-release-action@2.11.4

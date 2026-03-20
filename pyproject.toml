@@ -20,7 +20,8 @@ dependencies = [
     "construct>=2.10.70",
     "jsonschema>=4.0.0",
     "ndspy>=4.2.0",
-    "keystone-engine>=0.9.2"
+    "keystone-engine>=0.9.2",
+    "types-jsonschema>=4.26.0",
 ]
 dynamic = ["version"]
 
@@ -29,7 +30,7 @@ file = "README.md"
 content-type = "text/markdown"
 
 [project.urls]
-Homepage = "https://github.com/dyceron/open-prime-hunters-rando"
+Homepage = "https://github.com/randovania/open-prime-hunters-rando"
 
 # Entry Points for PyInstaller
 [project.entry-points.pyinstaller40]
@@ -72,15 +73,24 @@ extend-ignore = [
 max-complexity = 25
 
 [project.optional-dependencies]
-typing = [
+dev = [
     "types-jsonschema",
     "types-pyinstaller",
-    "mypy"
+    "types-setuptools",
+    "mypy",
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest-xdist",
 ]
 
 [tool.mypy]
 files = [
     "src/"
+]
+exclude = [
+    "tests/"
 ]
 follow_imports = "silent"
 disallow_untyped_defs = true
