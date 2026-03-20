@@ -36,12 +36,15 @@ ScanSpeedConstruct = EnumAdapter(ScanSpeed, Byte)
 class ScanCategory(enum.Enum):
     NONE = ""
     BIOFORM = "B"
+    BIOFORM2 = "b"
     EQUIPMENT = "E"
     LORE = "L"
     OBJECT = "O"
     OBJECT2 = "X"
     OBJECT3 = "o"
     SWITCH = "x"
+    JAPANESE_EXTRA = "\n"
+    ITALIAN_EXTRA = "A"
 
 
 ScanCategoryConstruct = EnumAdapter(ScanCategory, PaddedString(1, "utf-8"))
@@ -105,7 +108,8 @@ class StringTableAdapter(construct.Adapter):
             string = string_wrapper._raw
 
             size = len(string_wrapper.text)
-            string.header._string_length = size
+            if string.header._string_length > size:
+                size = string.header._string_length
             string.header._data_offset = offset
 
             offset += size + num_bytes_to_align(size)
