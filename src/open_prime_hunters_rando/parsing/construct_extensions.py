@@ -53,6 +53,8 @@ class ErrorWithMessage(Construct):
 #
 # Everything else (null terminator, alignment, pointer arithmetic) is handled
 # by the surrounding Aligned / Pointer constructs and is not touched here.
+#
+# This class was created by Claude.ai
 # ---------------------------------------------------------------------------
 
 
