@@ -9,7 +9,6 @@ from construct import (
     Array,
     Byte,
     Container,
-    CString,
     If,
     Int16ul,
     Int32ul,
@@ -20,7 +19,7 @@ from construct import (
     this,
 )
 
-from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
+from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter, ShortUtf8CString
 
 
 class ScanSpeed(enum.Enum):
@@ -59,7 +58,7 @@ StringEntryHeader = Struct(
 
 Strings = Struct(
     "header" / StringEntryHeader,
-    "text" / Pointer(this.header._data_offset, Aligned(4, CString("utf-8"), pattern=b"\xbb")),
+    "text" / Pointer(this.header._data_offset, Aligned(4, ShortUtf8CString(), pattern=b"\xbb")),
 )
 
 StringTableHeader = Struct(
@@ -136,6 +135,9 @@ class StringEntry:
             and self.text == other.text
         )
 
+    def __hash__(self) -> int:
+        return hash(self._raw)
+
     @property
     def string_id(self) -> str:
         return self._raw.header.string_id
@@ -195,6 +197,9 @@ class StringTable:
 
     def __eq__(self, value: Any) -> bool:
         return isinstance(value, StringTable) and self.strings == value.strings
+
+    def __hash__(self) -> int:
+        return hash(self._raw)
 
     @property
     def entries(self) -> int:
