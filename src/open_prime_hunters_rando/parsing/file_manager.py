@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from enum import Enum
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from construct import Container, ListContainer
 
 from open_prime_hunters_rando.logger import LOG
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
+from open_prime_hunters_rando.parsing.formats.metroidhunters_text import MetroidHuntersTextFile
 from open_prime_hunters_rando.parsing.formats.string_tables import StringTable
 from open_prime_hunters_rando.parsing.level_data import get_data
 
@@ -26,12 +27,16 @@ class Language(Enum):
     SPANISH = "stringTables_sp"
 
 
+type ExportedFormat = Literal["entity_files", "string_tables", "text_files"]
+
+
 class FileManager:
     def __init__(self, rom: NintendoDSRom, export_parsed_files: bool):
         self.rom = rom
         self.export_parsed_files = export_parsed_files
         self.entity_files: dict[str, EntityFile] = {}
         self.string_tables: dict[str, StringTable] = {}
+        self.metroidhunters_text_files: dict[str, MetroidHuntersTextFile] = {}
 
     def get_entity_file(self, area_name: str, room_name: str) -> EntityFile:
         level_data = get_data(area_name, room_name)
@@ -45,6 +50,12 @@ class FileManager:
         if file_name not in self.string_tables:
             self.string_tables[file_name] = StringTable.parse(self.rom.getFileByName(file_name))
         return self.string_tables[file_name]
+
+    def get_metroidhunters_text_file(self, text_file: MetroidHuntersTextFile) -> MetroidHuntersTextFile:
+        file_name = f"frontend/{text_file}.bin"
+        if file_name not in self.metroidhunters_text_files:
+            self.metroidhunters_text_files[file_name] = MetroidHuntersTextFile.parse(self.rom.getFileByName(file_name))
+        return self.metroidhunters_text_files[file_name]
 
     def finalize_parsed_files(self) -> None:
         for file_name, entity_file in self.entity_files.items():
@@ -61,6 +72,18 @@ class FileManager:
             if self.export_parsed_files:
                 self.export_string_table(file_name, string_table)
 
+        for file_name, metroidhunters_text_file in self.metroidhunters_text_files.items():
+            self.rom.setFileByName(file_name, metroidhunters_text_file.build())
+
+            # Export parsed metroidhunters text files
+            if self.export_parsed_files:
+                self.export_metroidhunters_text_file(file_name, metroidhunters_text_file)
+
+    def _set_export_path(self, format_to_be_exported: ExportedFormat, language: str = "") -> Path:
+        export_path = Path(__file__).parent.parent.joinpath("exported_files", f"{format_to_be_exported}" + language)
+        export_path.mkdir(parents=True, exist_ok=True)
+        return export_path
+
     def export_entity_file(self, file_name: str, entity_file: EntityFile) -> None:
         to_export = Container(
             {
@@ -69,9 +92,7 @@ class FileManager:
             }
         )
 
-        export_path = Path(__file__).parent.parent.joinpath("exported_files", "entity_files")
-        export_path.mkdir(parents=True, exist_ok=True)
-        with Path.open(export_path / f"{file_name[16:-4]}.txt", "w") as f:
+        with Path.open(self._set_export_path("entity_files") / f"{file_name[16:-4]}.txt", "w") as f:
             f.write(str(to_export))
 
     def export_string_table(self, file_name: str, string_table: StringTable) -> None:
@@ -83,9 +104,19 @@ class FileManager:
         )
 
         language, string_table_file = file_name.split("/")
-        export_path = Path(__file__).parent.parent.joinpath("exported_files", f"string_tables/{language}")
-        export_path.mkdir(parents=True, exist_ok=True)
-        with Path.open(export_path / f"{string_table_file[:-4]}.txt", "w") as f:
+        with Path.open(
+            self._set_export_path("string_tables", f"/{language}") / f"{string_table_file[:-4]}.txt", "w"
+        ) as f:
+            f.write(str(to_export))
+
+    def export_metroidhunters_text_file(self, file_name: str, metroidhunters_text_file: MetroidHuntersTextFile) -> None:
+        to_export = Container(
+            {
+                "strings": ListContainer([e._raw for e in metroidhunters_text_file.strings]),
+            }
+        )
+
+        with Path.open(self._set_export_path("text_files") / f"{file_name[9:-4]}.txt", "w") as f:
             f.write(str(to_export))
 
     def save_to_rom(self, output_path: Path) -> None:
