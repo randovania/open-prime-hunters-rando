@@ -92,7 +92,7 @@ class FileManager:
             }
         )
 
-        with Path.open(self._set_export_path("entity_files") / f"{file_name[16:-4]}.txt", "w") as f:
+        with Path.open(self._set_export_path("entity_files") / f"{file_name[16:-4]}.txt", "w", encoding="utf-8") as f:
             f.write(str(to_export))
 
     def export_string_table(self, file_name: str, string_table: StringTable) -> None:
@@ -105,7 +105,7 @@ class FileManager:
 
         language, string_table_file = file_name.split("/")
         with Path.open(
-            self._set_export_path("string_tables", f"/{language}") / f"{string_table_file[:-4]}.txt", "w"
+            self._set_export_path("string_tables", f"/{language}") / f"{string_table_file[:-4]}.txt", "w", encoding="utf-8"
         ) as f:
             f.write(str(to_export))
 
@@ -116,7 +116,7 @@ class FileManager:
             }
         )
 
-        with Path.open(self._set_export_path("text_files") / f"{file_name[9:-4]}.txt", "w") as f:
+        with Path.open(self._set_export_path("text_files") / f"{file_name[9:-4]}.txt", "w", encoding="utf-8") as f:
             f.write(str(to_export))
 
     def save_to_rom(self, output_path: Path) -> None:
