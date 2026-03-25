@@ -2,7 +2,6 @@ from enum import Enum
 
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.metroidhunters_text import MetroidHuntersTextFile
-from open_prime_hunters_rando.version import version
 
 
 class MetroidHuntersTextFiles(Enum):
@@ -21,12 +20,10 @@ def patch_text_files(file_manager: FileManager, text_patches: dict) -> None:
         if language == MetroidHuntersTextFiles.JAPANESE:
             continue
 
-        patcher_version = "Open Prime Hunters Randomizer\nv" + f"{text_patches.get('patcher_version', version)}"
-        assert isinstance(patcher_version, str)
-
-        _add_patcher_version(file_manager, language.value, patcher_version)
+        _add_patcher_version(file_manager, language.value)
 
 
-def _add_patcher_version(file_manager: FileManager, text_file: MetroidHuntersTextFile, patcher_version: str) -> None:
+def _add_patcher_version(file_manager: FileManager, text_file: MetroidHuntersTextFile) -> None:
+    patcher_version = "Open Prime Hunters Randomizer\nv" + text_patches.get("patcher_version", "Development Version")
     file_select_screen = file_manager.get_metroidhunters_text_file(text_file)
     file_select_screen.get_string(6792).text = patcher_version
