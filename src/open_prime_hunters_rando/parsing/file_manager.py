@@ -71,7 +71,7 @@ class FileManager:
 
         export_path = Path(__file__).parent.parent.joinpath("exported_files", "entity_files")
         export_path.mkdir(parents=True, exist_ok=True)
-        with Path.open(export_path / f"{file_name[16:-4]}.txt", "w") as f:
+        with Path.open(export_path / f"{file_name[16:-4]}.txt", "w", encoding="utf-8") as f:
             f.write(str(to_export))
 
     def export_string_table(self, file_name: str, string_table: StringTable) -> None:
@@ -85,7 +85,7 @@ class FileManager:
         language, string_table_file = file_name.split("/")
         export_path = Path(__file__).parent.parent.joinpath("exported_files", f"string_tables/{language}")
         export_path.mkdir(parents=True, exist_ok=True)
-        with Path.open(export_path / f"{string_table_file[:-4]}.txt", "w") as f:
+        with Path.open(export_path / f"{string_table_file[:-4]}.txt", "w", encoding="utf-8") as f:
             f.write(str(to_export))
 
     def save_to_rom(self, output_path: Path) -> None:

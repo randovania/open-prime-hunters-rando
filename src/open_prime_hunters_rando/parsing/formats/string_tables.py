@@ -9,7 +9,6 @@ from construct import (
     Array,
     Byte,
     Container,
-    CString,
     If,
     Int16ul,
     Int32ul,
@@ -20,7 +19,7 @@ from construct import (
     this,
 )
 
-from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
+from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter, ShortUtf8CString
 
 
 class ScanSpeed(enum.Enum):
@@ -36,12 +35,15 @@ ScanSpeedConstruct = EnumAdapter(ScanSpeed, Byte)
 class ScanCategory(enum.Enum):
     NONE = ""
     BIOFORM = "B"
+    BIOFORM2 = "b"
     EQUIPMENT = "E"
     LORE = "L"
     OBJECT = "O"
     OBJECT2 = "X"
     OBJECT3 = "o"
     SWITCH = "x"
+    JAPANESE_EXTRA = "\n"
+    ITALIAN_EXTRA = "A"
 
 
 ScanCategoryConstruct = EnumAdapter(ScanCategory, PaddedString(1, "utf-8"))
@@ -56,7 +58,7 @@ StringEntryHeader = Struct(
 
 Strings = Struct(
     "header" / StringEntryHeader,
-    "text" / Pointer(this.header._data_offset, Aligned(4, CString("utf-8"), pattern=b"\xbb")),
+    "text" / Pointer(this.header._data_offset, Aligned(4, ShortUtf8CString(), pattern=b"\xbb")),
 )
 
 StringTableHeader = Struct(
@@ -105,7 +107,8 @@ class StringTableAdapter(construct.Adapter):
             string = string_wrapper._raw
 
             size = len(string_wrapper.text)
-            string.header._string_length = size
+            if string.header._string_length > size:
+                size = string.header._string_length
             string.header._data_offset = offset
 
             offset += size + num_bytes_to_align(size)
@@ -131,6 +134,9 @@ class StringEntry:
             and self.scan_category == other.scan_category
             and self.text == other.text
         )
+
+    def __hash__(self) -> int:
+        return hash(self._raw)
 
     @property
     def string_id(self) -> str:
@@ -191,6 +197,9 @@ class StringTable:
 
     def __eq__(self, value: Any) -> bool:
         return isinstance(value, StringTable) and self.strings == value.strings
+
+    def __hash__(self) -> int:
+        return hash(self._raw)
 
     @property
     def entries(self) -> int:
