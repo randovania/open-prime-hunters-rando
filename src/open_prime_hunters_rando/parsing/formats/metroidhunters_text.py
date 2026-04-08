@@ -16,7 +16,7 @@ from construct import (
     this,
 )
 
-from open_prime_hunters_rando.parsing.common_tupes import num_bytes_to_align
+from open_prime_hunters_rando.parsing.common_types import num_bytes_to_align
 from open_prime_hunters_rando.parsing.construct_extensions import ShortUtf8CString
 
 StringEntryHeader = Struct(
