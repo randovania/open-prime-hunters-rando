@@ -19,6 +19,7 @@ from construct import (
     this,
 )
 
+from open_prime_hunters_rando.parsing.common_types import num_bytes_to_align
 from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter, ShortUtf8CString
 
 
@@ -70,14 +71,6 @@ StringTableConstruct = Struct(
     "header" / StringTableHeader,
     "strings" / Array(this.header.entries, Strings),
 )
-
-
-def num_bytes_to_align(length: int, modulus: int = 4) -> int:
-    alignment = length % modulus
-    if 0 < alignment < 4:
-        return modulus - alignment
-    else:
-        return modulus
 
 
 class StringTableAdapter(construct.Adapter):

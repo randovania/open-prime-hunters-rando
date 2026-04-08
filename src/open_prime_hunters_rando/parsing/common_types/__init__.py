@@ -29,3 +29,10 @@ DecodedString = construct.PaddedString(16, "ascii")
 MessageConstruct = EnumAdapter(Message, construct.Int32ul)
 ItemTypeConstruct = EnumAdapter(ItemType, construct.Int32sl)
 PaletteIdConstruct = EnumAdapter(PaletteId, construct.Int32ul)
+
+def num_bytes_to_align(length: int, modulus: int = 4) -> int:
+    alignment = length % modulus
+    if 0 < alignment < 4:
+        return modulus - alignment
+    else:
+        return modulus
