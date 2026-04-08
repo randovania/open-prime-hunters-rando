@@ -16,6 +16,7 @@ from construct import (
     this,
 )
 
+from open_prime_hunters_rando.parsing.common_tupes import num_bytes_to_align
 from open_prime_hunters_rando.parsing.construct_extensions import ShortUtf8CString
 
 StringEntryHeader = Struct(
@@ -29,14 +30,6 @@ StringEntryHeader = Struct(
 TextFileConstruct = Struct(
     "strings" / RepeatUntil(lambda string, lst, ctx: string.data_offset == 0, StringEntryHeader),
 )
-
-
-def num_bytes_to_align(length: int, modulus: int = 4) -> int:
-    alignment = length % modulus
-    if 0 < alignment < 4:
-        return modulus - alignment
-    else:
-        return modulus
 
 
 class MetroidHuntersTextFileAdapter(construct.Adapter):
