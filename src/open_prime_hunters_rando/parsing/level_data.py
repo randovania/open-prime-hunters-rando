@@ -147,7 +147,7 @@ ALINOS: dict[str, LevelData] = {
         room_id=40,
         area_name="Alinos",
         entity_file="unit1_rm3_Ent",
-        portal_filename="unit1_rm3_Ent",
+        portal_filename="unit1_RM3_Ent",
     ),
     "Processor Core": LevelData(
         room_id=41,
@@ -342,7 +342,7 @@ VESPER_DEFENSE_OUTPOST: dict[str, LevelData] = {
         room_id=74,
         area_name="Vesper Defense Outpost",
         entity_file="Unit3_RM3_Ent",
-        portal_filename="Unit3_RM3_Ent",
+        portal_filename="unit3_RM3_Ent",
     ),
     "Stronghold Void B": LevelData(
         room_id=75,
