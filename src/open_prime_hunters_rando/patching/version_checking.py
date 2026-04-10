@@ -38,7 +38,8 @@ def get_rom_save_data_addresses(rom: NintendoDSRom) -> SaveStoryAddresses:
             return SaveStoryAddresses(0x0)
         case Revision.AMHP.value:
             return SaveStoryAddresses(0x8C0)
-        case Revision.AMHJ.value:
-            return SaveStoryAddresses(0x1CF0)
+        # TODO: Support Japanese version
+        # case Revision.AMHJ.value:
+        # return SaveStoryAddresses(0x1CF0)
         case _:
             raise ValueError(f"Unsupported ROM detected. Detected {id_code!r}!")
