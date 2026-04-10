@@ -6,12 +6,12 @@ OVERLAY_MODIFICATIONS: dict[int, list[dict[str, int]]] = {
     2: [
         {
             # Assign new Nothing scan entry to Nothing item (Cloak) in the item_scan_id table
-            "offset": 0x01E26A,
+            "offset": 0x01E20A,
             "value": 0x1DA,
         },
         {
             # Assign the Missile Launcher scan entry to Affinity Weapon in the item_scan_id table
-            "offset": 0x01E272,
+            "offset": 0x01E212,
             "value": 0x5,
         },
     ]
