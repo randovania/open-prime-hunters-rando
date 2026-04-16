@@ -1,5 +1,3 @@
-b       =0x022E8000     // jump to unused space
-
 /*
 Register values at the start of the snippet
 R0: 21 (id value of Affinity Weapon)
