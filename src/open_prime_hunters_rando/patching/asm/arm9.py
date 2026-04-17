@@ -1,17 +1,7 @@
-from pathlib import Path
-
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.patching.asm import generate_arm_add_bytes
+from open_prime_hunters_rando.patching.asm import NOP, generate_arm_add_bytes, read_bytes_from_file
 from open_prime_hunters_rando.patching.version_checking import get_rom_save_data_addresses
-
-asm_patches = Path(__file__).parent.parent.parent.joinpath("files", "asm_patches")
-
-NOP = bytes.fromhex("00F020E3")
-
-
-def _read_bytes_from_file(asm_patch: bytes) -> bytes:
-    return Path(asm_patches / asm_patch).read_bytes()
 
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
@@ -32,17 +22,17 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
 
     # Missile Launcher (Direct, searching for original #50 / 0x32 20)
     missile_launcher_instructions = generate_arm_add_bytes(ammo_sizes["missile_launcher"])
-    custom_missile_launcher = _read_bytes_from_file("missile_launcher.bin")
+    custom_missile_launcher = read_bytes_from_file("missile_launcher.bin")
     custom_missile_launcher = custom_missile_launcher.replace(b"\x32\x20\x82\xe2", missile_launcher_instructions)
 
     # Missile Expansion (x10, searching for placeholder #0xFF / 0xFF 20)
     missile_expansion_instructions = generate_arm_add_bytes(ammo_sizes["missile_expansion"], multiply=True)
-    missiles_per_expansion = _read_bytes_from_file("ammo_per_expansion.bin")
+    missiles_per_expansion = read_bytes_from_file("ammo_per_expansion.bin")
     missiles_per_expansion = missiles_per_expansion.replace(b"\xff\x20\x82\xe2", missile_expansion_instructions)
 
     # UA Expansion (x10, searching for placeholder #0xFF / 0xFF 20)
     ua_expansion_instructions = generate_arm_add_bytes(ammo_sizes["ua_expansion"], multiply=True)
-    ammo_per_expansion = _read_bytes_from_file("ammo_per_expansion.bin")
+    ammo_per_expansion = read_bytes_from_file("ammo_per_expansion.bin")
     ammo_per_expansion = ammo_per_expansion.replace(b"\xff\x20\x82\xe2", ua_expansion_instructions)
 
     ARM9_PATCHES: dict[int, bytes] = {
@@ -54,13 +44,13 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
         addresses.starting_ammo: bytes.fromhex(starting_ammo),  # Starting Universal Ammo
         addresses.starting_energy: NOP,  # Normally loads value of etank (100)
         addresses.starting_missiles: (starting_items["missiles"] * 10).to_bytes(),  # Starting Missiles
-        addresses.reordered_instructions: _read_bytes_from_file(
+        addresses.reordered_instructions: read_bytes_from_file(
             "reordered_instructions.bin"
         ),  # Changing R0 affects later instructions, so reorder
         addresses.unlock_planets: _unlock_planets(game_patches["unlock_planets"]),  # Unlock planets from start
         addresses.starting_energy_ptr: starting_energy,  # Starting energy - 1
         addresses.missile_launcher: custom_missile_launcher,  # Load instructions to create a custom Missile Launcher
-        addresses.nothing: _read_bytes_from_file("nothing.bin"),  # Add Nothing item
+        addresses.nothing: read_bytes_from_file("nothing.bin"),  # Add Nothing item
     }
 
     # Decompress arm9.bin for editing
