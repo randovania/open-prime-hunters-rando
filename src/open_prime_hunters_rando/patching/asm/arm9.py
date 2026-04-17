@@ -23,7 +23,7 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     # Missile Launcher (Direct, searching for original #50 / 0x32 20)
     missile_launcher_instructions = generate_arm_add_bytes(ammo_sizes["missile_launcher"])
     custom_missile_launcher = read_bytes_from_file("missile_launcher.bin")
-    custom_missile_launcher = custom_missile_launcher.replace(b"\x32\x20\x82\xe2", missile_launcher_instructions)
+    custom_missile_launcher = custom_missile_launcher.replace(b"\x05\x20\x82\xe2", missile_launcher_instructions)
 
     # Missile Expansion (x10, searching for placeholder #0xFF / 0xFF 20)
     missile_expansion_instructions = generate_arm_add_bytes(ammo_sizes["missile_expansion"], multiply=True)

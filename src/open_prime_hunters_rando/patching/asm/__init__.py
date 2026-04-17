@@ -6,7 +6,7 @@ asm_patches = Path(__file__).parent.parent.parent.joinpath("files", "asm_patches
 NOP = bytes.fromhex("00F020E3")
 
 
-def read_bytes_from_file(asm_patch: bytes) -> bytes:
+def read_bytes_from_file(asm_patch: str) -> bytes:
     return Path(asm_patches / asm_patch).read_bytes()
 
 
@@ -30,4 +30,4 @@ def generate_arm_add_bytes(in_game_val: int, multiply: bool = False) -> bytes:
     # Rounds to the nearest multiple of 4
     val_rounded: int = (val // 4) * 4
     imm8: int = val_rounded // 4
-    return struct.pack("<B", imm8) + b"\xf2\x82\xe2"
+    return struct.pack("<B", imm8) + b"\x2f\x82\xe2"

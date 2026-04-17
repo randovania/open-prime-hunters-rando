@@ -4,6 +4,7 @@
         "weapons": "00000101",
         "missiles": 0
     },
+    "ammo_sizes": {"missile_launcher": 40},
     "string_tables": {
         "scan_log": {
             "904L": "ALINOS OCTOLITHS\\OCTOLITH 1 is guarded by CRETAPHID V4. OCTOLITH 2 is guarded by SLENCH 3."
@@ -324,7 +325,7 @@
                         {
                             "entity_id": 13,
                             "entity_type": 4,
-                            "item_type": 10
+                            "item_type": 21
                         }
                     ],
                     "force_fields": [],
