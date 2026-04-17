@@ -1,8 +1,8 @@
-import struct
 from pathlib import Path
 
 from ndspy.rom import NintendoDSRom
 
+from open_prime_hunters_rando.patching.asm import generate_arm_add_bytes
 from open_prime_hunters_rando.patching.version_checking import get_rom_save_data_addresses
 
 asm_patches = Path(__file__).parent.parent.parent.joinpath("files", "asm_patches")
@@ -30,17 +30,24 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
 
     starting_ammo = str(hex(starting_items["ammo"] * 10))[2:-1]
 
-    custom_missile_launcher = _read_bytes_from_file("missile_launcher.bin").replace(
-        b"\x32\x20", struct.pack("<H", ammo_sizes["missile_launcher"])
-    )
+    # Missile Launcher (Direct, searching for original #50 / 0x32 20)
+    missile_launcher_instructions = generate_arm_add_bytes(ammo_sizes["missile_launcher"])
+    custom_missile_launcher = _read_bytes_from_file("missile_launcher.bin")
+    custom_missile_launcher = custom_missile_launcher.replace(b"\x32\x20\x82\xe2", missile_launcher_instructions)
+
+    # Missile Expansion (x10, searching for placeholder #0xFF / 0xFF 20)
+    missile_expansion_instructions = generate_arm_add_bytes(ammo_sizes["missile_expansion"], multiply=True)
+    missiles_per_expansion = _read_bytes_from_file("ammo_per_expansion.bin")
+    missiles_per_expansion = missiles_per_expansion.replace(b"\xff\x20\x82\xe2", missile_expansion_instructions)
+
+    # UA Expansion (x10, searching for placeholder #0xFF / 0xFF 20)
+    ua_expansion_instructions = generate_arm_add_bytes(ammo_sizes["ua_expansion"], multiply=True)
+    ammo_per_expansion = _read_bytes_from_file("ammo_per_expansion.bin")
+    ammo_per_expansion = ammo_per_expansion.replace(b"\xff\x20\x82\xe2", ua_expansion_instructions)
 
     ARM9_PATCHES: dict[int, bytes] = {
-        addresses.missiles_per_expansion: _read_bytes_from_file("ammo_per_expansion.bin").replace(
-            b"\xff\x20", struct.pack("<H", ammo_sizes["missile_expansion"] * 10)
-        ),  # Missiles per expansion
-        addresses.ammo_per_expansion: _read_bytes_from_file("ammo_per_expansion.bin").replace(
-            b"\xff\x20", struct.pack("<H", ammo_sizes["ua_expansion"] * 10)
-        ),  # UA per expansion
+        addresses.missiles_per_expansion: missiles_per_expansion,  # Missiles per expansion
+        addresses.ammo_per_expansion: ammo_per_expansion,  # UA per expansion
         addresses.starting_octoliths: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths (0-8)
         addresses.starting_weapons: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
         addresses.weapon_slots: NOP,  # Prevents deleting the weapons when changing Octoliths
