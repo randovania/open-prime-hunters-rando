@@ -1,6 +1,10 @@
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.patching.asm import NOP, generate_arm_add_bytes, read_bytes_from_file
+from open_prime_hunters_rando.patching.asm import (
+    NOP,
+    read_bytes_from_file,
+    replace_bytes_from_binary,
+)
 from open_prime_hunters_rando.patching.version_checking import get_rom_save_data_addresses
 
 
@@ -20,20 +24,20 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
 
     starting_ammo = str(hex(starting_items["ammo"] * 10))[2:-1]
 
-    # Missile Launcher (Direct, searching for original #50 / 0x32 20)
-    missile_launcher_instructions = generate_arm_add_bytes(ammo_sizes["missile_launcher"])
-    custom_missile_launcher = read_bytes_from_file("missile_launcher.bin")
-    custom_missile_launcher = custom_missile_launcher.replace(b"\x05\x20\x82\xe2", missile_launcher_instructions)
+    # Missile Launcher (Direct, searching for original #0x05 / 0x05 20)
+    custom_missile_launcher = replace_bytes_from_binary(
+        "missile_launcher.bin", ammo_sizes["missile_launcher"], False, b"\x05\x20\x82\xe2"
+    )
 
     # Missile Expansion (x10, searching for placeholder #0xFF / 0xFF 20)
-    missile_expansion_instructions = generate_arm_add_bytes(ammo_sizes["missile_expansion"], multiply=True)
-    missiles_per_expansion = read_bytes_from_file("ammo_per_expansion.bin")
-    missiles_per_expansion = missiles_per_expansion.replace(b"\xff\x20\x82\xe2", missile_expansion_instructions)
+    missiles_per_expansion = replace_bytes_from_binary(
+        "ammo_per_expansion.bin", ammo_sizes["missile_expansion"], True, b"\xff\x20\x82\xe2"
+    )
 
     # UA Expansion (x10, searching for placeholder #0xFF / 0xFF 20)
-    ua_expansion_instructions = generate_arm_add_bytes(ammo_sizes["ua_expansion"], multiply=True)
-    ammo_per_expansion = read_bytes_from_file("ammo_per_expansion.bin")
-    ammo_per_expansion = ammo_per_expansion.replace(b"\xff\x20\x82\xe2", ua_expansion_instructions)
+    ammo_per_expansion = replace_bytes_from_binary(
+        "ammo_per_expansion.bin", ammo_sizes["ua_expansion"], True, b"\xff\x20\x82\xe2"
+    )
 
     ARM9_PATCHES: dict[int, bytes] = {
         addresses.missiles_per_expansion: missiles_per_expansion,  # Missiles per expansion

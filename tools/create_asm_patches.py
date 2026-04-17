@@ -1,3 +1,10 @@
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#   "keystone-engine>=0.9.2",
+# ]
+# ///
+
 from pathlib import Path
 
 import keystone  # type: ignore[import-untyped]
