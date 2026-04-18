@@ -34,8 +34,15 @@ def _generate_arm_add_bytes(in_game_val: int, multiply: bool) -> bytes:
 
 
 def replace_bytes_from_binary(binary_file: str, value: int, multiply: bool, bytes_to_replace: bytes) -> bytes:
-    new_instructions = _generate_arm_add_bytes(value, multiply)
+    """
+    Reads bytes from a binary file, creates a new instruction, and replaces specified bytes with the new instruction.
+    param binary_file: The binary file to be read.
+    param value: An integer that is used to create a new instruction.
+    param multiply: Multiplies the value by 10 if True. Some parts of the code require this multiplication.
+    param bytes_to_replace: The bytes to be replaced by the new instruction.
+    """
     bytes_from_binary = read_bytes_from_file(binary_file)
+    new_instructions = _generate_arm_add_bytes(value, multiply)
     modified_bytes = bytes_from_binary.replace(bytes_to_replace, new_instructions)
 
     return modified_bytes
