@@ -2,8 +2,9 @@ from ndspy.rom import NintendoDSRom
 
 from open_prime_hunters_rando.patching.asm import (
     NOP,
+    patch_ammo_per_expansion,
+    patch_missile_launcher,
     read_bytes_from_file,
-    replace_bytes_from_binary,
 )
 from open_prime_hunters_rando.patching.version_checking import get_rom_save_data_addresses
 
@@ -25,19 +26,13 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     starting_ammo = str(hex(starting_items["ammo"] * 10))[2:-1]
 
     # Missile Launcher (Direct, searching for original #0x05 / 0x05 20)
-    custom_missile_launcher = replace_bytes_from_binary(
-        "missile_launcher.bin", ammo_sizes["missile_launcher"], False, b"\x05\x20\x82\xe2"
-    )
+    custom_missile_launcher = patch_missile_launcher(ammo_sizes["missile_launcher"])
 
     # Missile Expansion (x10, searching for placeholder #0xFF / 0xFF 20)
-    missiles_per_expansion = replace_bytes_from_binary(
-        "ammo_per_expansion.bin", ammo_sizes["missile_expansion"], True, b"\xff\x20\x82\xe2"
-    )
+    missiles_per_expansion = patch_ammo_per_expansion(ammo_sizes["missile_expansion"])
 
     # UA Expansion (x10, searching for placeholder #0xFF / 0xFF 20)
-    ammo_per_expansion = replace_bytes_from_binary(
-        "ammo_per_expansion.bin", ammo_sizes["ua_expansion"], True, b"\xff\x20\x82\xe2"
-    )
+    ammo_per_expansion = patch_ammo_per_expansion(ammo_sizes["ua_expansion"])
 
     ARM9_PATCHES: dict[int, bytes] = {
         addresses.missiles_per_expansion: missiles_per_expansion,  # Missiles per expansion
