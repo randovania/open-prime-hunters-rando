@@ -76,13 +76,14 @@
                 "missile_expansion": {
                     "type": "integer",
                     "default": 10,
-                    "maximum": 400
+                    "maximum": 102,
+                    "multipleOf": 2
                 },
                 "ua_expansion": {
                     "type": "integer",
                     "default": 30,
-                    "maximum": 100,
-                    "multipleOf": 10
+                    "maximum": 102,
+                    "multipleOf": 2
                 }
             },
             "default": {}
