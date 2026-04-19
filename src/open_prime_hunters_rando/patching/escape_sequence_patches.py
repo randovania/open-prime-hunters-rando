@@ -93,13 +93,6 @@ def _patch_specific_rooms(file_manager: FileManager) -> None:
         for layer in range(1, 3):
             entity.layer_state[layer] = False
 
-    # Alinos Perch
-    entity_file = file_manager.get_entity_file("Alinos", "Alinos Perch")
-
-    second_pass_door = entity_file.get_entity(5, Entity)
-    second_pass_door.layer_state[1] = False
-    second_pass_door.layer_state[2] = False
-
     # Data Shrine 01
     entity_file = file_manager.get_entity_file("Celestial Archives", "Data Shrine 01")
 
@@ -161,8 +154,7 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
     ROOMS_TO_PATCH: dict[str, dict[str, list[int]]] = {
         "Alinos": {
             "Alinos Gateway": [],
-            "Alinos Perch": [],
-            "Council Chamber": [],
+            "Council Chamber": [35, 37],  # First pass Guardians
             "Crash Site": [],
             "Echo Hall": [],
             "Elder Passage": [39],  # Spire top force field
