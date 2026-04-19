@@ -22,10 +22,6 @@ def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
     ammo_sizes = configuration.get("ammo_sizes", {})
 
     for language in Language:
-        # FIXME: Japanese has parsing issues
-        if language == Language.JAPANESE:
-            continue
-
         _patch_hints(file_manager, language, string_tables.get("scan_log", {}))
         _patch_ammo(file_manager, language, ammo_sizes)
         _add_game_messages_strings(file_manager, language, ammo_sizes["missile_launcher"])

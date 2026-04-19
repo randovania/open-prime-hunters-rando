@@ -16,9 +16,7 @@ def language(request):
 
 @pytest.fixture(scope="module", params=all_string_tables)
 def string_table(rom, request, language):
-    # FIXME: Remove once Japanese can be correctly parsed
-    if language != "stringTables_jp":
-        return rom.getFileByName(f"{language}/{request.param}.bin")
+    return rom.getFileByName(f"{language}/{request.param}.bin")
 
 
 def test_compare_string_table(string_table):

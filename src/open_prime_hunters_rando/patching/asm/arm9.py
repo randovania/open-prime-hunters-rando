@@ -6,11 +6,11 @@ from open_prime_hunters_rando.patching.asm import (
     patch_missile_launcher,
     read_bytes_from_file,
 )
-from open_prime_hunters_rando.patching.version_checking import get_rom_save_data_addresses
+from open_prime_hunters_rando.patching.version_checking import RomData
 
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
-    addresses = get_rom_save_data_addresses(rom)
+    addresses = RomData(rom).get_story_save_addresses()
 
     starting_items = configuration["starting_items"]
     game_patches = configuration["game_patches"]

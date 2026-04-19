@@ -55,7 +55,8 @@ class MetroidHuntersTextFileAdapter(construct.Adapter):
         # update sizes and offsets
         encoded.strings = ListContainer()
 
-        data_offset = 2916
+        # Rev0 and Rev1 have different starting data offsets, so just read the first value
+        data_offset = strings[0].data_offset
         _string_offset = 11652
 
         for string_wrapper in strings:
@@ -79,8 +80,8 @@ class MetroidHuntersTextFileAdapter(construct.Adapter):
             Container(
                 {
                     "data_offset": 0,
-                    "_string_offset": ListContainer([2916, 2928]),
-                    "_string_length": ListContainer([2940, 0]),
+                    "_string_offset": ListContainer([data_offset, data_offset + 4]),
+                    "_string_length": ListContainer([data_offset + 8, 0]),
                     "text": "T'",
                 }
             )
