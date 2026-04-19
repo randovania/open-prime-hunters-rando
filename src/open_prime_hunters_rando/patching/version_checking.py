@@ -65,6 +65,8 @@ class RomData:
                 revision_offset = 0x0
             case (IdCode.AMHE, Revision.REV1):
                 revision_offset = 0x814
+            case (IdCode.AMHP, Revision.REV0):
+                revision_offset = 0x874
             case (IdCode.AMHP, Revision.REV1):
                 revision_offset = 0x8C0
             # case (IdCode.AMHJ, Revision.REV0):
