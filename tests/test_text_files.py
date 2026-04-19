@@ -5,6 +5,7 @@ from open_prime_hunters_rando.parsing.formats.metroidhunters_text import Metroid
 all_text_files = [
     "metroidhunters_text_de",
     "metroidhunters_text_en",
+    # "metroidhunters_text_en-gb"
     "metroidhunters_text_es",
     "metroidhunters_text_fr",
     "metroidhunters_text_it",

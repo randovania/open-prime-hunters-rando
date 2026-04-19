@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from ndspy.rom import NintendoDSRom
 
     from open_prime_hunters_rando.patching.string_tables_patches import StringTables
+    from open_prime_hunters_rando.patching.text_patches import MetroidHuntersTextFiles
 
 
 class Language(Enum):
@@ -23,7 +24,7 @@ class Language(Enum):
     FRENCH = "stringTables_fr"
     GERMAN = "stringTables_gr"
     ITALIAN = "stringTables_it"
-    JAPANESE = "stringTables_jp"
+    # JAPANESE = "stringTables_jp"
     SPANISH = "stringTables_sp"
 
 
@@ -51,8 +52,8 @@ class FileManager:
             self.string_tables[file_name] = StringTable.parse(self.rom.getFileByName(file_name))
         return self.string_tables[file_name]
 
-    def get_metroidhunters_text_file(self, text_file: MetroidHuntersTextFile) -> MetroidHuntersTextFile:
-        file_name = f"frontend/{text_file}.bin"
+    def get_metroidhunters_text_file(self, text_file: MetroidHuntersTextFiles) -> MetroidHuntersTextFile:
+        file_name = f"frontend/{text_file.value}.bin"
         if file_name not in self.metroidhunters_text_files:
             self.metroidhunters_text_files[file_name] = MetroidHuntersTextFile.parse(self.rom.getFileByName(file_name))
         return self.metroidhunters_text_files[file_name]

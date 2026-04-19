@@ -50,10 +50,7 @@ class RomData:
 
     @property
     def id_code(self) -> IdCode:
-        try:
-            return IdCode(self._id_code)
-        except ValueError:
-            return self._id_code
+        return IdCode(self._id_code)
 
     @property
     def version(self) -> Revision:
