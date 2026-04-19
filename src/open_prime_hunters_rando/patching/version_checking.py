@@ -49,40 +49,32 @@ class RomData:
         self._version = rom.version
 
     @property
-    def id_code(self) -> bytes:
-        return self._id_code
+    def id_code(self) -> IdCode:
+        try:
+            return IdCode(self._id_code)
+        except ValueError:
+            return self._id_code
 
     @property
-    def version(self) -> int:
-        return self._version
-
-    def _get_revision_offsets(self) -> list[int]:
-        save_story_offset: int
-        overlay_offset: int
-
-        # Get the offsets
-        match self.id_code:
-            case IdCode.AMHE.value:
-                if self.version == Revision.REV0:
-                    save_story_offset = 0x0
-                    overlay_offset = 0x0
-                else:
-                    save_story_offset = 0x814
-                    overlay_offset = 0x60
-            case IdCode.AMHP.value:
-                if self.version == Revision.REV1:
-                    save_story_offset = 0x8C0
-            # case IdCode.AMHJ.value:
-            #     if revision == Revision.REV0:
-            #         save_story_offset = 0x1CF0
-            case _:
-                raise ValueError(f"Unsupported ROM detected. Detected {self.id_code.decode()} Rev {self.version}!")
-        return [save_story_offset, overlay_offset]
+    def version(self) -> Revision:
+        return Revision(self._version)
 
     def get_story_save_addresses(self) -> StorySaveAddresses:
-        offsets, _ = self._get_revision_offsets()
-        return StorySaveAddresses(offsets)
+        match (self.id_code, self.version):
+            case (IdCode.AMHE, Revision.REV0):
+                revision_offset = 0x0
+            case (IdCode.AMHE, Revision.REV1):
+                revision_offset = 0x814
+            case (IdCode.AMHP, Revision.REV1):
+                revision_offset = 0x8C0
+            # case (IdCode.AMHJ, Revision.REV0):
+            #     revision_offset = 0x1CF0
+            case _:
+                raise ValueError(f"Unsupported ROM detected. Detected {self.id_code} Rev{self.version.value}!")
+        return StorySaveAddresses(revision_offset)
 
     def get_overlay_offsets(self) -> OverlayOffsets:
-        _, offsets = self._get_revision_offsets()
-        return OverlayOffsets(offsets)
+        revision_offset: int = 0x0
+        if self.version == Revision.REV1:
+            revision_offset = 0x60
+        return OverlayOffsets(revision_offset)
