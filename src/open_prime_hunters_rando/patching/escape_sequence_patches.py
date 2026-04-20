@@ -100,6 +100,16 @@ def _patch_specific_rooms(file_manager: FileManager) -> None:
     second_pass_door.layer_state[1] = False
     second_pass_door.layer_state[2] = False
 
+    # Stasis Bunker
+    entity_file = file_manager.get_entity_file("Vesper Defense Outpost", "Stasis Bunker")
+
+    item_spawns = [4, 5, 21, 24, 79, 90]
+    for item_spawn in item_spawns:
+        # FIXME: This is an ugly workaround to fix the post-boss layer softlock
+        entity = entity_file.get_entity(item_spawn, Entity)
+        entity.layer_state[1] = True
+        entity.layer_state[2] = True
+
     # Frost Labyrinth
     entity_file = file_manager.get_entity_file("Arcterra", "Frost Labyrinth")
 
@@ -179,7 +189,6 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
             "Compression Chamber": [],
             "Cortex CPU": [],
             "Fuel Stack": [],
-            "Stasis Bunker": [],
             "VDO Gateway": [],
             "Weapons Complex": [],
         },
