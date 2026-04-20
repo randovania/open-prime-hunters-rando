@@ -26,6 +26,7 @@ def static_patches(file_manager: FileManager) -> None:
     _lock_fault_line_magmaul_door(file_manager)
     _fix_incubation_vault_03_portal_spawn(file_manager)
     _disable_helm_room_scan_door_cutscenes(file_manager)
+    _disable_sic_transit_door_locking(file_manager)
 
 
 def _disable_boss_force_fields(file_manager: FileManager) -> None:
@@ -133,3 +134,18 @@ def _disable_helm_room_scan_door_cutscenes(file_manager: FileManager) -> None:
     # Trigger activates the cutscene showing the door
     trigger = entity_file.get_entity(17, TriggerVolume)
     trigger.active = False
+
+
+def _disable_sic_transit_door_locking(file_manager: FileManager) -> None:
+    entity_file = file_manager.get_entity_file("Arcterra", "Sic Transit")
+
+    # Trigger that locks the doors until the Artifact is collected
+    trigger_volume = entity_file.get_entity(20, TriggerVolume)
+    trigger_volume.layer_state[0] = False
+
+    # Remove the unlocking messages from the Artifact
+    artifact = entity_file.get_entity(35, Artifact)
+    artifact.message1_target = -1
+    artifact.message1 = Message.NONE
+    artifact.message2_target = -1
+    artifact.message2 = Message.NONE

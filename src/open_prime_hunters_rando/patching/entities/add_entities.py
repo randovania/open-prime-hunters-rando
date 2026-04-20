@@ -39,13 +39,6 @@ new_triggers = [
     ),
     NewTrigger(
         "Arcterra",
-        "Sic Transit",
-        [0, 1, 2],
-        35,
-        [(6, Message.UNLOCK), (9, Message.UNLOCK)],
-    ),
-    NewTrigger(
-        "Arcterra",
         "Subterranean",
         [0, 1, 2],
         18,
