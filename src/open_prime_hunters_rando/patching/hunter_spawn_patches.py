@@ -1,7 +1,5 @@
 import random
 
-from construct import Container
-
 from open_prime_hunters_rando.logger import LOG
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
@@ -77,6 +75,8 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
                 if not isinstance(entity.enemy_fields, Hunter):
                     continue
 
+                hunter_data = entity.enemy_fields
+
                 if shuffle_hunter_ids:
                     # Have "Spire" spawns in High Ground and Elder Passage match
                     if room_name == "High Ground" and entity.entity_id in [21, 60]:
@@ -100,18 +100,20 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
                         # If enabled, generate a new hunter id (1-7) and modify the entity
                         new_hunter_id = HunterType(random.choice(list(range(1, 8))))
 
-                    hunter_data = entity.enemy_fields
                     # Only modify the hunter fields if the hunter id is different
                     if hunter_data.hunter_id != new_hunter_id:
                         _patch_hunter_ids(hunter_data, new_hunter_id)
                         _patch_encounter_types(entity_file, encounter_type_entities)
 
+                # If enabled, change the hunter spawns to use a random color by hunter type (0-5)
                 if shuffle_hunter_colors:
-                    # If enabled, change the hunter spawns to use a random color by hunter type (0-5)
-                    entity.enemy_fields.hunter_color = _HUNTERS_TO_COLOR.get(entity.enemy_fields.hunter_id, 0)
+                    # FIXME: Guardians crash the game if they use a different color, so skip for now
+                    if hunter_data.hunter_id in (HunterType.GUARDIAN, HunterType.RANDOM):
+                        continue
+                    hunter_data.hunter_color = _HUNTERS_TO_COLOR[HunterType(hunter_data.hunter_id)]
 
 
-def _patch_hunter_ids(hunter_data: Container, new_hunter_id: HunterType) -> None:
+def _patch_hunter_ids(hunter_data: Hunter, new_hunter_id: HunterType) -> None:
     # Set the new hunter id
     hunter_data.hunter_id = new_hunter_id
     if new_hunter_id == HunterType.GUARDIAN:
