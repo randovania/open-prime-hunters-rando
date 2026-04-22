@@ -141,8 +141,10 @@
         "text_patches": {
             "type": "object",
             "description": "Modify the text of an entry in a frontend text file.",
-            "additionalProperties": {
-                "type": "string"
+            "patternProperties": {
+                ".*": {
+                    "type": "string"
+                }
             }
         },
         "default": {}
