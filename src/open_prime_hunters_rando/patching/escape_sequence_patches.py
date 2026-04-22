@@ -1,7 +1,5 @@
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
 
 
 def patch_escape_sequences(file_manager: FileManager) -> None:
@@ -32,7 +30,7 @@ def _disable_escape_triggers(file_manager: FileManager) -> None:
 
 
 def _remove_disabled_portals(file_manager: FileManager) -> None:
-    disabled_portal_entities = {
+    disabled_portal_entities: dict[str, dict[str, list[int]]] = {
         "Alinos": {
             "Elder Passage": [21, 24],
             "Council Chamber": [54, 57],
@@ -59,123 +57,66 @@ def _remove_disabled_portals(file_manager: FileManager) -> None:
 
 
 def _patch_specific_rooms(file_manager: FileManager) -> None:
-    # High Ground
-    entity_file = file_manager.get_entity_file("Alinos", "High Ground")
+    # Patch layer states per room (IDs, Entity Type, Layers, Value)
+    specific_room_patches: dict[str, dict[str, list[tuple[list[int], list[int], bool]]]] = {
+        "Alinos": {
+            "Elder Passage": [
+                ([11, 18], [1, 2], False),  # Second Pass Doors
+            ],
+            "High Ground": [
+                ([15], [3], True),  # First Pass Bottom Door
+                ([56, 72], [1, 2, 3], False),  # Second Pass Bottom Doors
+                ([74, 77], [3], True),  # Force Fields
+                ([57, 58], [3], True),  # Portals
+                ([85, 95], [1], True),  # Hunter Spawns
+            ],
+        },
+        "Celestial Archives": {
+            "Data Shrine 01": [
+                ([37], [1, 2], False),  # Second Pass Door
+            ],
+        },
+        "Vesper Defense Outpost": {
+            # FIXME: This is an ugly workaround to fix the post-boss layer softlock
+            "Stasis Bunker": [
+                ([4, 5], [1, 2], True),  # Artifacts
+                ([21, 79, 90], [1, 2], True),  # Artifact Keys and Item Spawn
+            ],
+        },
+        "Arcterra": {
+            "Arcterra Gateway": [
+                ([36], [1, 2], True),  # Landing Camera
+                ([5, 39], [1], True),  # Teleporter Triggers
+            ],
+            "Fault Line": [
+                ([13], [1, 2], False),  # Knocked Down Pillar
+            ],
+            "Frost Labyrinth": [
+                ([5], [0], False),  # Force Field
+            ],
+            "Ice Hive": [
+                ([65], [1, 2], False),  # Entrance Jump Pad
+            ],
+            "Sic Transit": [
+                ([11], [1, 2], False),  # Second Pass Inner Door
+                ([24], [1, 2], True),  # First Pass Inner Door
+                ([35], [1, 2], True),  # Artifact
+            ],
+        },
+    }
 
-    first_pass_bottom_door = entity_file.get_entity(15, Entity)
-    first_pass_bottom_door.layer_state[3] = True
-
-    second_pass_bottom_doors = [56, 72]
-    for door in second_pass_bottom_doors:
-        entity = entity_file.get_entity(door, Entity)
-        for layer in range(1, 4):
-            entity.layer_state[layer] = False
-
-    force_fields = [74, 77]
-    for force_field_id in force_fields:
-        entity = entity_file.get_entity(force_field_id, Entity)
-        entity.layer_state[3] = True
-
-    portals = [57, 58]
-    for portal in portals:
-        entity = entity_file.get_entity(portal, Entity)
-        entity.layer_state[3] = True
-
-    hunters = [85, 95]
-    for hunter in hunters:
-        entity = entity_file.get_entity(hunter, Entity)
-        entity.layer_state[1] = True
-
-    # Elder Passage
-    entity_file = file_manager.get_entity_file("Alinos", "Elder Passage")
-
-    second_pass_doors = [11, 18]
-    for door in second_pass_doors:
-        entity = entity_file.get_entity(door, Entity)
-        for layer in range(1, 3):
-            entity.layer_state[layer] = False
-
-    # Data Shrine 01
-    entity_file = file_manager.get_entity_file("Celestial Archives", "Data Shrine 01")
-
-    second_pass_door = entity_file.get_entity(37, Entity)
-    second_pass_door.layer_state[1] = False
-    second_pass_door.layer_state[2] = False
-
-    # Weapons Complex
-    entity_file = file_manager.get_entity_file("Vesper Defense Outpost", "Weapons Complex")
-
-    # FIXME: Figure out how to keep the Sylux encounter on the post-boss layer without softlocking
-    artifact_key = entity_file.get_entity(38, ItemSpawn)
-    artifact_key.enabled = True
-
-    wc_force_fields = [34, 36]
-    for id in wc_force_fields:
-        wc_force_field = entity_file.get_entity(id, ForceField)
-        wc_force_field.active = False
-
-    # Stasis Bunker
-    entity_file = file_manager.get_entity_file("Vesper Defense Outpost", "Stasis Bunker")
-
-    item_spawns = [4, 5, 21, 79, 90]
-    for item_spawn in item_spawns:
-        # FIXME: This is an ugly workaround to fix the post-boss layer softlock
-        entity = entity_file.get_entity(item_spawn, Entity)
-        entity.layer_state[1] = True
-        entity.layer_state[2] = True
-
-    # Frost Labyrinth
-    entity_file = file_manager.get_entity_file("Arcterra", "Frost Labyrinth")
-
-    force_field = entity_file.get_entity(5, Entity)
-    force_field.layer_state[0] = False
-
-    # Arcterra Gateway
-    entity_file = file_manager.get_entity_file("Arcterra", "Arcterra Gateway")
-
-    # Landing camera
-    camera_sequence = entity_file.get_entity(36, Entity)
-    camera_sequence.layer_state[1] = True
-    camera_sequence.layer_state[2] = True
-
-    # Teleporter triggers
-    trigger_volumes = [5, 39]
-    for trigger_volume in trigger_volumes:
-        entity = entity_file.get_entity(trigger_volume, Entity)
-        entity.layer_state[1] = True
-
-    # Ice Hive
-    entity_file = file_manager.get_entity_file("Arcterra", "Ice Hive")
-
-    entrance_jump_pad = entity_file.get_entity(65, Entity)
-    entrance_jump_pad.layer_state[1] = False
-    entrance_jump_pad.layer_state[2] = False
-
-    # Sic Transit
-    entity_file = file_manager.get_entity_file("Arcterra", "Sic Transit")
-
-    first_pass_inner_door = entity_file.get_entity(24, Entity)
-    first_pass_inner_door.layer_state[1] = True
-    first_pass_inner_door.layer_state[2] = True
-
-    second_pass_inner_door = entity_file.get_entity(11, Entity)
-    second_pass_inner_door.layer_state[1] = False
-    second_pass_inner_door.layer_state[2] = False
-
-    artifact = entity_file.get_entity(35, Entity)
-    artifact.layer_state[1] = True
-    artifact.layer_state[2] = True
-
-    # Fault Line
-    entity_file = file_manager.get_entity_file("Arcterra", "Fault Line")
-
-    knocked_down_pillar = entity_file.get_entity(13, Entity)
-    knocked_down_pillar.layer_state[1] = False
-    knocked_down_pillar.layer_state[2] = False
+    for area_name, room_names in specific_room_patches.items():
+        for room_name, list_of_entities in room_names.items():
+            entity_file = file_manager.get_entity_file(area_name, room_name)
+            for entity_ids, layers, state in list_of_entities:
+                for entity_id in entity_ids:
+                    for layer in layers:
+                        entity = entity_file.get_entity(entity_id, Entity)
+                        entity.layer_state[layer] = state
 
 
 def _patch_both_escape_layers(file_manager: FileManager) -> None:
-    ROOMS_TO_PATCH: dict[str, dict[str, list[int]]] = {
+    room_to_patch: dict[str, dict[str, list[int]]] = {
         "Alinos": {
             "Alinos Gateway": [],
             "Council Chamber": [35, 37],  # First pass Guardians
@@ -204,7 +145,8 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
             "Cortex CPU": [],
             "Fuel Stack": [],
             "VDO Gateway": [],
-            "Weapons Complex": [18, 22, 59, 84, 90],  # Sylux Encounter
+            # FIXME: Figure out how to keep the Sylux encounter on the post-boss layer without softlocking
+            "Weapons Complex": [18, 22, 50, 59, 84, 90],  # Sylux Encounter
         },
         "Arcterra": {
             "Drip Moat": [],
@@ -215,7 +157,7 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
             "Subterranean": [],
         },
     }
-    for area_name, room_names in ROOMS_TO_PATCH.items():
+    for area_name, room_names in room_to_patch.items():
         for room_name, skipped_entities in room_names.items():
             entity_file = file_manager.get_entity_file(area_name, room_name)
             for entity in entity_file.entities:
