@@ -1,5 +1,7 @@
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
 
 
 def patch_escape_sequences(file_manager: FileManager) -> None:
@@ -100,6 +102,18 @@ def _patch_specific_rooms(file_manager: FileManager) -> None:
     second_pass_door.layer_state[1] = False
     second_pass_door.layer_state[2] = False
 
+    # Weapons Complex
+    entity_file = file_manager.get_entity_file("Vesper Defense Outpost", "Weapons Complex")
+
+    # FIXME: Figure out how to keep the Sylux encounter on the post-boss layer without softlocking
+    artifact_key = entity_file.get_entity(38, ItemSpawn)
+    artifact_key.enabled = True
+
+    wc_force_fields = [34, 36]
+    for id in wc_force_fields:
+        wc_force_field = entity_file.get_entity(id, ForceField)
+        wc_force_field.active = False
+
     # Stasis Bunker
     entity_file = file_manager.get_entity_file("Vesper Defense Outpost", "Stasis Bunker")
 
@@ -190,7 +204,7 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
             "Cortex CPU": [],
             "Fuel Stack": [],
             "VDO Gateway": [],
-            "Weapons Complex": [],
+            "Weapons Complex": [18, 22, 59, 84, 90],  # Sylux Encounter
         },
         "Arcterra": {
             "Drip Moat": [],
