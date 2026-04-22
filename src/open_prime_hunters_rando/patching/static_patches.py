@@ -26,6 +26,7 @@ def static_patches(file_manager: FileManager) -> None:
     _lock_fault_line_magmaul_door(file_manager)
     _fix_incubation_vault_03_portal_spawn(file_manager)
     _disable_helm_room_scan_door_cutscenes(file_manager)
+    _move_data_shrine_01_fight_trigger(file_manager)
 
 
 def _disable_boss_force_fields(file_manager: FileManager) -> None:
@@ -133,3 +134,17 @@ def _disable_helm_room_scan_door_cutscenes(file_manager: FileManager) -> None:
     # Trigger activates the cutscene showing the door
     trigger = entity_file.get_entity(17, TriggerVolume)
     trigger.active = False
+
+
+def _move_data_shrine_01_fight_trigger(file_manager: FileManager) -> None:
+    entity_file = file_manager.get_entity_file("Celestial Archives", "Data Shrine 01")
+
+    # Fight normally starts by scanning the Artifact Shield
+    artifact_shield = entity_file.get_entity(48, Object)
+    artifact_shield.scan_message_target = -1
+    artifact_shield.scan_message = Message.NONE
+
+    # Move the fight trigger to the scan below the Artifact Shield
+    lower_scan = entity_file.get_entity(52, Object)
+    lower_scan.scan_message_target = 43
+    lower_scan.scan_message = Message.TRIGGER
