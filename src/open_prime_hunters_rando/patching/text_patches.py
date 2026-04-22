@@ -31,10 +31,15 @@ def patch_text_files(file_manager: FileManager, text_patches: dict) -> None:
 
 
 def _add_patcher_version(rom_data: RomData, text_file: MetroidHuntersTextFile, text_patches: dict) -> None:
-    patcher_version = text_patches.get("patcher_version", "development version")
-    if patcher_version != "development version":
+    patcher_version = text_patches.get("patcher_version", "\ndevelopment version")
+    if patcher_version != "\ndevelopment version":
         patcher_version = f"v{patcher_version}"
 
-    menu_text = f"Open Prime Hunters Randomizer\n{patcher_version}"
+    menu_text = f"Open Prime Hunters Randomizer {patcher_version}\n"
+
+    seed_hash = text_patches.get("seed_hash", None)
+    if seed_hash is not None:
+        menu_text += seed_hash
+
     data_offset = 7944 if rom_data.version == Revision.REV0 else 6792
     text_file.get_string(data_offset).text = menu_text
