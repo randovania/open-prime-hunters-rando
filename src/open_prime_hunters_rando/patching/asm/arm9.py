@@ -4,6 +4,7 @@ from open_prime_hunters_rando.patching.asm import (
     NOP,
     patch_ammo_per_expansion,
     patch_missile_launcher,
+    patch_starting_missiles,
     read_bytes_from_file,
 )
 from open_prime_hunters_rando.patching.version_checking import RomData
@@ -34,6 +35,8 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     # UA Expansion (x10, searching for placeholder #0xFF / 0xFF 20)
     ammo_per_expansion = patch_ammo_per_expansion(ammo_sizes["ua_expansion"])
 
+    starting_missiles = patch_starting_missiles(starting_items["missiles"])
+
     ARM9_PATCHES: dict[int, bytes] = {
         addresses.missiles_per_expansion: missiles_per_expansion,  # Missiles per expansion
         addresses.ammo_per_expansion: ammo_per_expansion,  # UA per expansion
@@ -42,7 +45,7 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
         addresses.weapon_slots: NOP,  # Prevents deleting the weapons when changing Octoliths
         addresses.starting_ammo: bytes.fromhex(starting_ammo),  # Starting Universal Ammo
         addresses.starting_energy: NOP,  # Normally loads value of etank (100)
-        addresses.starting_missiles: (starting_items["missiles"] * 10).to_bytes(),  # Starting Missiles
+        addresses.starting_missiles: starting_missiles,  # Starting Missiles
         addresses.reordered_instructions: read_bytes_from_file(
             "reordered_instructions.bin"
         ),  # Changing R0 affects later instructions, so reorder
