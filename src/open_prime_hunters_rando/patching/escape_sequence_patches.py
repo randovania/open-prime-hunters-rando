@@ -5,7 +5,7 @@ from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 def patch_escape_sequences(file_manager: FileManager) -> None:
     _disable_escape_triggers(file_manager)
     _remove_disabled_portals(file_manager)
-    _patch_specific_rooms(file_manager)
+    _patch_specific_layer_states(file_manager)
     _patch_both_escape_layers(file_manager)
 
 
@@ -56,9 +56,9 @@ def _remove_disabled_portals(file_manager: FileManager) -> None:
                 entity.layer_state[1] = False
 
 
-def _patch_specific_rooms(file_manager: FileManager) -> None:
+def _patch_specific_layer_states(file_manager: FileManager) -> None:
     # Patch layer states per room (IDs, Entity Type, Layers, Value)
-    specific_room_patches: dict[str, dict[str, list[tuple[list[int], list[int], bool]]]] = {
+    patches_per_layer_state: dict[str, dict[str, list[tuple[list[int], list[int], bool]]]] = {
         "Alinos": {
             "Elder Passage": [
                 ([11, 18], [1, 2], False),  # Second Pass Doors
@@ -74,6 +74,9 @@ def _patch_specific_rooms(file_manager: FileManager) -> None:
         "Celestial Archives": {
             "Data Shrine 01": [
                 ([37], [1, 2], False),  # Second Pass Door
+            ],
+            "Incubation Vault 02": [
+                ([5, 11], [1, 2], False),  # 2nd pass Psycho Bit and Voldrum spawners
             ],
         },
         "Vesper Defense Outpost": {
@@ -105,7 +108,7 @@ def _patch_specific_rooms(file_manager: FileManager) -> None:
         },
     }
 
-    for area_name, room_names in specific_room_patches.items():
+    for area_name, room_names in patches_per_layer_state.items():
         for room_name, list_of_entities in room_names.items():
             entity_file = file_manager.get_entity_file(area_name, room_name)
             for entity_ids, layers, state in list_of_entities:
@@ -123,7 +126,7 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
             "Crash Site": [],
             "Echo Hall": [],
             "Elder Passage": [39],  # Spire top force field
-            "High Ground": [10, 33, 38, 39, 41],  # Slench 1 force fields
+            "High Ground": [33, 38, 39, 41],  # Slench 1 force fields
             "Piston Cave": [],
             "Processor Core": [],
         },
@@ -133,7 +136,7 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
             "Data Shrine 03": [],
             "Docking Bay": [],
             "Incubation Vault 01": [],
-            "Incubation Vault 02": [5, 11],  # 2nd pass Voldrum and Psycho Bit Spawners
+            "Incubation Vault 02": [],
             "New Arrival Registration": [],
             "Synergy Core": [],
             "Tetra Vista": [],
@@ -163,8 +166,7 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
             for entity in entity_file.entities:
                 # Disable entities in this list
                 if entity.entity_id in excluded_entities:
-                    entity.layer_state[1] = False
-                    entity.layer_state[2] = False
+                    continue
                 # Workaraound for Data Shrine 03 to prevent softlocking
                 if room_name == "Data Shrine 03":
                     entity.layer_state[0] = True
