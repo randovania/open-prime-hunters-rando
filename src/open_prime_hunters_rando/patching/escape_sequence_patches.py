@@ -133,7 +133,7 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
             "Data Shrine 03": [],
             "Docking Bay": [],
             "Incubation Vault 01": [],
-            "Incubation Vault 02": [],
+            "Incubation Vault 02": [5, 11],  # 2nd pass Voldrum and Psycho Bit Spawners
             "New Arrival Registration": [],
             "Synergy Core": [],
             "Tetra Vista": [],
@@ -158,12 +158,13 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
         },
     }
     for area_name, room_names in room_to_patch.items():
-        for room_name, skipped_entities in room_names.items():
+        for room_name, excluded_entities in room_names.items():
             entity_file = file_manager.get_entity_file(area_name, room_name)
             for entity in entity_file.entities:
-                # Skip modifying any entities in this list
-                if entity.entity_id in skipped_entities:
-                    continue
+                # Disable entities in this list
+                if entity.entity_id in excluded_entities:
+                    entity.layer_state[1] = False
+                    entity.layer_state[2] = False
                 # Workaraound for Data Shrine 03 to prevent softlocking
                 if room_name == "Data Shrine 03":
                     entity.layer_state[0] = True
