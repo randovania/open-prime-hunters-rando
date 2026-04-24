@@ -165,6 +165,8 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
                 if entity.entity_id in skipped_entities:
                     continue
                 # Ensure entities on layer 0 are loaded on layer 1 (during escape) and layer 2 (post escape)
-                elif entity.layer_state[0]:
+                if room_name in "Data Shrine 03":
+                    entity.layer_state[0] = True
+                if entity.layer_state[0]:
                     entity.layer_state[1] = True
                     entity.layer_state[2] = True
