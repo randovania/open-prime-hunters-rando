@@ -165,7 +165,7 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
                 if entity.entity_id in skipped_entities:
                     continue
                 # Workaraound for Data Shrine 03 to prevent softlocking
-                if room_name in "Data Shrine 03":
+                if room_name == "Data Shrine 03":
                     entity.layer_state[0] = True
                 # Ensure entities on layer 0 are loaded on layer 1 (during escape) and layer 2 (post escape)
                 if entity.layer_state[0]:
