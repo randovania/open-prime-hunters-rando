@@ -161,9 +161,10 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
         for room_name, excluded_entities in room_names.items():
             entity_file = file_manager.get_entity_file(area_name, room_name)
             for entity in entity_file.entities:
-                # Skip modifying any entities in this list
+                # Disable entities in this list
                 if entity.entity_id in excluded_entities:
-                    continue
+                    entity.layer_state[1] = False
+                    entity.layer_state[2] = False
                 # Workaraound for Data Shrine 03 to prevent softlocking
                 if room_name == "Data Shrine 03":
                     entity.layer_state[0] = True
