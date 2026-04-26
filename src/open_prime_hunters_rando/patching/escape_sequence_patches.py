@@ -105,6 +105,9 @@ def _patch_specific_layer_states(file_manager: FileManager) -> None:
                 ([24], [1, 2], True),  # First Pass Inner Door
                 ([35], [1, 2], True),  # Artifact
             ],
+            "Subterranean": [
+                ([44], [1, 2], False),  # Second Pass Elevator
+            ],
         },
     }
 
