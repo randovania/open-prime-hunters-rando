@@ -41,7 +41,7 @@ class GenerateArmBytes:
 
         return result
 
-    def add(self, destination_register: int, operand_register: int | None) -> bytes:
+    def add(self, destination_register: int, operand_register: int) -> bytes:
         """
         Generates a 4-byte ARM 'ADD Rd, Rn, #imm' instruction in Little Endian.
         Handles launcher (direct) and expansions (x10) up to a total of 1020.
