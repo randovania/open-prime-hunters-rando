@@ -1,6 +1,11 @@
 import pytest
 
-from open_prime_hunters_rando.patching.asm import patch_ammo_per_expansion, patch_missile_launcher, read_bytes_from_file
+from open_prime_hunters_rando.patching.asm import (
+    patch_ammo_per_expansion,
+    patch_missile_launcher,
+    patch_starting_missiles,
+    read_bytes_from_file,
+)
 
 
 def test_read_bytes():
@@ -34,4 +39,18 @@ def test_replace_missile_launcher_bytes():
 )
 def test_replace_ammo_expansion_bytes(value, expected_bytes):
     new_bytes = patch_ammo_per_expansion(value)
+    assert new_bytes == expected_bytes
+
+
+@pytest.mark.parametrize(
+    ("value", "expected_bytes"),
+    [
+        (10, b"d\x80\xa0\xe3"),
+        (20, b"\xc8\x80\xa0\xe3"),
+        (60, b"\x96\x8f\xa0\xe3"),
+        (102, b"\xff\x8f\xa0\xe3"),
+    ],
+)
+def test_replace_starting_missiles_bytes(value, expected_bytes):
+    new_bytes = patch_starting_missiles(value)
     assert new_bytes == expected_bytes

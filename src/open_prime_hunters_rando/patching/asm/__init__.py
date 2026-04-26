@@ -26,12 +26,12 @@ class GenerateArmBytes:
         # 0-255: Standard rotation (ie, 0x20)
         if value <= 255:
             result = struct.pack("<B", value)
-
-        # 256-1020: ARM rotation 30 (ie, 0x2F)
-        # Rounds to the nearest multiple of 4
-        value_rounded = (value // 4) * 4
-        imm8 = value_rounded // 4
-        result = struct.pack("<B", imm8)
+        else:
+            # 256-1020: ARM rotation 30 (ie, 0x2F)
+            # Rounds to the nearest multiple of 4
+            value_rounded = (value // 4) * 4
+            imm8 = value_rounded // 4
+            result = struct.pack("<B", imm8)
 
         # Sets the instruction bytes given registers and an operand
         dr_value = f"{destination_register}0" if value <= 255 else f"{destination_register}F"
