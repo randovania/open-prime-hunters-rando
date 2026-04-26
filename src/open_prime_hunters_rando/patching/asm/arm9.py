@@ -4,6 +4,8 @@ from open_prime_hunters_rando.patching.asm import (
     NOP,
     patch_ammo_per_expansion,
     patch_missile_launcher,
+    patch_starting_ammo,
+    patch_starting_missiles,
     read_bytes_from_file,
 )
 from open_prime_hunters_rando.patching.version_checking import RomData
@@ -23,8 +25,6 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     tanks_to_energy = etanks * 100 if etanks > 0 else 100
     starting_energy = tanks_to_energy.to_bytes(4, "little")
 
-    starting_ammo = str(hex(starting_items["ammo"] * 10))[2:-1]
-
     # Missile Launcher (Direct, searching for original #0x05 / 0x05 20)
     custom_missile_launcher = patch_missile_launcher(ammo_sizes["missile_launcher"])
 
@@ -34,15 +34,21 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     # UA Expansion (x10, searching for placeholder #0xFF / 0xFF 20)
     ammo_per_expansion = patch_ammo_per_expansion(ammo_sizes["ua_expansion"])
 
+    # Starting UA Ammo (x10, searching for original #0x19C / 0x19C 2E)
+    starting_ammo = patch_starting_ammo(starting_items["ammo"])
+
+    # Starting Missiles (x10, searching for original #0x32 / 0x32 80)
+    starting_missiles = patch_starting_missiles(starting_items["missiles"])
+
     ARM9_PATCHES: dict[int, bytes] = {
         addresses.missiles_per_expansion: missiles_per_expansion,  # Missiles per expansion
         addresses.ammo_per_expansion: ammo_per_expansion,  # UA per expansion
         addresses.starting_octoliths: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths (0-8)
         addresses.starting_weapons: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
         addresses.weapon_slots: NOP,  # Prevents deleting the weapons when changing Octoliths
-        addresses.starting_ammo: bytes.fromhex(starting_ammo),  # Starting Universal Ammo
+        addresses.starting_ammo: starting_ammo,  # Starting Universal Ammo
         addresses.starting_energy: NOP,  # Normally loads value of etank (100)
-        addresses.starting_missiles: (starting_items["missiles"] * 10).to_bytes(),  # Starting Missiles
+        addresses.starting_missiles: starting_missiles,  # Starting Missiles
         addresses.reordered_instructions: read_bytes_from_file(
             "reordered_instructions.bin"
         ),  # Changing R0 affects later instructions, so reorder
