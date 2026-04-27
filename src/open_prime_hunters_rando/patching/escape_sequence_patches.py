@@ -64,7 +64,8 @@ def _patch_specific_layer_states(file_manager: FileManager) -> None:
                 ([11, 18], [1, 2], False),  # Second Pass Doors
             ],
             "High Ground": [
-                ([15], [3], True),  # First Pass Bottom Door
+                ([15], [3], True),  # 1st Pass Lower Elder Passage Door
+                ([18], [1, 2], False),  # 2nd Pass Elder Passage Moving Platform
                 ([56, 72], [1, 2, 3], False),  # Second Pass Bottom Doors
                 ([74, 77], [3], True),  # Force Fields
                 ([57, 58], [3], True),  # Portals
@@ -128,8 +129,8 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
             "Council Chamber": [35, 37],  # First pass Guardians
             "Crash Site": [],
             "Echo Hall": [],
-            "Elder Passage": [39],  # Spire top force field
-            "High Ground": [33, 38, 39, 41],  # Slench 1 force fields
+            "Elder Passage": [],
+            "High Ground": [21, 33, 38, 39, 41],  # Spire 1 Spawn and Slench 1 force fields
             "Piston Cave": [],
             "Processor Core": [],
         },
