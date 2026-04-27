@@ -19,35 +19,27 @@
                     "type": "integer",
                     "description": "The number of missiles to start with.",
                     "default": 5,
+                    "minimum": 0,
                     "maximum": 102,
-                    "oneOf": [
-                        {
-                            "description": "Any integer from 1 to 25",
-                            "maximum": 25
-                        },
-                        {
-                            "description": "Multiples of 2 from 26 to 400",
-                            "minimum": 26,
-                            "multipleOf": 2
-                        }
-                    ]
+                    "if": {
+                        "exclusiveMinimum": 25
+                    },
+                    "then": {
+                        "multipleOf": 2
+                    }
                 },
                 "ammo": {
                     "type": "integer",
                     "description": "The amount of UA to start with.",
                     "default": 40,
+                    "minimum": 0,
                     "maximum": 102,
-                    "oneOf": [
-                        {
-                            "description": "Any integer from 1 to 25",
-                            "maximum": 25
-                        },
-                        {
-                            "description": "Multiples of 2 from 26 to 400",
-                            "minimum": 26,
-                            "multipleOf": 2
-                        }
-                    ]
+                    "if": {
+                        "exclusiveMinimum": 25
+                    },
+                    "then": {
+                        "multipleOf": 2
+                    }
                 },
                 "energy_tanks": {
                     "type": "integer",
@@ -94,39 +86,32 @@
                 "missile_launcher": {
                     "type": "integer",
                     "default": 5,
+                    "minimum": 0,
                     "maximum": 255
                 },
                 "missile_expansion": {
                     "type": "integer",
                     "default": 10,
+                    "minimum": 0,
                     "maximum": 102,
-                    "oneOf": [
-                        {
-                            "description": "Any integer from 1 to 25",
-                            "maximum": 25
-                        },
-                        {
-                            "description": "Multiples of 2 from 26 to 400",
-                            "minimum": 26,
-                            "multipleOf": 2
-                        }
-                    ]
+                    "if": {
+                        "exclusiveMinimum": 25
+                    },
+                    "then": {
+                        "multipleOf": 2
+                    }
                 },
                 "ua_expansion": {
                     "type": "integer",
                     "default": 30,
+                    "minimum": 0,
                     "maximum": 102,
-                    "oneOf": [
-                        {
-                            "description": "Any integer from 1 to 25",
-                            "maximum": 25
-                        },
-                        {
-                            "description": "Multiples of 2 from 26 to 400",
-                            "minimum": 26,
-                            "multipleOf": 2
-                        }
-                    ]
+                    "if": {
+                        "exclusiveMinimum": 25
+                    },
+                    "then": {
+                        "multipleOf": 2
+                    }
                 }
             },
             "default": {}
