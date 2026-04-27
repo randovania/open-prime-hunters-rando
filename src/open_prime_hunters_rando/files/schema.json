@@ -20,14 +20,34 @@
                     "description": "The number of missiles to start with.",
                     "default": 5,
                     "maximum": 102,
-                    "multipleOf": 2
+                    "oneOf": [
+                        {
+                            "description": "Any integer from 1 to 25",
+                            "maximum": 25
+                        },
+                        {
+                            "description": "Multiples of 2 from 26 to 400",
+                            "minimum": 26,
+                            "multipleOf": 2
+                        }
+                    ]
                 },
                 "ammo": {
                     "type": "integer",
                     "description": "The amount of UA to start with.",
                     "default": 40,
                     "maximum": 102,
-                    "multipleOf": 2
+                    "oneOf": [
+                        {
+                            "description": "Any integer from 1 to 25",
+                            "maximum": 25
+                        },
+                        {
+                            "description": "Multiples of 2 from 26 to 400",
+                            "minimum": 26,
+                            "multipleOf": 2
+                        }
+                    ]
                 },
                 "energy_tanks": {
                     "type": "integer",
@@ -80,13 +100,33 @@
                     "type": "integer",
                     "default": 10,
                     "maximum": 102,
-                    "multipleOf": 2
+                    "oneOf": [
+                        {
+                            "description": "Any integer from 1 to 25",
+                            "maximum": 25
+                        },
+                        {
+                            "description": "Multiples of 2 from 26 to 400",
+                            "minimum": 26,
+                            "multipleOf": 2
+                        }
+                    ]
                 },
                 "ua_expansion": {
                     "type": "integer",
                     "default": 30,
                     "maximum": 102,
-                    "multipleOf": 2
+                    "oneOf": [
+                        {
+                            "description": "Any integer from 1 to 25",
+                            "maximum": 25
+                        },
+                        {
+                            "description": "Multiples of 2 from 26 to 400",
+                            "minimum": 26,
+                            "multipleOf": 2
+                        }
+                    ]
                 }
             },
             "default": {}
