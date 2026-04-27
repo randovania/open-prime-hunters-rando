@@ -74,7 +74,7 @@
                 "missile_launcher": {
                     "type": "integer",
                     "default": 5,
-                    "maximum": 400
+                    "maximum": 255
                 },
                 "missile_expansion": {
                     "type": "integer",
