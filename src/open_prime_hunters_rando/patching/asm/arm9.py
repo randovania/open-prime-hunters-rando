@@ -25,19 +25,11 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     tanks_to_energy = etanks * 100 if etanks > 0 else 100
     starting_energy = tanks_to_energy.to_bytes(4, "little")
 
-    # Missile Launcher (Direct, searching for original #0x05 / 0x05 20)
-    custom_missile_launcher = patch_missile_launcher(ammo_sizes["missile_launcher"])
-
-    # Missile Expansion (x10, searching for placeholder #0xFF / 0xFF 20)
+    # ASM patches for ammo
+    missile_launcher = patch_missile_launcher(ammo_sizes["missile_launcher"])
     missiles_per_expansion = patch_ammo_per_expansion(ammo_sizes["missile_expansion"])
-
-    # UA Expansion (x10, searching for placeholder #0xFF / 0xFF 20)
     ammo_per_expansion = patch_ammo_per_expansion(ammo_sizes["ua_expansion"])
-
-    # Starting UA Ammo (x10, searching for original #0x19C / 0x19C 2E)
     starting_ammo = patch_starting_ammo(starting_items["ammo"])
-
-    # Starting Missiles (x10, searching for original #0x32 / 0x32 80)
     starting_missiles = patch_starting_missiles(starting_items["missiles"])
 
     ARM9_PATCHES: dict[int, bytes] = {
@@ -54,7 +46,7 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
         ),  # Changing R0 affects later instructions, so reorder
         addresses.unlock_planets: _unlock_planets(game_patches["unlock_planets"]),  # Unlock planets from start
         addresses.starting_energy_ptr: starting_energy,  # Starting energy - 1
-        addresses.missile_launcher: custom_missile_launcher,  # Load instructions to create a custom Missile Launcher
+        addresses.missile_launcher: missile_launcher,  # Load instructions to create a custom Missile Launcher
         addresses.nothing: read_bytes_from_file("nothing.bin"),  # Add Nothing item
     }
 
