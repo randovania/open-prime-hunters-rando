@@ -11,7 +11,7 @@ def read_bytes_from_file(asm_patch: str) -> bytes:
 
 
 class GenerateArmBytes:
-    def __init__(self, in_game_value: int, multiply: bool) -> None:
+    def __init__(self, in_game_value: int, multiply: bool = True) -> None:
         self.in_game_value = in_game_value
         self.multiply = multiply
 
@@ -44,7 +44,6 @@ class GenerateArmBytes:
     def add(self, destination_register: int, operand_register: int) -> bytes:
         """
         Generates a 4-byte ARM 'ADD Rd, Rn, #imm' instruction in Little Endian.
-        Handles launcher (direct) and expansions (x10) up to a total of 1020.
         """
         # Set the instruction bytes
         instruction_bytes = self._set_instruction_bytes(destination_register, operand_register)
@@ -54,7 +53,6 @@ class GenerateArmBytes:
     def mov(self, destination_register: int) -> bytes:
         """
         Generates a 4-byte ARM 'MOV Rd, #imm' instruction in Little Endian.
-        Handles direct and x10 values up to a total of 1020.
         """
         # Set the instruction bytes
         instruction_bytes = self._set_instruction_bytes(destination_register, None)
@@ -64,15 +62,15 @@ class GenerateArmBytes:
 
 def patch_missile_launcher(ammo_value: int) -> bytes:
     binary = read_bytes_from_file("missile_launcher.bin")
-    new_instructions = GenerateArmBytes(ammo_value, False).add(2, 2)
-    modified_bytes = binary.replace(b"\x05\x20\x82\xe2", new_instructions)
+    new_instructions = GenerateArmBytes(ammo_value).add(2, 2)
+    modified_bytes = binary.replace(b"\x32\x20\x82\xe2", new_instructions)
 
     return modified_bytes
 
 
 def patch_ammo_per_expansion(ammo_value: int) -> bytes:
     binary = read_bytes_from_file("ammo_per_expansion.bin")
-    new_instructions = GenerateArmBytes(ammo_value, True).add(2, 2)
+    new_instructions = GenerateArmBytes(ammo_value).add(2, 2)
     modified_bytes = binary.replace(b"\xff\x20\x82\xe2", new_instructions)
 
     return modified_bytes
@@ -80,7 +78,7 @@ def patch_ammo_per_expansion(ammo_value: int) -> bytes:
 
 def patch_starting_missiles(ammo_value: int) -> bytes:
     binary = read_bytes_from_file("starting_ammo.bin")
-    new_instructions = GenerateArmBytes(ammo_value, True).mov(8)
+    new_instructions = GenerateArmBytes(ammo_value).mov(8)
     modified_bytes = binary.replace(b"\x32\x80\xa0\xe3", new_instructions)
 
     return modified_bytes
@@ -88,7 +86,7 @@ def patch_starting_missiles(ammo_value: int) -> bytes:
 
 def patch_starting_ammo(ammo_value: int) -> bytes:
     binary = read_bytes_from_file("starting_ammo.bin")
-    new_instructions = GenerateArmBytes(ammo_value, True).mov(2)
+    new_instructions = GenerateArmBytes(ammo_value).mov(2)
     modified_bytes = binary.replace(b"\x32\x80\xa0\xe3", new_instructions)
 
     return modified_bytes
