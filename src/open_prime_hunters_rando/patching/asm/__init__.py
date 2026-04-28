@@ -43,7 +43,7 @@ class GenerateArmBytes:
 
     def add(self, destination_register: int, operand_register: int) -> bytes:
         """
-        Generates a 4-byte ARM 'ADD Rd, Rn, #imm' instruction in Little Endian.
+        Generates a 4-byte ARM 'ADD Rd, Rn, #imm' instruction in Little Endian. Supports a max value of 1020.
         """
         # Set the instruction bytes
         instruction_bytes = self._set_instruction_bytes(destination_register, operand_register)
@@ -52,7 +52,7 @@ class GenerateArmBytes:
 
     def mov(self, destination_register: int) -> bytes:
         """
-        Generates a 4-byte ARM 'MOV Rd, #imm' instruction in Little Endian.
+        Generates a 4-byte ARM 'MOV Rd, #imm' instruction in Little Endian. Supports a max value of 1020.
         """
         # Set the instruction bytes
         instruction_bytes = self._set_instruction_bytes(destination_register, None)
