@@ -18,10 +18,14 @@ class Revision(Enum):
 class StorySaveAddresses:
     def __init__(self, revision_offset: int) -> None:
         # Addresses that are consistent across all revisions
+        self.init_enemy_hunter_spawns = 0x02015914
+        self.random_hunter_spawn_first_condition = 0x02015994
+        self.random_hunter_spawn_game_state = 0x02015AFC
         self.missile_launcher = 0x02019E94
         self.nothing = 0x0201A23C
         self.missiles_per_expansion = 0x0201A350
         self.ammo_per_expansion = 0x0201A3AC
+        self.door_locking_condition = 0x02053B3C
 
         # Addresses that are different across revisions (Using US 1.0 as a base)
         self.story_save_data_start = 0x0205BC96 + revision_offset

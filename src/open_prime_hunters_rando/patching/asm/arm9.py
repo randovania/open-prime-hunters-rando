@@ -48,6 +48,10 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
         addresses.starting_energy_ptr: starting_energy,  # Starting energy - 1
         addresses.missile_launcher: missile_launcher,  # Load instructions to create a custom Missile Launcher
         addresses.nothing: read_bytes_from_file("nothing.bin"),  # Add Nothing item
+        # Addresses below handle random hunter spawns and locking doors
+        addresses.random_hunter_spawn_first_condition: read_bytes_from_file("random_hunter_spawn_condition.bin"),
+        addresses.random_hunter_spawn_game_state: read_bytes_from_file("enemy_hunter_spawns.bin"),
+        addresses.door_locking_condition: read_bytes_from_file("door_locking_condition.bin"),
     }
 
     # Decompress arm9.bin for editing
