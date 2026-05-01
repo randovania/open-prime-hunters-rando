@@ -34,18 +34,15 @@ def main():
 
         # Search the text for a custom @ADDRESS tag, necessary for relative jumps/loads
         match = re.search(r"@ADDRESS:\s*(0x[0-9a-fA-F]+)", raw_text)
-        if match:
-            target_address = int(match.group(1), 16)
+        target_address = int(match.group(1), 16) if match else 0
 
-            try:
-                code = create_asm_patch(raw_text, target_address)
-                Path(asm_patches / asm_source.with_suffix(".bin").name).write_bytes(code)
-
-            except keystone.KsError as e:
-                print(f"Error assembling {asm_source.name}: {e}")
-
-        else:
+        try:
+            code = create_asm_patch(raw_text, target_address)
+            Path(asm_patches / asm_source.with_suffix(".bin").name).write_bytes(code)
             print(f"Warning: {asm_source.name} is missing an @ADDRESS tag.")
+
+        except keystone.KsError as e:
+            print(f"Error assembling {asm_source.name}: {e}")
 
 
 if __name__ == "__main__":
