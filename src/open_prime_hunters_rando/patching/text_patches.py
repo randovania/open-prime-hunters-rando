@@ -2,7 +2,7 @@ from enum import Enum
 
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.metroidhunters_text import MetroidHuntersTextFile
-from open_prime_hunters_rando.patching.version_checking import IdCode, Revision, RomData
+from open_prime_hunters_rando.patching.rom_data import IdCode, Revision, RomData
 
 
 class MetroidHuntersTextFiles(Enum):

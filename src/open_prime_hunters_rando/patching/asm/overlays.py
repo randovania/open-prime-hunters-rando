@@ -1,7 +1,7 @@
 import ndspy.code
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.patching.version_checking import RomData
+from open_prime_hunters_rando.patching.rom_data import RomData
 
 
 def patch_overlays(rom: NintendoDSRom) -> None:

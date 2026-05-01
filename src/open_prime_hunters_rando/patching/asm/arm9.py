@@ -8,7 +8,7 @@ from open_prime_hunters_rando.patching.asm import (
     patch_starting_missiles,
     read_bytes_from_file,
 )
-from open_prime_hunters_rando.patching.version_checking import RomData
+from open_prime_hunters_rando.patching.rom_data import RomData
 
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
