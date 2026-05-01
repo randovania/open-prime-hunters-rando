@@ -80,13 +80,6 @@ def _patch_specific_layer_states(file_manager: FileManager) -> None:
                 ([5, 11], [1, 2], False),  # 2nd pass Psycho Bit and Voldrum spawners
             ],
         },
-        "Vesper Defense Outpost": {
-            # FIXME: This is an ugly workaround to fix the post-boss layer softlock
-            "Stasis Bunker": [
-                ([4, 5], [1, 2], True),  # Artifacts
-                ([21, 79, 90], [1, 2], True),  # Artifact Keys and Item Spawn
-            ],
-        },
         "Arcterra": {
             "Arcterra Gateway": [
                 ([36], [1, 2], True),  # Landing Camera
@@ -126,11 +119,11 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
     room_to_patch: dict[str, dict[str, list[int]]] = {
         "Alinos": {
             "Alinos Gateway": [],
-            "Council Chamber": [35, 37],  # First pass Guardians
+            "Council Chamber": [],
             "Crash Site": [],
             "Echo Hall": [],
             "Elder Passage": [],
-            "High Ground": [21, 33, 38, 39, 41],  # Spire 1 Spawn and Slench 1 force fields
+            "High Ground": [33, 38, 39, 41],  # Slench 1 force fields
             "Piston Cave": [],
             "Processor Core": [],
         },
@@ -152,8 +145,8 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
             "Cortex CPU": [],
             "Fuel Stack": [],
             "VDO Gateway": [],
-            # FIXME: Figure out how to keep the Sylux encounter on the post-boss layer without softlocking
-            "Weapons Complex": [18, 22, 50, 59, 84, 90],  # Sylux Encounter
+            "Stasis Bunker": [],
+            "Weapons Complex": [],
         },
         "Arcterra": {
             "Drip Moat": [],
@@ -171,9 +164,6 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
                 # Disable entities in this list
                 if entity.entity_id in excluded_entities:
                     continue
-                # Workaraound for Data Shrine 03 to prevent softlocking
-                if room_name == "Data Shrine 03":
-                    entity.layer_state[0] = True
                 # Ensure entities on layer 0 are loaded on layer 1 (during escape) and layer 2 (post escape)
                 if entity.layer_state[0]:
                     entity.layer_state[1] = True
