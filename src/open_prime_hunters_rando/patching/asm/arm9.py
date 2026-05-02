@@ -1,7 +1,6 @@
 from ndspy.rom import NintendoDSRom
 
 from open_prime_hunters_rando.patching.asm import (
-    NOP,
     patch_ammo_per_expansion,
     patch_missile_launcher,
     patch_starting_ammo,
@@ -37,10 +36,14 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
         addresses.ammo_per_expansion: ammo_per_expansion,  # UA per expansion
         addresses.starting_octoliths: _bitfield_to_hex(starting_items["octoliths"]),  # Starting Octoliths (0-8)
         addresses.starting_weapons: _bitfield_to_hex(starting_items["weapons"]),  # Starting weapons
-        addresses.weapon_slots: NOP,  # Prevents deleting the weapons when changing Octoliths
+        # Overwrite weapon_slots to prevent deleting the weapons when
+        # changing Octoliths. Sets the amount of starting Missiles
+        addresses.old_weapon_slots: starting_missiles,
         addresses.starting_ammo: starting_ammo,  # Starting Universal Ammo
-        addresses.starting_energy: NOP,  # Normally loads value of etank (100)
-        addresses.starting_missiles: starting_missiles,  # Starting Missiles
+        addresses.old_starting_energy: read_bytes_from_file(
+            "starting_missiles.bin"
+        ),  # Normally loads value of etank (100). Now sets the starting missile ammo.
+        addresses.starting_missiles: starting_missiles,  # Sets the total capacity of starting Missiles
         addresses.reordered_instructions: read_bytes_from_file(
             "reordered_instructions.bin"
         ),  # Changing R0 affects later instructions, so reorder

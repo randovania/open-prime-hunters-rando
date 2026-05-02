@@ -79,7 +79,7 @@ def patch_ammo_per_expansion(ammo_value: int) -> bytes:
 def patch_starting_missiles(ammo_value: int) -> bytes:
     binary = read_bytes_from_file("starting_ammo.bin")
     new_instructions = GenerateArmBytes(ammo_value).mov(8)
-    modified_bytes = binary.replace(b"\x32\x80\xa0\xe3", new_instructions)
+    modified_bytes = binary.replace(b"2\x80\xa0\xe3", new_instructions)
 
     return modified_bytes
 
@@ -87,6 +87,6 @@ def patch_starting_missiles(ammo_value: int) -> bytes:
 def patch_starting_ammo(ammo_value: int) -> bytes:
     binary = read_bytes_from_file("starting_ammo.bin")
     new_instructions = GenerateArmBytes(ammo_value).mov(2)
-    modified_bytes = binary.replace(b"\x32\x80\xa0\xe3", new_instructions)
+    modified_bytes = binary.replace(b"2\x80\xa0\xe3", new_instructions)
 
     return modified_bytes
