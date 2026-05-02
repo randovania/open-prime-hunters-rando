@@ -77,7 +77,5 @@ class RomData:
         return StorySaveAddresses(revision_offset)
 
     def get_overlay_offsets(self) -> OverlayOffsets:
-        revision_offset: int = 0x0
-        if self.version == Revision.REV1:
-            revision_offset = 0x60
+        revision_offset = 0x60 if self.version == Revision.REV1 else 0x00
         return OverlayOffsets(revision_offset)
