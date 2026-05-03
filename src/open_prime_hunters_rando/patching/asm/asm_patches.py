@@ -7,7 +7,7 @@ class AsmPatches:
         self.starting_items = configuration["starting_items"]
         self.game_patches = configuration["game_patches"]
         self.ammo_sizes = configuration["ammo_sizes"]
-        self.validate = self.validate_starting_items()
+        self.validate_starting_items()
 
         # Starting Items
         self.starting_ammo = patch_starting_ammo(self.starting_items["ammo"])
