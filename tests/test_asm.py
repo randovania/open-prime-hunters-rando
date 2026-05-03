@@ -1,11 +1,11 @@
 import pytest
 
-from open_prime_hunters_rando.patching.asm import (
+from open_prime_hunters_rando.patching.asm import read_bytes_from_file
+from open_prime_hunters_rando.patching.asm.asm_patches import (
     patch_ammo_per_expansion,
     patch_missile_launcher,
     patch_starting_ammo,
     patch_starting_missiles,
-    read_bytes_from_file,
 )
 
 
