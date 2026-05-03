@@ -41,10 +41,12 @@
                         "multipleOf": 2
                     }
                 },
-                "energy_tanks": {
+                "energy": {
                     "type": "integer",
-                    "description": "The amount of energy tanks to start with.",
-                    "default": 0
+                    "description": "The amount of energy to start with.",
+                    "default": 1,
+                    "minimum": 1,
+                    "maximum": 1299
                 },
                 "octoliths": {
                     "type": "string",

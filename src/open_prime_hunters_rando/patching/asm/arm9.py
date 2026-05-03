@@ -21,6 +21,7 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
         addresses.old_starting_energy: read_bytes_from_file(
             "starting_missiles.bin"
         ),  # Normally loads value of etank (100). Now sets the starting missile ammo.
+        addresses.energy_cap: read_bytes_from_file("energy_cap.bin"),  # Starting energy - 1 is now just starting energy
         addresses.starting_missiles: patches.starting_missiles,  # Sets the total capacity of starting Missiles
         addresses.reordered_instructions: read_bytes_from_file(
             "reordered_instructions.bin"
