@@ -10,7 +10,7 @@ def read_bytes_from_file(asm_patch: str) -> bytes:
     return patch_files.joinpath(asm_patch).read_bytes()
 
 
-def bitfield_to_hex(bitfield: str | list) -> bytes:
+def bitfield_to_bytes(bitfield: str | list) -> bytes:
     if isinstance(bitfield, list):
         fmt = "{:d}" * 8
         bitfield = fmt.format(*bitfield)

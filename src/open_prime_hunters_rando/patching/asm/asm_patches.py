@@ -1,4 +1,4 @@
-from open_prime_hunters_rando.patching.asm import GenerateArmBytes, bitfield_to_hex, read_bytes_from_file
+from open_prime_hunters_rando.patching.asm import GenerateArmBytes, bitfield_to_bytes, read_bytes_from_file
 
 
 class AsmPatches:
@@ -13,8 +13,8 @@ class AsmPatches:
         self.starting_ammo = patch_starting_ammo(self.starting_items["ammo"])
         self.starting_energy = patch_starting_energy(self.starting_items["energy_tanks"])
         self.starting_missiles = patch_starting_missiles(self.starting_items["missiles"])
-        self.starting_octoliths = bitfield_to_hex(self.starting_items["octoliths"])
-        self.starting_weapons = bitfield_to_hex(self.starting_items["weapons"])
+        self.starting_octoliths = bitfield_to_bytes(self.starting_items["octoliths"])
+        self.starting_weapons = bitfield_to_bytes(self.starting_items["weapons"])
 
         # Ammo Sizes
         self.ammo_per_expansion = patch_ammo_per_expansion(self.ammo_sizes["ua_expansion"])
@@ -51,7 +51,7 @@ def unlock_planets(unlock_planets: dict) -> bytes:
         unlock_planets["Alinos"],  # Alinos 2
     ]
 
-    return bitfield_to_hex(planets)
+    return bitfield_to_bytes(planets)
 
 
 def patch_starting_energy(energy_tanks: int) -> bytes:
