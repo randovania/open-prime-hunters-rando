@@ -7,7 +7,7 @@ class AsmPatches:
         self.starting_items = configuration["starting_items"]
         self.game_patches = configuration["game_patches"]
         self.ammo_sizes = configuration["ammo_sizes"]
-        self.validate_starting_items()
+        self.validate_bitfields()
 
         # Starting Items
         self.starting_ammo = patch_starting_ammo(self.starting_items["ammo"])
@@ -24,7 +24,7 @@ class AsmPatches:
         # Game Patches
         self.unlock_planets = unlock_planets(self.game_patches["unlock_planets"])
 
-    def validate_starting_items(self) -> None:
+    def validate_bitfields(self) -> None:
         bitfields = ["weapons", "octoliths"]
         # Validate weapons and octoliths bitfields
         for bitfield in bitfields:
