@@ -1,13 +1,20 @@
 import struct
 from pathlib import Path
 
-asm_patches = Path(__file__).parent.parent.parent.joinpath("files", "asm_patches")
+patch_files = Path(__file__).parent.parent.parent.joinpath("files", "asm_patches")
 
 NOP = bytes.fromhex("00F020E3")
 
 
 def read_bytes_from_file(asm_patch: str) -> bytes:
-    return asm_patches.joinpath(asm_patch).read_bytes()
+    return patch_files.joinpath(asm_patch).read_bytes()
+
+
+def bitfield_to_bytes(bitfield: str | list) -> bytes:
+    if isinstance(bitfield, list):
+        fmt = "{:d}" * 8
+        bitfield = fmt.format(*bitfield)
+    return int(bitfield, 2).to_bytes()
 
 
 class GenerateArmBytes:
@@ -58,35 +65,3 @@ class GenerateArmBytes:
         instruction_bytes = self._set_instruction_bytes(destination_register, None)
 
         return instruction_bytes + b"\xa0\xe3"
-
-
-def patch_missile_launcher(ammo_value: int) -> bytes:
-    binary = read_bytes_from_file("missile_launcher.bin")
-    new_instructions = GenerateArmBytes(ammo_value).add(2, 2)
-    modified_bytes = binary.replace(b"\x32\x20\x82\xe2", new_instructions)
-
-    return modified_bytes
-
-
-def patch_ammo_per_expansion(ammo_value: int) -> bytes:
-    binary = read_bytes_from_file("ammo_per_expansion.bin")
-    new_instructions = GenerateArmBytes(ammo_value).add(2, 2)
-    modified_bytes = binary.replace(b"\xff\x20\x82\xe2", new_instructions)
-
-    return modified_bytes
-
-
-def patch_starting_missiles(ammo_value: int) -> bytes:
-    binary = read_bytes_from_file("starting_ammo.bin")
-    new_instructions = GenerateArmBytes(ammo_value).mov(8)
-    modified_bytes = binary.replace(b"2\x80\xa0\xe3", new_instructions)
-
-    return modified_bytes
-
-
-def patch_starting_ammo(ammo_value: int) -> bytes:
-    binary = read_bytes_from_file("starting_ammo.bin")
-    new_instructions = GenerateArmBytes(ammo_value).mov(2)
-    modified_bytes = binary.replace(b"2\x80\xa0\xe3", new_instructions)
-
-    return modified_bytes

@@ -1,11 +1,11 @@
 import pytest
 
-from open_prime_hunters_rando.patching.asm import (
+from open_prime_hunters_rando.patching.asm import bitfield_to_bytes, read_bytes_from_file
+from open_prime_hunters_rando.patching.asm.asm_patches import (
     patch_ammo_per_expansion,
     patch_missile_launcher,
     patch_starting_ammo,
     patch_starting_missiles,
-    read_bytes_from_file,
 )
 
 
@@ -17,6 +17,22 @@ def test_read_bytes():
 
     ammo_per_expansion = read_bytes_from_file("ammo_per_expansion.bin")
     assert ammo_per_expansion == b"\xff \x82\xe2"
+
+
+@pytest.mark.parametrize(
+    ("value", "expected_bytes"),
+    [
+        ("00000000", b"\x00"),
+        ("01010101", b"\x55"),
+        ("11111111", b"\xff"),
+        ([False, False, False, False, False, False, False, False], b"\x00"),
+        ([True, False, True, False, True, False, True, False], b"\xaa"),
+        ([True, True, True, True, True, True, True, True], b"\xff"),
+    ],
+)
+def test_bitfield_to_bytes(value, expected_bytes):
+    bitfield = bitfield_to_bytes(value)
+    assert bitfield == expected_bytes
 
 
 def test_replace_missile_launcher_bytes():
