@@ -5,7 +5,7 @@
         "weapons": "00000101",
         "missiles": 0,
         "ammo": 40,
-        "energy_tanks": 0,
+        "energy": 99,
         "octoliths": "11110000"
     },
     "areas": {

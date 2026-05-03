@@ -11,7 +11,7 @@ class AsmPatches:
 
         # Starting Items
         self.starting_ammo = patch_starting_ammo(self.starting_items["ammo"])
-        self.starting_energy = patch_starting_energy(self.starting_items["energy_tanks"])
+        self.starting_energy = patch_starting_energy(self.starting_items["energy"])
         self.starting_missiles = patch_starting_missiles(self.starting_items["missiles"])
         self.starting_octoliths = bitfield_to_bytes(self.starting_items["octoliths"])
         self.starting_weapons = bitfield_to_bytes(self.starting_items["weapons"])
@@ -54,11 +54,8 @@ def unlock_planets(unlock_planets: dict) -> bytes:
     return bitfield_to_bytes(planets)
 
 
-def patch_starting_energy(energy_tanks: int) -> bytes:
-    tanks_to_energy = energy_tanks * 100 if energy_tanks > 0 else 100
-    starting_energy = tanks_to_energy.to_bytes(4, "little")
-
-    return starting_energy
+def patch_starting_energy(starting_energy: int) -> bytes:
+    return starting_energy.to_bytes(4, "little")
 
 
 def patch_missile_launcher(ammo_value: int) -> bytes:

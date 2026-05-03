@@ -34,6 +34,7 @@ class StorySaveAddresses:
         self.old_weapon_slots = 0x0205BCEC + revision_offset
         self.starting_ammo = 0x0205BD00 + revision_offset
         self.old_starting_energy = 0x0205BD04 + revision_offset
+        self.energy_cap = 0x0205BD10 + revision_offset
         self.starting_missiles = 0x0205BD1C + revision_offset
         self.reordered_instructions = 0x0205BD28 + revision_offset
         self.unlock_planets = 0x0205BDC8 + revision_offset
