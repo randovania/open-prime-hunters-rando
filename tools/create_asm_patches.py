@@ -39,7 +39,8 @@ def main():
         try:
             code = create_asm_patch(raw_text, target_address)
             Path(asm_patches / asm_source.with_suffix(".bin").name).write_bytes(code)
-            print(f"Warning: {asm_source.name} is missing an @ADDRESS tag.")
+            if match:
+                print(f"Patched {asm_source.name} at {hex(target_address)}")
 
         except keystone.KsError as e:
             print(f"Error assembling {asm_source.name}: {e}")
