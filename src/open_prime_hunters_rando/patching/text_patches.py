@@ -33,5 +33,11 @@ def patch_text_files(file_manager: FileManager, text_patches: dict) -> None:
 
 def _add_patcher_version(rom_data: RomData, text_file: MetroidHuntersTextFile, text_patches: dict) -> None:
     patcher_version = text_patches.get("patcher_version", "Open Prime Hunters Rando\ndevelopment version")
-    data_offset = 7944 if rom_data.version == Revision.REV0 else 6792
+
+    # The offset changes based on the revision
+    if rom_data.version == Revision.REV0:
+        data_offset = 7944 if rom_data.id_code != IdCode.AMHP else 8012
+    else:
+        data_offset = 6792
+
     text_file.get_string(data_offset).text = patcher_version
