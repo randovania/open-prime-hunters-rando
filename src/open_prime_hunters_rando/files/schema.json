@@ -44,7 +44,7 @@
                 "energy": {
                     "type": "integer",
                     "description": "The amount of energy to start with.",
-                    "default": 1,
+                    "default": 99,
                     "minimum": 1,
                     "maximum": 1299
                 },
