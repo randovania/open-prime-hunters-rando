@@ -10,8 +10,16 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
     patches = AsmPatches(configuration)
 
     ARM9_PATCHES: dict[int, bytes] = {
+        # Both Addresses below handle random hunter spawns
+        addresses.random_hunter_spawn_first_condition: read_bytes_from_file("random_hunter_spawns.bin"),
+        addresses.random_hunter_spawn_game_state: read_bytes_from_file("enemy_hunter_spawns.bin"),
+        addresses.missile_launcher: patches.missile_launcher,  # Load instructions to create a custom Missile Launcher
+        addresses.nothing: read_bytes_from_file("nothing.bin"),  # Add Nothing item
         addresses.missiles_per_expansion: patches.missiles_per_expansion,  # Missiles per expansion
         addresses.ammo_per_expansion: patches.ammo_per_expansion,  # UA per expansion
+        addresses.door_locking_condition: read_bytes_from_file(
+            "door_locking_condition.bin"
+        ),  # Handles the door locking code
         addresses.starting_octoliths: patches.starting_octoliths,  # Starting Octoliths (0-8)
         addresses.starting_weapons: patches.starting_weapons,  # Starting weapons
         # Overwrite weapon_slots to prevent deleting the weapons when
@@ -28,12 +36,6 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
         ),  # Changing R0 affects later instructions, so reorder
         addresses.unlock_planets: patches.unlock_planets,  # Unlock planets from start
         addresses.starting_energy_ptr: patches.starting_energy,  # Starting energy - 1
-        addresses.missile_launcher: patches.missile_launcher,  # Load instructions to create a custom Missile Launcher
-        addresses.nothing: read_bytes_from_file("nothing.bin"),  # Add Nothing item
-        # Addresses below handle random hunter spawns and locking doors
-        addresses.random_hunter_spawn_first_condition: read_bytes_from_file("random_hunter_spawns.bin"),
-        addresses.random_hunter_spawn_game_state: read_bytes_from_file("enemy_hunter_spawns.bin"),
-        addresses.door_locking_condition: read_bytes_from_file("door_locking_condition.bin"),
     }
 
     # Decompress arm9.bin for editing
