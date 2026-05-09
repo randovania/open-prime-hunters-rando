@@ -48,6 +48,42 @@
                     "minimum": 1,
                     "maximum": 1299
                 },
+                "artifacts": {
+                    "type": "object",
+                    "description": "The amount of Artifacts to start with for each Boss Portal.",
+                    "properties": {
+                        "Celestial Archives": {
+                            "$ref": "#/$defs/starting_artifacts"
+                        },
+                        "Alinos": {
+                            "$ref": "#/$defs/starting_artifacts"
+                        },
+                        "Arcterra": {
+                            "$ref": "#/$defs/starting_artifacts"
+                        },
+                        "Vesper Defense Outpost": {
+                            "$ref": "#/$defs/starting_artifacts"
+                        }
+                    },
+                    "default": {
+                        "Celestial Archives": [
+                            0,
+                            0
+                        ],
+                        "Alinos": [
+                            0,
+                            0
+                        ],
+                        "Arcterra": [
+                            0,
+                            0
+                        ],
+                        "Vesper Defense Outpost": [
+                            0,
+                            0
+                        ]
+                    }
+                },
                 "octoliths": {
                     "type": "string",
                     "description": "Bitfield that determines what Octoliths to start with in descending order, 8-1.\nLeft to Right: Arcterra 2-1, VDO 2-1, Alinos 2-1, Celestial Archives 2-1",
@@ -344,6 +380,13 @@
                     "default": []
                 }
             }
+        },
+        "starting_artifacts": {
+            "type": "array",
+            "default": [
+                0,
+                0
+            ]
         }
     }
 }

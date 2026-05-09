@@ -10,11 +10,12 @@ def read_bytes_from_file(asm_patch: str) -> bytes:
     return patch_files.joinpath(asm_patch).read_bytes()
 
 
-def bitfield_to_bytes(bitfield: str | list) -> bytes:
+def bitfield_to_bytes(bitfield: str | list, endian: str = "little") -> bytes:
+    number_of_bitfields = (len(bitfield) + 7) // 8
     if isinstance(bitfield, list):
-        fmt = "{:d}" * 8
+        fmt = "{:d}" * 8 * number_of_bitfields
         bitfield = fmt.format(*bitfield)
-    return int(bitfield, 2).to_bytes()
+    return int(bitfield, 2).to_bytes(number_of_bitfields, endian)
 
 
 class GenerateArmBytes:

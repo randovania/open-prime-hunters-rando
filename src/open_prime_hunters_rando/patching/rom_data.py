@@ -37,7 +37,7 @@ class StorySaveAddresses:
         self.energy_cap = 0x0205BD10 + revision_offset
         self.starting_missiles = 0x0205BD1C + revision_offset
         self.reordered_instructions = 0x0205BD28 + revision_offset
-        self.unlock_planets = 0x0205BDC8 + revision_offset
+        self.story_save_wipe = 0x0205BD50 + revision_offset
         self.starting_energy_ptr = 0x0205BF0C + revision_offset
 
 
