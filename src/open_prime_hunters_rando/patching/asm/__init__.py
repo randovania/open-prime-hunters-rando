@@ -1,5 +1,6 @@
 import struct
 from pathlib import Path
+from typing import Literal
 
 patch_files = Path(__file__).parent.parent.parent.joinpath("files", "asm_patches")
 
@@ -10,7 +11,7 @@ def read_bytes_from_file(asm_patch: str) -> bytes:
     return patch_files.joinpath(asm_patch).read_bytes()
 
 
-def bitfield_to_bytes(bitfield: str | list, endian: str = "little") -> bytes:
+def bitfield_to_bytes(bitfield: str | list, endian: Literal["little", "big"] = "little") -> bytes:
     number_of_bitfields = (len(bitfield) + 7) // 8
     if isinstance(bitfield, list):
         fmt = "{:d}" * 8 * number_of_bitfields

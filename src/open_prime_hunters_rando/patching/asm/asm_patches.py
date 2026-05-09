@@ -69,8 +69,8 @@ def _patch_starting_artifacts(starting_artifacts: dict) -> bytes:
     }
     artifact_bitfields = ""
     for area in reversed(areas):
-        artifact_bitfields += artifact_mapping.get(starting_artifacts[area][1])
-        artifact_bitfields += artifact_mapping.get(starting_artifacts[area][0])
+        artifact_bitfields += artifact_mapping[starting_artifacts[area][1]]
+        artifact_bitfields += artifact_mapping[starting_artifacts[area][0]]
 
     converted_field = bitfield_to_bytes(artifact_bitfields, "big")
     to_hex = converted_field.hex().upper().zfill(8)
