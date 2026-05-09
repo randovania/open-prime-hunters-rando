@@ -26,7 +26,7 @@ class AsmPatches:
 
         # Game Patches
         self.unlock_planets = _patch_planets(self.game_patches["unlock_planets"])
-        self.story_save_wipe = optimize_story_save_wipe(self.unlock_planets, self.starting_artifacts)
+        self.story_save_wipe = patch_planets_and_artifacts(self.unlock_planets, self.starting_artifacts)
 
     def validate_bitfields(self) -> None:
         bitfields = ["weapons", "octoliths"]
@@ -115,8 +115,8 @@ def patch_starting_ammo(ammo_value: int) -> bytes:
     return modified_bytes
 
 
-def optimize_story_save_wipe(unlocked_planets: bytes, starting_artifacts: bytes) -> bytes:
-    binary = read_bytes_from_file("story_save_wipe.bin")
+def patch_planets_and_artifacts(unlocked_planets: bytes, starting_artifacts: bytes) -> bytes:
+    binary = read_bytes_from_file("optimized_story_save_init.bin")
     # Replace bytes from unlocked planets and starting artifacts
     modified_bytes = binary.replace(b"\x0c\x10\xa0\xe3", unlocked_planets).replace(
         b"\xff\xff\xff\xff", starting_artifacts
