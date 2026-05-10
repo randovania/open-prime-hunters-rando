@@ -34,7 +34,7 @@ def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
         addresses.reordered_instructions: read_bytes_from_file(
             "reordered_instructions.bin"
         ),  # Changing R0 affects later instructions, so reorder
-        addresses.unlock_planets: patches.unlock_planets,  # Unlock planets from start
+        addresses.init_save_file_rewrite: patches.init_save_file_rewrite,  # Unlocked planets and starting artifacts
         addresses.starting_energy_ptr: patches.starting_energy,  # Starting energy - 1
     }
 

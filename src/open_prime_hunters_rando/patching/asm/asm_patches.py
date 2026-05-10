@@ -1,4 +1,9 @@
-from open_prime_hunters_rando.patching.asm import GenerateArmBytes, bitfield_to_bytes, read_bytes_from_file
+from open_prime_hunters_rando.patching.asm import (
+    GenerateArmBytes,
+    bitfield_to_bytes,
+    create_bitmask,
+    read_bytes_from_file,
+)
 
 
 class AsmPatches:
@@ -22,7 +27,9 @@ class AsmPatches:
         self.missiles_per_expansion = patch_ammo_per_expansion(self.ammo_sizes["missile_expansion"])
 
         # Game Patches
-        self.unlock_planets = unlock_planets(self.game_patches["unlock_planets"])
+        self.init_save_file_rewrite = patch_planets_and_artifacts(
+            self.game_patches["unlock_planets"], self.starting_items["artifacts"]
+        )
 
     def validate_bitfields(self) -> None:
         bitfields = ["weapons", "octoliths"]
@@ -37,21 +44,6 @@ class AsmPatches:
             for bitflag in self.starting_items[bitfield]:
                 if bitflag not in ["0", "1"]:
                     raise ValueError(f"Invalid starting {bitfield} bitfield. Must only contain 0 or 1, got {bitflag}!")
-
-
-def unlock_planets(unlock_planets: dict) -> bytes:
-    planets = [
-        unlock_planets["Arcterra"],  # Arcterra 1
-        unlock_planets["Arcterra"],  # Arcterra 2
-        unlock_planets["Vesper Defense Outpost"],  # Vesper Defense Outpost 1
-        unlock_planets["Vesper Defense Outpost"],  # Vesper Defense Outpost 2
-        True,  # Celestial Archives 1 (Always unlocked)
-        True,  # Celestial Archives 2 (Always unlocked)
-        unlock_planets["Alinos"],  # Alinos 1
-        unlock_planets["Alinos"],  # Alinos 2
-    ]
-
-    return bitfield_to_bytes(planets)
 
 
 def patch_starting_energy(starting_energy: int) -> bytes:
@@ -86,5 +78,45 @@ def patch_starting_ammo(ammo_value: int) -> bytes:
     binary = read_bytes_from_file("starting_ammo.bin")
     new_instructions = GenerateArmBytes(ammo_value).mov(2)
     modified_bytes = binary.replace(b"2\x80\xa0\xe3", new_instructions)
+
+    return modified_bytes
+
+
+def patch_planets_and_artifacts(unlock_planets: dict, starting_artifacts: dict) -> bytes:
+    binary = read_bytes_from_file("optimized_story_save_init.bin")
+
+    # Starting Planets
+    planets = [
+        unlock_planets["Arcterra"],  # Arcterra 1
+        unlock_planets["Arcterra"],  # Arcterra 2
+        unlock_planets["Vesper Defense Outpost"],  # Vesper Defense Outpost 1
+        unlock_planets["Vesper Defense Outpost"],  # Vesper Defense Outpost 2
+        True,  # Celestial Archives 1 (Always unlocked)
+        True,  # Celestial Archives 2 (Always unlocked)
+        unlock_planets["Alinos"],  # Alinos 1
+        unlock_planets["Alinos"],  # Alinos 2
+    ]
+
+    planets_instruction = bitfield_to_bytes(planets) + b"\x10\xa0\xe3"
+
+    # Starting Artifacts (0-24)
+    areas = ["Alinos", "Celestial Archives", "Vesper Defense Outpost", "Arcterra"]
+    artifact_mapping: dict = {
+        0: "000",
+        1: "001",
+        2: "011",
+        3: "111",
+    }
+    artifact_bitfields = ""
+    for area in reversed(areas):
+        artifact_bitfields += artifact_mapping[starting_artifacts[area][1]]
+        artifact_bitfields += artifact_mapping[starting_artifacts[area][0]]
+
+    artifact_bitmask = create_bitmask(artifact_bitfields)
+
+    # Replace bytes from unlocked planets and starting artifacts
+    modified_bytes = binary.replace(b"\x0c\x10\xa0\xe3", planets_instruction).replace(
+        b"\xff\xff\xff\xff", artifact_bitmask
+    )
 
     return modified_bytes

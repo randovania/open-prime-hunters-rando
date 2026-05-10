@@ -1,9 +1,10 @@
 import pytest
 
-from open_prime_hunters_rando.patching.asm import bitfield_to_bytes, read_bytes_from_file
+from open_prime_hunters_rando.patching.asm import bitfield_to_bytes, create_bitmask, read_bytes_from_file
 from open_prime_hunters_rando.patching.asm.asm_patches import (
     patch_ammo_per_expansion,
     patch_missile_launcher,
+    patch_planets_and_artifacts,
     patch_starting_ammo,
     patch_starting_missiles,
 )
@@ -73,3 +74,44 @@ def test_replace_starting_ammo_bytes(value, expected_missile_bytes, expected_amm
 
     new_ammo_bytes = patch_starting_ammo(value)
     assert new_ammo_bytes == expected_ammo_bytes
+
+
+def test_patch_planets_and_artifacts():
+    planets_dict = {
+        "Arcterra": True,
+        "Vesper Defense Outpost": False,
+        "Celestial Archives": True,
+        "Alinos": False,
+    }
+    planets_list = [
+        planets_dict["Arcterra"],
+        planets_dict["Arcterra"],
+        planets_dict["Vesper Defense Outpost"],
+        planets_dict["Vesper Defense Outpost"],
+        planets_dict["Celestial Archives"],
+        planets_dict["Celestial Archives"],
+        planets_dict["Alinos"],
+        planets_dict["Alinos"],
+    ]
+    planets_bytes = bitfield_to_bytes(planets_list) + b"\x10\xa0\xe3"
+    assert planets_bytes == b"\xcc\x10\xa0\xe3"
+
+    artifacts_dict = {
+        "Arcterra": [0, 2],
+        "Vesper Defense Outpost": [1, 0],
+        "Celestial Archives": [1, 0],
+        "Alinos": [2, 1],
+    }
+
+    artifacts_bitmask = create_bitmask("000011001000001000011001")
+    assert artifacts_bitmask == b"\x19\x82\x0c\x00"
+
+    init_save_file = patch_planets_and_artifacts(planets_dict, artifacts_dict)
+    assert init_save_file == (
+        b"{\x90\xa0\xe3\x0f\x00\xa5\xe8\x0f\x00\xa5\xe8\x01\x90Y\xe2\xfb\xff\xff\x1a\x0f\x00\xa5\xe8\x03\x00\x85\xe8"
+        b"\x00\x00\xa0\xe3\x00\x10\xa0\xe1\x000\xa0\xe1\x00\x90\xa0\xe1\x0f,\x84\xe2\xcc \x82\xe2\x0b\x02\xa2\xe8"
+        b"\x0b\x02\xa2\xe8\x0b\x02\xa2\xe8\x0b\x02\xa2\xe8\x03\x00\x82\xe8P \x82\xe2\x0b\x02\xa2\xe8\x0b\x02\xa2\xe8"
+        b"\x0b\x02\xa2\xe8\x0b\x02\xa2\xe8\x0b\x02\xa2\xe8\x0b\x02\xa2\xe8$\x00\x9f\xe5\x1c\x00\x84\xe5\xcc\x10\xa0"
+        b"\xe3\xb2\x11\xc4\xe1\x180\x84\xe5\x01\x90\xa0\xe3\x1c B\xe2\tP\xa0\xe1\xa9q\x84\xe0\x00\xf0 \xe3\x00\xf0 "
+        b"\xe3K\x10`\x00"
+    )
