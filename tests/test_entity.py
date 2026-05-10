@@ -1,34 +1,12 @@
-import itertools
-
 import pytest
 
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.door import Door, DoorType
 from open_prime_hunters_rando.parsing.formats.entities.enum import PaletteId
-from open_prime_hunters_rando.parsing.level_data import (
-    ALINOS,
-    ARCTERRA,
-    CELESTIAL_ARCHIVES,
-    CONNECTORS,
-    OUBLIETTE,
-    VESPER_DEFENSE_OUTPOST,
-)
-
-all_entity_files = [
-    level.entity_file
-    for level in itertools.chain(
-        CONNECTORS.values(),
-        ALINOS.values(),
-        CELESTIAL_ARCHIVES.values(),
-        VESPER_DEFENSE_OUTPOST.values(),
-        ARCTERRA.values(),
-        OUBLIETTE.values(),
-    )
-    if level.entity_file is not None
-]
+from open_prime_hunters_rando.parsing.level_data import ALL_ENTITY_FILES
 
 
-@pytest.fixture(scope="module", params=all_entity_files)
+@pytest.fixture(scope="module", params=ALL_ENTITY_FILES)
 def entity_file(rom, request):
     return rom.getFileByName(f"levels/entities/{request.param}.bin")
 

@@ -1,4 +1,5 @@
 import dataclasses
+import itertools
 
 
 @dataclasses.dataclass(frozen=True)
@@ -467,10 +468,16 @@ def get_data(area_name: str, room_name: str) -> LevelData:
             return CONNECTORS[room_name]
 
 
-ALL_AREAS = [ALINOS, CELESTIAL_ARCHIVES, VESPER_DEFENSE_OUTPOST, ARCTERRA, OUBLIETTE]
-ALL_PORTAL_FILENAMES = [
-    portal_filename
-    for area in ALL_AREAS
-    for level_data in area.values()
-    if (portal_filename := level_data.portal_filename) is not None
-]
+ALL_LEVEL_DATA = list(
+    itertools.chain(
+        CONNECTORS.values(),
+        ALINOS.values(),
+        CELESTIAL_ARCHIVES.values(),
+        VESPER_DEFENSE_OUTPOST.values(),
+        ARCTERRA.values(),
+        OUBLIETTE.values(),
+    )
+)
+
+ALL_ENTITY_FILES = [level.entity_file for level in ALL_LEVEL_DATA if level.entity_file is not None]
+ALL_PORTAL_FILENAMES = [level.portal_filename for level in ALL_LEVEL_DATA if level.portal_filename is not None]

@@ -10,7 +10,7 @@ from open_prime_hunters_rando.logger import LOG
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.metroidhunters_text import MetroidHuntersTextFile
 from open_prime_hunters_rando.parsing.formats.string_tables import StringTable
-from open_prime_hunters_rando.parsing.level_data import get_data
+from open_prime_hunters_rando.parsing.level_data import ALL_ENTITY_FILES, get_data
 
 if TYPE_CHECKING:
     from ndspy.rom import NintendoDSRom
@@ -38,12 +38,16 @@ class FileManager:
         self.entity_files: dict[str, EntityFile] = {}
         self.string_tables: dict[str, StringTable] = {}
         self.metroidhunters_text_files: dict[str, MetroidHuntersTextFile] = {}
+        self._parse_all_entity_files()
+
+    def _parse_all_entity_files(self) -> None:
+        for entity_file in ALL_ENTITY_FILES:
+            file_name = f"levels/entities/{entity_file}.bin"
+            self.entity_files[file_name] = EntityFile.parse(self.rom.getFileByName(file_name))
 
     def get_entity_file(self, area_name: str, room_name: str) -> EntityFile:
         level_data = get_data(area_name, room_name)
         file_name = f"levels/entities/{level_data.entity_file}.bin"
-        if file_name not in self.entity_files:
-            self.entity_files[file_name] = EntityFile.parse(self.rom.getFileByName(file_name))
         return self.entity_files[file_name]
 
     def get_string_table(self, language: Language, string_table: StringTables) -> StringTable:
