@@ -1,6 +1,9 @@
-import struct
-
-from open_prime_hunters_rando.patching.asm import GenerateArmBytes, bitfield_to_bytes, read_bytes_from_file
+from open_prime_hunters_rando.patching.asm import (
+    GenerateArmBytes,
+    bitfield_to_bytes,
+    create_bitmask,
+    read_bytes_from_file,
+)
 
 
 class AsmPatches:
@@ -109,13 +112,11 @@ def patch_planets_and_artifacts(unlock_planets: dict, starting_artifacts: dict) 
         artifact_bitfields += artifact_mapping[starting_artifacts[area][1]]
         artifact_bitfields += artifact_mapping[starting_artifacts[area][0]]
 
-    converted_field = bitfield_to_bytes(artifact_bitfields, "big")
-    to_hex = converted_field.hex().zfill(8)
-    artifact_mask = struct.pack("<I", int(to_hex, 16))
+    artifact_bitmask = create_bitmask(artifact_bitfields)
 
     # Replace bytes from unlocked planets and starting artifacts
     modified_bytes = binary.replace(b"\x0c\x10\xa0\xe3", planets_instruction).replace(
-        b"\xff\xff\xff\xff", artifact_mask
+        b"\xff\xff\xff\xff", artifact_bitmask
     )
 
     return modified_bytes

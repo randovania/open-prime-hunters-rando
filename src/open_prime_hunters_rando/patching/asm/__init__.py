@@ -19,6 +19,14 @@ def bitfield_to_bytes(bitfield: str | list, endian: Literal["little", "big"] = "
     return int(bitfield, 2).to_bytes(number_of_bitfields, endian)
 
 
+def create_bitmask(bitfield: str) -> bytes:
+    converted_bitfield = bitfield_to_bytes(bitfield, "big")
+    to_hex = converted_bitfield.hex().zfill(8)
+    bitmask = struct.pack("<I", int(to_hex, 16))
+
+    return bitmask
+
+
 class GenerateArmBytes:
     def __init__(self, in_game_value: int, multiply: bool = True) -> None:
         self.in_game_value = in_game_value

@@ -1,8 +1,6 @@
-import struct
-
 import pytest
 
-from open_prime_hunters_rando.patching.asm import bitfield_to_bytes, read_bytes_from_file
+from open_prime_hunters_rando.patching.asm import bitfield_to_bytes, create_bitmask, read_bytes_from_file
 from open_prime_hunters_rando.patching.asm.asm_patches import (
     patch_ammo_per_expansion,
     patch_missile_launcher,
@@ -104,10 +102,9 @@ def test_patch_planets_and_artifacts():
         "Celestial Archives": [1, 0],
         "Alinos": [2, 1],
     }
-    artifacts_bitfield = "000011001000001000011001"
-    as_hex = bitfield_to_bytes(artifacts_bitfield, "big").hex().zfill(8)
-    artifacts_mask = struct.pack("<I", int(as_hex, 16))
-    assert artifacts_mask == b"\x19\x82\x0c\x00"
+
+    artifacts_bitmask = create_bitmask("000011001000001000011001")
+    assert artifacts_bitmask == b"\x19\x82\x0c\x00"
 
     init_save_file = patch_planets_and_artifacts(planets_dict, artifacts_dict)
     assert init_save_file == (
