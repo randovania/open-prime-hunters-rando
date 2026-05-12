@@ -6,7 +6,7 @@ from open_prime_hunters_rando.patching.rom_data import RomData
 
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
-    addresses = RomData(rom).get_story_save_addresses()
+    addresses = RomData(rom).get_arm9_addresses()
     patches = AsmPatches(configuration)
 
     ARM9_PATCHES: dict[int, bytes] = {

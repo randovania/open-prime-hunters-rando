@@ -3,6 +3,61 @@ from enum import Enum
 from ndspy.rom import NintendoDSRom
 
 
+class InitEnemyHunterSpawns:
+    def __init__(self, base_address: int) -> None:
+        self.random_hunter_spawn_first_condition = base_address + 0x80
+        self.random_hunter_spawn_game_state = base_address + 0x1E8
+
+
+class PlayerPickupItems:
+    def __init__(self, base_address: int) -> None:
+        self.missile_launcher = base_address + 0x3E4
+        self.nothing = base_address + 0x78C
+        self.missiles_per_expansion = base_address + 0x8A0
+        self.ammo_per_expansion = base_address + 0x8FC
+
+
+class RoomTransitionEnd:
+    def __init__(self, base_address: int) -> None:
+        self.door_locking_condition = base_address + 0x70C
+
+
+class InitSaveFile:
+    def __init__(self, base_address: int) -> None:
+        self.starting_octoliths = base_address + 0x3E
+        self.starting_weapons = base_address + 0x46
+        self.old_weapon_slots = base_address + 0x56
+        self.starting_ammo = base_address + 0x6A
+        self.old_starting_energy = base_address + 0x6E
+        self.energy_cap = base_address + 0x7A
+        self.starting_missiles = base_address + 0x86
+        self.reordered_instructions = base_address + 0x92
+        self.init_save_file_rewrite = base_address + 0xBA
+        self.starting_energy_ptr = base_address + 0x276
+
+
+class Arm9Addresses(InitEnemyHunterSpawns, PlayerPickupItems, RoomTransitionEnd, InitSaveFile):
+    def __init__(self, revision_offset: int) -> None:
+        # Base addresses for different functions
+        init_enemy_hunter_spawn = 0x02015914
+        player_pickup_items = 0x02019AB0
+        room_transition_end = 0x02053430
+        # This function starts at a different address based on the revision. US Rev0 is used as a base.
+        init_save_file = 0x0205BC96 + revision_offset
+
+        # Initialize each class using the base addresses
+        InitEnemyHunterSpawns.__init__(self, init_enemy_hunter_spawn)
+        PlayerPickupItems.__init__(self, player_pickup_items)
+        RoomTransitionEnd.__init__(self, room_transition_end)
+        InitSaveFile.__init__(self, init_save_file)
+
+
+class OverlayOffsets:
+    def __init__(self, revision_offset: int = 0x0) -> None:
+        self.cloak = 0x01E20A + revision_offset
+        self.affinity_weapon = 0x01E212 + revision_offset
+
+
 class IdCode(Enum):
     AMHE = b"AMHE"
     AMHP = b"AMHP"
@@ -13,38 +68,6 @@ class IdCode(Enum):
 class Revision(Enum):
     REV0 = 0
     REV1 = 1
-
-
-class StorySaveAddresses:
-    def __init__(self, revision_offset: int) -> None:
-        # Addresses that are consistent across all revisions
-        self.init_enemy_hunter_spawns = 0x02015914
-        self.random_hunter_spawn_first_condition = 0x02015994
-        self.random_hunter_spawn_game_state = 0x02015AFC
-        self.missile_launcher = 0x02019E94
-        self.nothing = 0x0201A23C
-        self.missiles_per_expansion = 0x0201A350
-        self.ammo_per_expansion = 0x0201A3AC
-        self.door_locking_condition = 0x02053B3C
-
-        # Addresses that are different across revisions (Using US 1.0 as a base)
-        self.story_save_data_start = 0x0205BC96 + revision_offset
-        self.starting_octoliths = 0x0205BCD4 + revision_offset
-        self.starting_weapons = 0x0205BCDC + revision_offset
-        self.old_weapon_slots = 0x0205BCEC + revision_offset
-        self.starting_ammo = 0x0205BD00 + revision_offset
-        self.old_starting_energy = 0x0205BD04 + revision_offset
-        self.energy_cap = 0x0205BD10 + revision_offset
-        self.starting_missiles = 0x0205BD1C + revision_offset
-        self.reordered_instructions = 0x0205BD28 + revision_offset
-        self.init_save_file_rewrite = 0x0205BD50 + revision_offset
-        self.starting_energy_ptr = 0x0205BF0C + revision_offset
-
-
-class OverlayOffsets:
-    def __init__(self, revision_offset: int = 0x0) -> None:
-        self.cloak = 0x01E20A + revision_offset
-        self.affinity_weapon = 0x01E212 + revision_offset
 
 
 class RomData:
@@ -61,7 +84,7 @@ class RomData:
     def version(self) -> Revision:
         return Revision(self._version)
 
-    def get_story_save_addresses(self) -> StorySaveAddresses:
+    def get_arm9_addresses(self) -> Arm9Addresses:
         match (self.id_code, self.version):
             case (IdCode.AMHE, Revision.REV0):
                 revision_offset = 0x0
@@ -75,7 +98,7 @@ class RomData:
             #     revision_offset = 0x1CF0
             case _:
                 raise ValueError(f"Unsupported ROM detected. Detected {self.id_code} Rev{self.version.value}!")
-        return StorySaveAddresses(revision_offset)
+        return Arm9Addresses(revision_offset)
 
     def get_overlay_offsets(self) -> OverlayOffsets:
         revision_offset = 0x60 if self.version == Revision.REV1 else 0x00
