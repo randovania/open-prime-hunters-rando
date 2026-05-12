@@ -4,6 +4,7 @@ import pytest
 
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.door import Door, DoorType
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
 from open_prime_hunters_rando.parsing.formats.entities.enum import PaletteId
 from open_prime_hunters_rando.parsing.level_data import (
     ALINOS,
@@ -42,7 +43,7 @@ def test_compare_entity_file(entity_file):
 
 
 def test_create_new_entity(entity_file):
-    new_entity = Door.create(
+    new_door = Door.create(
         port_name="port_rmMain",
         palette_id=PaletteId.SHOCK_COIL,
         door_type=DoorType.THIN,
@@ -55,13 +56,25 @@ def test_create_new_entity(entity_file):
         room_name="rmMain",
     )
 
+    new_force_field = ForceField.create(
+        node_name="rmMain",
+        force_field_type=PaletteId.OMEGA_CANNON,
+        width=4.0,
+        height=2.0,
+        active=True,
+    )
+
+    new_entities = [new_door, new_force_field]
+
     parsed = EntityFile.parse(entity_file)
-    max_entity_id = parsed.get_max_entity_id()
-    parsed.replace_entity(max_entity_id, new_entity)
 
-    replaced_entity = parsed.get_entity(max_entity_id, Door)
+    for new_entity in new_entities:
+        max_entity_id = parsed.get_max_entity_id()
+        parsed.replace_entity(max_entity_id, new_entity)
 
-    assert new_entity == replaced_entity
+        replaced_entity = parsed.get_entity(max_entity_id, type(new_entity))
+
+        assert new_entity == replaced_entity
 
     built = EntityFile.build(parsed)
     assert parsed == EntityFile.parse(built)

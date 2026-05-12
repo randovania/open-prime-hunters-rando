@@ -89,7 +89,6 @@ class Door(Entity):
         obj.port_name = port_name
         obj.palette_id = palette_id
         obj.door_type = door_type
-        obj.door_type = door_type
         obj.connector_id = connector_id
         obj.target_layer_id = target_layer_id
         obj.locked = locked
