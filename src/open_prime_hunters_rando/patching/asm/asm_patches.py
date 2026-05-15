@@ -37,13 +37,15 @@ class AsmPatches:
         for bitfield in bitfields:
             if len(self.starting_items[bitfield]) != 8:
                 raise ValueError(
-                    f"Invalid starting {bitfield} bitfield. Must contain 8 numbers, got "
-                    f" {len(self.starting_items[bitfield])}!"
+                    f"Invalid 'starting {bitfield}' bitfield. Must contain 8 numbers, got "
+                    f"{len(self.starting_items[bitfield])}!"
                 )
 
             for bitflag in self.starting_items[bitfield]:
                 if bitflag not in ["0", "1"]:
-                    raise ValueError(f"Invalid starting {bitfield} bitfield. Must only contain 0 or 1, got {bitflag}!")
+                    raise ValueError(
+                        f"Invalid 'starting {bitfield}' bitfield. Must only contain 0 or 1, got {bitflag}!"
+                    )
 
 
 def patch_starting_energy(starting_energy: int) -> bytes:
@@ -100,17 +102,10 @@ def patch_planets_and_artifacts(unlock_planets: dict, starting_artifacts: dict) 
     planets_instruction = bitfield_to_bytes(planets) + b"\x10\xa0\xe3"
 
     # Starting Artifacts (0-24)
-    areas = ["Alinos", "Celestial Archives", "Vesper Defense Outpost", "Arcterra"]
-    artifact_mapping: dict = {
-        0: "000",
-        1: "001",
-        2: "011",
-        3: "111",
-    }
     artifact_bitfields = ""
-    for area in reversed(areas):
-        artifact_bitfields += artifact_mapping[starting_artifacts[area][1]]
-        artifact_bitfields += artifact_mapping[starting_artifacts[area][0]]
+
+    for artifacts in reversed(starting_artifacts.values()):
+        artifact_bitfields += artifacts
 
     artifact_bitmask = create_bitmask(artifact_bitfields)
 
