@@ -52,36 +52,40 @@
                     "type": "object",
                     "description": "The amount of Artifacts to start with for each Boss Portal.",
                     "properties": {
-                        "Celestial Archives": {
-                            "$ref": "#/$defs/starting_artifacts"
+                        "alinos_1": {
+                            "type": "string"
                         },
-                        "Alinos": {
-                            "$ref": "#/$defs/starting_artifacts"
+                        "alinos_2": {
+                            "type": "string"
                         },
-                        "Arcterra": {
-                            "$ref": "#/$defs/starting_artifacts"
+                        "celestial_archives_1": {
+                            "type": "string"
                         },
-                        "Vesper Defense Outpost": {
-                            "$ref": "#/$defs/starting_artifacts"
+                        "celestial_archives_2": {
+                            "type": "string"
+                        },
+                        "vesper_defense_outpost_1": {
+                            "type": "string"
+                        },
+                        "vesper_defense_outpost_2": {
+                            "type": "string"
+                        },
+                        "arcterra_1": {
+                            "type": "string"
+                        },
+                        "arcterra_2": {
+                            "type": "string"
                         }
                     },
                     "default": {
-                        "Celestial Archives": [
-                            0,
-                            0
-                        ],
-                        "Alinos": [
-                            0,
-                            0
-                        ],
-                        "Arcterra": [
-                            0,
-                            0
-                        ],
-                        "Vesper Defense Outpost": [
-                            0,
-                            0
-                        ]
+                        "alinos_1": "000",
+                        "alinos_2": "000",
+                        "celestial_archives_1": "000",
+                        "celestial_archives_2": "000",
+                        "vesper_defense_outpost_1": "000",
+                        "vesper_defense_outpost_2": "000",
+                        "arcterra_1": "000",
+                        "arcterra_2": "000"
                     }
                 },
                 "octoliths": {
@@ -380,13 +384,6 @@
                     "default": []
                 }
             }
-        },
-        "starting_artifacts": {
-            "type": "array",
-            "default": [
-                0,
-                0
-            ]
         }
     }
 }

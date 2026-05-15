@@ -6,7 +6,17 @@
         "missiles": 0,
         "ammo": 40,
         "energy": 99,
-        "octoliths": "11110000"
+        "octoliths": "11110000",
+        "artifacts": {
+            "alinos_1": "000",
+            "alinos_2": "000",
+            "celestial_archives_1": "000",
+            "celestial_archives_2": "000",
+            "vesper_defense_outpost_1": "000",
+            "vesper_defense_outpost_2": "000",
+            "arcterra_1": "000",
+            "arcterra_2": "000"
+        }
     },
     "areas": {
         "Celestial Archives": {
