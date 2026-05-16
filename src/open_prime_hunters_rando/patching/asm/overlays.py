@@ -1,23 +1,21 @@
 import ndspy.code
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.patching.rom_data import RomData
+from open_prime_hunters_rando.patching.game_version import GameVersion
 
 
-def patch_overlays(rom: NintendoDSRom) -> None:
-    offsets = RomData(rom).get_overlay_offsets()
-
+def patch_overlays(rom: NintendoDSRom, version: GameVersion) -> None:
     OVERLAY_MODIFICATIONS: dict[int, list[dict[str, int]]] = {
         # Overlay 2 handles Models and Scan Data
         2: [
             {
                 # Assign new Nothing scan entry to Nothing item (Cloak) in the item_scan_id table
-                "offset": offsets.cloak,
+                "offset": version.overlay_offsets.cloak,
                 "value": 0x1DA,
             },
             {
                 # Assign the Missile Launcher scan entry to Affinity Weapon in the item_scan_id table
-                "offset": offsets.affinity_weapon,
+                "offset": version.overlay_offsets.affinity_weapon,
                 "value": 0x5,
             },
         ]

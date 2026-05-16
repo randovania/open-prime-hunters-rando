@@ -6,6 +6,7 @@ from ndspy.rom import NintendoDSRom
 
 from open_prime_hunters_rando.logger import LOG
 from open_prime_hunters_rando.parsing.file_manager import FileManager
+from open_prime_hunters_rando.patching import game_version
 from open_prime_hunters_rando.patching.asm.arm9 import patch_arm9
 from open_prime_hunters_rando.patching.asm.overlays import patch_overlays
 from open_prime_hunters_rando.patching.entities.add_entities import add_new_entities
@@ -43,16 +44,19 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
     # Load rom file as input
     rom = DebugNintendoDsRom.fromFile(input_path)
 
+    # Get the version data for the rom
+    version = game_version.get_version(rom, game_version.ALL_VERSIONS)
+
     # Initialize the file manager
     file_manager = FileManager(rom, export_parsed_files)
 
     # Modify main code file arm9.bin
     LOG.info("Patching arm9.bin")
-    patch_arm9(rom, configuration)
+    patch_arm9(rom, version, configuration)
 
     # Modify overlay files
     LOG.info("Patching overlays")
-    patch_overlays(rom)
+    patch_overlays(rom, version)
 
     # Static patches to rooms
     LOG.info("Patching rooms")
@@ -78,7 +82,7 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
 
     # Patch frontend text files
     LOG.info("Patching frontend text files")
-    patch_text_files(file_manager, configuration.get("text_patches", {}))
+    patch_text_files(version, file_manager, configuration.get("text_patches", {}))
 
     # Save all changes to a new rom
     file_manager.save_to_rom(output_path)
