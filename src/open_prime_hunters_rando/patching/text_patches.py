@@ -1,10 +1,7 @@
 from enum import Enum
 
-from ndspy.rom import NintendoDSRom
-
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.metroidhunters_text import MetroidHuntersTextFile
-from open_prime_hunters_rando.patching import game_version
 from open_prime_hunters_rando.patching.game_version import GameVersion, IdCode, Revision
 
 
@@ -18,8 +15,7 @@ class MetroidHuntersTextFiles(Enum):
     SPANISH = "metroidhunters_text_es"
 
 
-def patch_text_files(rom: NintendoDSRom, file_manager: FileManager, text_patches: dict) -> None:
-    version = game_version.get_version(rom, game_version.ALL_VERSIONS)
+def patch_text_files(version: GameVersion, file_manager: FileManager, text_patches: dict) -> None:
     for language_file in MetroidHuntersTextFiles:
         # ENGLISH_GB does not exist on US Rev0
         if (

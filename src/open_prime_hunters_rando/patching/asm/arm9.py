@@ -1,12 +1,11 @@
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.patching import game_version
 from open_prime_hunters_rando.patching.asm import read_bytes_from_file
 from open_prime_hunters_rando.patching.asm.asm_patches import AsmPatches
+from open_prime_hunters_rando.patching.game_version import GameVersion
 
 
-def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
-    version = game_version.get_version(rom, game_version.ALL_VERSIONS)
+def patch_arm9(rom: NintendoDSRom, version: GameVersion, configuration: dict) -> None:
     hunter = version.init_enemy_hunter_spawns_addresses
     pickup = version.player_pickup_items_addresses
     room = version.room_transition_end_addresses
