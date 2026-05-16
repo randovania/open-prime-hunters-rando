@@ -1,11 +1,11 @@
 import ndspy.code
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.patching.rom_data import RomData
+from open_prime_hunters_rando.patching import game_version
 
 
 def patch_overlays(rom: NintendoDSRom) -> None:
-    offsets = RomData(rom).get_overlay_offsets()
+    offsets = game_version.get_version(rom, game_version.ALL_VERSIONS).overlay_offsets
 
     OVERLAY_MODIFICATIONS: dict[int, list[dict[str, int]]] = {
         # Overlay 2 handles Models and Scan Data

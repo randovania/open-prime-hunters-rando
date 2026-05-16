@@ -1,41 +1,46 @@
 from ndspy.rom import NintendoDSRom
 
+from open_prime_hunters_rando.patching import game_version
 from open_prime_hunters_rando.patching.asm import read_bytes_from_file
 from open_prime_hunters_rando.patching.asm.asm_patches import AsmPatches
-from open_prime_hunters_rando.patching.rom_data import RomData
 
 
 def patch_arm9(rom: NintendoDSRom, configuration: dict) -> None:
-    addresses = RomData(rom).get_arm9_addresses()
+    version = game_version.get_version(rom, game_version.ALL_VERSIONS)
+    hunter = version.init_enemy_hunter_spawns_addresses
+    pickup = version.player_pickup_items_addresses
+    room = version.room_transition_end_addresses
+    save_file = version.init_save_file_addresses
+
     patches = AsmPatches(configuration)
 
     ARM9_PATCHES: dict[int, bytes] = {
         # Both Addresses below handle random hunter spawns
-        addresses.random_hunter_spawn_first_condition: read_bytes_from_file("random_hunter_spawns.bin"),
-        addresses.random_hunter_spawn_game_state: read_bytes_from_file("enemy_hunter_spawns.bin"),
-        addresses.missile_launcher: patches.missile_launcher,  # Load instructions to create a custom Missile Launcher
-        addresses.nothing: read_bytes_from_file("nothing.bin"),  # Add Nothing item
-        addresses.missiles_per_expansion: patches.missiles_per_expansion,  # Missiles per expansion
-        addresses.ammo_per_expansion: patches.ammo_per_expansion,  # UA per expansion
-        addresses.door_locking_condition: read_bytes_from_file(
+        hunter.random_hunter_spawn_first_condition: read_bytes_from_file("random_hunter_spawns.bin"),
+        hunter.random_hunter_spawn_game_state: read_bytes_from_file("enemy_hunter_spawns.bin"),
+        pickup.missile_launcher: patches.missile_launcher,  # Load instructions to create a custom Missile Launcher
+        pickup.nothing: read_bytes_from_file("nothing.bin"),  # Add Nothing item
+        pickup.missiles_per_expansion: patches.missiles_per_expansion,  # Missiles per expansion
+        pickup.ammo_per_expansion: patches.ammo_per_expansion,  # UA per expansion
+        room.door_locking_condition: read_bytes_from_file(
             "door_locking_condition.bin"
         ),  # Handles the door locking code
-        addresses.starting_octoliths: patches.starting_octoliths,  # Starting Octoliths (0-8)
-        addresses.starting_weapons: patches.starting_weapons,  # Starting weapons
+        save_file.starting_octoliths: patches.starting_octoliths,  # Starting Octoliths (0-8)
+        save_file.starting_weapons: patches.starting_weapons,  # Starting weapons
         # Overwrite weapon_slots to prevent deleting the weapons when
         # changing Octoliths. Sets the amount of starting Missiles
-        addresses.old_weapon_slots: patches.starting_missiles,
-        addresses.starting_ammo: patches.starting_ammo,  # Starting Universal Ammo
-        addresses.old_starting_energy: read_bytes_from_file(
+        save_file.old_weapon_slots: patches.starting_missiles,
+        save_file.starting_ammo: patches.starting_ammo,  # Starting Universal Ammo
+        save_file.old_starting_energy: read_bytes_from_file(
             "starting_missiles.bin"
         ),  # Normally loads value of etank (100). Now sets the starting missile ammo.
-        addresses.energy_cap: read_bytes_from_file("energy_cap.bin"),  # Starting energy - 1 is now just starting energy
-        addresses.starting_missiles: patches.starting_missiles,  # Sets the total capacity of starting Missiles
-        addresses.reordered_instructions: read_bytes_from_file(
+        save_file.energy_cap: read_bytes_from_file("energy_cap.bin"),  # Starting energy - 1 is now just starting energy
+        save_file.starting_missiles: patches.starting_missiles,  # Sets the total capacity of starting Missiles
+        save_file.reordered_instructions: read_bytes_from_file(
             "reordered_instructions.bin"
         ),  # Changing R0 affects later instructions, so reorder
-        addresses.init_save_file_rewrite: patches.init_save_file_rewrite,  # Unlocked planets and starting artifacts
-        addresses.starting_energy_ptr: patches.starting_energy,  # Starting energy - 1
+        save_file.init_save_file_rewrite: patches.init_save_file_rewrite,  # Unlocked planets and starting artifacts
+        save_file.starting_energy_ptr: patches.starting_energy,  # Starting energy - 1
     }
 
     # Decompress arm9.bin for editing

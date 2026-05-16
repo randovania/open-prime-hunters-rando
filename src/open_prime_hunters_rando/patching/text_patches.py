@@ -1,8 +1,11 @@
 from enum import Enum
 
+from ndspy.rom import NintendoDSRom
+
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.metroidhunters_text import MetroidHuntersTextFile
-from open_prime_hunters_rando.patching.rom_data import IdCode, Revision, RomData
+from open_prime_hunters_rando.patching import game_version
+from open_prime_hunters_rando.patching.game_version import GameVersion, IdCode, Revision
 
 
 class MetroidHuntersTextFiles(Enum):
@@ -15,29 +18,23 @@ class MetroidHuntersTextFiles(Enum):
     SPANISH = "metroidhunters_text_es"
 
 
-def patch_text_files(file_manager: FileManager, text_patches: dict) -> None:
-    rom_data = RomData(file_manager.rom)
+def patch_text_files(rom: NintendoDSRom, file_manager: FileManager, text_patches: dict) -> None:
+    version = game_version.get_version(rom, game_version.ALL_VERSIONS)
     for language_file in MetroidHuntersTextFiles:
         # ENGLISH_GB does not exist on US Rev0
         if (
             language_file == MetroidHuntersTextFiles.ENGLISH_GB
-            and rom_data.id_code == IdCode.AMHE
-            and rom_data.version == Revision.REV0
+            and version.id_code == IdCode.AMHE
+            and version.revision == Revision.REV0
         ):
             continue
 
         text_file = file_manager.get_metroidhunters_text_file(language_file)
 
-        _add_patcher_version(rom_data, text_file, text_patches)
+        _add_patcher_version(version, text_file, text_patches)
 
 
-def _add_patcher_version(rom_data: RomData, text_file: MetroidHuntersTextFile, text_patches: dict) -> None:
+def _add_patcher_version(version: GameVersion, text_file: MetroidHuntersTextFile, text_patches: dict) -> None:
+    data_offset = version.metroidhunters_text_file_offsets.main_menu_textbox
     patcher_version = text_patches.get("patcher_version", "Open Prime Hunters Rando\ndevelopment version")
-
-    # The offset changes based on the revision
-    if rom_data.version == Revision.REV0:
-        data_offset = 7944 if rom_data.id_code != IdCode.AMHP else 8012
-    else:
-        data_offset = 6792
-
     text_file.get_string(data_offset).text = patcher_version
