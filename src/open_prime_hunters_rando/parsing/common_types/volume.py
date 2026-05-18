@@ -173,7 +173,7 @@ class SphereVolumeType(BaseVolumeType, default_field_location="data"):
     def create(
         cls,
         sphere_position: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
-        sphere_radius: float = 0.0,
+        sphere_radius: float = 1.0,
     ) -> Self:
         sphere = super().create()
 
