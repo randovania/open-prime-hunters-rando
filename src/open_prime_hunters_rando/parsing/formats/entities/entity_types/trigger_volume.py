@@ -71,7 +71,7 @@ class TriggerVolume(Entity):
 
     required_state_bit = field(int)
 
-    trigger_flags = field(dict[TriggerVolumeFlags, bool])
+    trigger_flags = field(TriggerVolumeFlags)
 
     trigger_threshold = field(int)
 

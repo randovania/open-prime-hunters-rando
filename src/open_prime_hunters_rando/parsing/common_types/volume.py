@@ -8,7 +8,7 @@ from construct import Adapter, Container, Int32ul, Padded, Struct, Switch
 
 from open_prime_hunters_rando.parsing.common_types import FixedPoint
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3
-from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
+from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter, FlagsEnumAdapter
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import FieldsMixin, field
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import Vector3Fx
 
@@ -30,7 +30,7 @@ class TriggerVolumeFlags(enum.IntFlag):
     INCLUDE_BOTS = 0x1000
 
 
-TriggerVolumeFlagsConstruct: construct.FlagsEnum = construct.FlagsEnum(Int32ul, TriggerVolumeFlags)
+TriggerVolumeFlagsConstruct = FlagsEnumAdapter(TriggerVolumeFlags, Int32ul)
 
 
 class VolumeType(enum.Enum):
