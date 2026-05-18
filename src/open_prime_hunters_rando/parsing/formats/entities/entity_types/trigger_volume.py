@@ -9,8 +9,6 @@ from open_prime_hunters_rando.parsing.common_types.volume import (
     BaseVolumeType,
     BoxVolumeType,
     CollisionVolume,
-    CylinderVolumeType,
-    SphereVolumeType,
     TriggerVolumeFlags,
     TriggerVolumeFlagsConstruct,
 )
@@ -119,7 +117,7 @@ class TriggerVolume(Entity):
         child_message_param2: int = 0,
     ) -> typing.Self:
         if volume is None:
-            volume = BoxVolumeType.create() | CylinderVolumeType.create() | SphereVolumeType.create()
+            volume = BoxVolumeType.create()
 
         obj = super().create(
             node_name,

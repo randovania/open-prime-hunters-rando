@@ -30,7 +30,7 @@ class TriggerVolumeFlags(enum.IntFlag):
     INCLUDE_BOTS = 0x1000
 
 
-TriggerVolumeFlagsConstruct = FlagsEnumAdapter(TriggerVolumeFlags, Int32ul)
+TriggerVolumeFlagsConstruct: FlagsEnumAdapter = FlagsEnumAdapter(TriggerVolumeFlags, Int32ul)
 
 
 class VolumeType(enum.Enum):
