@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import enum
 from typing import Any
 
 import construct
@@ -20,6 +21,29 @@ class EnumAdapter(Adapter):
     def _encode(self, obj: Enum, context: Container, path: str) -> str:
         if isinstance(obj, self._enum_class):
             return obj.name
+        return obj
+
+
+class FlagsEnumAdapter[T: enum.IntFlag](construct.Adapter):
+    def __init__(
+        self,
+        enum_class: type[T],
+        subcon: construct.Construct = construct.Int32ub,
+    ):
+        super().__init__(construct.FlagsEnum(subcon, enum_class))
+        self._enum_class = enum_class
+
+    def _decode(self, obj: dict[str, bool], context: construct.Container, path: str) -> T:
+        value = self._enum_class(0)
+        for name, val in obj.items():
+            if name == "_flagsenum":
+                continue
+            if val:
+                value |= self._enum_class[name]
+        return value
+
+    def _encode(self, obj: T, context: construct.Container, path: str) -> T:
+        # FlagsEnum happily just builds from an int
         return obj
 
 

@@ -2,10 +2,15 @@ import itertools
 
 import pytest
 
+from open_prime_hunters_rando.parsing.common_types.volume import SphereVolumeType, TriggerVolumeFlags
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.door import Door, DoorType
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
-from open_prime_hunters_rando.parsing.formats.entities.enum import PaletteId
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import (
+    TriggerVolume,
+    TriggerVolumeType,
+)
+from open_prime_hunters_rando.parsing.formats.entities.enum import Message, PaletteId
 from open_prime_hunters_rando.parsing.level_data import (
     ALINOS,
     ARCTERRA,
@@ -64,17 +69,28 @@ def test_create_new_entity(entity_file):
         active=True,
     )
 
-    new_entities = [new_door, new_force_field]
+    new_trigger_volume = TriggerVolume.create(
+        node_name="rmMain",
+        subtype=TriggerVolumeType.AUTOMATIC,
+        volume=SphereVolumeType.create(
+            sphere_position=(1.0, 2.0, 3.0),
+            sphere_radius=4.0,
+        ),
+        trigger_flags=TriggerVolumeFlags.INCLUDE_BOTS,
+        child_id=0,
+        child_message=Message.LOAD_OUBLIETTE,
+    )
+
+    new_entities = [new_door, new_force_field, new_trigger_volume]
 
     parsed = EntityFile.parse(entity_file)
 
     for new_entity in new_entities:
-        max_entity_id = parsed.get_max_entity_id()
-        parsed.replace_entity(max_entity_id, new_entity)
+        parsed.append_entity(new_entity)
 
-        replaced_entity = parsed.get_entity(max_entity_id, type(new_entity))
+        appended_entity = parsed.get_entity(parsed.get_max_entity_id(), type(new_entity))
 
-        assert new_entity == replaced_entity
+        assert new_entity == appended_entity
 
     built = EntityFile.build(parsed)
     assert parsed == EntityFile.parse(built)
