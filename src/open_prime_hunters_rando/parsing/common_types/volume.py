@@ -29,6 +29,12 @@ class TriggerVolumeFlags(enum.IntFlag):
     BIT_11 = 0x800  # unused
     INCLUDE_BOTS = 0x1000
 
+    def __repr__(self) -> str:
+        return " | ".join(f.name for f in self if f.name) or "NONE"
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
 
 TriggerVolumeFlagsConstruct: FlagsEnumAdapter = FlagsEnumAdapter(TriggerVolumeFlags, Int32ul)
 
