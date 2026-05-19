@@ -83,40 +83,40 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
                         elder_passage = file_manager.get_entity_file("Alinos", "Elder Passage")
                         spire_data = elder_passage.get_entity(9, EnemySpawn)
                         assert isinstance(spire_data.enemy_fields, Hunter)
-                        new_hunter_id = spire_data.enemy_fields.hunter_id
+                        new_hunter_type = spire_data.enemy_fields.hunter_type
                     # Spawning a Guardian causes a crash in Data Shrine 03 "Kanden" spawn
                     elif room_name == "Data Shrine 02" and entity.entity_id == 12:
-                        new_hunter_id = HunterType(random.choice(list(range(1, 7))))
+                        new_hunter_type = HunterType(random.choice(list(range(1, 7))))
                     # Have "Kanden" spawns in Data Shrine 02 and Data Shrine 03 match
                     elif room_name == "Data Shrine 03" and entity.entity_id == 3:
                         data_shrine_02 = file_manager.get_entity_file("Celestial Archives", "Data Shrine 02")
                         kanden_data = data_shrine_02.get_entity(12, EnemySpawn)
                         assert isinstance(kanden_data.enemy_fields, Hunter)
-                        new_hunter_id = kanden_data.enemy_fields.hunter_id
+                        new_hunter_type = kanden_data.enemy_fields.hunter_type
                     # TODO: Figure out why Weapons Complex crashes when shuffling the hunters
                     elif room_name == "Weapons Complex":
                         continue
                     else:
                         # If enabled, generate a new hunter id (1-7) and modify the entity
-                        new_hunter_id = HunterType(random.choice(list(range(1, 8))))
+                        new_hunter_type = HunterType(random.choice(list(range(1, 8))))
 
                     # Only modify the hunter fields if the hunter id is different
-                    if hunter_data.hunter_id != new_hunter_id:
-                        _patch_hunter_ids(hunter_data, new_hunter_id)
+                    if hunter_data.hunter_type != new_hunter_type:
+                        _patch_hunter_ids(hunter_data, new_hunter_type)
                         _patch_encounter_types(entity_file, encounter_type_entities)
 
                 # If enabled, change the hunter spawns to use a random color by hunter type (0-5)
                 if shuffle_hunter_colors:
                     # FIXME: Guardians crash the game if they use a different color, so skip for now
-                    if hunter_data.hunter_id in (HunterType.GUARDIAN, HunterType.RANDOM):
+                    if hunter_data.hunter_type in (HunterType.GUARDIAN, HunterType.RANDOM):
                         continue
-                    hunter_data.hunter_color = _HUNTERS_TO_COLOR[HunterType(hunter_data.hunter_id)]
+                    hunter_data.hunter_color = _HUNTERS_TO_COLOR[HunterType(hunter_data.hunter_type)]
 
 
-def _patch_hunter_ids(hunter_data: Hunter, new_hunter_id: HunterType) -> None:
+def _patch_hunter_ids(hunter_data: Hunter, new_hunter_type: HunterType) -> None:
     # Set the new hunter id
-    hunter_data.hunter_id = new_hunter_id
-    if new_hunter_id == HunterType.GUARDIAN:
+    hunter_data.hunter_type = new_hunter_type
+    if new_hunter_type == HunterType.GUARDIAN:
         # Guardians can use weapon except Omega Cannon
         hunter_data.hunter_weapon = random.choice(list(range(8)))
     else:

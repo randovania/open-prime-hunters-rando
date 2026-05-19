@@ -40,12 +40,12 @@ EnemySpawnEntityData = Struct(
     "initial_cooldown" / Padded(4, Int16ul),
     "active_distance" / FixedPoint,
     "enemy_active_distance" / FixedPoint,
-    "node_name" / DecodedString,
-    "entity_id1" / Padded(4, Int16sl),
+    "enemy_node_name" / DecodedString,
+    "message1_target" / Padded(4, Int16sl),
     "message1" / MessageConstruct,
-    "entity_id2" / Padded(4, Int16sl),
+    "message2_target" / Padded(4, Int16sl),
     "message2" / MessageConstruct,
-    "entity_id3" / Padded(4, Int16sl),
+    "message3_target" / Padded(4, Int16sl),
     "message3" / MessageConstruct,
     "item_type" / ItemTypeConstruct,
 )
@@ -94,15 +94,15 @@ class EnemySpawn(Entity):
     active_distance = field(float)
     enemy_active_distance = field(float)
 
-    node_name = field(str)
+    enemy_node_name = field(str)
 
-    entity_id1 = field(int)
+    message1_target = field(int)
     message1 = field(Message)
 
-    entity_id2 = field(int)
+    message2_target = field(int)
     message2 = field(Message)
 
-    entity_id3 = field(int)
+    message3_target = field(int)
     message3 = field(Message)
 
     item_type = field(ItemType)

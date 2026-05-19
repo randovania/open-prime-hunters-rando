@@ -23,7 +23,7 @@ HunterConstruct = EnumAdapter(HunterType, Int32ul)
 
 
 HunterEntityData = Struct(
-    "hunter_id" / HunterConstruct,
+    "hunter_type" / HunterConstruct,
     "encounter_type" / Int32ul,
     "hunter_weapon" / Int32ul,
     "hunter_health" / Int16ul,
@@ -39,7 +39,7 @@ class Hunter(EnemyFields, default_field_location="raw"):
     def type_construct(cls) -> Construct:
         return HunterEntityData
 
-    hunter_id = field(HunterType)
+    hunter_type = field(HunterType)
 
     encounter_type = field(int)
 
