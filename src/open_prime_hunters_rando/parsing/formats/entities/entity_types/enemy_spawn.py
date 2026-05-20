@@ -1,3 +1,5 @@
+import typing
+
 import construct
 from construct import (
     Byte,
@@ -12,6 +14,7 @@ from construct import (
 )
 
 from open_prime_hunters_rando.parsing.common_types import DecodedString, FixedPoint, ItemTypeConstruct, MessageConstruct
+from open_prime_hunters_rando.parsing.common_types.vectors import Vec3
 from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
@@ -20,7 +23,8 @@ from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies impo
     enemy_type_to_construct,
 )
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.enemy_base import EnemyFields, EnemyType
-from open_prime_hunters_rando.parsing.formats.entities.enum import ItemType, Message
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.hunter import Hunter
+from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, ItemType, Message
 
 EnemyTypeConstruct = EnumAdapter(EnemyType, Byte)
 
@@ -106,3 +110,81 @@ class EnemySpawn(Entity):
     message3 = field(Message)
 
     item_type = field(ItemType)
+
+    @classmethod
+    def cls_entity_type(cls) -> EntityType:
+        return EntityType.ENEMY_SPAWN
+
+    @classmethod
+    def cls_enemy_type(cls) -> EnemyType:
+        raise NotImplementedError
+
+    @classmethod
+    def create(
+        cls,
+        node_name: str = "",
+        layer_state: typing.Sequence[bool] = (False,) * 16,
+        entity_id: int = -1,
+        position: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
+        up_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
+        facing_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
+        enemy_type: EnemyType | None = None,
+        enemy_fields: EnemyFields | None = None,
+        linked_entity_id: int = 0,
+        spawn_limit: int = 1,
+        spawn_total: int = 1,
+        spawn_count: int = 1,
+        active: bool = True,
+        always_active: bool = True,
+        item_chance: int = 100,
+        spawner_health: int = 0,
+        cooldown_time: int = 0,
+        initial_cooldown: int = 0,
+        active_distance: float = 30.0,
+        enemy_active_distance: float = 35.0,
+        enemy_node_name: str = "",
+        message1_target: int = -1,
+        message1: Message = Message.NONE,
+        message2_target: int = -1,
+        message2: Message = Message.NONE,
+        message3_target: int = -1,
+        message3: Message = Message.NONE,
+        item_type: ItemType = ItemType.NONE,
+    ) -> typing.Self:
+        if enemy_type is None:
+            enemy_type = Hunter.cls_enemy_type()
+        if enemy_fields is None:
+            enemy_fields = Hunter.create()
+
+        obj = super().create(
+            node_name,
+            layer_state,
+            entity_id,
+            position,
+            up_vector,
+            facing_vector,
+        )
+        obj.enemy_type = enemy_type
+        obj.enemy_fields = enemy_fields
+        obj.linked_entity_id = linked_entity_id
+        obj.spawn_limit = spawn_limit
+        obj.spawn_total = spawn_total
+        obj.spawn_count = spawn_count
+        obj.active = active
+        obj.always_active = always_active
+        obj.item_chance = item_chance
+        obj.spawner_health = spawner_health
+        obj.cooldown_time = cooldown_time
+        obj.initial_cooldown = initial_cooldown
+        obj.active_distance = active_distance
+        obj.enemy_active_distance = enemy_active_distance
+        obj.enemy_node_name = enemy_node_name
+        obj.message1_target = message1_target
+        obj.message1 = message1
+        obj.message2_target = message2_target
+        obj.message2 = message2
+        obj.message3_target = message3_target
+        obj.message3 = message3
+        obj.item_type = item_type
+
+        return obj
