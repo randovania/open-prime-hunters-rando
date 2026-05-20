@@ -3,13 +3,13 @@ import typing
 
 from construct import Byte, Construct, Flag, Int32ul, Struct
 
-from open_prime_hunters_rando.parsing.common_types import PaletteIdConstruct
+from open_prime_hunters_rando.parsing.common_types import WeaponTypeConstruct
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3
 from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import DecodedString
-from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, PaletteId
+from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, WeaponType
 
 
 class DoorType(enum.Enum):
@@ -21,7 +21,7 @@ class DoorType(enum.Enum):
 
 DoorEntityData = Struct(
     "port_name" / DecodedString,
-    "palette_id" / PaletteIdConstruct,
+    "weapon_type" / WeaponTypeConstruct,
     "door_type" / EnumAdapter(DoorType, Int32ul),
     "connector_id" / Int32ul,
     "target_layer_id" / Byte,
@@ -40,7 +40,7 @@ class Door(Entity):
 
     port_name = field(str)
 
-    palette_id = field(PaletteId)
+    weapon_type = field(WeaponType)
     door_type = field(DoorType)
 
     connector_id = field(int)
@@ -68,7 +68,7 @@ class Door(Entity):
         up_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
         facing_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
         port_name: str = "",
-        palette_id: PaletteId = PaletteId.POWER_BEAM,
+        weapon_type: WeaponType = WeaponType.POWER_BEAM,
         door_type: DoorType = DoorType.STANDARD,
         connector_id: int = 0,
         target_layer_id: int = 0,
@@ -87,7 +87,7 @@ class Door(Entity):
             facing_vector,
         )
         obj.port_name = port_name
-        obj.palette_id = palette_id
+        obj.weapon_type = weapon_type
         obj.door_type = door_type
         obj.connector_id = connector_id
         obj.target_layer_id = target_layer_id
