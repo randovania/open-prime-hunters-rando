@@ -1,10 +1,9 @@
-import enum
 import typing
 
 import construct
 from construct import Byte, Int16sl, Int16ul, Int32sl, Int32ul, Padded, Struct
 
-from open_prime_hunters_rando.parsing.common_types import MessageConstruct
+from open_prime_hunters_rando.parsing.common_types import BaseFlags, MessageConstruct
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3, Vector3Fx
 from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, BoxVolumeType, CollisionVolume
 from open_prime_hunters_rando.parsing.construct_extensions import FlagsEnumAdapter
@@ -13,7 +12,7 @@ from open_prime_hunters_rando.parsing.formats.entities.entity_classes import fie
 from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, Message
 
 
-class ObjectFlags(enum.IntFlag):
+class ObjectFlags(BaseFlags):
     NONE = 0x0
     STATE_BIT0 = 0x1
     STATE_BIT1 = 0x2
@@ -22,17 +21,11 @@ class ObjectFlags(enum.IntFlag):
     ENTITY_LINKED = 0x8
     IS_VISIBLE = 0x10
 
-    def __repr__(self) -> str:
-        return " | ".join(f.name for f in self if f.name) or "NONE"
-
-    def __str__(self) -> str:
-        return self.__repr__()
-
 
 ObjectFlagsConstruct: FlagsEnumAdapter = FlagsEnumAdapter(ObjectFlags, Byte)
 
 
-class ObjectEffectFlags(enum.IntFlag):
+class ObjectEffectFlags(BaseFlags):
     NONE = 0x0
     USE_EFFECT_VOLUME = 0x1
     USE_EFFECT_OFFSET = 0x2
@@ -42,12 +35,6 @@ class ObjectEffectFlags(enum.IntFlag):
     DESTROY_EFFECT = 0x20
     ALWAYS_UPDATE_EFFECT = 0x40
     UNKNOWN = 0x8000
-
-    def __repr__(self) -> str:
-        return " | ".join(f.name for f in self if f.name) or "NONE"
-
-    def __str__(self) -> str:
-        return self.__repr__()
 
 
 ObjectEffectFlagsConstruct: FlagsEnumAdapter = FlagsEnumAdapter(ObjectEffectFlags, Int32ul)

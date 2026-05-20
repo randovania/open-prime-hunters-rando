@@ -1,9 +1,14 @@
-import enum
 import typing
 
 from construct import Byte, Construct, Flag, Int16sl, Int16ul, Int32sl, Int32ul, Padded, Struct
 
-from open_prime_hunters_rando.parsing.common_types import DecodedString, FixedPoint, ItemTypeConstruct, MessageConstruct
+from open_prime_hunters_rando.parsing.common_types import (
+    BaseFlags,
+    DecodedString,
+    FixedPoint,
+    ItemTypeConstruct,
+    MessageConstruct,
+)
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3, Vec4, Vector3Fx, Vector4Fx
 from open_prime_hunters_rando.parsing.construct_extensions import FlagsEnumAdapter
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
@@ -11,7 +16,7 @@ from open_prime_hunters_rando.parsing.formats.entities.entity_classes import fie
 from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, ItemType, Message
 
 
-class PlatformFlags(enum.IntFlag):
+class PlatformFlags(BaseFlags):
     NONE = 0x0
     HAZARD = 0x1
     CONTACT_DAMAGE = 0x2
@@ -45,12 +50,6 @@ class PlatformFlags(enum.IntFlag):
     BIT29 = 0x20000000
     BIT30 = 0x40000000
     BIT31 = 0x80000000
-
-    def __repr__(self) -> str:
-        return " | ".join(f.name for f in self if f.name) or "NONE"
-
-    def __str__(self) -> str:
-        return self.__repr__()
 
 
 PlatformFlagsConstruct: FlagsEnumAdapter = FlagsEnumAdapter(PlatformFlags, Int32ul)
