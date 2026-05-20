@@ -1,6 +1,6 @@
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
-from open_prime_hunters_rando.parsing.formats.entities.enum import PaletteId
+from open_prime_hunters_rando.parsing.formats.entities.enum import WeaponType
 
 
 def patch_force_fields(entity_file: EntityFile, force_fields: list) -> None:
@@ -8,4 +8,4 @@ def patch_force_fields(entity_file: EntityFile, force_fields: list) -> None:
         entity_id = force_field["entity_id"]
 
         entity = entity_file.get_entity(entity_id, ForceField)
-        entity.force_field_type = PaletteId(force_field["type"])
+        entity.force_field_type = WeaponType(force_field["type"])

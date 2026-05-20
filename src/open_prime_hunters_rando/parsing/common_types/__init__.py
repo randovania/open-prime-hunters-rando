@@ -3,7 +3,7 @@ import math
 import construct
 
 from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
-from open_prime_hunters_rando.parsing.formats.entities.enum import ItemType, Message, PaletteId
+from open_prime_hunters_rando.parsing.formats.entities.enum import ItemType, Message, WeaponType
 
 
 class _FixedPointAdapter(construct.Adapter):
@@ -28,7 +28,8 @@ DecodedString = construct.PaddedString(16, "ascii")
 
 MessageConstruct = EnumAdapter(Message, construct.Int32ul)
 ItemTypeConstruct = EnumAdapter(ItemType, construct.Int32sl)
-PaletteIdConstruct = EnumAdapter(PaletteId, construct.Int32ul)
+WeaponTypeConstruct = EnumAdapter(WeaponType, construct.Int32ul)
+
 
 def num_bytes_to_align(length: int, modulus: int = 4) -> int:
     alignment = length % modulus

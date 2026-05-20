@@ -1,12 +1,12 @@
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.door import Door, DoorType
-from open_prime_hunters_rando.parsing.formats.entities.enum import PaletteId
+from open_prime_hunters_rando.parsing.formats.entities.enum import WeaponType
 
 
 def patch_doors(entity_file: EntityFile, doors: list, room_name: str) -> None:
     for door in doors:
         entity_id = door["entity_id"]
-        palette_id = PaletteId(door["palette_id"])
+        weapon_type = WeaponType(door["weapon_type"])
 
         entity = entity_file.get_entity(entity_id, Door)
 
@@ -16,14 +16,14 @@ def patch_doors(entity_file: EntityFile, doors: list, room_name: str) -> None:
                 f"Unable to patch entity {entity_id} in {room_name}. Only Standard and Thin door types can be modified."
             )
         # If the new type is the same as the original type, skip changing it
-        if palette_id == entity.palette_id:
+        if weapon_type == entity.weapon_type:
             continue
 
         # Change the weakness
-        entity.palette_id = palette_id
+        entity.weapon_type = weapon_type
 
         # Unlock doors that are changed to Power Beam
-        if palette_id == PaletteId.POWER_BEAM:
+        if weapon_type == WeaponType.POWER_BEAM:
             entity.locked = False
         # Activate and lock doors changed to another weapon
         else:
