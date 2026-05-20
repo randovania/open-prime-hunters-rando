@@ -2,15 +2,8 @@ import itertools
 
 import pytest
 
-from open_prime_hunters_rando.parsing.common_types.volume import SphereVolumeType, TriggerVolumeFlags
-from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.door import Door, DoorType
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import (
-    TriggerVolume,
-    TriggerVolumeType,
-)
-from open_prime_hunters_rando.parsing.formats.entities.enum import Message, WeaponType
+from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile, entity_type_to_class
+from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType
 from open_prime_hunters_rando.parsing.level_data import (
     ALINOS,
     ARCTERRA,
@@ -48,44 +41,13 @@ def test_compare_entity_file(entity_file):
 
 
 def test_create_new_entity(entity_file):
-    new_door = Door.create(
-        port_name="port_rmMain",
-        weapon_type=WeaponType.SHOCK_COIL,
-        door_type=DoorType.THIN,
-        connector_id=255,
-        target_layer_id=12,
-        locked=True,
-        out_connector_id=10,
-        out_loader_id=4,
-        entity_file_name="Unit1_Land_Ent",
-        room_name="rmMain",
-    )
-
-    new_force_field = ForceField.create(
-        node_name="rmMain",
-        force_field_type=WeaponType.OMEGA_CANNON,
-        width=4.0,
-        height=2.0,
-        active=True,
-    )
-
-    new_trigger_volume = TriggerVolume.create(
-        node_name="rmMain",
-        subtype=TriggerVolumeType.AUTOMATIC,
-        volume=SphereVolumeType.create(
-            sphere_position=(1.0, 2.0, 3.0),
-            sphere_radius=4.0,
-        ),
-        trigger_flags=TriggerVolumeFlags.INCLUDE_BOTS,
-        child_id=0,
-        child_message=Message.LOAD_OUBLIETTE,
-    )
-
-    new_entities = [new_door, new_force_field, new_trigger_volume]
-
     parsed = EntityFile.parse(entity_file)
 
-    for new_entity in new_entities:
+    for etype, eclass in entity_type_to_class.items():
+        # FIXME: Remove once added
+        if etype == EntityType.ENEMY_SPAWN:
+            continue
+        new_entity = eclass.create()
         parsed.append_entity(new_entity)
 
         appended_entity = parsed.get_entity(parsed.get_max_entity_id(), type(new_entity))

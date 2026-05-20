@@ -1,13 +1,14 @@
 import enum
+import typing
 
-import construct
 from construct import Byte, Construct, Flag, Int16sl, Int16ul, Int32sl, Int32ul, Padded, Struct
 
 from open_prime_hunters_rando.parsing.common_types import DecodedString, FixedPoint, ItemTypeConstruct, MessageConstruct
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3, Vec4, Vector3Fx, Vector4Fx
+from open_prime_hunters_rando.parsing.construct_extensions import FlagsEnumAdapter
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
-from open_prime_hunters_rando.parsing.formats.entities.enum import ItemType, Message
+from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, ItemType, Message
 
 
 class PlatformFlags(enum.IntFlag):
@@ -45,6 +46,15 @@ class PlatformFlags(enum.IntFlag):
     BIT30 = 0x40000000
     BIT31 = 0x80000000
 
+    def __repr__(self) -> str:
+        return " | ".join(f.name for f in self if f.name) or "NONE"
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
+
+PlatformFlagsConstruct: FlagsEnumAdapter = FlagsEnumAdapter(PlatformFlags, Int32ul)
+
 
 PlatformEntityData = Struct(
     "no_port" / Int32ul,
@@ -66,15 +76,15 @@ PlatformEntityData = Struct(
     "movement_type" / Int32ul,
     "for_cutscene" / Int32ul,
     "reverse_type" / Int32ul,
-    "flags" / construct.FlagsEnum(Int32ul, PlatformFlags),
+    "platform_flags" / PlatformFlagsConstruct,
     "contact_damage" / Int32ul,
     "beam_spawn_direction" / Vector3Fx,
     "beam_spawn_position" / Vector3Fx,
     "beam_id" / Int32sl,
     "beam_interval" / Int32ul,
     "beam_on_intervals" / Int32ul,
-    "_unused1" / Int16ul,
-    "_unused2" / Int16ul,
+    "field27" / Int16ul,  # Unused
+    "field28" / Int16ul,  # Unused
     "resist_effect_id" / Int32sl,
     "health" / Int32ul,
     "effectiveness" / Int32ul,
@@ -82,8 +92,8 @@ PlatformEntityData = Struct(
     "dead_effect_id" / Int32sl,
     "item_chance" / Padded(4, Byte),
     "item_type" / ItemTypeConstruct,
-    "_unused3" / Int32ul,
-    "_unused4" / Int32ul,
+    "field36" / Int32ul,  # Unused
+    "field37" / Int32ul,  # Unused
     "beam_hit_message_target" / Int32sl,
     "beam_hit_message" / MessageConstruct,
     "beam_hit_message_param1" / Int32sl,
@@ -152,7 +162,7 @@ class Platform(Entity):
     for_cutscene = field(int)
     reverse_type = field(int)
 
-    flags = field(dict[PlatformFlags, bool])
+    platform_flags = field(PlatformFlags)
 
     contact_damage = field(int)
 
@@ -161,6 +171,9 @@ class Platform(Entity):
     beam_id = field(int)
     beam_interval = field(int)
     beam_on_intervals = field(int)
+
+    field27 = field(int)
+    field28 = field(int)
 
     resist_effect_id = field(int)
 
@@ -172,6 +185,9 @@ class Platform(Entity):
 
     item_chance = field(int)
     item_type = field(ItemType)
+
+    field36 = field(int)
+    field37 = field(int)
 
     beam_hit_message_target = field(int)
     beam_hit_message = field(Message)
@@ -211,3 +227,167 @@ class Platform(Entity):
     lifetime_message4 = field(Message)
     lifetime_message4_param1 = field(int)
     lifetime_message4_param2 = field(int)
+
+    @classmethod
+    def cls_entity_type(cls) -> EntityType:
+        return EntityType.PLATFORM
+
+    @classmethod
+    def create(
+        cls,
+        node_name: str = "",
+        layer_state: typing.Sequence[bool] = (False,) * 16,
+        entity_id: int = -1,
+        position: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
+        up_vector: Vec3 | tuple[float, float, float] = (0.0, 1.0, 0.0),
+        facing_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 1.0),
+        no_port: int = 1,
+        model_id: int = 0,
+        parent_id: int = -1,
+        active: bool = True,
+        delay: int = 150,
+        scan_data1: int = 0,
+        scan_message_target: int = -1,
+        scan_message: Message = Message.NONE,
+        scan_data2: int = 0,
+        position_count: int = 0,
+        positions: list[Vec3 | tuple[float, float, float]] = [Vec3(0.0, 0.0, 0.0)] * 10,
+        rotations: list[Vec4 | tuple[float, float, float, float]] = [(0.0, 0.0, 0.0, 0.0)] * 10,
+        position_offset: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
+        forward_speed: float = 0.0,
+        backward_speed: float = 0.0,
+        portal_name: str = "",
+        movement_type: int = 0,
+        for_cutscene: int = 0,
+        reverse_type: int = 1,
+        platform_flags: PlatformFlags = PlatformFlags.NONE,
+        contact_damage: int = 1,
+        beam_spawn_direction: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
+        beam_spawn_position: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
+        beam_id: int = 0,
+        beam_interval: int = 10,
+        beam_on_intervals: int = 1,
+        field27: int = 65535,
+        field28: int = 0,
+        resist_effect_id: int = 0,
+        health: int = 100,
+        effectiveness: int = 1,
+        damage_effect_id: int = 0,
+        dead_effect_id: int = 0,
+        item_chance: int = 100,
+        item_type: ItemType = ItemType.NONE,
+        field36: int = 0,
+        field37: int = 4294967295,
+        beam_hit_message_target: int = 65535,
+        beam_hit_message: Message = Message.NONE,
+        beam_hit_message_param1: int = 0,
+        beam_hit_message_param2: int = 0,
+        player_collision_message_target: int = 65535,
+        player_collision_message: Message = Message.NONE,
+        player_collision_message_param1: int = 0,
+        player_collision_message_param2: int = 0,
+        dead_message_target: int = 65635,
+        dead_message: Message = Message.NONE,
+        dead_message_param1: int = 0,
+        dead_message_param2: int = 0,
+        lifetime_message1_index: int = 255,
+        lifetime_message1_target: int = -1,
+        lifetime_message1: Message = Message.NONE,
+        lifetime_message1_param1: int = 0,
+        lifetime_message1_param2: int = 0,
+        lifetime_message2_index: int = 255,
+        lifetime_message2_target: int = -1,
+        lifetime_message2: Message = Message.NONE,
+        lifetime_message2_param1: int = 0,
+        lifetime_message2_param2: int = 0,
+        lifetime_message3_index: int = 255,
+        lifetime_message3_target: int = -1,
+        lifetime_message3: Message = Message.NONE,
+        lifetime_message3_param1: int = 0,
+        lifetime_message3_param2: int = 0,
+        lifetime_message4_index: int = 255,
+        lifetime_message4_target: int = -1,
+        lifetime_message4: Message = Message.NONE,
+        lifetime_message4_param1: int = 0,
+        lifetime_message4_param2: int = 0,
+    ) -> typing.Self:
+        obj = super().create(
+            node_name,
+            layer_state,
+            entity_id,
+            position,
+            up_vector,
+            facing_vector,
+        )
+        obj.no_port = no_port
+        obj.model_id = model_id
+        obj.parent_id = parent_id
+        obj.active = active
+        obj.delay = delay
+        obj.scan_data1 = scan_data1
+        obj.scan_message_target = scan_message_target
+        obj.scan_message = scan_message
+        obj.scan_data2 = scan_data2
+        obj.position_count = position_count
+        obj.positions = [Vec3(*position) for position in positions]
+        obj.rotations = [Vec4(*rotation) for rotation in rotations]
+        obj.position_offset = Vec3(*position_offset)
+        obj.forward_speed = forward_speed
+        obj.backward_speed = backward_speed
+        obj.portal_name = portal_name
+        obj.movement_type = movement_type
+        obj.for_cutscene = for_cutscene
+        obj.reverse_type = reverse_type
+        obj.platform_flags = platform_flags
+        obj.active = active
+        obj.contact_damage = contact_damage
+        obj.beam_spawn_direction = Vec3(*beam_spawn_direction)
+        obj.beam_spawn_position = Vec3(*beam_spawn_position)
+        obj.beam_id = beam_id
+        obj.beam_interval = beam_interval
+        obj.beam_on_intervals = beam_on_intervals
+        obj.field27 = field27
+        obj.field28 = field28
+        obj.resist_effect_id = resist_effect_id
+        obj.health = health
+        obj.effectiveness = effectiveness
+        obj.damage_effect_id = damage_effect_id
+        obj.dead_effect_id = dead_effect_id
+        obj.item_chance = item_chance
+        obj.item_type = item_type
+        obj.field36 = field36
+        obj.field37 = field37
+        obj.beam_hit_message_target = beam_hit_message_target
+        obj.beam_hit_message = beam_hit_message
+        obj.beam_hit_message_param1 = beam_hit_message_param1
+        obj.beam_hit_message_param2 = beam_hit_message_param2
+        obj.player_collision_message_target = player_collision_message_target
+        obj.player_collision_message = player_collision_message
+        obj.player_collision_message_param1 = player_collision_message_param1
+        obj.player_collision_message_param2 = player_collision_message_param2
+        obj.dead_message_target = dead_message_target
+        obj.dead_message = dead_message
+        obj.dead_message_param1 = dead_message_param1
+        obj.dead_message_param2 = dead_message_param2
+        obj.lifetime_message1_index = lifetime_message1_index
+        obj.lifetime_message1_target = lifetime_message1_target
+        obj.lifetime_message1 = lifetime_message1
+        obj.lifetime_message1_param1 = lifetime_message1_param1
+        obj.lifetime_message1_param2 = lifetime_message1_param2
+        obj.lifetime_message2_index = lifetime_message2_index
+        obj.lifetime_message2_target = lifetime_message2_target
+        obj.lifetime_message2 = lifetime_message2
+        obj.lifetime_message2_param1 = lifetime_message2_param1
+        obj.lifetime_message2_param2 = lifetime_message2_param2
+        obj.lifetime_message3_index = lifetime_message3_index
+        obj.lifetime_message3_target = lifetime_message3_target
+        obj.lifetime_message3 = lifetime_message3
+        obj.lifetime_message3_param1 = lifetime_message3_param1
+        obj.lifetime_message3_param2 = lifetime_message3_param2
+        obj.lifetime_message4_index = lifetime_message4_index
+        obj.lifetime_message4_target = lifetime_message4_target
+        obj.lifetime_message4 = lifetime_message4
+        obj.lifetime_message4_param1 = lifetime_message4_param1
+        obj.lifetime_message4_param2 = lifetime_message4_param2
+
+        return obj
