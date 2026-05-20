@@ -5,6 +5,7 @@ from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.hunter import Hunter, HunterType
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
+from open_prime_hunters_rando.parsing.formats.entities.enum import WeaponType
 
 _ROOMS_WITH_HUNTERS: dict[str, dict[str, dict[int, int]]] = {
     "Alinos": {
@@ -117,11 +118,11 @@ def _patch_hunter_ids(hunter_data: Hunter, new_hunter_type: HunterType) -> None:
     # Set the new hunter id
     hunter_data.hunter_type = new_hunter_type
     if new_hunter_type == HunterType.GUARDIAN:
-        # Guardians can use weapon except Omega Cannon
-        hunter_data.hunter_weapon = random.choice(list(range(8)))
+        # Guardians can use any weapon except Omega Cannon
+        hunter_data.hunter_weapon = WeaponType(random.choice(list(range(8))))
     else:
         # Hunters by default use a weapon value of 255
-        hunter_data.hunter_weapon = 255
+        hunter_data.hunter_weapon = WeaponType.HUNTER
 
 
 def _patch_encounter_types(entity_file: EntityFile, encounter_type_entities: dict[int, int]) -> None:

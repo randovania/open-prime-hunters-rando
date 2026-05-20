@@ -3,9 +3,11 @@ import typing
 
 from construct import Byte, Construct, Int16ul, Int32ul, Struct
 
+from open_prime_hunters_rando.parsing.common_types import WeaponTypeConstruct
 from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.enemy_base import EnemyFields, EnemyType
+from open_prime_hunters_rando.parsing.formats.entities.enum import WeaponType
 
 
 class HunterType(enum.Enum):
@@ -26,7 +28,7 @@ HunterConstruct = EnumAdapter(HunterType, Int32ul)
 HunterEntityData = Struct(
     "hunter_type" / HunterConstruct,
     "encounter_type" / Int32ul,
-    "hunter_weapon" / Int32ul,
+    "hunter_weapon" / WeaponTypeConstruct,
     "hunter_health" / Int16ul,
     "hunter_health_max" / Int16ul,
     "field6" / Int16ul,  # set in AI data
@@ -44,7 +46,7 @@ class Hunter(EnemyFields, default_field_location="raw"):
 
     encounter_type = field(int)
 
-    hunter_weapon = field(int)
+    hunter_weapon = field(WeaponType)
     hunter_health = field(int)
     hunter_health_max = field(int)
 
@@ -63,7 +65,7 @@ class Hunter(EnemyFields, default_field_location="raw"):
         cls,
         hunter_type: HunterType = HunterType.SAMUS,
         encounter_type: int = 0,
-        hunter_weapon: int = 0,
+        hunter_weapon: WeaponType = WeaponType.HUNTER,
         hunter_health: int = 0,
         hunter_health_max: int = 0,
         field6: int = 1,

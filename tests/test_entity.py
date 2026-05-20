@@ -89,7 +89,7 @@ def test_create_new_entity(entity_file):
         enemy_fields=Hunter.create(
             hunter_type=HunterType.SYLUX,
             encounter_type=2,
-            hunter_weapon=5,
+            hunter_weapon=WeaponType.OMEGA_CANNON,
             hunter_health=10,
             hunter_health_max=20,
             hunter_color=4,
