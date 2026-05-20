@@ -367,7 +367,7 @@
                                 "type": "integer",
                                 "description": "The id of the entity."
                             },
-                            "palette_id": {
+                            "weapon_type": {
                                 "type": "integer",
                                 "description": "The weakness of door. Sealed doors can only be unlocked remotely.\nPower Beam, Volt Driver, Missile, Battlehammer, Imperialist, Judicator, Magmaul, Shock Coil, Omega Cannon, Sealed."
                             },
@@ -379,7 +379,7 @@
                     },
                     "required": [
                         "entity_id",
-                        "palette_id"
+                        "weapon_type"
                     ],
                     "default": []
                 }

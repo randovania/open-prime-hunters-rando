@@ -99,7 +99,7 @@ class ItemType(enum.Enum):
     PICK_WPN_MISSILE = 22
 
 
-class PaletteId(enum.Enum):
+class WeaponType(enum.Enum):
     POWER_BEAM = 0
     VOLT_DRIVER = 1
     MISSILE = 2
@@ -109,4 +109,5 @@ class PaletteId(enum.Enum):
     MAGMAUL = 6
     SHOCK_COIL = 7
     OMEGA_CANNON = 8
-    LOCKED = 9
+    LOCKED = 9  # Used for Doors and Force Fields
+    HUNTER = 255  # Used for Hunter weapons

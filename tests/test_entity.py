@@ -13,7 +13,7 @@ from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volu
     TriggerVolume,
     TriggerVolumeType,
 )
-from open_prime_hunters_rando.parsing.formats.entities.enum import Message, PaletteId
+from open_prime_hunters_rando.parsing.formats.entities.enum import Message, WeaponType
 from open_prime_hunters_rando.parsing.level_data import (
     ALINOS,
     ARCTERRA,
@@ -53,7 +53,7 @@ def test_compare_entity_file(entity_file):
 def test_create_new_entity(entity_file):
     new_door = Door.create(
         port_name="port_rmMain",
-        palette_id=PaletteId.SHOCK_COIL,
+        weapon_type=WeaponType.SHOCK_COIL,
         door_type=DoorType.THIN,
         connector_id=255,
         target_layer_id=12,
@@ -66,7 +66,7 @@ def test_create_new_entity(entity_file):
 
     new_force_field = ForceField.create(
         node_name="rmMain",
-        force_field_type=PaletteId.OMEGA_CANNON,
+        force_field_type=WeaponType.OMEGA_CANNON,
         width=4.0,
         height=2.0,
         active=True,

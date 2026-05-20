@@ -2,14 +2,14 @@ import typing
 
 from construct import Construct, Flag, Struct
 
-from open_prime_hunters_rando.parsing.common_types import FixedPoint, PaletteIdConstruct
+from open_prime_hunters_rando.parsing.common_types import FixedPoint, WeaponTypeConstruct
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
-from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, PaletteId
+from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, WeaponType
 
 ForceFieldEntityData = Struct(
-    "force_field_type" / PaletteIdConstruct,
+    "force_field_type" / WeaponTypeConstruct,
     "width" / FixedPoint,
     "height" / FixedPoint,
     "active" / Flag,
@@ -21,7 +21,7 @@ class ForceField(Entity):
     def type_construct(cls) -> Construct:
         return ForceFieldEntityData
 
-    force_field_type = field(PaletteId)
+    force_field_type = field(WeaponType)
 
     width = field(float)
     height = field(float)
@@ -41,7 +41,7 @@ class ForceField(Entity):
         position: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
         up_vector: Vec3 | tuple[float, float, float] = (0.0, 1.0, 0.0),
         facing_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 1.0),
-        force_field_type: PaletteId = PaletteId.LOCKED,
+        force_field_type: WeaponType = WeaponType.LOCKED,
         width: float = 0.0,
         height: float = 0.0,
         active: bool = False,
