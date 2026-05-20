@@ -6,14 +6,14 @@ from typing import Self
 import construct
 from construct import Adapter, Container, Int32ul, Padded, Struct, Switch
 
-from open_prime_hunters_rando.parsing.common_types import FixedPoint
+from open_prime_hunters_rando.parsing.common_types import BaseFlags, FixedPoint
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3
 from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter, FlagsEnumAdapter
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import FieldsMixin, field
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import Vector3Fx
 
 
-class TriggerVolumeFlags(enum.IntFlag):
+class TriggerVolumeFlags(BaseFlags):
     NONE = 0x0
     POWER_BEAM = 0x1
     VOLT_DRIVER = 0x2
@@ -28,12 +28,6 @@ class TriggerVolumeFlags(enum.IntFlag):
     PLAYER_ALT = 0x400
     BIT_11 = 0x800  # unused
     INCLUDE_BOTS = 0x1000
-
-    def __repr__(self) -> str:
-        return " | ".join(f.name for f in self if f.name) or "NONE"
-
-    def __str__(self) -> str:
-        return self.__repr__()
 
 
 TriggerVolumeFlagsConstruct: FlagsEnumAdapter = FlagsEnumAdapter(TriggerVolumeFlags, Int32ul)

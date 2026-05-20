@@ -1,3 +1,4 @@
+import enum
 import math
 
 import construct
@@ -23,6 +24,15 @@ FixedPoint = _FixedPointAdapter(construct.Int32sl, 4096)
 
 Rgb01 = _FixedPointAdapter(construct.Byte, 255)
 """8-bit number within the interval [0.0, 1.0]"""
+
+
+class BaseFlags(enum.IntFlag):
+    def __repr__(self) -> str:
+        return " | ".join(f.name for f in self if f.name) or "NONE"
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
 
 DecodedString = construct.PaddedString(16, "ascii")
 
