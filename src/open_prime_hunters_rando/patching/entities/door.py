@@ -6,7 +6,7 @@ from open_prime_hunters_rando.parsing.formats.entities.enum import WeaponType
 def patch_doors(entity_file: EntityFile, doors: list, room_name: str) -> None:
     for door in doors:
         entity_id = door["entity_id"]
-        weapon_type = WeaponType(door["palette_id"])
+        weapon_type = WeaponType(door["weapon_type"])
 
         entity = entity_file.get_entity(entity_id, Door)
 
