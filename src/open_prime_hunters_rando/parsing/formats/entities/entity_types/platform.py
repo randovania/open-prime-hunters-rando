@@ -153,8 +153,8 @@ class Platform(Entity):
     rotations = field(list[Vec4])
     position_offset = field(Vec3)
 
-    forward_speed = field(int)
-    backward_speed = field(int)
+    forward_speed = field(float)
+    backward_speed = field(float)
 
     portal_name = field(str)
 
