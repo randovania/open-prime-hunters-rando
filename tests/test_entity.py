@@ -5,6 +5,8 @@ import pytest
 from open_prime_hunters_rando.parsing.common_types.volume import SphereVolumeType, TriggerVolumeFlags
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.door import Door, DoorType
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.enemy_base import EnemyType
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemies.hunter import Hunter, HunterType
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import (
@@ -82,7 +84,18 @@ def test_create_new_entity(entity_file):
         child_message=Message.LOAD_OUBLIETTE,
     )
 
-    new_enemy_spawn = EnemySpawn.create()
+    new_enemy_spawn = EnemySpawn.create(
+        enemy_type=EnemyType.HUNTER,
+        enemy_fields=Hunter.create(
+            hunter_type=HunterType.SYLUX,
+            encounter_type=2,
+            hunter_weapon=5,
+            hunter_health=10,
+            hunter_health_max=20,
+            hunter_color=4,
+            hunter_chance=50,
+        ),
+    )
 
     new_entities = [new_door, new_force_field, new_trigger_volume, new_enemy_spawn]
 
