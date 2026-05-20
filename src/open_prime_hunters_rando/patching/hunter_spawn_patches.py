@@ -103,7 +103,7 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
 
                     # Only modify the hunter fields if the hunter id is different
                     if hunter_data.hunter_type != new_hunter_type:
-                        _patch_hunter_ids(hunter_data, new_hunter_type)
+                        _patch_hunter_types(hunter_data, new_hunter_type)
                         _patch_encounter_types(entity_file, encounter_type_entities)
 
                 # If enabled, change the hunter spawns to use a random color by hunter type (0-5)
@@ -114,11 +114,11 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
                     hunter_data.hunter_color = _HUNTERS_TO_COLOR[HunterType(hunter_data.hunter_type)]
 
 
-def _patch_hunter_ids(hunter_data: Hunter, new_hunter_type: HunterType) -> None:
+def _patch_hunter_types(hunter_data: Hunter, new_hunter_type: HunterType) -> None:
     # Set the new hunter id
     hunter_data.hunter_type = new_hunter_type
-    if new_hunter_type == HunterType.GUARDIAN:
-        # Guardians can use any weapon except Omega Cannon
+    # Guardians can use any weapon except Omega Cannon
+    if new_hunter_type in (HunterType.GUARDIAN, HunterType.RANDOM):
         hunter_data.hunter_weapon = WeaponType(random.choice(list(range(8))))
     else:
         # Hunters by default use a weapon value of 255
