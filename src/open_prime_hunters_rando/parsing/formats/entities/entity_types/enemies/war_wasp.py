@@ -91,10 +91,23 @@ class BarbedWarWasp(WarWasp, default_field_location="raw"):
     @classmethod
     def create(
         cls,
+        volume1: BaseVolumeType | None = None,
+        volume2: BaseVolumeType | None = None,
+        volume3: BaseVolumeType | None = None,
+        movement_vectors: list[Vec3 | tuple[float, float, float]] = [(0.0, 0.0, 0.0)] * 16,
+        position_count: int = 0,
+        movement_type: int = 0,
         enemy_subtype: int = 0,
         enemy_version: int = 0,
     ) -> typing.Self:
-        barbed_war_wasp = super().create()
+        barbed_war_wasp = super().create(
+            volume1,
+            volume2,
+            volume3,
+            movement_vectors,
+            position_count,
+            movement_type,
+        )
 
         barbed_war_wasp.enemy_subtype = enemy_subtype
         barbed_war_wasp.enemy_version = enemy_version
