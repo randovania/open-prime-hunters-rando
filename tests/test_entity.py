@@ -3,7 +3,6 @@ import itertools
 import pytest
 
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile, entity_type_to_class
-from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType
 from open_prime_hunters_rando.parsing.level_data import (
     ALINOS,
     ARCTERRA,
@@ -44,9 +43,6 @@ def test_create_new_entity(entity_file):
     parsed = EntityFile.parse(entity_file)
 
     for etype, eclass in entity_type_to_class.items():
-        # FIXME: Remove once added
-        if etype == EntityType.ENEMY_SPAWN:
-            continue
         new_entity = eclass.create()
         parsed.append_entity(new_entity)
 
