@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
-from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, ItemType
+from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, ItemType, Message
 
 if TYPE_CHECKING:
     from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
@@ -22,7 +22,21 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
         if isinstance(entity, ItemSpawn):
             # Entity is still ItemSpawn
             if new_entity_type == EntityType.ITEM_SPAWN:
-                entity.item_type = ItemType(pickup["item_type"])
+                new_entity = ItemSpawn.create(
+                    item_type=ItemType(pickup["item_type"]),
+                    enabled=entity.enabled,
+                    has_base=entity.has_base,
+                )
+
+                # Removes inherited messages from ItemSpawns that replaced the Shield Key
+                if entity.item_type == ItemType.ARTIFACT_KEY != new_entity.item_type:
+                    new_entity.notify_entity_id = -1
+                    new_entity.collected_message = Message.NONE
+
+                if new_entity.item_type == ItemType.ARTIFACT_KEY:
+                    _update_shield_key(new_entity, pickup)
+
+                entity_file.replace_entity(entity_id, new_entity)
 
             # Entity is now Artifact
             else:
@@ -65,4 +79,16 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
                     collected_message=entity.message1,
                 )
 
+                if new_entity.item_type == ItemType.ARTIFACT_KEY:
+                    _update_shield_key(new_entity, pickup)
+
                 entity_file.replace_entity(entity_id, new_entity)
+
+
+def _update_shield_key(new_entity: ItemSpawn, pickup: dict) -> ItemSpawn:
+    # Sets a custom state bit when picked up which is activates its corresponding door/object
+    new_entity.notify_entity_id = -1
+    new_entity.collected_message = Message.SET_TRIGGER_STATE
+    new_entity.collected_message_param1 = pickup["state_bit"]
+
+    return new_entity
