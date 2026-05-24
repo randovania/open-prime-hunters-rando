@@ -66,7 +66,7 @@ class ItemSpawn(Entity):
         max_spawn_count: int = 1,
         spawn_interval: int = 0,
         spawn_delay: int = 0,
-        notify_entity_id: int = 0,
+        notify_entity_id: int = -1,
         collected_message: Message = Message.NONE,
         collected_message_param1: int = 0,
         collected_message_param2: int = 0,

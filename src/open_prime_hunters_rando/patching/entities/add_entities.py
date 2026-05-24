@@ -39,6 +39,14 @@ new_triggers = [
         "rmHallB",
     ),
     NewTrigger(
+        "Celestial Archives",
+        "Synergy Core",
+        [0, 1, 2],
+        3,
+        [(22, Message.TRIGGER), (21, Message.NONE)],
+        "rmRory",
+    ),
+    NewTrigger(
         "Arcterra",
         "Sic Transit",
         [0, 1, 2],

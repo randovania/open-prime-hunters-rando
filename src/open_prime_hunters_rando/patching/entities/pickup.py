@@ -28,6 +28,7 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
             # Entity is still ItemSpawn
             if new_entity_type == EntityType.ITEM_SPAWN:
                 new_entity = ItemSpawn.create(
+                    layer_state=entity.layer_state,
                     position=entity.position,
                     item_type=ItemType(pickup["item_type"]),
                     enabled=entity.enabled,
@@ -36,7 +37,6 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
 
                 # Removes inherited messages from ItemSpawns that replaced the Shield Key
                 if entity.item_type == ItemType.ARTIFACT_KEY != new_entity.item_type:
-                    new_entity.notify_entity_id = -1
                     new_entity.collected_message = Message.NONE
 
                 if new_entity.item_type == ItemType.ARTIFACT_KEY:
@@ -78,6 +78,8 @@ def patch_pickups(entity_file: EntityFile, pickups: list) -> None:
                     entity.position.y -= 0.3
 
                 new_entity = ItemSpawn.create(
+                    node_name=entity.node_name,
+                    layer_state=entity.layer_state,
                     position=entity.position,
                     item_type=ItemType(pickup["item_type"]),
                     enabled=entity.active,
