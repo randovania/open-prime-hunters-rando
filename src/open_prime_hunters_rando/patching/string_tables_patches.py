@@ -2,6 +2,7 @@ from enum import Enum
 
 from open_prime_hunters_rando.parsing.file_manager import FileManager, Language
 from open_prime_hunters_rando.parsing.formats.string_tables import ScanCategory, ScanSpeed
+from open_prime_hunters_rando.patching.state_bits import create_shield_key_messages
 
 
 class StringTables(Enum):
@@ -69,6 +70,7 @@ def _add_game_messages_strings(file_manager: FileManager, language: Language, mi
             f"your MISSILE capacity is increased by {missile_launcher_ammo} UNITS."
         ),
         "PNOTHING FOUND\\you've obtained NOTHING.",
+        *create_shield_key_messages(),  # Shield Key Messages
     ]
 
     for custom_game_message in custom_game_messages:
