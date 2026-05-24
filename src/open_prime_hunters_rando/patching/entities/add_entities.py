@@ -6,58 +6,11 @@ from open_prime_hunters_rando.parsing.common_types.volume import SphereVolumeTyp
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.object import Object
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import (
-    TriggerVolume,
-    TriggerVolumeType,
-)
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import TriggerVolume
 from open_prime_hunters_rando.parsing.formats.entities.enum import ItemType, Message
-from open_prime_hunters_rando.patching.state_bits import STATE_BIT_SHIELD_KEY_MAPPING, get_shield_key
 
 if TYPE_CHECKING:
     from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
-
-
-def add_new_entities(file_manager: FileManager) -> None:
-    # Add new triggers for shield keys
-    _add_shield_key_triggers(file_manager)
-    # Add new trigger entities
-    for new_trigger in new_triggers:
-        _add_triggers(file_manager, new_trigger)
-    # Add new object entities
-    for new_object in new_objects:
-        _add_objects(file_manager, new_object)
-
-
-def _add_shield_key_triggers(file_manager: FileManager) -> None:
-    for state_bit in STATE_BIT_SHIELD_KEY_MAPPING.keys():
-        # Get the Shield Key
-        state_bit_data = get_shield_key(state_bit)
-        entity_file = file_manager.get_entity_file(state_bit_data.area_name, state_bit_data.room_name)
-        shield_key: Entity = entity_file.get_entity(state_bit_data.entity_id)
-
-        # Ensure the entity is an ItemSpawn
-        if not isinstance(shield_key, ItemSpawn):
-            continue
-
-        # Only add a new trigger if the original Shield key has been shuffled
-        if shield_key.item_type == ItemType.ARTIFACT_KEY and shield_key.collected_message != Message.SET_TRIGGER_STATE:
-            continue
-
-        # Create a new trigger that checks if the state bit is set
-        # If set, it sends out the original message of the shield key
-        shield_key_trigger = TriggerVolume.create(
-            node_name=shield_key.node_name,
-            layer_state=shield_key.layer_state,
-            subtype=TriggerVolumeType.STATE_BITS,
-            volume=SphereVolumeType.create(
-                sphere_radius=75.0,
-            ),
-            required_state_bit=state_bit,
-            trigger_flags=TriggerVolumeFlags.PLAYER_BIPED | TriggerVolumeFlags.PLAYER_ALT,
-            parent_id=shield_key.notify_entity_id,
-            parent_message=shield_key.collected_message,
-        )
-        entity_file.append_entity(shield_key_trigger)
 
 
 class NewTrigger(NamedTuple):
@@ -221,3 +174,12 @@ def _add_objects(file_manager: FileManager, new_object: NewObject) -> None:
 
     for layer in new_object.active_layers:
         object_entity.layer_state[layer] = True
+
+
+def add_new_entities(file_manager: FileManager) -> None:
+    # Add new trigger entities
+    for new_trigger in new_triggers:
+        _add_triggers(file_manager, new_trigger)
+    # Add new object entities
+    for new_object in new_objects:
+        _add_objects(file_manager, new_object)
