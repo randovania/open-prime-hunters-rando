@@ -9,7 +9,6 @@ from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.patching import game_version
 from open_prime_hunters_rando.patching.asm.arm9 import patch_arm9
 from open_prime_hunters_rando.patching.asm.overlays import patch_overlays
-from open_prime_hunters_rando.patching.entities.add_entities import add_new_entities
 from open_prime_hunters_rando.patching.entities.entity_patching import patch_entities
 from open_prime_hunters_rando.patching.escape_sequence_patches import patch_escape_sequences
 from open_prime_hunters_rando.patching.hunter_spawn_patches import patch_hunters
@@ -73,10 +72,6 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
 
     # Patch entities
     patch_entities(file_manager, configuration["areas"])
-
-    # Add new entities
-    LOG.info("Adding new entities")
-    add_new_entities(file_manager)
 
     # Patch Hunter Spawns
     patch_hunters(file_manager, configuration)
