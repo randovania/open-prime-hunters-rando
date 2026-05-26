@@ -6,7 +6,9 @@ from open_prime_hunters_rando.patching.asm.asm_patches import (
     patch_missile_launcher,
     patch_planets_and_artifacts,
     patch_starting_ammo,
+    patch_starting_energy,
     patch_starting_missiles,
+    patch_starting_weapons,
 )
 
 
@@ -119,3 +121,29 @@ def test_patch_planets_and_artifacts():
         b"\xb2\x11\xc4\xe1\x180\x84\xe5\x01\x90\xa0\xe3\x1c B\xe2\tP\xa0\xe1\xa9q\x84\xe0\x00\xf0 "
         b"\xe3\x00\xf0 \xe3K\x10`\x00"
     )
+
+
+def test_patch_starting_weapons():
+    weapons_dict = {
+        "battlehammer": False,
+        "imperialist": True,
+        "judicator": True,
+        "magmaul": False,
+        "shock_coil": True,
+        "volt_driver": True,
+    }
+
+    assert patch_starting_weapons(weapons_dict) == b"\xb7"
+
+
+@pytest.mark.parametrize(
+    ("value", "expected_bytes"),
+    [
+        (1, b"\x01\x00\x00\x00"),
+        (99, b"c\x00\x00\x00"),
+        (300, b",\x01\x00\x00"),
+        (1299, b"\x13\x05\x00\x00"),
+    ],
+)
+def test_patch_starting_energy(value, expected_bytes):
+    assert patch_starting_energy(value) == expected_bytes
