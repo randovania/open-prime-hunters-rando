@@ -11,9 +11,36 @@
             "type": "object",
             "properties": {
                 "weapons": {
-                    "type": "string",
-                    "description": "Bitfield that determines what weapons to start with.\nLeft to Right: Shock Coil, Magmaul, Judicator, Imperialist, Battlehammer, Missile, Volt Driver, Power Beam",
-                    "default": "00000101"
+                    "type": "object",
+                    "description": "Determines what weapons to start with. Power Beam and Missiles currently cannot be shuffled, so they are always starting.",
+                    "properties": {
+                        "battlehammer": {
+                            "type": "boolean"
+                        },
+                        "imperialist": {
+                            "type": "boolean"
+                        },
+                        "judicator": {
+                            "type": "boolean"
+                        },
+                        "magmaul": {
+                            "type": "boolean"
+                        },
+                        "shock_coil": {
+                            "type": "boolean"
+                        },
+                        "volt_driver": {
+                            "type": "boolean"
+                        }
+                    },
+                    "default": {
+                        "battlehammer": false,
+                        "imperialist": false,
+                        "judicator": false,
+                        "magmaul": false,
+                        "shock_coil": false,
+                        "volt_driver": false
+                    }
                 },
                 "missiles": {
                     "type": "integer",
@@ -91,6 +118,7 @@
                 "octoliths": {
                     "type": "string",
                     "description": "Bitfield that determines what Octoliths to start with in descending order, 8-1.\nLeft to Right: Arcterra 2-1, VDO 2-1, Alinos 2-1, Celestial Archives 2-1",
+                    "minLength": 8,
                     "default": "00000000"
                 }
             },

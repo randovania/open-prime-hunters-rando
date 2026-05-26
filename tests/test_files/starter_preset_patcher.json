@@ -2,7 +2,14 @@
     "$schema": "../../src/open_prime_hunters_rando/files/schema.json",
     "configuration_id": 206913146,
     "starting_items": {
-        "weapons": "00000101",
+        "weapons": {
+            "battlehammer": true,
+            "imperialist": false,
+            "judicator": false,
+            "magmaul": true,
+            "shock_coil": false,
+            "volt_driver": false
+        },
         "missiles": 0,
         "ammo": 40,
         "energy": 99,

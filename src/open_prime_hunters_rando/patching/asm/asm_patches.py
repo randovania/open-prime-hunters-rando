@@ -12,14 +12,13 @@ class AsmPatches:
         self.starting_items = configuration["starting_items"]
         self.game_patches = configuration["game_patches"]
         self.ammo_sizes = configuration["ammo_sizes"]
-        self.validate_bitfields()
 
         # Starting Items
         self.starting_ammo = patch_starting_ammo(self.starting_items["ammo"])
         self.starting_energy = patch_starting_energy(self.starting_items["energy"])
         self.starting_missiles = patch_starting_missiles(self.starting_items["missiles"])
         self.starting_octoliths = bitfield_to_bytes(self.starting_items["octoliths"])
-        self.starting_weapons = bitfield_to_bytes(self.starting_items["weapons"])
+        self.starting_weapons = patch_starting_weapons(self.starting_items["weapons"])
 
         # Ammo Sizes
         self.ammo_per_expansion = patch_ammo_per_expansion(self.ammo_sizes["ua_expansion"])
@@ -31,25 +30,24 @@ class AsmPatches:
             self.game_patches["unlock_planets"], self.starting_items["artifacts"]
         )
 
-    def validate_bitfields(self) -> None:
-        bitfields = ["weapons", "octoliths"]
-        # Validate weapons and octoliths bitfields
-        for bitfield in bitfields:
-            if len(self.starting_items[bitfield]) != 8:
-                raise ValueError(
-                    f"Invalid 'starting {bitfield}' bitfield. Must contain 8 numbers, got "
-                    f"{len(self.starting_items[bitfield])}!"
-                )
-
-            for bitflag in self.starting_items[bitfield]:
-                if bitflag not in ["0", "1"]:
-                    raise ValueError(
-                        f"Invalid 'starting {bitfield}' bitfield. Must only contain 0 or 1, got {bitflag}!"
-                    )
-
 
 def patch_starting_energy(starting_energy: int) -> bytes:
     return starting_energy.to_bytes(4, "little")
+
+
+def patch_starting_weapons(starting_weapons: dict[str, bool]) -> bytes:
+    weapons = [
+        starting_weapons["shock_coil"],
+        starting_weapons["magmaul"],
+        starting_weapons["judicator"],
+        starting_weapons["imperialist"],
+        starting_weapons["battlehammer"],
+        True,  # Missiles
+        starting_weapons["volt_driver"],
+        True,  # Power Beam
+    ]
+
+    return bitfield_to_bytes(weapons)
 
 
 def patch_missile_launcher(ammo_value: int) -> bytes:
