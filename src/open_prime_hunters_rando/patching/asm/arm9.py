@@ -9,6 +9,7 @@ def patch_arm9(rom: NintendoDSRom, version: GameVersion, configuration: dict) ->
     hunter = version.init_enemy_hunter_spawns_addresses
     pickup = version.player_pickup_items_addresses
     room = version.room_transition_end_addresses
+    check_state = version.mode_1p_check_state
     save_file = version.init_save_file_addresses
 
     patches = AsmPatches(configuration)
@@ -24,7 +25,7 @@ def patch_arm9(rom: NintendoDSRom, version: GameVersion, configuration: dict) ->
         room.door_locking_condition: read_bytes_from_file(
             "door_locking_condition.bin"
         ),  # Handles the door locking code
-        save_file.starting_octoliths: patches.starting_octoliths,  # Starting Octoliths (0-8)
+        check_state.required_octoliths: patches.required_octoliths,  # Number of Octoliths required to unlock Oubliette
         save_file.starting_weapons: patches.starting_weapons,  # Starting weapons
         # Overwrite weapon_slots to prevent deleting the weapons when
         # changing Octoliths. Sets the amount of starting Missiles

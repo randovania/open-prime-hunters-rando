@@ -3,17 +3,16 @@
     "configuration_id": 206913146,
     "starting_items": {
         "weapons": {
-            "battlehammer": true,
+            "battlehammer": false,
             "imperialist": false,
             "judicator": false,
-            "magmaul": true,
+            "magmaul": false,
             "shock_coil": false,
             "volt_driver": false
         },
         "missiles": 0,
         "ammo": 40,
         "energy": 99,
-        "octoliths": "11110000",
         "artifacts": {
             "alinos_1": "000",
             "alinos_2": "000",
@@ -1248,6 +1247,7 @@
         "ua_expansion": 30
     },
     "game_patches": {
+        "required_octoliths": 4,
         "shuffle_hunter_colors": false
     },
     "string_tables": {

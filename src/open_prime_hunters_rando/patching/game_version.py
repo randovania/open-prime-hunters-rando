@@ -37,6 +37,11 @@ class RoomTransitionEndAddresses:
 
 
 @dataclasses.dataclass(frozen=True)
+class Mode1PCheckState:
+    required_octoliths: int
+
+
+@dataclasses.dataclass(frozen=True)
 class InitSaveFileAddresses:
     starting_octoliths: int
     starting_weapons: int
@@ -69,6 +74,7 @@ class GameVersion:
     init_enemy_hunter_spawns_addresses: InitEnemyHunterSpawnsAddresses
     player_pickup_items_addresses: PlayerPickupItemsAddresses
     room_transition_end_addresses: RoomTransitionEndAddresses
+    mode_1p_check_state: Mode1PCheckState
     init_save_file_addresses: InitSaveFileAddresses
     overlay_offsets: OverlayOffsets
     metroidhunters_text_file_offsets: MetroidHuntersTextFileOffsets
@@ -91,6 +97,9 @@ ALL_VERSIONS = [
         ),
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
+        ),
+        mode_1p_check_state=Mode1PCheckState(
+            required_octoliths=0x02053FE0,
         ),
         init_save_file_addresses=InitSaveFileAddresses(
             starting_octoliths=0x0205BCD4,
@@ -129,6 +138,9 @@ ALL_VERSIONS = [
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
         ),
+        mode_1p_check_state=Mode1PCheckState(
+            required_octoliths=0x02054800,
+        ),
         init_save_file_addresses=InitSaveFileAddresses(
             starting_octoliths=0x0205C4E8,
             starting_weapons=0x0205C4F0,
@@ -165,6 +177,9 @@ ALL_VERSIONS = [
         ),
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
+        ),
+        mode_1p_check_state=Mode1PCheckState(
+            required_octoliths=0x020547D4,
         ),
         init_save_file_addresses=InitSaveFileAddresses(
             starting_octoliths=0x0205C548,
@@ -203,6 +218,9 @@ ALL_VERSIONS = [
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
         ),
+        mode_1p_check_state=Mode1PCheckState(
+            required_octoliths=0x02054800,
+        ),
         init_save_file_addresses=InitSaveFileAddresses(
             starting_octoliths=0x0205C594,
             starting_weapons=0x0205C59C,
@@ -239,6 +257,9 @@ ALL_VERSIONS = [
         ),
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
+        ),
+        mode_1p_check_state=Mode1PCheckState(
+            required_octoliths=0x02055A30,
         ),
         init_save_file_addresses=InitSaveFileAddresses(
             starting_octoliths=0x0205D9C4,

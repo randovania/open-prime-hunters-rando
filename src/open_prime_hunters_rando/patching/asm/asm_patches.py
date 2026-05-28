@@ -17,7 +17,6 @@ class AsmPatches:
         self.starting_ammo = patch_starting_ammo(self.starting_items["ammo"])
         self.starting_energy = patch_starting_energy(self.starting_items["energy"])
         self.starting_missiles = patch_starting_missiles(self.starting_items["missiles"])
-        self.starting_octoliths = bitfield_to_bytes(self.starting_items["octoliths"])
         self.starting_weapons = patch_starting_weapons(self.starting_items["weapons"])
 
         # Ammo Sizes
@@ -29,6 +28,7 @@ class AsmPatches:
         self.init_save_file_rewrite = patch_planets_and_artifacts(
             self.game_patches["unlock_planets"], self.starting_items["artifacts"]
         )
+        self.required_octoliths = patch_required_octoliths(self.game_patches["required_octoliths"])
 
 
 def patch_starting_energy(starting_energy: int) -> bytes:
@@ -111,5 +111,16 @@ def patch_planets_and_artifacts(unlock_planets: dict, starting_artifacts: dict) 
     modified_bytes = binary.replace(b"\x0c\x10\xa0\xe3", planets_instruction).replace(
         b"\xff\xff\xff\xff", artifact_bitmask
     )
+
+    return modified_bytes
+
+
+def patch_required_octoliths(required_octoliths: int) -> bytes:
+    octoliths_bitfield = "00000000"
+    difference = 8 - required_octoliths
+    required = bitfield_to_bytes(octoliths_bitfield.replace("0", "1", difference))
+
+    binary = read_bytes_from_file("required_octoliths.bin")
+    modified_bytes = binary.replace(b"\xff", required)
 
     return modified_bytes

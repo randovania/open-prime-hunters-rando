@@ -114,12 +114,6 @@
                         "arcterra_1": "000",
                         "arcterra_2": "000"
                     }
-                },
-                "octoliths": {
-                    "type": "string",
-                    "description": "Bitfield that determines what Octoliths to start with in descending order, 8-1.\nLeft to Right: Arcterra 2-1, VDO 2-1, Alinos 2-1, Celestial Archives 2-1",
-                    "minLength": 8,
-                    "default": "00000000"
                 }
             },
             "required": [
@@ -189,6 +183,13 @@
         "game_patches": {
             "type": "object",
             "properties": {
+                "required_octoliths": {
+                    "type": "integer",
+                    "description": "The amount of Octoliths required to unlock Oubliette.",
+                    "minimum": 0,
+                    "maximum": 8,
+                    "default": 0
+                },
                 "shuffle_hunter_colors": {
                     "type": "boolean",
                     "description": "Changes the colors of the hunters.",
