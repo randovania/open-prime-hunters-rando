@@ -18,12 +18,14 @@ class StringTables(Enum):
 
 
 def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
-    string_tables = configuration.get("string_tables", {})
-    ammo_sizes = configuration.get("ammo_sizes", {})
+    string_tables: dict = configuration.get("string_tables", {})
+    ammo_sizes: dict = configuration.get("ammo_sizes", {})
+    game_patches: dict = configuration.get("game_patches", {})
 
     for language in Language:
         _patch_hints(file_manager, language, string_tables.get("scan_log", {}))
         _patch_ammo(file_manager, language, ammo_sizes)
+        _patch_alimbic_cannon_control_room(file_manager, language, game_patches.get("required_octoliths", 8))
         _add_game_messages_strings(file_manager, language, ammo_sizes["missile_launcher"])
         _add_scan_log_strings(file_manager, language)
 
@@ -58,6 +60,28 @@ def _patch_ammo(file_manager: FileManager, language: Language, ammo_sizes: dict[
 
         ammo_scan_string = scan_log.get_string("420L")
         ammo_scan_string.text = ammo_scan_string.text.replace("30", f"{ua}")
+
+
+def _patch_alimbic_cannon_control_room(file_manager: FileManager, language: Language, required_octoliths: int) -> None:
+    if required_octoliths in [0, 8]:
+        return
+
+    octolith_mapping: dict[int, str] = {
+        1: "ONE",
+        2: "TWO",
+        3: "THREE",
+        4: "FOUR",
+        5: "FIVE",
+        6: "SIX",
+        7: "SEVEN",
+    }
+
+    game_messages = file_manager.get_string_table(language, StringTables.GAME_MESSAGES)
+
+    required_octoliths_message = game_messages.get_string("440M")
+    required_octoliths_message.text = required_octoliths_message.text.replace(
+        "EIGHT", octolith_mapping[required_octoliths]
+    )
 
 
 def _add_game_messages_strings(file_manager: FileManager, language: Language, missile_launcher_ammo: int) -> None:
