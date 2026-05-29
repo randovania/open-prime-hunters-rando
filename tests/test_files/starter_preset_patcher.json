@@ -3,10 +3,10 @@
     "configuration_id": 206913146,
     "starting_items": {
         "weapons": {
-            "battlehammer": true,
+            "battlehammer": false,
             "imperialist": false,
             "judicator": false,
-            "magmaul": true,
+            "magmaul": false,
             "shock_coil": false,
             "volt_driver": false
         },
