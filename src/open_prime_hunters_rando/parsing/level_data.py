@@ -112,13 +112,13 @@ ALINOS: dict[str, LevelData] = {
         area_name="Alinos",
         entity_file="unit1_rm4_Ent",
     ),
-    "Stronghold Void B": LevelData(
+    "Stronghold Void A": LevelData(
         room_id=34,
         area_name="Alinos",
         entity_file="Unit1_TP1_Ent",
         portal_filename="Unit1_TP1_Ent",
     ),
-    "Biodefense Chamber B": LevelData(
+    "Biodefense Chamber A": LevelData(
         room_id=35,
         area_name="Alinos",
         entity_file="Unit1_b1_Ent",
@@ -160,13 +160,13 @@ ALINOS: dict[str, LevelData] = {
         area_name="Alinos",
         entity_file="Unit1_C3_Ent",
     ),
-    "Stronghold Void A": LevelData(
+    "Stronghold Void B": LevelData(
         room_id=43,
         area_name="Alinos",
         entity_file="Unit1_TP2_Ent",
         portal_filename="Unit1_TP2_Ent",
     ),
-    "Biodefense Chamber A": LevelData(
+    "Biodefense Chamber B": LevelData(
         room_id=44,
         area_name="Alinos",
         entity_file="Unit1_b2_Ent",

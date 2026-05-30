@@ -439,7 +439,7 @@
                     "force_fields": [],
                     "portals": []
                 },
-                "Biodefense Chamber B": {
+                "Biodefense Chamber A": {
                     "pickups": [
                         {
                             "entity_id": 2,
@@ -451,7 +451,7 @@
                     "force_fields": [],
                     "portals": []
                 },
-                "Biodefense Chamber A": {
+                "Biodefense Chamber B": {
                     "pickups": [
                         {
                             "entity_id": 8,
@@ -713,7 +713,7 @@
                         }
                     ]
                 },
-                "Stronghold Void B": {
+                "Stronghold Void A": {
                     "pickups": [],
                     "force_fields": [],
                     "portals": [
@@ -724,7 +724,7 @@
                         }
                     ]
                 },
-                "Stronghold Void A": {
+                "Stronghold Void B": {
                     "pickups": [],
                     "force_fields": [],
                     "portals": [
