@@ -1250,12 +1250,14 @@
     "game_patches": {
         "shuffle_hunter_colors": false
     },
-    "string_tables": {
-        "scan_log": {
-            "904L": "OCTOLITH HINTS 01\\OCTOLITH 1 is located in CELESTIAL ARCHIVES. OCTOLITH 2 is located in ALINOS.",
-            "014L": "OCTOLITH HINTS 02\\OCTOLITH 3 is located in ARCTERRA. OCTOLITH 4 is located in ALINOS.",
-            "114L": "OCTOLITH HINTS 03\\Want a hint? Just go where the items are.",
-            "214L": "OCTOLITH HINTS 04\\Made you look!"
+    "text_patches": {
+        "string_tables": {
+            "scan_log": {
+                "904L": "OCTOLITH HINTS 01\\OCTOLITH 1 is located in CELESTIAL ARCHIVES. OCTOLITH 2 is located in ALINOS.",
+                "014L": "OCTOLITH HINTS 02\\OCTOLITH 3 is located in ARCTERRA. OCTOLITH 4 is located in ALINOS.",
+                "114L": "OCTOLITH HINTS 03\\Want a hint? Just go where the items are.",
+                "214L": "OCTOLITH HINTS 04\\Made you look!"
+            }
         }
     }
 }

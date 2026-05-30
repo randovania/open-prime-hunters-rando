@@ -15,7 +15,9 @@ class MetroidHuntersTextFiles(Enum):
     SPANISH = "metroidhunters_text_es"
 
 
-def patch_text_files(version: GameVersion, file_manager: FileManager, text_patches: dict) -> None:
+def patch_frontend_text_files(version: GameVersion, file_manager: FileManager, text_patches: dict) -> None:
+    frontend = text_patches.get("frontend", {})
+
     for language_file in MetroidHuntersTextFiles:
         # ENGLISH_GB does not exist on US Rev0
         if (
@@ -27,10 +29,10 @@ def patch_text_files(version: GameVersion, file_manager: FileManager, text_patch
 
         text_file = file_manager.get_metroidhunters_text_file(language_file)
 
-        _add_patcher_version(version, text_file, text_patches)
+        _add_patcher_version(version, text_file, frontend)
 
 
-def _add_patcher_version(version: GameVersion, text_file: MetroidHuntersTextFile, text_patches: dict) -> None:
+def _add_patcher_version(version: GameVersion, text_file: MetroidHuntersTextFile, frontend: dict) -> None:
     data_offset = version.metroidhunters_text_file_offsets.main_menu_textbox
-    patcher_version = text_patches.get("patcher_version", "Open Prime Hunters Rando\ndevelopment version")
+    patcher_version = frontend.get("patcher_version", "Open Prime Hunters Rando\ndevelopment version")
     text_file.get_string(data_offset).text = patcher_version
