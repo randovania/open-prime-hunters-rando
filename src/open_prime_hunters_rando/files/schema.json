@@ -222,26 +222,31 @@
             },
             "default": {}
         },
-        "string_tables": {
+        "text_patches": {
             "type": "object",
             "properties": {
-                "scan_log": {
+                "frontend": {
                     "type": "object",
-                    "description": "Modify the text of an entry in the ScanLog.",
+                    "description": "Modify the text of an entry in a frontend text file.",
                     "patternProperties": {
                         ".*": {
                             "type": "string"
                         }
                     }
-                }
-            }
-        },
-        "text_patches": {
-            "type": "object",
-            "description": "Modify the text of an entry in a frontend text file.",
-            "patternProperties": {
-                ".*": {
-                    "type": "string"
+                },
+                "string_tables": {
+                    "type": "object",
+                    "properties": {
+                        "scan_log": {
+                            "type": "object",
+                            "description": "Modify the text of an entry in the ScanLog.",
+                            "patternProperties": {
+                                ".*": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
                 }
             }
         },

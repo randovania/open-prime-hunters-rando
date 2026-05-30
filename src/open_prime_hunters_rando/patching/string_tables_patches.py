@@ -1,7 +1,7 @@
 from enum import Enum
 
 from open_prime_hunters_rando.parsing.file_manager import FileManager, Language
-from open_prime_hunters_rando.parsing.formats.string_tables import ScanCategory, ScanSpeed
+from open_prime_hunters_rando.parsing.formats.string_tables import ScanCategory, ScanSpeed, StringTable
 
 
 class StringTables(Enum):
@@ -18,31 +18,30 @@ class StringTables(Enum):
 
 
 def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
-    string_tables = configuration.get("string_tables", {})
     ammo_sizes = configuration.get("ammo_sizes", {})
+    string_tables = configuration["text_patches"]["string_tables"]
+    scan_log_config = string_tables.get("scan_log", {})
 
     for language in Language:
-        _patch_hints(file_manager, language, string_tables.get("scan_log", {}))
-        _patch_ammo(file_manager, language, ammo_sizes)
-        _patch_alimbic_cannon_control_room(file_manager, language, configuration["starting_items"]["octoliths"])
-        _add_game_messages_strings(file_manager, language, ammo_sizes["missile_launcher"])
-        _add_scan_log_strings(file_manager, language)
+        scan_log = file_manager.get_string_table(language, StringTables.SCAN_LOG)
+        game_messages = file_manager.get_string_table(language, StringTables.GAME_MESSAGES)
+
+        _patch_hints(scan_log, scan_log_config)
+        _patch_ammo(scan_log, game_messages, ammo_sizes)
+        _patch_alimbic_cannon_control_room(game_messages, configuration["starting_items"]["octoliths"])
+        _add_game_messages_strings(game_messages, ammo_sizes["missile_launcher"])
+        _add_scan_log_strings(scan_log)
 
 
-def _patch_hints(file_manager: FileManager, language: Language, hints: dict[str, str]) -> None:
-    scan_log = file_manager.get_string_table(language, StringTables.SCAN_LOG)
-
+def _patch_hints(scan_log: StringTable, hints: dict[str, str]) -> None:
     for string_id, text in hints.items():
         string_entry = scan_log.get_string(string_id)
         string_entry.text = text
 
 
-def _patch_ammo(file_manager: FileManager, language: Language, ammo_sizes: dict[str, int]) -> None:
+def _patch_ammo(scan_log: StringTable, game_messages: StringTable, ammo_sizes: dict[str, int]) -> None:
     missiles = ammo_sizes["missile_expansion"]
     ua = ammo_sizes["ua_expansion"]
-
-    game_messages = file_manager.get_string_table(language, StringTables.GAME_MESSAGES)
-    scan_log = file_manager.get_string_table(language, StringTables.SCAN_LOG)
 
     # Missile Expansion
     if missiles != 10:
@@ -61,7 +60,7 @@ def _patch_ammo(file_manager: FileManager, language: Language, ammo_sizes: dict[
         ammo_scan_string.text = ammo_scan_string.text.replace("30", f"{ua}")
 
 
-def _patch_alimbic_cannon_control_room(file_manager: FileManager, language: Language, starting_octoliths: str) -> None:
+def _patch_alimbic_cannon_control_room(game_messages: StringTable, starting_octoliths: str) -> None:
     required_octoliths = starting_octoliths.count("0")
     if required_octoliths in [0, 8]:
         return
@@ -76,17 +75,13 @@ def _patch_alimbic_cannon_control_room(file_manager: FileManager, language: Lang
         7: "SEVEN OCTOLITHS",
     }
 
-    game_messages = file_manager.get_string_table(language, StringTables.GAME_MESSAGES)
-
     required_octoliths_message = game_messages.get_string("440M")
     required_octoliths_message.text = required_octoliths_message.text.replace(
         "EIGHT OCTOLITHS", octolith_mapping[required_octoliths]
     )
 
 
-def _add_game_messages_strings(file_manager: FileManager, language: Language, missile_launcher_ammo: int) -> None:
-    game_messages = file_manager.get_string_table(language, StringTables.GAME_MESSAGES)
-
+def _add_game_messages_strings(game_messages: StringTable, missile_launcher_ammo: int) -> None:
     custom_game_messages: list = [
         (
             "PMISSILE LAUNCHER FOUND\\you've obtained the MISSILE LAUNCHER. "
@@ -100,9 +95,7 @@ def _add_game_messages_strings(file_manager: FileManager, language: Language, mi
         new_string.text = custom_game_message
 
 
-def _add_scan_log_strings(file_manager: FileManager, language: Language) -> None:
-    scan_log = file_manager.get_string_table(language, StringTables.SCAN_LOG)
-
+def _add_scan_log_strings(scan_log: StringTable) -> None:
     custom_scan_logs: list = [
         {
             "text": "NOTHING\\a nothing item.",
