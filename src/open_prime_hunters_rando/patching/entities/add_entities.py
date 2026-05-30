@@ -21,12 +21,11 @@ def add_new_entities(file_manager: FileManager, new_artifact_triggers: list[NewT
         _add_new_objects(file_manager, new_object)
 
 
-new_triggers: list[NewTrigger] = []
-
-
 def _add_new_triggers(file_manager: FileManager, new_artifact_triggers: list[NewTrigger]) -> None:
     # Add all generated artifact triggers to the main list of new triggers
-    new_triggers.extend(new_artifact_triggers)
+    new_triggers: list[NewTrigger] = [
+        *new_artifact_triggers,
+    ]
 
     for new_trigger in new_triggers:
         entity_file = file_manager.get_entity_file(new_trigger.area_name, new_trigger.room_name)
