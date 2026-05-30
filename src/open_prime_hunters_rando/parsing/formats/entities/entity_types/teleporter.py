@@ -14,7 +14,7 @@ TeleporterEntityData = Struct(
     "artifact_id" / Byte,
     "active" / Flag,
     "invisible" / Flag,
-    "entity_filename" / PaddedString(15, "ascii"),
+    "entity_file_name" / PaddedString(15, "ascii"),
     "field7" / Int32ul,  # Unused
     "target_position" / Vector3Fx,
     "teleporter_node_name" / DecodedString,
@@ -33,7 +33,7 @@ class Teleporter(Entity):
     active = field(bool)
     invisible = field(bool)
 
-    entity_filename = field(str)
+    entity_file_name = field(str)
 
     field7 = field(int)
 
@@ -59,7 +59,7 @@ class Teleporter(Entity):
         artifact_id: int = 0,
         active: bool = True,
         invisible: bool = True,
-        entity_filename: str = "",
+        entity_file_name: str = "",
         field7: int = 4294901760,
         target_position: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
         teleporter_node_name: str = "",
@@ -77,7 +77,7 @@ class Teleporter(Entity):
         obj.artifact_id = artifact_id
         obj.active = active
         obj.invisible = invisible
-        obj.entity_filename = entity_filename
+        obj.entity_file_name = entity_file_name
         obj.field7 = field7
         obj.target_position = Vec3(*target_position)
         obj.teleporter_node_name = teleporter_node_name
