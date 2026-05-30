@@ -14,7 +14,7 @@ class Entity(FieldsMixin):
 
     node_name = field(str, "raw")
 
-    layer_state = field(list[int], "raw")
+    layer_state = field(list[bool], "raw")
 
     @property
     def active_layers(self) -> tuple[int, ...]:
@@ -35,7 +35,7 @@ class Entity(FieldsMixin):
     def create(
         cls,
         node_name: str = "",
-        layer_state: Sequence[bool | int] = (False,) * 16,
+        layer_state: Sequence[bool] = (False,) * 16,
         entity_id: int = -1,
         position: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
         up_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),

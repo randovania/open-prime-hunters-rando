@@ -60,7 +60,7 @@ class CameraSequence(Entity):
     def create(
         cls,
         node_name: str = "",
-        layer_state: typing.Sequence[bool | int] = (False,) * 16,
+        layer_state: typing.Sequence[bool] = (False,) * 16,
         entity_id: int = -1,
         position: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
         up_vector: Vec3 | tuple[float, float, float] = (0.0, 1.0, 0.0),
