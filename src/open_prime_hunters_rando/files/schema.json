@@ -378,7 +378,7 @@
                                 "type": "integer",
                                 "description": "The load index of the target portal."
                             },
-                            "entity_filename": {
+                            "entity_file_name": {
                                 "type": "string",
                                 "description": "The entity file of the target portal."
                             }
@@ -387,7 +387,7 @@
                     "required": [
                         "entity_id",
                         "target_index",
-                        "entity_filename"
+                        "entity_file_name"
                     ],
                     "default": []
                 },
