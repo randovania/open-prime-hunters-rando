@@ -250,7 +250,7 @@ class Platform(Entity):
         scan_message: Message = Message.NONE,
         scan_data2: int = 0,
         position_count: int = 0,
-        positions: list[Vec3 | tuple[float, float, float]] = [Vec3(0.0, 0.0, 0.0)] * 10,
+        positions: list[Vec3 | tuple[float, float, float]] = [(0.0, 0.0, 0.0)] * 10,
         rotations: list[Vec4 | tuple[float, float, float, float]] = [(0.0, 0.0, 0.0, 0.0)] * 10,
         position_offset: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
         forward_speed: float = 0.0,
