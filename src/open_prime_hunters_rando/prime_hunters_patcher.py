@@ -15,7 +15,7 @@ from open_prime_hunters_rando.patching.hunter_spawn_patches import patch_hunters
 from open_prime_hunters_rando.patching.state_bits import add_shield_key_triggers
 from open_prime_hunters_rando.patching.static_patches import static_patches
 from open_prime_hunters_rando.patching.string_tables_patches import patch_string_tables
-from open_prime_hunters_rando.patching.text_patches import patch_text_files
+from open_prime_hunters_rando.patching.text_patches import patch_frontend_text_files
 from open_prime_hunters_rando.validator_with_default import DefaultValidatingDraft7Validator
 
 T = typing.TypeVar("T")
@@ -82,7 +82,7 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
 
     # Patch frontend text files
     LOG.info("Patching frontend text files")
-    patch_text_files(version, file_manager, configuration.get("text_patches", {}))
+    patch_frontend_text_files(version, file_manager, configuration.get("text_patches", {}))
 
     # Save all changes to a new rom
     file_manager.save_to_rom(output_path)

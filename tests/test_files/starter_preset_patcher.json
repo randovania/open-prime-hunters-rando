@@ -2,7 +2,14 @@
     "$schema": "../../src/open_prime_hunters_rando/files/schema.json",
     "configuration_id": 206913146,
     "starting_items": {
-        "weapons": "00000101",
+        "weapons": {
+            "battlehammer": false,
+            "imperialist": false,
+            "judicator": false,
+            "magmaul": false,
+            "shock_coil": false,
+            "volt_driver": false
+        },
         "missiles": 0,
         "ammo": 40,
         "energy": 99,
@@ -83,17 +90,17 @@
                         {
                             "entity_id": 2,
                             "target_index": 2,
-                            "entity_filename": "Unit2_TP1_Ent"
+                            "entity_file_name": "Unit2_TP1_Ent"
                         },
                         {
                             "entity_id": 7,
                             "target_index": 10,
-                            "entity_filename": "unit2_RM4_Ent"
+                            "entity_file_name": "unit2_RM4_Ent"
                         },
                         {
                             "entity_id": 38,
                             "target_index": 20,
-                            "entity_filename": "unit2_Land_Ent"
+                            "entity_file_name": "unit2_Land_Ent"
                         }
                     ]
                 },
@@ -104,7 +111,7 @@
                         {
                             "entity_id": 1,
                             "target_index": 31,
-                            "entity_filename": "unit2_RM7_Ent"
+                            "entity_file_name": "unit2_RM7_Ent"
                         }
                     ]
                 },
@@ -128,12 +135,12 @@
                         {
                             "entity_id": 24,
                             "target_index": 3,
-                            "entity_filename": "Unit2_TP2_Ent"
+                            "entity_file_name": "Unit2_TP2_Ent"
                         },
                         {
                             "entity_id": 41,
                             "target_index": 21,
-                            "entity_filename": "unit2_Land_Ent"
+                            "entity_file_name": "unit2_Land_Ent"
                         }
                     ]
                 },
@@ -156,12 +163,12 @@
                         {
                             "entity_id": 15,
                             "target_index": 20,
-                            "entity_filename": "unit2_C4_Ent"
+                            "entity_file_name": "unit2_C4_Ent"
                         },
                         {
                             "entity_id": 16,
                             "target_index": 21,
-                            "entity_filename": "unit2_C7_Ent"
+                            "entity_file_name": "unit2_C7_Ent"
                         }
                     ]
                 },
@@ -226,12 +233,12 @@
                         {
                             "entity_id": 3,
                             "target_index": 10,
-                            "entity_filename": "unit2_C4_Ent"
+                            "entity_file_name": "unit2_C4_Ent"
                         },
                         {
                             "entity_id": 15,
                             "target_index": 12,
-                            "entity_filename": "unit2_RM8_Ent"
+                            "entity_file_name": "unit2_RM8_Ent"
                         }
                     ]
                 },
@@ -254,32 +261,32 @@
                         {
                             "entity_id": 2,
                             "target_index": 50,
-                            "entity_filename": "unit2_RM8_Ent"
+                            "entity_file_name": "unit2_RM8_Ent"
                         },
                         {
                             "entity_id": 3,
                             "target_index": 26,
-                            "entity_filename": "unit2_RM6_Ent"
+                            "entity_file_name": "unit2_RM6_Ent"
                         },
                         {
                             "entity_id": 7,
                             "target_index": 19,
-                            "entity_filename": "unit2_RM5_Ent"
+                            "entity_file_name": "unit2_RM5_Ent"
                         },
                         {
                             "entity_id": 9,
                             "target_index": 18,
-                            "entity_filename": "unit2_RM5_Ent"
+                            "entity_file_name": "unit2_RM5_Ent"
                         },
                         {
                             "entity_id": 11,
                             "target_index": 24,
-                            "entity_filename": "unit2_RM6_Ent"
+                            "entity_file_name": "unit2_RM6_Ent"
                         },
                         {
                             "entity_id": 1,
                             "target_index": 13,
-                            "entity_filename": "unit2_RM8_Ent"
+                            "entity_file_name": "unit2_RM8_Ent"
                         }
                     ]
                 },
@@ -301,22 +308,22 @@
                         {
                             "entity_id": 1,
                             "target_index": 16,
-                            "entity_filename": "unit2_RM8_Ent"
+                            "entity_file_name": "unit2_RM8_Ent"
                         },
                         {
                             "entity_id": 2,
                             "target_index": 21,
-                            "entity_filename": "unit2_RM5_Ent"
+                            "entity_file_name": "unit2_RM5_Ent"
                         },
                         {
                             "entity_id": 6,
                             "target_index": 30,
-                            "entity_filename": "unit2_RM7_Ent"
+                            "entity_file_name": "unit2_RM7_Ent"
                         },
                         {
                             "entity_id": 8,
                             "target_index": 22,
-                            "entity_filename": "unit2_RM5_Ent"
+                            "entity_file_name": "unit2_RM5_Ent"
                         }
                     ]
                 },
@@ -342,22 +349,22 @@
                         {
                             "entity_id": 1,
                             "target_index": 32,
-                            "entity_filename": "unit2_C6_Ent"
+                            "entity_file_name": "unit2_C6_Ent"
                         },
                         {
                             "entity_id": 11,
                             "target_index": 25,
-                            "entity_filename": "unit2_RM6_Ent"
+                            "entity_file_name": "unit2_RM6_Ent"
                         },
                         {
                             "entity_id": 2,
                             "target_index": 50,
-                            "entity_filename": "unit2_RM8_Ent"
+                            "entity_file_name": "unit2_RM8_Ent"
                         },
                         {
                             "entity_id": 12,
                             "target_index": 14,
-                            "entity_filename": "unit2_RM8_Ent"
+                            "entity_file_name": "unit2_RM8_Ent"
                         }
                     ]
                 },
@@ -379,32 +386,32 @@
                         {
                             "entity_id": 5,
                             "target_index": 17,
-                            "entity_filename": "unit2_RM5_Ent"
+                            "entity_file_name": "unit2_RM5_Ent"
                         },
                         {
                             "entity_id": 7,
                             "target_index": 29,
-                            "entity_filename": "unit2_RM7_Ent"
+                            "entity_file_name": "unit2_RM7_Ent"
                         },
                         {
                             "entity_id": 8,
                             "target_index": 23,
-                            "entity_filename": "unit2_RM6_Ent"
+                            "entity_file_name": "unit2_RM6_Ent"
                         },
                         {
                             "entity_id": 3,
                             "target_index": 11,
-                            "entity_filename": "unit2_RM4_Ent"
+                            "entity_file_name": "unit2_RM4_Ent"
                         },
                         {
                             "entity_id": 23,
                             "target_index": 20,
-                            "entity_filename": "unit2_RM5_Ent"
+                            "entity_file_name": "unit2_RM5_Ent"
                         },
                         {
                             "entity_id": 23,
                             "target_index": 27,
-                            "entity_filename": "unit2_RM7_Ent"
+                            "entity_file_name": "unit2_RM7_Ent"
                         }
                     ]
                 },
@@ -415,7 +422,7 @@
                         {
                             "entity_id": 1,
                             "target_index": 2,
-                            "entity_filename": "unit2_C4_Ent"
+                            "entity_file_name": "unit2_C4_Ent"
                         }
                     ]
                 },
@@ -426,7 +433,7 @@
                         {
                             "entity_id": 1,
                             "target_index": 3,
-                            "entity_filename": "unit2_C7_Ent"
+                            "entity_file_name": "unit2_C7_Ent"
                         }
                     ]
                 }
@@ -516,12 +523,12 @@
                         {
                             "entity_id": 28,
                             "target_index": 11,
-                            "entity_filename": "unit1_RM1_Ent"
+                            "entity_file_name": "unit1_RM1_Ent"
                         },
                         {
                             "entity_id": 29,
                             "target_index": 10,
-                            "entity_filename": "unit1_RM1_Ent"
+                            "entity_file_name": "unit1_RM1_Ent"
                         }
                     ]
                 },
@@ -549,12 +556,12 @@
                         {
                             "entity_id": 24,
                             "target_index": 21,
-                            "entity_filename": "unit1_RM3_Ent"
+                            "entity_file_name": "unit1_RM3_Ent"
                         },
                         {
                             "entity_id": 25,
                             "target_index": 20,
-                            "entity_filename": "unit1_RM6_Ent"
+                            "entity_file_name": "unit1_RM6_Ent"
                         }
                     ]
                 },
@@ -601,12 +608,12 @@
                         {
                             "entity_id": 57,
                             "target_index": 11,
-                            "entity_filename": "unit1_C4_Ent"
+                            "entity_file_name": "unit1_C4_Ent"
                         },
                         {
                             "entity_id": 58,
                             "target_index": 10,
-                            "entity_filename": "unit1_C4_Ent"
+                            "entity_file_name": "unit1_C4_Ent"
                         }
                     ]
                 },
@@ -665,7 +672,7 @@
                         {
                             "entity_id": 52,
                             "target_index": 21,
-                            "entity_filename": "unit1_Land_Ent"
+                            "entity_file_name": "unit1_Land_Ent"
                         }
                     ]
                 },
@@ -687,7 +694,7 @@
                         {
                             "entity_id": 8,
                             "target_index": 1,
-                            "entity_filename": "Unit1_TP2_Ent"
+                            "entity_file_name": "Unit1_TP2_Ent"
                         }
                     ]
                 },
@@ -704,12 +711,12 @@
                         {
                             "entity_id": 2,
                             "target_index": 0,
-                            "entity_filename": "Unit1_TP1_Ent"
+                            "entity_file_name": "Unit1_TP1_Ent"
                         },
                         {
                             "entity_id": 19,
                             "target_index": 20,
-                            "entity_filename": "unit1_Land_Ent"
+                            "entity_file_name": "unit1_Land_Ent"
                         }
                     ]
                 },
@@ -720,7 +727,7 @@
                         {
                             "entity_id": 1,
                             "target_index": 0,
-                            "entity_filename": "unit1_RM6_Ent"
+                            "entity_file_name": "unit1_RM6_Ent"
                         }
                     ]
                 },
@@ -731,7 +738,7 @@
                         {
                             "entity_id": 1,
                             "target_index": 1,
-                            "entity_filename": "unit1_RM5_Ent"
+                            "entity_file_name": "unit1_RM5_Ent"
                         }
                     ]
                 }
@@ -798,12 +805,12 @@
                         {
                             "entity_id": 4,
                             "target_index": 60,
-                            "entity_filename": "unit4_RM1_Ent"
+                            "entity_file_name": "unit4_RM1_Ent"
                         },
                         {
                             "entity_id": 38,
                             "target_index": 70,
-                            "entity_filename": "unit4_RM5_Ent"
+                            "entity_file_name": "unit4_RM5_Ent"
                         }
                     ]
                 },
@@ -864,12 +871,12 @@
                         {
                             "entity_id": 20,
                             "target_index": 6,
-                            "entity_filename": "Unit4_TP1_Ent"
+                            "entity_file_name": "Unit4_TP1_Ent"
                         },
                         {
                             "entity_id": 162,
                             "target_index": 60,
-                            "entity_filename": "unit4_Land_Ent"
+                            "entity_file_name": "unit4_Land_Ent"
                         }
                     ]
                 },
@@ -942,12 +949,12 @@
                         {
                             "entity_id": 39,
                             "target_index": 3,
-                            "entity_filename": "Unit4_TP2_Ent"
+                            "entity_file_name": "Unit4_TP2_Ent"
                         },
                         {
                             "entity_id": 71,
                             "target_index": 70,
-                            "entity_filename": "unit4_Land_Ent"
+                            "entity_file_name": "unit4_Land_Ent"
                         }
                     ]
                 },
@@ -958,7 +965,7 @@
                         {
                             "entity_id": 1,
                             "target_index": 6,
-                            "entity_filename": "unit4_RM1_Ent"
+                            "entity_file_name": "unit4_RM1_Ent"
                         }
                     ]
                 },
@@ -969,7 +976,7 @@
                         {
                             "entity_id": 1,
                             "target_index": 2,
-                            "entity_filename": "unit4_RM5_Ent"
+                            "entity_file_name": "unit4_RM5_Ent"
                         }
                     ]
                 }
@@ -1012,7 +1019,7 @@
                         {
                             "entity_id": 35,
                             "target_index": 15,
-                            "entity_filename": "unit3_Land_Ent"
+                            "entity_file_name": "unit3_Land_Ent"
                         }
                     ]
                 },
@@ -1045,12 +1052,12 @@
                         {
                             "entity_id": 5,
                             "target_index": 15,
-                            "entity_filename": "unit3_C1_Ent"
+                            "entity_file_name": "unit3_C1_Ent"
                         },
                         {
                             "entity_id": 8,
                             "target_index": 40,
-                            "entity_filename": "unit3_RM1_Ent"
+                            "entity_file_name": "unit3_RM1_Ent"
                         }
                     ]
                 },
@@ -1078,7 +1085,7 @@
                         {
                             "entity_id": 47,
                             "target_index": 40,
-                            "entity_filename": "unit3_Land_Ent"
+                            "entity_file_name": "unit3_Land_Ent"
                         }
                     ]
                 },
@@ -1122,7 +1129,7 @@
                         {
                             "entity_id": 3,
                             "target_index": 5,
-                            "entity_filename": "Unit3_TP2_Ent"
+                            "entity_file_name": "Unit3_TP2_Ent"
                         }
                     ]
                 },
@@ -1154,7 +1161,7 @@
                         {
                             "entity_id": 36,
                             "target_index": 4,
-                            "entity_filename": "Unit3_TP1_Ent"
+                            "entity_file_name": "Unit3_TP1_Ent"
                         }
                     ]
                 },
@@ -1165,7 +1172,7 @@
                         {
                             "entity_id": 1,
                             "target_index": 4,
-                            "entity_filename": "unit3_RM4_Ent"
+                            "entity_file_name": "unit3_RM4_Ent"
                         }
                     ]
                 },
@@ -1176,7 +1183,7 @@
                         {
                             "entity_id": 1,
                             "target_index": 5,
-                            "entity_filename": "unit3_RM3_Ent"
+                            "entity_file_name": "unit3_RM3_Ent"
                         }
                     ]
                 }
@@ -1201,17 +1208,17 @@
                         {
                             "entity_id": 3,
                             "target_index": 11,
-                            "entity_filename": "Gorea_Peek_Ent"
+                            "entity_file_name": "Gorea_Peek_Ent"
                         },
                         {
                             "entity_id": 6,
                             "target_index": 13,
-                            "entity_filename": "Gorea_Land_Ent"
+                            "entity_file_name": "Gorea_Land_Ent"
                         },
                         {
                             "entity_id": 7,
                             "target_index": 12,
-                            "entity_filename": "Gorea_Land_Ent"
+                            "entity_file_name": "Gorea_Land_Ent"
                         }
                     ]
                 },
@@ -1228,7 +1235,7 @@
                         {
                             "entity_id": 12,
                             "target_index": 11,
-                            "entity_filename": "Gorea_Land_Ent"
+                            "entity_file_name": "Gorea_Land_Ent"
                         }
                     ]
                 }
@@ -1243,12 +1250,14 @@
     "game_patches": {
         "shuffle_hunter_colors": false
     },
-    "string_tables": {
-        "scan_log": {
-            "904L": "OCTOLITH HINTS 01\\OCTOLITH 1 is located in CELESTIAL ARCHIVES. OCTOLITH 2 is located in ALINOS.",
-            "014L": "OCTOLITH HINTS 02\\OCTOLITH 3 is located in ARCTERRA. OCTOLITH 4 is located in ALINOS.",
-            "114L": "OCTOLITH HINTS 03\\Want a hint? Just go where the items are.",
-            "214L": "OCTOLITH HINTS 04\\Made you look!"
+    "text_patches": {
+        "string_tables": {
+            "scan_log": {
+                "904L": "OCTOLITH HINTS 01\\OCTOLITH 1 is located in CELESTIAL ARCHIVES. OCTOLITH 2 is located in ALINOS.",
+                "014L": "OCTOLITH HINTS 02\\OCTOLITH 3 is located in ARCTERRA. OCTOLITH 4 is located in ALINOS.",
+                "114L": "OCTOLITH HINTS 03\\Want a hint? Just go where the items are.",
+                "214L": "OCTOLITH HINTS 04\\Made you look!"
+            }
         }
     }
 }
