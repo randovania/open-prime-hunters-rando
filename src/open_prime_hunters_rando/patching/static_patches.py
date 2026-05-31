@@ -27,6 +27,7 @@ def static_patches(file_manager: FileManager) -> None:
     _fix_incubation_vault_03_portal_spawn(file_manager)
     _disable_helm_room_scan_door_cutscenes(file_manager)
     _move_data_shrine_01_fight_trigger(file_manager)
+    _update_high_ground_big_health_layers(file_manager)
 
 
 def _disable_boss_force_fields(file_manager: FileManager) -> None:
@@ -148,3 +149,11 @@ def _move_data_shrine_01_fight_trigger(file_manager: FileManager) -> None:
     lower_scan = entity_file.get_entity(52, Object)
     lower_scan.scan_message_target = 43
     lower_scan.scan_message = Message.TRIGGER
+
+
+def _update_high_ground_big_health_layers(file_manager: FileManager) -> None:
+    entity_file = file_manager.get_entity_file("Alinos", "High Ground")
+
+    big_health = entity_file.get_entity(59, ItemSpawn)
+    for layer in range(4):
+        big_health.layer_state[layer] = True
