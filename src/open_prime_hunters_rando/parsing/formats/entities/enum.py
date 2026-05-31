@@ -74,8 +74,8 @@ class Message(enum.Enum):
 
 class ItemType(enum.Enum):
     NONE = -1
-    HEALTH_MEDIUM = 0
-    HEALTH_SMALL = 1
+    HEALTH_SMALL = 0
+    HEALTH_MEDIUM = 1
     HEALTH_BIG = 2
     DOUBLE_DAMAGE = 3
     ENERGY_TANK = 4
