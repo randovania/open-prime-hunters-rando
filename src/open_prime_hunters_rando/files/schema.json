@@ -12,7 +12,7 @@
             "properties": {
                 "weapons": {
                     "type": "object",
-                    "description": "Determines what weapons to start with. Power Beam and Missiles currently cannot be shuffled, so they are always starting.",
+                    "description": "Determines what weapons to start with. Power Beam currently cannot be shuffled, so it is always starting.",
                     "properties": {
                         "battlehammer": {
                             "type": "boolean"
@@ -26,6 +26,9 @@
                         "magmaul": {
                             "type": "boolean"
                         },
+                        "missile_launcher": {
+                            "type": "boolean"
+                        },
                         "shock_coil": {
                             "type": "boolean"
                         },
@@ -35,6 +38,7 @@
                     },
                     "default": {
                         "battlehammer": false,
+                        "missile_launcher": false,
                         "imperialist": false,
                         "judicator": false,
                         "magmaul": false,

@@ -4,10 +4,11 @@ from open_prime_hunters_rando.patching.asm import (
     create_bitmask,
     read_bytes_from_file,
 )
+from open_prime_hunters_rando.patching.game_version import DataSectionAddresses
 
 
 class AsmPatches:
-    def __init__(self, configuration: dict) -> None:
+    def __init__(self, configuration: dict, data_section: DataSectionAddresses) -> None:
         # Setup
         self.starting_items = configuration["starting_items"]
         self.game_patches = configuration["game_patches"]
@@ -22,7 +23,9 @@ class AsmPatches:
 
         # Ammo Sizes
         self.ammo_per_expansion = patch_ammo_per_expansion(self.ammo_sizes["ua_expansion"])
-        self.missile_launcher = patch_missile_launcher(self.ammo_sizes["missile_launcher"])
+        self.missile_launcher = patch_missile_launcher(
+            self.ammo_sizes["missile_launcher"], data_section.story_save_data
+        )
         self.missiles_per_expansion = patch_ammo_per_expansion(self.ammo_sizes["missile_expansion"])
 
         # Game Patches
@@ -42,7 +45,7 @@ def patch_starting_weapons(starting_weapons: dict[str, bool]) -> bytes:
         starting_weapons["judicator"],
         starting_weapons["imperialist"],
         starting_weapons["battlehammer"],
-        True,  # Missiles
+        starting_weapons["missile_launcher"],
         starting_weapons["volt_driver"],
         True,  # Power Beam
     ]
@@ -50,10 +53,13 @@ def patch_starting_weapons(starting_weapons: dict[str, bool]) -> bytes:
     return bitfield_to_bytes(weapons)
 
 
-def patch_missile_launcher(ammo_value: int) -> bytes:
+def patch_missile_launcher(ammo_value: int, story_save_data_address: int) -> bytes:
     binary = read_bytes_from_file("missile_launcher.bin")
-    new_instructions = GenerateArmBytes(ammo_value).add(2, 2)
-    modified_bytes = binary.replace(b"\x32\x20\x82\xe2", new_instructions)
+    new_instructions = GenerateArmBytes(ammo_value).add(1, 1)
+
+    # Replace the StorySaveData address based on the version
+    ssd = story_save_data_address.to_bytes(4, "little")
+    modified_bytes = binary.replace(b"\x32\x10\x81\xe2", new_instructions).replace(b"P\x8c\x0e\x02", ssd)
 
     return modified_bytes
 

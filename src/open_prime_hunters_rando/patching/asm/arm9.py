@@ -8,10 +8,12 @@ from open_prime_hunters_rando.patching.game_version import GameVersion
 def patch_arm9(rom: NintendoDSRom, version: GameVersion, configuration: dict) -> None:
     hunter = version.init_enemy_hunter_spawns_addresses
     pickup = version.player_pickup_items_addresses
+    hud = version.hud_update_addresses
     room = version.room_transition_end_addresses
     save_file = version.init_save_file_addresses
+    data_section = version.data_section_addresses
 
-    patches = AsmPatches(configuration)
+    patches = AsmPatches(configuration, data_section)
 
     ARM9_PATCHES: dict[int, bytes] = {
         # Both Addresses below handle random hunter spawns
@@ -21,6 +23,10 @@ def patch_arm9(rom: NintendoDSRom, version: GameVersion, configuration: dict) ->
         pickup.nothing: read_bytes_from_file("nothing.bin"),  # Add Nothing item
         pickup.missiles_per_expansion: patches.missiles_per_expansion,  # Missiles per expansion
         pickup.ammo_per_expansion: patches.ammo_per_expansion,  # UA per expansion
+        # The next three addresses hijack Cloak hud code for the custom Missile Launcher
+        hud.cloak_base_case: read_bytes_from_file("cloak_base_case.bin"),
+        hud.hud_up_cloak_base: read_bytes_from_file("hud_up_cloak_base.bin"),
+        hud.hud_up_weapon_unlocked_case_2: read_bytes_from_file("hud_up_weapon_unlocked_case_2.bin"),
         room.door_locking_condition: read_bytes_from_file(
             "door_locking_condition.bin"
         ),  # Handles the door locking code

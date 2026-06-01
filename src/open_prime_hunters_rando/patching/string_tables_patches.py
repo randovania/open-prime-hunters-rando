@@ -25,12 +25,14 @@ def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
     for language in Language:
         scan_log = file_manager.get_string_table(language, StringTables.SCAN_LOG)
         game_messages = file_manager.get_string_table(language, StringTables.GAME_MESSAGES)
+        hud_messages_sp = file_manager.get_string_table(language, StringTables.HUD_MESSAGES_SP)
 
         _patch_hints(scan_log, scan_log_config)
         _patch_ammo(scan_log, game_messages, ammo_sizes)
         _patch_alimbic_cannon_control_room(game_messages, configuration["starting_items"]["octoliths"])
         _add_game_messages_strings(game_messages, ammo_sizes["missile_launcher"])
         _add_scan_log_strings(scan_log)
+        _add_hud_messages_strings(hud_messages_sp, ammo_sizes["missile_launcher"])
 
 
 def _patch_hints(scan_log: StringTable, hints: dict[str, str]) -> None:
@@ -83,15 +85,11 @@ def _patch_alimbic_cannon_control_room(game_messages: StringTable, starting_octo
 
 def _add_game_messages_strings(game_messages: StringTable, missile_launcher_ammo: int) -> None:
     custom_game_messages: list = [
-        (
-            "PMISSILE LAUNCHER FOUND\\you've obtained the MISSILE LAUNCHER. "
-            f"your MISSILE capacity is increased by {missile_launcher_ammo} UNITS."
-        ),
         "PNOTHING FOUND\\you've obtained NOTHING.",
     ]
 
     for custom_game_message in custom_game_messages:
-        new_string = game_messages.append_string("M")
+        new_string = game_messages.add_string("M")
         new_string.text = custom_game_message
 
 
@@ -105,7 +103,17 @@ def _add_scan_log_strings(scan_log: StringTable) -> None:
     ]
 
     for custom_scan_log in custom_scan_logs:
-        new_string = scan_log.append_string("L")
+        new_string = scan_log.add_string("L")
         new_string.text = custom_scan_log["text"]
         new_string.scan_speed = custom_scan_log["scan_speed"]
         new_string.scan_category = custom_scan_log["scan_category"]
+
+
+def _add_hud_messages_strings(hud_messages_sp: StringTable, missile_launcher_ammo: int) -> None:
+    custom_hud_messages: list[str] = [
+        f"your $MISSILE$ capacity is increased by {missile_launcher_ammo} UNITS.",
+    ]
+
+    for custom_hud_message in custom_hud_messages:
+        new_string = hud_messages_sp.add_string("H", False)
+        new_string.text = custom_hud_message
