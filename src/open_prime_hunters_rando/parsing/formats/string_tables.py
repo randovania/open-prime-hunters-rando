@@ -212,7 +212,7 @@ class StringTable:
             raise ValueError(f"No string with ID {string_id} found!")
         return string
 
-    def get_min_max_for_string_group(self, string_group: str, append_to_group_end: bool = True) -> tuple[int, StringEntry, int]:
+    def get_min_max_string_for_group(self, string_group: str, append_to_group_end: bool = True) -> tuple[int, StringEntry, int]:
         # If not appending to the end of the froup, subtract one from the index
         for index, string in enumerate(self.strings):
             # Get min id
@@ -236,7 +236,7 @@ class StringTable:
         String IDs are actually in reverse, so '100M' is actually string '001' of group 'M'.
         """
         # Calculate the min/max string id of a string group and return the string
-        index, base_string, step = self.get_min_max_string_for_string_group(string_group, append_to_group_end)
+        index, base_string, step = self.get_min_max_string_for_group(string_group, append_to_group_end)
 
         # Reverse the string and convert it to an int to change the value
         current_id = base_string.string_id[:-1]
