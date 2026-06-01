@@ -212,22 +212,23 @@ class StringTable:
             raise ValueError(f"No string with ID {string_id} found!")
         return string
 
-    def get_min_string_for_group(self, string_group: str) -> tuple[int, StringEntry]:
+    def get_min_max_for_string_group(self, string_group: str, append_to_group_end: bool = True) -> tuple[int, StringEntry, int]:
+        # If not appending to the end of the froup, subtract one from the index
         for index, string in enumerate(self.strings):
-            if string.string_id[-1] == string_group:
+            # Get min id
+            if not append_to_group_end and string.string_id[-1] == string_group:
+                step = -1
                 break
-        return index, string
-
-    def get_max_string_for_group(self, string_group: str) -> StringEntry:
-        for string in self.strings:
-            if string.string_id[-1] != string_group:
+            # Get max id
+            else:
+                step = 1
                 break
-        return string
+        return index, string, step
 
     def reverse_string(self, string: str) -> str:
         return string[::-1]
 
-    def add_string(self, string_group: str, append_to_end: bool = True) -> StringEntry:
+    def add_string(self, string_group: str, append_to_group_end: bool = True) -> StringEntry:
         """
         Strings of a similar type share a group, which is determined by a letter. eg, 'L'.
         The String ID is a number combined with the group letter. eg, '320P'.
@@ -235,13 +236,7 @@ class StringTable:
         String IDs are actually in reverse, so '100M' is actually string '001' of group 'M'.
         """
         # Calculate the min/max string id of a string group and return the string
-        # If inserting, subtract one from the index
-        if append_to_end:
-            base_string = self.get_max_string_for_group(string_group)
-            step = 1
-        else:
-            index, base_string = self.get_min_string_for_group(string_group)
-            step = -1
+        index, base_string, step = self.get_min_max_string_for_string_group(string_group, append_to_group_end)
 
         # Reverse the string and convert it to an int to change the value
         current_id = base_string.string_id[:-1]
@@ -256,8 +251,5 @@ class StringTable:
         new_string.string_id = final_new_id
 
         # Add the new string to the string table
-        if append_to_end:
-            self.strings.append(new_string)
-        else:
-            self.strings.insert(index, new_string)
+        self.strings.insert(index, new_string)
         return new_string
