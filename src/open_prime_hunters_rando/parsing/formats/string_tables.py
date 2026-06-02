@@ -1,7 +1,7 @@
 import copy
 import enum
 import typing
-from typing import Any, Self
+from typing import Any, Self, TypedDict
 
 import construct
 from construct import (
@@ -164,6 +164,11 @@ class StringEntry:
         self._raw.text = value
 
 
+class StringGroup(TypedDict):
+    index: int
+    string: StringEntry
+
+
 class StringTable:
     def __init__(self, raw: Container):
         self._raw = raw
@@ -215,11 +220,11 @@ class StringTable:
             raise ValueError(f"No string with ID {string_id} found!")
         return string
 
-    def get_string_group(self, string_group: str) -> list[dict[int, StringEntry]]:
+    def get_string_group(self, string_group: str) -> list[StringGroup]:
         """
         Iterates through a string table and returns a specified string group.
         """
-        group = []
+        group: list[StringGroup] = []
         for index, string in enumerate(self.strings):
             if string.string_id[-1] == string_group:
                 group.append(
