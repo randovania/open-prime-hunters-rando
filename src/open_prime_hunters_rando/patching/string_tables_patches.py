@@ -115,5 +115,5 @@ def _add_hud_messages_strings(hud_messages_sp: StringTable, missile_launcher_amm
     ]
 
     for custom_hud_message in custom_hud_messages:
-        new_string = hud_messages_sp.add_string("H", False)
+        new_string = hud_messages_sp.add_string("H")
         new_string.text = custom_hud_message
