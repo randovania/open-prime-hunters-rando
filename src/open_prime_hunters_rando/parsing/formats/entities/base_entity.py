@@ -14,7 +14,7 @@ class Entity(FieldsMixin):
 
     node_name = field(str, "raw")
 
-    layer_state = field(list[int], "raw")
+    layer_state = field(list[bool], "raw")
 
     @property
     def active_layers(self) -> tuple[int, ...]:

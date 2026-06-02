@@ -321,7 +321,27 @@
                             },
                             "required": [
                                 "item_type"
-                            ]
+                            ],
+                            "if": {
+                                "properties": {
+                                    "item_type": {
+                                        "const": 19
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "state_bit": {
+                                        "type": "integer",
+                                        "description": "The state bit to activate when picked up.",
+                                        "minimum": 0,
+                                        "maximum": 63
+                                    }
+                                },
+                                "required": [
+                                    "state_bit"
+                                ]
+                            }
                         },
                         "else": {
                             "properties": {

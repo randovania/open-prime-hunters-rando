@@ -2,6 +2,7 @@ from enum import Enum
 
 from open_prime_hunters_rando.parsing.file_manager import FileManager, Language
 from open_prime_hunters_rando.parsing.formats.string_tables import ScanCategory, ScanSpeed, StringTable
+from open_prime_hunters_rando.patching.state_bits import create_shield_key_messages
 
 
 class StringTables(Enum):
@@ -86,6 +87,7 @@ def _patch_alimbic_cannon_control_room(game_messages: StringTable, starting_octo
 def _add_game_messages_strings(game_messages: StringTable, missile_launcher_ammo: int) -> None:
     custom_game_messages: list = [
         "PNOTHING FOUND\\you've obtained NOTHING.",
+        *create_shield_key_messages(),  # Shield Key Messages
     ]
 
     for custom_game_message in custom_game_messages:
