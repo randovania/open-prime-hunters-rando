@@ -32,6 +32,13 @@ class PlayerPickupItemsAddresses:
 
 
 @dataclasses.dataclass(frozen=True)
+class HudUpdateAddresses:
+    cloak_base_case: int
+    hud_up_cloak_base: int
+    hud_up_weapon_unlocked_case_2: int
+
+
+@dataclasses.dataclass(frozen=True)
 class RoomTransitionEndAddresses:
     door_locking_condition: int
 
@@ -48,6 +55,11 @@ class InitSaveFileAddresses:
     reordered_instructions: int
     init_save_file_rewrite: int
     starting_energy_ptr: int
+
+
+@dataclasses.dataclass(frozen=True)
+class DataSectionAddresses:
+    story_save_data: int
 
 
 @dataclasses.dataclass(frozen=True)
@@ -68,8 +80,10 @@ class GameVersion:
     description: str
     init_enemy_hunter_spawns_addresses: InitEnemyHunterSpawnsAddresses
     player_pickup_items_addresses: PlayerPickupItemsAddresses
+    hud_update_addresses: HudUpdateAddresses
     room_transition_end_addresses: RoomTransitionEndAddresses
     init_save_file_addresses: InitSaveFileAddresses
+    data_section_addresses: DataSectionAddresses
     overlay_offsets: OverlayOffsets
     metroidhunters_text_file_offsets: MetroidHuntersTextFileOffsets
 
@@ -84,10 +98,15 @@ ALL_VERSIONS = [
             random_hunter_spawn_game_state=0x02015AFC,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
-            missile_launcher=0x02019E94,
+            missile_launcher=0x02019E80,
             nothing=0x0201A23C,
             missiles_per_expansion=0x0201A350,
             ammo_per_expansion=0x0201A3AC,
+        ),
+        hud_update_addresses=HudUpdateAddresses(
+            cloak_base_case=0x0202D128,
+            hud_up_cloak_base=0x0202D594,
+            hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
@@ -103,6 +122,9 @@ ALL_VERSIONS = [
             reordered_instructions=0x0205BD28,
             init_save_file_rewrite=0x0205BD50,
             starting_energy_ptr=0x0205BF0C,
+        ),
+        data_section_addresses=DataSectionAddresses(
+            story_save_data=0x020E8C50,
         ),
         overlay_offsets=OverlayOffsets(
             cloak=0x01E20A,
@@ -121,10 +143,15 @@ ALL_VERSIONS = [
             random_hunter_spawn_game_state=0x02015AFC,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
-            missile_launcher=0x02019E94,
+            missile_launcher=0x02019E80,
             nothing=0x0201A23C,
             missiles_per_expansion=0x0201A350,
             ammo_per_expansion=0x0201A3AC,
+        ),
+        hud_update_addresses=HudUpdateAddresses(
+            cloak_base_case=0x0202D128,
+            hud_up_cloak_base=0x0202D594,
+            hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
@@ -140,6 +167,9 @@ ALL_VERSIONS = [
             reordered_instructions=0x0205C53C,
             init_save_file_rewrite=0x0205C564,
             starting_energy_ptr=0x0205C720,
+        ),
+        data_section_addresses=DataSectionAddresses(
+            story_save_data=0x020E9710,
         ),
         overlay_offsets=OverlayOffsets(
             cloak=0x01E26A,
@@ -158,10 +188,15 @@ ALL_VERSIONS = [
             random_hunter_spawn_game_state=0x02015AFC,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
-            missile_launcher=0x02019E94,
+            missile_launcher=0x02019E80,
             nothing=0x0201A23C,
             missiles_per_expansion=0x0201A350,
             ammo_per_expansion=0x0201A3AC,
+        ),
+        hud_update_addresses=HudUpdateAddresses(
+            cloak_base_case=0x0202D128,
+            hud_up_cloak_base=0x0202D594,
+            hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
@@ -177,6 +212,9 @@ ALL_VERSIONS = [
             reordered_instructions=0x0205C59C,
             init_save_file_rewrite=0x0205C5C4,
             starting_energy_ptr=0x0205C780,
+        ),
+        data_section_addresses=DataSectionAddresses(
+            story_save_data=0x020E9730,
         ),
         overlay_offsets=OverlayOffsets(
             cloak=0x01E20A,
@@ -195,10 +233,15 @@ ALL_VERSIONS = [
             random_hunter_spawn_game_state=0x02015AFC,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
-            missile_launcher=0x02019E94,
+            missile_launcher=0x02019E80,
             nothing=0x0201A23C,
             missiles_per_expansion=0x0201A350,
             ammo_per_expansion=0x0201A3AC,
+        ),
+        hud_update_addresses=HudUpdateAddresses(
+            cloak_base_case=0x0202D128,
+            hud_up_cloak_base=0x0202D594,
+            hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
@@ -214,6 +257,9 @@ ALL_VERSIONS = [
             reordered_instructions=0x0205C5E8,
             init_save_file_rewrite=0x0205C610,
             starting_energy_ptr=0x0205C7CC,
+        ),
+        data_section_addresses=DataSectionAddresses(
+            story_save_data=0x020E97B0,
         ),
         overlay_offsets=OverlayOffsets(
             cloak=0x01E26A,
@@ -232,10 +278,15 @@ ALL_VERSIONS = [
             random_hunter_spawn_game_state=0x02015AFC,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
-            missile_launcher=0x02019E94,
+            missile_launcher=0x02019E80,
             nothing=0x0201A23C,
             missiles_per_expansion=0x0201A350,
             ammo_per_expansion=0x0201A3AC,
+        ),
+        hud_update_addresses=HudUpdateAddresses(
+            cloak_base_case=0x0202D128,
+            hud_up_cloak_base=0x0202D594,
+            hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
@@ -251,6 +302,9 @@ ALL_VERSIONS = [
             reordered_instructions=0x0205DA18,
             init_save_file_rewrite=0x0205DA40,
             starting_energy_ptr=0x0205DBFC,
+        ),
+        data_section_addresses=DataSectionAddresses(
+            story_save_data=0x020EADA0,
         ),
         overlay_offsets=OverlayOffsets(
             cloak=0x01E20A,
