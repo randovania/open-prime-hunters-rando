@@ -207,12 +207,18 @@ class StringTable:
         self._raw.strings = value
 
     def get_string(self, string_id: str) -> StringEntry:
+        """
+        Returns a string from a string table.
+        """
         string = next((string for string in self.strings if string.string_id == string_id), None)
         if string is None:
             raise ValueError(f"No string with ID {string_id} found!")
         return string
 
     def get_string_group(self, string_group: str) -> list[dict[int, StringEntry]]:
+        """
+        Iterates through a string table and returns a specified string group.
+        """
         group = []
         for index, string in enumerate(self.strings):
             if string.string_id[-1] == string_group:
@@ -228,9 +234,15 @@ class StringTable:
         return group
 
     def reverse_string(self, string: str) -> str:
+        """
+        Returns a reversed version of a given string.
+        """
         return string[::-1]
 
     def _convert_string_to_int(self, string: str) -> int:
+        """
+        Converts a reversed string to an integer then returns it.
+        """
         current_id = string[:-1]
         reversed_id = int(self.reverse_string(current_id))
         return reversed_id
@@ -238,6 +250,7 @@ class StringTable:
     def add_string(self, string_group: str) -> StringEntry:
         """
         Adds a new string to a group which sorted by ID
+
         Strings of a similar type share a group, which is determined by a letter. eg, 'L'.
         The String ID is a number combined with the group letter. eg, '320P'.
         The first ID of most groups start at '100', eg, '100M'.
