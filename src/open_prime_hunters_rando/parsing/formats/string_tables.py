@@ -1,7 +1,7 @@
 import copy
 import enum
 import typing
-from typing import Any, Self
+from typing import Any, Self, TypedDict
 
 import construct
 from construct import (
@@ -164,6 +164,11 @@ class StringEntry:
         self._raw.text = value
 
 
+class StringGroup(TypedDict):
+    index: int
+    string: StringEntry
+
+
 class StringTable:
     def __init__(self, raw: Container):
         self._raw = raw
@@ -207,47 +212,80 @@ class StringTable:
         self._raw.strings = value
 
     def get_string(self, string_id: str) -> StringEntry:
+        """
+        Returns a string from a string table.
+        """
         string = next((string for string in self.strings if string.string_id == string_id), None)
         if string is None:
             raise ValueError(f"No string with ID {string_id} found!")
         return string
 
-    def get_min_max_string_for_group(self, string_group: str, append_to_group_end: bool = True) -> tuple[int, StringEntry, int]:
-        # If not appending to the end of the froup, subtract one from the index
+    def get_string_group(self, string_group: str) -> list[StringGroup]:
+        """
+        Iterates through a string table and returns a specified string group.
+        """
+        group: list[StringGroup] = []
         for index, string in enumerate(self.strings):
-            # Get min id
-            if not append_to_group_end and string.string_id[-1] == string_group:
-                step = -1
-                break
-            # Get max id
-            else:
-                step = 1
-                break
-        return index, string, step
+            if string.string_id[-1] == string_group:
+                group.append(
+                    {
+                        "index": index,
+                        "string": string,
+                    }
+                )
+
+        if len(group) == 0:
+            raise ValueError(f"No string group '{string_group}' found!")
+        return group
 
     def reverse_string(self, string: str) -> str:
+        """
+        Returns a reversed version of a given string.
+        """
         return string[::-1]
 
-    def add_string(self, string_group: str, append_to_group_end: bool = True) -> StringEntry:
+    def _convert_string_to_int(self, string: str) -> int:
         """
+        Converts a reversed string to an integer then returns it.
+        """
+        current_id = string[:-1]
+        reversed_id = int(self.reverse_string(current_id))
+        return reversed_id
+
+    def add_string(self, string_group: str) -> StringEntry:
+        """
+        Adds a new string to a group which sorted by ID
+
         Strings of a similar type share a group, which is determined by a letter. eg, 'L'.
         The String ID is a number combined with the group letter. eg, '320P'.
-        The first ID of every group always starts at '100', eg, '100M'.
+        The first ID of most groups start at '100', eg, '100M'.
         String IDs are actually in reverse, so '100M' is actually string '001' of group 'M'.
         """
-        # Calculate the min/max string id of a string group and return the string
-        index, base_string, step = self.get_min_max_string_for_group(string_group, append_to_group_end)
+        # Get all strings of the string group
+        group = self.get_string_group(string_group)
 
+        # Calculate the min string id in the group
         # Reverse the string and convert it to an int to change the value
-        current_id = base_string.string_id[:-1]
-        reversed_id = int(self.reverse_string(current_id))
-        reversed_new_id = reversed_id + step
+        first_entry = group[0]
+        min_id = self._convert_string_to_int(first_entry["string"].string_id)
+
+        # Insert the string at the start of the group
+        if min_id > 1:
+            new_id = min_id - 1
+            index = first_entry["index"]
+        # Append to the end of the group
+        else:
+            last_entry = group[-1]
+            max_id = last_entry["string"].string_id
+            converted_max = self._convert_string_to_int(max_id)
+            new_id = converted_max + 1
+            index = last_entry["index"] + 1
 
         # Reverse the string again so the game can use it
-        final_new_id = self.reverse_string(str(reversed_new_id).zfill(3)) + string_group
+        final_new_id = self.reverse_string(str(new_id).zfill(3)) + string_group
 
         # Assign the new string id to the newly copied string
-        new_string = copy.deepcopy(base_string)
+        new_string = copy.deepcopy(first_entry["string"])
         new_string.string_id = final_new_id
 
         # Add the new string to the string table
