@@ -91,7 +91,7 @@ def _add_game_messages_strings(game_messages: StringTable, missile_launcher_ammo
     ]
 
     for custom_game_message in custom_game_messages:
-        new_string = game_messages.append_string("M")
+        new_string = game_messages.add_string("M")
         new_string.text = custom_game_message
 
 
@@ -105,7 +105,7 @@ def _add_scan_log_strings(scan_log: StringTable) -> None:
     ]
 
     for custom_scan_log in custom_scan_logs:
-        new_string = scan_log.append_string("L")
+        new_string = scan_log.add_string("L")
         new_string.text = custom_scan_log["text"]
         new_string.scan_speed = custom_scan_log["scan_speed"]
         new_string.scan_category = custom_scan_log["scan_category"]

@@ -212,35 +212,64 @@ class StringTable:
             raise ValueError(f"No string with ID {string_id} found!")
         return string
 
-    def get_max_string_for_group(self, string_group: str) -> StringEntry:
-        for string in self.strings:
-            if string.string_id[-1] != string_group:
-                break
-        return string
+    def get_string_group(self, string_group: str) -> list[dict[int, StringEntry]]:
+        group = []
+        for index, string in enumerate(self.strings):
+            if string.string_id[-1] == string_group:
+                group.append(
+                    {
+                        "index": index,
+                        "string": string,
+                    }
+                )
+
+        if string_group is None:
+            raise ValueError(f"No string group {string_group} found!")
+        return group
 
     def reverse_string(self, string: str) -> str:
         return string[::-1]
 
-    def append_string(self, string_group: str) -> StringEntry:
+    def _convert_string_to_int(self, string: str) -> int:
+        current_id = string[:-1]
+        reversed_id = int(self.reverse_string(current_id))
+        return reversed_id
+
+    def add_string(self, string_group: str) -> StringEntry:
         """
+        Adds a new string to a group which sorted by ID
         Strings of a similar type share a group, which is determined by a letter. eg, 'L'.
         The String ID is a number combined with the group letter. eg, '320P'.
-        The first ID of every group always starts at '100', eg, '100M'.
+        The first ID of most groups start at '100', eg, '100M'.
         String IDs are actually in reverse, so '100M' is actually string '001' of group 'M'.
         """
-        # Calculate the max string id of a string group and return the string
-        max_string = self.get_max_string_for_group(string_group)
+        # Get all strings of the string group
+        group = self.get_string_group(string_group)
 
-        # Reverse the string and convert it to an int to increment the max value
-        reversed_new_id = str(int(self.reverse_string(max_string.string_id[:-1])) + 1)
+        # Calculate the min string id in the group
+        # Reverse the string and convert it to an int to change the value
+        first_entry = group[0]
+        min_id = self._convert_string_to_int(first_entry["string"].string_id)
+
+        # Insert the string at the start of the group
+        if min_id > 1:
+            new_id = min_id - 1
+            index = first_entry["index"]
+        # Append to the end of the group
+        else:
+            last_entry = group[-1]
+            max_id = last_entry["string"].string_id
+            converted_max = self._convert_string_to_int(max_id)
+            new_id = converted_max + 1
+            index = last_entry["index"] + 1
 
         # Reverse the string again so the game can use it
-        final_new_id = self.reverse_string(str(reversed_new_id).zfill(3)) + string_group
+        final_new_id = self.reverse_string(str(new_id).zfill(3)) + string_group
 
         # Assign the new string id to the newly copied string
-        new_string = copy.deepcopy(max_string)
+        new_string = copy.deepcopy(first_entry["string"])
         new_string.string_id = final_new_id
 
         # Add the new string to the string table
-        self.strings.append(new_string)
+        self.strings.insert(index, new_string)
         return new_string
