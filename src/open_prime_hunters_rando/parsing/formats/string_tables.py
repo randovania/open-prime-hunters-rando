@@ -229,8 +229,8 @@ class StringTable:
                     }
                 )
 
-        if string_group is None:
-            raise ValueError(f"No string group {string_group} found!")
+        if len(group) == 0:
+            raise ValueError(f"No string group '{string_group}' found!")
         return group
 
     def reverse_string(self, string: str) -> str:
