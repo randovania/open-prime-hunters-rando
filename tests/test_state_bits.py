@@ -1,4 +1,4 @@
-from open_prime_hunters_rando.patching.state_bits import (
+from open_prime_hunters_rando.patching.entities.state_bits import (
     ShieldKeyData,
     UnlockMessage,
     create_shield_key_messages,
