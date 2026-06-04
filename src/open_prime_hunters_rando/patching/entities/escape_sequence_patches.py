@@ -67,6 +67,7 @@ def _disable_boss_force_fields(file_manager: FileManager) -> None:
     for area_name, room_name, force_field in boss_force_fields:
         entity_file = file_manager.get_entity_file(area_name, room_name)
         entity = entity_file.get_entity(force_field, ForceField)
+        # Spire activates the force field until Slench 1 so it has to be disabled outright
         if entity.entity_id == 10:
             entity.layer_state[0] = False
             entity.layer_state[3] = False
