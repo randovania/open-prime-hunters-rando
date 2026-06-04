@@ -186,12 +186,11 @@ def create_shield_key_messages() -> list[str]:
     return pickup_messages
 
 
-def add_shield_key_triggers(file_manager: FileManager) -> None:
-    for state_bit in STATE_BIT_SHIELD_KEY_MAPPING.keys():
+def create_shield_key_triggers(file_manager: FileManager) -> None:
+    for state_bit, shield_key_data in STATE_BIT_SHIELD_KEY_MAPPING.items():
         # Get the Shield Key
-        state_bit_data = get_state_bit(state_bit)
-        entity_file = file_manager.get_entity_file(state_bit_data.area_name, state_bit_data.room_name)
-        shield_key = entity_file.get_entity(state_bit_data.entity_id, ItemSpawn)
+        entity_file = file_manager.get_entity_file(shield_key_data.area_name, shield_key_data.room_name)
+        shield_key = entity_file.get_entity(shield_key_data.entity_id, ItemSpawn)
 
         # Create a new trigger that checks if the state bit is set
         # If set, it sends out the original message of the shield key

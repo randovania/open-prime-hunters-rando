@@ -56,7 +56,7 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties) -> None:
                 new_entity.collected_message = Message.NONE
 
             if new_entity.item_type == ItemType.ARTIFACT_KEY:
-                _add_shield_key_trigger(entity_file, new_entity, pickup["state_bit"])
+                _add_shield_key_pickup_trigger(entity_file, new_entity, pickup["state_bit"])
 
             entity_file.replace_entity(entity_id, new_entity)
 
@@ -105,12 +105,12 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties) -> None:
             )
 
             if new_entity.item_type == ItemType.ARTIFACT_KEY:
-                _add_shield_key_trigger(entity_file, new_entity, pickup["state_bit"])
+                _add_shield_key_pickup_trigger(entity_file, new_entity, pickup["state_bit"])
 
             entity_file.replace_entity(entity_id, new_entity)
 
 
-def _add_shield_key_trigger(entity_file: EntityFile, new_entity: ItemSpawn, state_bit: int) -> None:
+def _add_shield_key_pickup_trigger(entity_file: EntityFile, new_entity: ItemSpawn, state_bit: int) -> None:
     # First Shield Key message has a string_id of 57
     # 25 is added to the message_id because the first custom state bit is 32
     message_id = state_bit + 25
