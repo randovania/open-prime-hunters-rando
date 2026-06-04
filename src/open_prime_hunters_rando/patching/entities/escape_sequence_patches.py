@@ -1,10 +1,12 @@
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
 
 
 def patch_escape_sequences(file_manager: FileManager) -> None:
     _disable_escape_triggers(file_manager)
     _remove_disabled_portals(file_manager)
+    _disable_boss_force_fields(file_manager)
     _patch_specific_layer_states(file_manager)
     _patch_both_escape_layers(file_manager)
 
@@ -54,6 +56,22 @@ def _remove_disabled_portals(file_manager: FileManager) -> None:
             for portal_entity in portal_entities:
                 entity = entity_file.get_entity(portal_entity, Entity)
                 entity.layer_state[1] = False
+
+
+def _disable_boss_force_fields(file_manager: FileManager) -> None:
+    boss_force_fields = [
+        ("Alinos", "High Ground", 10),
+        ("Vesper Defense Outpost", "Weapons Complex", 31),
+        ("Arcterra", "Sic Transit", 64),
+    ]
+    for area_name, room_name, force_field in boss_force_fields:
+        entity_file = file_manager.get_entity_file(area_name, room_name)
+        entity = entity_file.get_entity(force_field, ForceField)
+        if entity.entity_id == 10:
+            entity.layer_state[0] = False
+            entity.layer_state[3] = False
+        else:
+            entity.active = False
 
 
 def _patch_specific_layer_states(file_manager: FileManager) -> None:

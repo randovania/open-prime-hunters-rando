@@ -9,11 +9,12 @@ from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.patching import game_version
 from open_prime_hunters_rando.patching.asm.arm9 import patch_arm9
 from open_prime_hunters_rando.patching.asm.overlays import patch_overlays
+from open_prime_hunters_rando.patching.entities.cutscene_patches import remove_cutscenes
 from open_prime_hunters_rando.patching.entities.entity_patching import patch_entities
 from open_prime_hunters_rando.patching.entities.escape_sequence_patches import patch_escape_sequences
 from open_prime_hunters_rando.patching.entities.hunter_spawn_patches import patch_hunters
+from open_prime_hunters_rando.patching.entities.misc_patches import misc_patches
 from open_prime_hunters_rando.patching.entities.state_bits import add_shield_key_triggers
-from open_prime_hunters_rando.patching.entities.static_patches import static_patches
 from open_prime_hunters_rando.patching.text.frontend_text_patches import patch_frontend_text_files
 from open_prime_hunters_rando.patching.text.string_tables_patches import patch_string_tables
 from open_prime_hunters_rando.validator_with_default import DefaultValidatingDraft7Validator
@@ -58,9 +59,13 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
     LOG.info("Patching overlays")
     patch_overlays(rom, version)
 
+    # Remove cutscenes
+    LOG.info("Removing cutscenes")
+    remove_cutscenes(file_manager)
+
     # Static patches to rooms
     LOG.info("Patching rooms")
-    static_patches(file_manager)
+    misc_patches(file_manager)
 
     # Patch escape sequences
     LOG.info("Removing escape sequences")

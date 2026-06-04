@@ -27,7 +27,7 @@ def patch_entities(file_manager: FileManager, configuration: dict[str, dict]) ->
                 LOG.info(f"Patching entities in {area_name} - {room_name}")
 
                 # Modify entities
-                patch_pickups(entity_file, entity_groups["pickups"])
+                patch_pickups(entity_file, entity_groups["pickups"], room_name)
                 patch_force_fields(entity_file, entity_groups["force_fields"])
                 patch_portals(entity_file, entity_groups["portals"], room_name)
                 patch_doors(entity_file, entity_groups["doors"], room_name)
