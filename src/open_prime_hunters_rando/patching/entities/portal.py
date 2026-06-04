@@ -8,6 +8,7 @@ from open_prime_hunters_rando.parsing.level_data import ALL_PORTAL_FILE_NAMES
 class PortalProperties(TypedDict):
     entity_id: int
     target_index: int
+    active: bool
     entity_file_name: str
 
 
@@ -34,6 +35,11 @@ def _patch_portal_destination(entity_file: EntityFile, portal: PortalProperties,
     file_name = file_name[:15]
 
     entity.entity_file_name = file_name
+
+    # Only change the active field if a value is provided
+    is_active = portal.get("active", None)
+    if is_active is not None:
+        entity.active = is_active
 
 
 def _fix_incubation_vault_03_portal_spawn(incubation_vault_03: EntityFile) -> None:
