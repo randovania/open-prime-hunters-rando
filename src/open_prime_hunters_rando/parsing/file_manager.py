@@ -15,8 +15,8 @@ from open_prime_hunters_rando.parsing.level_data import get_data
 if TYPE_CHECKING:
     from ndspy.rom import NintendoDSRom
 
-    from open_prime_hunters_rando.patching.string_tables_patches import StringTables
-    from open_prime_hunters_rando.patching.text_patches import MetroidHuntersTextFiles
+    from open_prime_hunters_rando.patching.text.frontend_text_patches import MetroidHuntersTextFiles
+    from open_prime_hunters_rando.patching.text.string_tables_patches import StringTables
 
 
 class Language(Enum):

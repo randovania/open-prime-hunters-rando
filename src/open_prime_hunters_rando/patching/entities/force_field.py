@@ -1,9 +1,16 @@
+from typing import TypedDict
+
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
 from open_prime_hunters_rando.parsing.formats.entities.enum import WeaponType
 
 
-def patch_force_fields(entity_file: EntityFile, force_fields: list) -> None:
+class ForceFieldProperties(TypedDict):
+    entity_id: int
+    type: WeaponType
+
+
+def patch_force_fields(entity_file: EntityFile, force_fields: list[ForceFieldProperties]) -> None:
     for force_field in force_fields:
         entity_id = force_field["entity_id"]
 

@@ -2,7 +2,7 @@ import pytest
 
 from open_prime_hunters_rando.parsing.file_manager import Language
 from open_prime_hunters_rando.parsing.formats.string_tables import StringTable
-from open_prime_hunters_rando.patching.string_tables_patches import StringTables
+from open_prime_hunters_rando.patching.text.string_tables_patches import StringTables
 
 all_string_tables = [string_table.value for string_table in StringTables]
 
