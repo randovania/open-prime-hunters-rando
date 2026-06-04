@@ -402,6 +402,10 @@
                                 "type": "integer",
                                 "description": "The load index of the target portal."
                             },
+                            "active": {
+                                "type": "boolean",
+                                "description": "Determines if the portal is active by default."
+                            },
                             "entity_file_name": {
                                 "type": "string",
                                 "description": "The entity file of the target portal."
