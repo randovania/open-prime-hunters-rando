@@ -1,15 +1,6 @@
 import dataclasses
 import enum
 
-from open_prime_hunters_rando.parsing.common_types.volume import SphereVolumeType, TriggerVolumeFlags
-from open_prime_hunters_rando.parsing.file_manager import FileManager
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import (
-    TriggerVolume,
-    TriggerVolumeType,
-)
-from open_prime_hunters_rando.parsing.formats.entities.enum import Message
-
 
 class UnlockMessage(enum.StrEnum):
     DOOR = "a DOOR was unlocked"
@@ -175,41 +166,3 @@ STATE_BIT_SHIELD_KEY_MAPPING: dict[int, ShieldKeyData] = {
 
 def get_state_bit(state_bit: int) -> ShieldKeyData:
     return STATE_BIT_SHIELD_KEY_MAPPING[state_bit]
-
-
-def create_shield_key_messages() -> list[str]:
-    pickup_messages = []
-    for key_data in STATE_BIT_SHIELD_KEY_MAPPING.values():
-        pickup_messages.append(
-            "PSHIELD KEY FOUND\\"
-            f"{key_data.unlock_message} in {key_data.area_name.upper()} - {key_data.room_name.upper()}!"
-        )
-    return pickup_messages
-
-
-def create_shield_key_triggers(file_manager: FileManager) -> None:
-    for state_bit, shield_key_data in STATE_BIT_SHIELD_KEY_MAPPING.items():
-        # Get the Shield Key
-        entity_file = file_manager.get_entity_file(shield_key_data.area_name, shield_key_data.room_name)
-        shield_key = entity_file.get_entity(shield_key_data.entity_id, ItemSpawn)
-
-        # Create a new trigger that checks if the state bit is set
-        # If set, it sends out the original message of the shield key
-        shield_key_trigger = TriggerVolume.create(
-            node_name=shield_key.node_name,
-            layer_state=shield_key.layer_state,
-            subtype=TriggerVolumeType.STATE_BITS,
-            volume=SphereVolumeType.create(
-                sphere_radius=75.0,
-            ),
-            required_state_bit=state_bit,
-            trigger_flags=TriggerVolumeFlags.PLAYER_BIPED | TriggerVolumeFlags.PLAYER_ALT,
-            parent_id=shield_key.notify_entity_id,
-            parent_message=shield_key.collected_message,
-        )
-        entity_file.append_entity(shield_key_trigger)
-
-        # Sets a custom state bit when picked up which is activates its corresponding recipient
-        shield_key.notify_entity_id = -1
-        shield_key.collected_message = Message.SET_TRIGGER_STATE
-        shield_key.collected_message_param1 = state_bit
