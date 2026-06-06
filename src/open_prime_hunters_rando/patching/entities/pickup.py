@@ -28,10 +28,10 @@ def patch_pickups(entity_file: EntityFile, pickups: list[PickupProperties], room
         _update_high_ground_big_health_layers(entity_file)
 
     for pickup in pickups:
-        _patch_pickup(entity_file, pickup)
+        _patch_pickup(entity_file, pickup, room_name)
 
 
-def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties) -> None:
+def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties, room_name: str) -> None:
     entity_id = pickup["entity_id"]
     new_entity_type = EntityType(pickup["entity_type"])
 
@@ -43,22 +43,16 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties) -> None:
     if isinstance(entity, ItemSpawn):
         # Entity is still ItemSpawn
         if new_entity_type == EntityType.ITEM_SPAWN:
-            new_entity = ItemSpawn.create(
-                layer_state=entity.layer_state,
-                position=entity.position,
-                item_type=ItemType(pickup["item_type"]),
-                enabled=entity.enabled,
-                has_base=entity.has_base,
-            )
+            new_item_type = ItemType(pickup["item_type"])
 
             # Removes inherited messages from ItemSpawns that replaced the Shield Key
-            if entity.item_type == ItemType.ARTIFACT_KEY != new_entity.item_type:
-                new_entity.collected_message = Message.NONE
+            if entity.item_type == ItemType.ARTIFACT_KEY != new_item_type:
+                entity.collected_message = Message.NONE
 
-            if new_entity.item_type == ItemType.ARTIFACT_KEY:
-                _add_shield_key_pickup_trigger(entity_file, new_entity, pickup["state_bit"])
+            entity.item_type = new_item_type
 
-            entity_file.replace_entity(entity_id, new_entity)
+            if entity.item_type == ItemType.ARTIFACT_KEY:
+                _add_shield_key_pickup_trigger(entity_file, entity, pickup["state_bit"], room_name)
 
         # Entity is now Artifact
         else:
@@ -105,15 +99,17 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties) -> None:
             )
 
             if new_entity.item_type == ItemType.ARTIFACT_KEY:
-                _add_shield_key_pickup_trigger(entity_file, new_entity, pickup["state_bit"])
+                _add_shield_key_pickup_trigger(entity_file, new_entity, pickup["state_bit"], room_name)
 
             entity_file.replace_entity(entity_id, new_entity)
 
 
-def _add_shield_key_pickup_trigger(entity_file: EntityFile, new_entity: ItemSpawn, state_bit: int) -> None:
-    # First Shield Key message has a string_id of 57
-    # 25 is added to the message_id because the first custom state bit is 32
-    message_id = state_bit + 25
+def _add_shield_key_pickup_trigger(
+    entity_file: EntityFile, new_entity: ItemSpawn, state_bit: int, room_name: str
+) -> None:
+    # First Shield Key message has a string_id of 56
+    # 24 is added to the message_id because the first custom state bit is 32
+    message_id = state_bit + 24
 
     # Create a new trigger volume to show the message and play the sfx
     key_trigger = TriggerVolume.create(
@@ -129,11 +125,6 @@ def _add_shield_key_pickup_trigger(entity_file: EntityFile, new_entity: ItemSpaw
         child_message_param1=19,
     )
     entity_file.append_entity(key_trigger)
-
-    # Sets a custom state bit when picked up which is activates its corresponding recipient
-    new_entity.notify_entity_id = -1
-    new_entity.collected_message = Message.SET_TRIGGER_STATE
-    new_entity.collected_message_param1 = state_bit
 
 
 def _update_high_ground_big_health_layers(high_ground: EntityFile) -> None:

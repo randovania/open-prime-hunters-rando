@@ -8,6 +8,7 @@ from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volu
     TriggerVolume,
     TriggerVolumeType,
 )
+from open_prime_hunters_rando.parsing.formats.entities.enum import Message
 
 
 class UnlockMessage(enum.StrEnum):
@@ -207,3 +208,8 @@ def create_shield_key_triggers(file_manager: FileManager) -> None:
             parent_message=shield_key.collected_message,
         )
         entity_file.append_entity(shield_key_trigger)
+
+        # Sets a custom state bit when picked up which is activates its corresponding recipient
+        shield_key.notify_entity_id = -1
+        shield_key.collected_message = Message.SET_TRIGGER_STATE
+        shield_key.collected_message_param1 = state_bit
