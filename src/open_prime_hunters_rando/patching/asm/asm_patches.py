@@ -74,27 +74,17 @@ def patch_missile_launcher(ammo_value: int, story_save_data_address: int) -> byt
 
 
 def patch_ammo_per_expansion(ammo_value: int) -> bytes:
-    binary = read_bytes_from_file("ammo_per_expansion.bin")
-    new_instructions = GenerateArmBytes(ammo_value).add(2, 2)
-    modified_bytes = binary.replace(b"\xff\x20\x82\xe2", new_instructions)
-
-    return modified_bytes
+    return GenerateArmBytes(ammo_value).add(2, 2)
 
 
 def patch_starting_missiles(ammo_value: int) -> bytes:
-    binary = read_bytes_from_file("starting_ammo.bin")
-    new_instructions = GenerateArmBytes(ammo_value).mov(8)
-    modified_bytes = binary.replace(b"2\x80\xa0\xe3", new_instructions)
-
-    return modified_bytes
+    # The default instruction for starting missiles is mov r8, #0x32
+    return GenerateArmBytes(ammo_value).mov(8)
 
 
 def patch_starting_ammo(ammo_value: int) -> bytes:
-    binary = read_bytes_from_file("starting_ammo.bin")
-    new_instructions = GenerateArmBytes(ammo_value).mov(2)
-    modified_bytes = binary.replace(b"2\x80\xa0\xe3", new_instructions)
-
-    return modified_bytes
+    # The default instruction for starting ammo is mov r2, #0x19C
+    return GenerateArmBytes(ammo_value).mov(2)
 
 
 def patch_planets_and_artifacts(unlock_planets: dict, starting_artifacts: dict) -> bytes:
