@@ -83,6 +83,7 @@ ALINOS: dict[str, LevelData] = {
         room_id=28,
         area_name="Alinos",
         entity_file="Unit1_C0_Ent",
+        portal_file_name="unit1_C0_Ent",
     ),
     "High Ground": LevelData(
         room_id=29,
@@ -106,11 +107,13 @@ ALINOS: dict[str, LevelData] = {
         room_id=32,
         area_name="Alinos",
         entity_file="crystalroom_Ent",
+        portal_file_name="crystalroom_Ent",
     ),
     "Combat Hall": LevelData(
         room_id=33,
         area_name="Alinos",
         entity_file="unit1_rm4_Ent",
+        portal_file_name="unit1_RM4_Ent",
     ),
     "Stronghold Void A": LevelData(
         room_id=34,
@@ -122,26 +125,31 @@ ALINOS: dict[str, LevelData] = {
         room_id=35,
         area_name="Alinos",
         entity_file="Unit1_b1_Ent",
+        portal_file_name="unit1_b1_Ent",
     ),
     "Alimbic Gardens": LevelData(
         room_id=36,
         area_name="Alinos",
         entity_file="Unit1_C1_Ent",
+        portal_file_name="unit1_C1_Ent",
     ),
     "Thermal Vast": LevelData(
         room_id=37,
         area_name="Alinos",
         entity_file="Unit1_C2_Ent",
+        portal_file_name="unit1_C2_Ent",
     ),
     "Piston Cave": LevelData(
         room_id=38,
         area_name="Alinos",
         entity_file="Unit1_C5_Ent",
+        portal_file_name="unit1_C5_Ent",
     ),
     "Alinos Perch": LevelData(
         room_id=39,
         area_name="Alinos",
         entity_file="unit1_RM2_ent",
+        portal_file_name="unit1_RM2_ent",
     ),
     "Council Chamber": LevelData(
         room_id=40,
@@ -159,6 +167,7 @@ ALINOS: dict[str, LevelData] = {
         room_id=42,
         area_name="Alinos",
         entity_file="Unit1_C3_Ent",
+        portal_file_name="unit1_C3_Ent",
     ),
     "Stronghold Void B": LevelData(
         room_id=43,
@@ -170,6 +179,7 @@ ALINOS: dict[str, LevelData] = {
         room_id=44,
         area_name="Alinos",
         entity_file="Unit1_b2_Ent",
+        portal_file_name="unit1_b2_Ent",
     ),
 }
 
@@ -184,36 +194,43 @@ CELESTIAL_ARCHIVES: dict[str, LevelData] = {
         room_id=46,
         area_name="Celestial Archives",
         entity_file="unit2_C0_Ent",
+        portal_file_name="unit2_C0_Ent",
     ),
     "Meditation Room": LevelData(
         room_id=47,
         area_name="Celestial Archives",
         entity_file="unit2_C1_Ent",
+        portal_file_name="unit2_C1_Ent",
     ),
     "Data Shrine 01": LevelData(
         room_id=48,
         area_name="Celestial Archives",
         entity_file="unit2_RM1_Ent",
+        portal_file_name="unit2_RM1_Ent",
     ),
     "Fan Room Alpha": LevelData(
         room_id=49,
         area_name="Celestial Archives",
         entity_file="unit2_C2_Ent",
+        portal_file_name="unit2_C2_Ent",
     ),
     "Data Shrine 02": LevelData(
         room_id=50,
         area_name="Celestial Archives",
         entity_file="unit2_RM2_Ent",
+        portal_file_name="unit2_RM2_Ent",
     ),
     "Fan Room Beta": LevelData(
         room_id=51,
         area_name="Celestial Archives",
         entity_file="unit2_C3_Ent",
+        portal_file_name="unit2_C3_Ent",
     ),
     "Data Shrine 03": LevelData(
         room_id=52,
         area_name="Celestial Archives",
         entity_file="unit2_RM3_Ent",
+        portal_file_name="unit2_RM3_Ent",
     ),
     "Synergy Core": LevelData(
         room_id=53,
@@ -231,6 +248,7 @@ CELESTIAL_ARCHIVES: dict[str, LevelData] = {
         room_id=55,
         area_name="Celestial Archives",
         entity_file="Unit2_b1_Ent",
+        portal_file_name="unit2_b1_Ent",
     ),
     "Tetra Vista": LevelData(
         room_id=56,
@@ -284,6 +302,7 @@ CELESTIAL_ARCHIVES: dict[str, LevelData] = {
         room_id=64,
         area_name="Celestial Archives",
         entity_file="Unit2_b2_Ent",
+        portal_file_name="unit2_b2_Ent",
     ),
 }
 
@@ -298,11 +317,13 @@ VESPER_DEFENSE_OUTPOST: dict[str, LevelData] = {
         room_id=66,
         area_name="Vesper Defense Outpost",
         entity_file="unit3_C0_Ent",
+        portal_file_name="unit3_C0_Ent",
     ),
     "Cortex CPU": LevelData(
         room_id=67,
         area_name="Vesper Defense Outpost",
         entity_file="Unit3_C2_Ent",
+        portal_file_name="unit3_C2_Ent",
     ),
     "Weapons Complex": LevelData(
         room_id=68,
@@ -326,6 +347,7 @@ VESPER_DEFENSE_OUTPOST: dict[str, LevelData] = {
         room_id=71,
         area_name="Vesper Defense Outpost",
         entity_file="Unit3_b1_Ent",
+        portal_file_name="unit3_b1_Ent",
     ),
     "Ascension": LevelData(
         room_id=72,
@@ -337,6 +359,7 @@ VESPER_DEFENSE_OUTPOST: dict[str, LevelData] = {
         room_id=73,
         area_name="Vesper Defense Outpost",
         entity_file="Unit3_RM2_Ent",
+        portal_file_name="unit3_RM2_Ent",
     ),
     "Stasis Bunker": LevelData(
         room_id=74,
@@ -354,6 +377,7 @@ VESPER_DEFENSE_OUTPOST: dict[str, LevelData] = {
         room_id=76,
         area_name="Vesper Defense Outpost",
         entity_file="Unit3_b2_Ent",
+        portal_file_name="unit3_b2_Ent",
     ),
 }
 
@@ -374,11 +398,13 @@ ARCTERRA: dict[str, LevelData] = {
         room_id=79,
         area_name="Arcterra",
         entity_file="unit4_rm3_Ent",
+        portal_file_name="unit4_RM3_Ent",
     ),
     "Frost Labyrinth": LevelData(
         room_id=80,
         area_name="Arcterra",
         entity_file="unit4_C0_Ent",
+        portal_file_name="unit4_C0_Ent",
     ),
     "Stronghold Void A": LevelData(
         room_id=81,
@@ -390,21 +416,25 @@ ARCTERRA: dict[str, LevelData] = {
         room_id=82,
         area_name="Arcterra",
         entity_file="unit4_b1_Ent",
+        portal_file_name="unit4_b1_Ent",
     ),
     "Drip Moat": LevelData(
         room_id=83,
         area_name="Arcterra",
         entity_file="unit4_C1_Ent",
+        portal_file_name="unit4_C1_Ent",
     ),
     "Subterranean": LevelData(
         room_id=84,
         area_name="Arcterra",
         entity_file="Unit4_RM2_Ent",
+        portal_file_name="unit4_RM2_Ent",
     ),
     "Sanctorus": LevelData(
         room_id=85,
         area_name="Arcterra",
         entity_file="unit4_rm4_Ent",
+        portal_file_name="unit4_RM4_Ent",
     ),
     "Fault Line": LevelData(
         room_id=86,
@@ -422,6 +452,7 @@ ARCTERRA: dict[str, LevelData] = {
         room_id=88,
         area_name="Arcterra",
         entity_file="unit4_b2_Ent",
+        portal_file_name="unit4_b2_Ent",
     ),
 }
 
@@ -442,11 +473,13 @@ OUBLIETTE: dict[str, LevelData] = {
         room_id=91,
         area_name="Oubliette",
         entity_file="Gorea_b1_Ent",
+        portal_file_name="Gorea_b1_Ent",
     ),
     "Gorea 2 Arena": LevelData(
         room_id=92,
         area_name="Oubliette",
         entity_file="gorea_b2_Ent",
+        portal_file_name="Gorea_b2_Ent",
     ),
 }
 
