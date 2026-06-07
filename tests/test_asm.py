@@ -3,8 +3,11 @@ import pytest
 from open_prime_hunters_rando.patching.asm import bitfield_to_bytes, create_bitmask, read_bytes_from_file
 from open_prime_hunters_rando.patching.asm.asm_patches import (
     patch_ammo_per_expansion,
+    patch_ammo_refills,
+    patch_energy_refills,
     patch_missile_launcher,
     patch_planets_and_artifacts,
+    patch_refill_sound,
     patch_starting_ammo,
     patch_starting_energy,
     patch_starting_missiles,
@@ -152,3 +155,29 @@ def test_patch_starting_weapons():
 )
 def test_patch_starting_energy(value, expected_bytes):
     assert patch_starting_energy(value) == expected_bytes
+
+
+@pytest.mark.parametrize(
+    ("value", "expected_bytes"),
+    [
+        (0, b"\x00"),
+        (30, b"\x1e"),
+        (60, b"<"),
+        (100, b"d"),
+        (255, b"\xff"),
+    ],
+)
+def test_patch_energy_refills(value, expected_bytes):
+    assert patch_energy_refills(value) == expected_bytes
+
+
+def test_patch_ammo_refills():
+    new_bytes = patch_ammo_refills(25)
+    assert new_bytes == (
+        b"\x89\x00\x88\xe0\x01\x0c\x80\xe2\xbc\x14\xd0\xe1\x08 \x9f\xe5\x02\x10\x81\xe0\xbc\x14\xc0\xe1\xff\xff\xff\xea"
+        b"\xfa\x00\x00\x00\x00\xf0 \xe3\x00\xf0 \xe3\x00\xf0 \xe3\x00\xf0 \xe3\x00\xf0 \xe3\x00\xf0 \xe3"
+    )
+
+
+def test_patch_refill_sound():
+    assert patch_refill_sound() == b"\x1e\x00\xa0\xe3"

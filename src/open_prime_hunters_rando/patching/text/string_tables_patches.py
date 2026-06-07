@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import TypedDict
 
 from open_prime_hunters_rando.parsing.file_manager import FileManager, Language
 from open_prime_hunters_rando.parsing.formats.string_tables import ScanCategory, ScanSpeed, StringTable
@@ -16,6 +17,12 @@ class StringTables(Enum):
     SHIP_IN_SPACE = "ShipInSpace"
     SHIP_ON_GROUND = "ShipOnGround"
     WEAPON_NAMES = "WeaponNames"
+
+
+class RefillProperties(TypedDict):
+    original_value: int
+    new_value: int
+    string_ids: list[str]
 
 
 def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
@@ -66,7 +73,7 @@ def _patch_ammo(scan_log: StringTable, game_messages: StringTable, ammo_sizes: d
 
 
 def _patch_refills(scan_log: StringTable, refill_sizes: dict[str, int]) -> None:
-    refill_mapping: dict[str, dict[str, int | str]] = {
+    refill_mapping: dict[str, RefillProperties] = {
         "small_energy": {
             "original_value": 30,
             "new_value": refill_sizes["small_energy"],
