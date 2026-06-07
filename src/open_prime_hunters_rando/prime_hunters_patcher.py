@@ -14,7 +14,8 @@ from open_prime_hunters_rando.patching.entities.entity_patching import patch_ent
 from open_prime_hunters_rando.patching.entities.escape_sequence_patches import patch_escape_sequences
 from open_prime_hunters_rando.patching.entities.hunter_spawn_patches import patch_hunters
 from open_prime_hunters_rando.patching.entities.misc_patches import misc_patches
-from open_prime_hunters_rando.patching.entities.shield_key_patches import patch_shield_keys
+from open_prime_hunters_rando.patching.entities.shield_key_patches import patch_shield_key_rooms
+from open_prime_hunters_rando.patching.entities.state_bits import create_shield_key_triggers
 from open_prime_hunters_rando.patching.text.frontend_text_patches import patch_frontend_text_files
 from open_prime_hunters_rando.patching.text.string_tables_patches import patch_string_tables
 from open_prime_hunters_rando.validator_with_default import DefaultValidatingDraft7Validator
@@ -69,7 +70,8 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
 
     # Patch shield keys
     LOG.info("Patching shield keys")
-    patch_shield_keys(file_manager)
+    create_shield_key_triggers(file_manager)
+    patch_shield_key_rooms(file_manager)
 
     # Patch escape sequences
     LOG.info("Removing escape sequences")
