@@ -18,6 +18,7 @@ def patch_shield_key_rooms(file_manager: FileManager) -> None:
     _data_shrine_01(file_manager)
     _data_shrine_03(file_manager)
     _synergy_core(file_manager)
+    _weapons_complex(file_manager)
     _stasis_bunker(file_manager)
     _sic_transit(file_manager)
 
@@ -172,6 +173,20 @@ def _synergy_core(file_manager: FileManager) -> None:
     artifact = synergy_core.get_entity(3, Artifact)
     artifact.message1_target = -1
     artifact.message1 = Message.NONE
+
+
+def _weapons_complex(file_manager: FileManager) -> None:
+    weapons_complex = file_manager.get_entity_file("Vesper Defense Outpost", "Weapons Complex")
+
+    # Activate the platform after spawning the first shield key
+    spawn_first_key = weapons_complex.get_entity(62, TriggerVolume)
+    spawn_first_key.child_message = Message.SET_TRIGGER_STATE
+    spawn_first_key.child_message_param1 = 20
+
+    # Remove the cutscene for the first artifact shield and unlock it directly
+    first_shield_key_trigger = weapons_complex.get_entity(101, TriggerVolume)
+    first_shield_key_trigger.parent_id = 63
+    first_shield_key_trigger.parent_message = Message.SET_ACTIVE
 
 
 def _stasis_bunker(file_manager: FileManager) -> None:

@@ -31,7 +31,7 @@ def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
         _patch_hints(scan_log, scan_log_config)
         _patch_ammo(scan_log, game_messages, ammo_sizes)
         _patch_alimbic_cannon_control_room(game_messages, configuration["starting_items"]["octoliths"])
-        _add_game_messages_strings(game_messages, ammo_sizes["missile_launcher"])
+        _add_game_messages_strings(game_messages)
         _add_scan_log_strings(scan_log)
         _add_hud_messages_strings(hud_messages_sp, ammo_sizes["missile_launcher"])
 
@@ -84,7 +84,7 @@ def _patch_alimbic_cannon_control_room(game_messages: StringTable, starting_octo
     )
 
 
-def _add_game_messages_strings(game_messages: StringTable, missile_launcher_ammo: int) -> None:
+def _add_game_messages_strings(game_messages: StringTable) -> None:
     custom_game_messages: list = [
         "PNOTHING FOUND\\you've obtained NOTHING.",
         *create_shield_key_messages(),  # Shield Key Messages

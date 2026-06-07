@@ -110,6 +110,7 @@ def _remove_shield_key_messages(entity: ItemSpawn) -> None:
     # Removes inherited messages from the entity if it is no longer a Shield Key
     entity.notify_entity_id = -1
     entity.collected_message = Message.NONE
+    entity.collected_message_param1 = 0
 
 
 def _add_shield_key_pickup_trigger(entity_file: EntityFile, new_entity: ItemSpawn, state_bit: int) -> None:
