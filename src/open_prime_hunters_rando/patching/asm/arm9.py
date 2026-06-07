@@ -19,9 +19,16 @@ def patch_arm9(rom: NintendoDSRom, version: GameVersion, configuration: dict) ->
         # Both Addresses below handle random hunter spawns
         hunter.random_hunter_spawn_first_condition: read_bytes_from_file("random_hunter_spawns.bin"),
         hunter.random_hunter_spawn_game_state: read_bytes_from_file("enemy_hunter_spawns.bin"),
+        pickup.small_energy_refill_amount: patches.small_energy,  # Energy replenished by Small Energy
+        pickup.medium_energy_refill_amount: patches.medium_energy,  # Energy replenished by Medium Energy
+        pickup.large_energy_refill_amount: patches.large_energy,  # Energy replenished by Large Energy
         pickup.missile_launcher: patches.missile_launcher,  # Load instructions to create a custom Missile Launcher
         pickup.nothing: read_bytes_from_file("nothing.bin"),  # Add Nothing item
         pickup.missiles_per_expansion: patches.missiles_per_expansion,  # Missiles per expansion
+        pickup.small_ammo_refill_amount: patches.small_ammo,  # Ammo replenished by Small Ammo
+        pickup.large_ammo_refill_amount: patches.large_ammo,  # Ammo replenished by Large Ammo
+        pickup.small_energy_play_sfx: patches.refill_play_sfx,  # Fixes pickup sfx if refill value is changed
+        pickup.large_energy_play_sfx: patches.refill_play_sfx,  # Fixes pickup sfx if refill value is changed
         pickup.ammo_per_expansion: patches.ammo_per_expansion,  # UA per expansion
         # The next three addresses hijack Cloak hud code for the custom Missile Launcher
         hud.cloak_base_case: read_bytes_from_file("cloak_base_case.bin"),

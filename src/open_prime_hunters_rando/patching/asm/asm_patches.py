@@ -13,6 +13,7 @@ class AsmPatches:
         self.starting_items = configuration["starting_items"]
         self.game_patches = configuration["game_patches"]
         self.ammo_sizes = configuration["ammo_sizes"]
+        self.refill_sizes = configuration["refill_sizes"]
 
         # Starting Items
         self.starting_ammo = patch_starting_ammo(self.starting_items["ammo"])
@@ -27,6 +28,14 @@ class AsmPatches:
             self.ammo_sizes["missile_launcher"], data_section.story_save_data
         )
         self.missiles_per_expansion = patch_ammo_per_expansion(self.ammo_sizes["missile_expansion"])
+
+        # Energy/Ammo Refills
+        self.small_energy = patch_energy_refills(self.refill_sizes["small_energy"])
+        self.medium_energy = patch_energy_refills(self.refill_sizes["medium_energy"])
+        self.large_energy = patch_energy_refills(self.refill_sizes["large_energy"])
+        self.small_ammo = patch_ammo_refills(self.refill_sizes["small_ammo"])
+        self.large_ammo = patch_ammo_refills(self.refill_sizes["large_ammo"])
+        self.refill_play_sfx = patch_refill_sound()
 
         # Game Patches
         self.init_save_file_rewrite = patch_planets_and_artifacts(
@@ -119,3 +128,24 @@ def patch_planets_and_artifacts(unlock_planets: dict, starting_artifacts: dict) 
     )
 
     return modified_bytes
+
+
+def patch_energy_refills(refill_value: int) -> bytes:
+    return refill_value.to_bytes()
+
+
+def patch_ammo_refills(refill_value: int) -> bytes:
+    binary = read_bytes_from_file("ammo_refill.bin")
+    converted_value = (refill_value * 10).to_bytes(4, "little")
+    placeholder_value = b"\xff\x00\x00\x00"
+    modified_bytes = binary.replace(placeholder_value, converted_value)
+
+    return modified_bytes
+
+
+def patch_refill_sound() -> bytes:
+    """
+    Overwrites the original instruction of loading from the sp to just moving a direct value
+    This is necessary to preserve the sfx when picking up a small/large energy refill that has its values changed
+    """
+    return GenerateArmBytes(30, False).mov(0)

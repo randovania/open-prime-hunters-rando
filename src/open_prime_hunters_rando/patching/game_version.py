@@ -25,9 +25,16 @@ class InitEnemyHunterSpawnsAddresses:
 
 @dataclasses.dataclass(frozen=True)
 class PlayerPickupItemsAddresses:
+    small_energy_refill_amount: int
+    medium_energy_refill_amount: int
+    large_energy_refill_amount: int
     missile_launcher: int
     nothing: int
     missiles_per_expansion: int
+    small_ammo_refill_amount: int
+    large_ammo_refill_amount: int
+    small_energy_play_sfx: int
+    large_energy_play_sfx: int
     ammo_per_expansion: int
 
 
@@ -98,9 +105,16 @@ ALL_VERSIONS = [
             random_hunter_spawn_game_state=0x02015AFC,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
+            small_energy_refill_amount=0x02019BD8,
+            medium_energy_refill_amount=0x02019B88,
+            large_energy_refill_amount=0x02019BE0,
             missile_launcher=0x02019E80,
             nothing=0x0201A23C,
             missiles_per_expansion=0x0201A350,
+            small_ammo_refill_amount=0x02019DD4,
+            large_ammo_refill_amount=0x02019D74,
+            small_energy_play_sfx=0x0201A144,
+            large_energy_play_sfx=0x0201A1E4,
             ammo_per_expansion=0x0201A3AC,
         ),
         hud_update_addresses=HudUpdateAddresses(
@@ -143,9 +157,16 @@ ALL_VERSIONS = [
             random_hunter_spawn_game_state=0x02015AFC,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
+            small_energy_refill_amount=0x02019BD8,
+            medium_energy_refill_amount=0x02019B88,
+            large_energy_refill_amount=0x02019BE0,
             missile_launcher=0x02019E80,
             nothing=0x0201A23C,
             missiles_per_expansion=0x0201A350,
+            small_ammo_refill_amount=0x02019DD4,
+            large_ammo_refill_amount=0x02019D74,
+            small_energy_play_sfx=0x0201A144,
+            large_energy_play_sfx=0x0201A1E4,
             ammo_per_expansion=0x0201A3AC,
         ),
         hud_update_addresses=HudUpdateAddresses(
@@ -188,9 +209,16 @@ ALL_VERSIONS = [
             random_hunter_spawn_game_state=0x02015AFC,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
+            small_energy_refill_amount=0x02019BD8,
+            medium_energy_refill_amount=0x02019B88,
+            large_energy_refill_amount=0x02019BE0,
             missile_launcher=0x02019E80,
             nothing=0x0201A23C,
             missiles_per_expansion=0x0201A350,
+            small_ammo_refill_amount=0x02019DD4,
+            large_ammo_refill_amount=0x02019D74,
+            small_energy_play_sfx=0x0201A144,
+            large_energy_play_sfx=0x0201A1E4,
             ammo_per_expansion=0x0201A3AC,
         ),
         hud_update_addresses=HudUpdateAddresses(
@@ -233,9 +261,16 @@ ALL_VERSIONS = [
             random_hunter_spawn_game_state=0x02015AFC,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
+            small_energy_refill_amount=0x02019BD8,
+            medium_energy_refill_amount=0x02019B88,
+            large_energy_refill_amount=0x02019BE0,
             missile_launcher=0x02019E80,
             nothing=0x0201A23C,
             missiles_per_expansion=0x0201A350,
+            small_ammo_refill_amount=0x02019DD4,
+            large_ammo_refill_amount=0x02019D74,
+            small_energy_play_sfx=0x0201A144,
+            large_energy_play_sfx=0x0201A1E4,
             ammo_per_expansion=0x0201A3AC,
         ),
         hud_update_addresses=HudUpdateAddresses(
@@ -278,9 +313,16 @@ ALL_VERSIONS = [
             random_hunter_spawn_game_state=0x02015AFC,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
+            small_energy_refill_amount=0x02019BD8,
+            medium_energy_refill_amount=0x02019B88,
+            large_energy_refill_amount=0x02019BE0,
             missile_launcher=0x02019E80,
             nothing=0x0201A23C,
             missiles_per_expansion=0x0201A350,
+            small_ammo_refill_amount=0x02019DD4,
+            large_ammo_refill_amount=0x02019D74,
+            small_energy_play_sfx=0x0201A144,
+            large_energy_play_sfx=0x0201A1E4,
             ammo_per_expansion=0x0201A3AC,
         ),
         hud_update_addresses=HudUpdateAddresses(
