@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, TypedDict
 
-from open_prime_hunters_rando.parsing.common_types.volume import SphereVolumeType, TriggerVolumeFlags
+from open_prime_hunters_rando.parsing.common_types.volume import SphereVolumeType
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
@@ -28,10 +28,10 @@ def patch_pickups(entity_file: EntityFile, pickups: list[PickupProperties], room
         _update_high_ground_big_health_layers(entity_file)
 
     for pickup in pickups:
-        _patch_pickup(entity_file, pickup, room_name)
+        _patch_pickup(entity_file, pickup)
 
 
-def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties, room_name: str) -> None:
+def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties) -> None:
     entity_id = pickup["entity_id"]
     new_entity_type = EntityType(pickup["entity_type"])
 
@@ -45,19 +45,21 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties, room_name: 
         if new_entity_type == EntityType.ITEM_SPAWN:
             new_item_type = ItemType(pickup["item_type"])
 
-            # Removes inherited messages from ItemSpawns that replaced the Shield Key
             if entity.item_type == ItemType.ARTIFACT_KEY != new_item_type:
-                entity.collected_message = Message.NONE
+                _remove_shield_key_messages(entity)
 
             entity.item_type = new_item_type
 
-            if entity.item_type == ItemType.ARTIFACT_KEY:
-                _add_shield_key_pickup_trigger(entity_file, entity, pickup["state_bit"], room_name)
+            if new_item_type == ItemType.ARTIFACT_KEY:
+                _add_shield_key_pickup_trigger(entity_file, entity, pickup["state_bit"])
 
         # Entity is now Artifact
         else:
             # Raise entity so it doesn't clip into the floor
             entity.position.y += 0.3
+
+            if entity.collected_message == Message.SET_TRIGGER_STATE:
+                _remove_shield_key_messages(entity)
 
             new_entity = Artifact.create(
                 model_id=pickup["model_id"],
@@ -99,26 +101,33 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties, room_name: 
             )
 
             if new_entity.item_type == ItemType.ARTIFACT_KEY:
-                _add_shield_key_pickup_trigger(entity_file, new_entity, pickup["state_bit"], room_name)
+                _add_shield_key_pickup_trigger(entity_file, new_entity, pickup["state_bit"])
 
             entity_file.replace_entity(entity_id, new_entity)
 
 
-def _add_shield_key_pickup_trigger(
-    entity_file: EntityFile, new_entity: ItemSpawn, state_bit: int, room_name: str
-) -> None:
+def _remove_shield_key_messages(entity: ItemSpawn) -> None:
+    # Removes inherited messages from the entity if it is no longer a Shield Key
+    entity.notify_entity_id = -1
+    entity.collected_message = Message.NONE
+
+
+def _add_shield_key_pickup_trigger(entity_file: EntityFile, new_entity: ItemSpawn, state_bit: int) -> None:
     # First Shield Key message has a string_id of 56
     # 24 is added to the message_id because the first custom state bit is 32
     message_id = state_bit + 24
+
+    # Updates the state bit set by the shield key based on the configuration
+    new_entity.collected_message_param1 = state_bit
 
     # Create a new trigger volume to show the message and play the sfx
     key_trigger = TriggerVolume.create(
         node_name=new_entity.node_name,
         position=new_entity.position,
         layer_state=new_entity.layer_state,
-        subtype=TriggerVolumeType.VOLUME,
+        subtype=TriggerVolumeType.STATE_BITS,
         volume=SphereVolumeType.create(),
-        trigger_flags=TriggerVolumeFlags.PLAYER_BIPED | TriggerVolumeFlags.PLAYER_ALT,
+        required_state_bit=state_bit,
         parent_message=Message.SHOW_PROMPT,
         parent_message_param1=message_id,
         child_message=Message.PLAY_SFX_SCRIPT,

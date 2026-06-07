@@ -1,7 +1,5 @@
 import copy
 
-from open_prime_hunters_rando.parsing.common_types.vectors import Vec3
-from open_prime_hunters_rando.parsing.common_types.volume import SphereVolumeType, TriggerVolumeFlags
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.camera_sequence import CameraSequence
@@ -42,17 +40,13 @@ def _create_shield_key_triggers(file_manager: FileManager) -> None:
             node_name=shield_key.node_name,
             layer_state=shield_key.layer_state,
             subtype=TriggerVolumeType.STATE_BITS,
-            volume=SphereVolumeType.create(
-                sphere_radius=75.0,
-            ),
             required_state_bit=state_bit,
-            trigger_flags=TriggerVolumeFlags.PLAYER_BIPED | TriggerVolumeFlags.PLAYER_ALT,
             parent_id=shield_key.notify_entity_id,
             parent_message=shield_key.collected_message,
         )
         entity_file.append_entity(shield_key_trigger)
 
-        # Sets a custom state bit when picked up which is activates its corresponding recipient
+        # Sets the required state bit for the shield key
         shield_key.notify_entity_id = -1
         shield_key.collected_message = Message.SET_TRIGGER_STATE
         shield_key.collected_message_param1 = state_bit
@@ -81,14 +75,12 @@ def _high_ground(file_manager: FileManager) -> None:
     artifact.message3_target = -1
     artifact.message3 = Message.NONE
 
-    # Move the Shield Key to Spire's spawn point to avoid having to add extra triggers to set the state bit
-    shield_key = high_ground.get_entity(81, ItemSpawn)
-    shield_key.position = Vec3(-0.05419921875, 11.60107421875, 9.8974609375)
+    spire2 = high_ground.get_entity(60, EnemySpawn)
 
     # Move the messages that unlock the doors to a new trigger that activates after Spire is defeated
     unlocking_trigger = TriggerVolume.create(
         node_name="rmMain",
-        layer_state=shield_key.layer_state,
+        layer_state=spire2.layer_state,
         subtype=TriggerVolumeType.AUTOMATIC,
         active=False,
         parent_id=17,
@@ -99,10 +91,26 @@ def _high_ground(file_manager: FileManager) -> None:
 
     high_ground.append_entity(unlocking_trigger)
 
-    # Replace the message thats moves the item spawner to Spire's place of defeat with unlocking the doors
-    spire = high_ground.get_entity(60, EnemySpawn)
-    spire.message2_target = unlocking_trigger.entity_id
-    spire.message2 = Message.ACTIVATE
+    # Add a new trigger that activates the Artifact and the door unlocking trigger
+    post_spire_trigger = TriggerVolume.create(
+        node_name="rmMain",
+        layer_state=spire2.layer_state,
+        subtype=TriggerVolumeType.AUTOMATIC,
+        active=False,
+        parent_id=81,
+        parent_message=Message.ACTIVATE,
+        child_id=unlocking_trigger.entity_id,
+        child_message=Message.ACTIVATE,
+    )
+
+    high_ground.append_entity(post_spire_trigger)
+
+    # Replace the message thats activates the Artifact with moving the item spawner
+    # and activate the new post-Spire trigger
+    spire2.message1_target = 81
+    spire2.message1 = Message.MOVE_ITEM_SPAWNER
+    spire2.message2_target = post_spire_trigger.entity_id
+    spire2.message2 = Message.ACTIVATE
 
 
 def _elder_passage(file_manager: FileManager) -> None:
@@ -160,15 +168,6 @@ def _data_shrine_03(file_manager: FileManager) -> None:
     camera_sequence = data_shrine_03.get_entity(42, CameraSequence)
     camera_sequence.end_message_target_id = 22
     camera_sequence.end_message = Message.ACTIVATE
-
-    # Move the Shield Key to the center of the room to avoid having to add extra triggers to set the state bit
-    shield_key = data_shrine_03.get_entity(45, ItemSpawn)
-    shield_key.position = Vec3(0.0, 3.7421875, 0.0)
-
-    # Remove the message thats moves the item spawner to Kanden's place of defeat
-    kanden = data_shrine_03.get_entity(3, EnemySpawn)
-    kanden.message3_target = -1
-    kanden.message3 = Message.NONE
 
 
 def _synergy_core(file_manager: FileManager) -> None:

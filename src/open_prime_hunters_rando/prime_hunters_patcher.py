@@ -67,13 +67,13 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
     LOG.info("Patching rooms")
     misc_patches(file_manager)
 
-    # Patch escape sequences
-    LOG.info("Removing escape sequences")
-    patch_escape_sequences(file_manager)
-
     # Patch shield keys
     LOG.info("Patching shield keys")
     patch_shield_keys(file_manager)
+
+    # Patch escape sequences
+    LOG.info("Removing escape sequences")
+    patch_escape_sequences(file_manager)
 
     # Patch entities
     patch_entities(file_manager, configuration["areas"])
