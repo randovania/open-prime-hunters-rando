@@ -20,6 +20,7 @@ class StringTables(Enum):
 
 def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
     ammo_sizes = configuration.get("ammo_sizes", {})
+    refill_sizes = configuration.get("refill_sizes", {})
     string_tables = configuration["text_patches"]["string_tables"]
     scan_log_config = string_tables.get("scan_log", {})
 
@@ -30,6 +31,7 @@ def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
 
         _patch_hints(scan_log, scan_log_config)
         _patch_ammo(scan_log, game_messages, ammo_sizes)
+        _patch_refills(scan_log, refill_sizes)
         _patch_alimbic_cannon_control_room(game_messages, configuration["starting_items"]["octoliths"])
         _add_game_messages_strings(game_messages)
         _add_scan_log_strings(scan_log)
@@ -61,6 +63,44 @@ def _patch_ammo(scan_log: StringTable, game_messages: StringTable, ammo_sizes: d
 
         ammo_scan_string = scan_log.get_string("420L")
         ammo_scan_string.text = ammo_scan_string.text.replace("30", f"{ua}")
+
+
+def _patch_refills(scan_log: StringTable, refill_sizes: dict[str, int]) -> None:
+    refill_mapping: dict[str, dict[str, int | str]] = {
+        "small_energy": {
+            "original_value": 30,
+            "new_value": refill_sizes["small_energy"],
+            "string_ids": ["900L"],
+        },
+        "medium_energy": {
+            "original_value": 60,
+            "new_value": refill_sizes["medium_energy"],
+            "string_ids": ["110L"],
+        },
+        "large_energy": {
+            "original_value": 100,
+            "new_value": refill_sizes["large_energy"],
+            "string_ids": ["210L"],
+        },
+        "small_ammo": {
+            "original_value": 10,
+            "new_value": refill_sizes["small_ammo"],
+            "string_ids": ["410L", "610L"],
+        },
+        "large_ammo": {
+            "original_value": 25,
+            "new_value": refill_sizes["large_ammo"],
+            "string_ids": ["510L", "710L"],
+        },
+    }
+
+    for refill_type, properties in refill_mapping.items():
+        if properties["original_value"] != properties["new_value"]:
+            for string_id in properties["string_ids"]:
+                refill_string = scan_log.get_string(string_id)
+                refill_string.text = refill_string.text.replace(
+                    str(properties["original_value"]), str(properties["new_value"])
+                )
 
 
 def _patch_alimbic_cannon_control_room(game_messages: StringTable, starting_octoliths: str) -> None:

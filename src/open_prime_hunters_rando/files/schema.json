@@ -190,6 +190,49 @@
             },
             "default": {}
         },
+        "refill_sizes": {
+            "type": "object",
+            "description": "Configure the amount of ammo recovered by different sources.",
+            "properties": {
+                "small_energy": {
+                    "type": "integer",
+                    "default": 30,
+                    "minimum": 0,
+                    "maximum": 255
+                },
+                "medium_energy": {
+                    "type": "integer",
+                    "default": 60,
+                    "minimum": 0,
+                    "maximum": 255
+                },
+                "large_energy": {
+                    "type": "integer",
+                    "default": 100,
+                    "minimum": 0,
+                    "maximum": 255
+                },
+                "small_ammo": {
+                    "type": "integer",
+                    "default": 10,
+                    "minimum": 0,
+                    "maximum": 255
+                },
+                "large_ammo": {
+                    "type": "integer",
+                    "default": 25,
+                    "minimum": 0,
+                    "maximum": 255
+                }
+            },
+            "default": {
+                "small_energy": 30,
+                "medium_energy": 60,
+                "large_energy": 100,
+                "small_ammo": 10,
+                "large_ammo": 25
+            }
+        },
         "game_patches": {
             "type": "object",
             "properties": {
