@@ -74,27 +74,24 @@ def patch_missile_launcher(ammo_value: int, story_save_data_address: int) -> byt
 
 
 def patch_ammo_per_expansion(ammo_value: int) -> bytes:
-    binary = read_bytes_from_file("ammo_per_expansion.bin")
-    new_instructions = GenerateArmBytes(ammo_value).add(2, 2)
-    modified_bytes = binary.replace(b"\xff\x20\x82\xe2", new_instructions)
-
-    return modified_bytes
+    """
+    Overwrites the original add r2, r2, #ammo instruction with a new one using the new ammo value.
+    """
+    return GenerateArmBytes(ammo_value).add(2, 2)
 
 
 def patch_starting_missiles(ammo_value: int) -> bytes:
-    binary = read_bytes_from_file("starting_ammo.bin")
-    new_instructions = GenerateArmBytes(ammo_value).mov(8)
-    modified_bytes = binary.replace(b"2\x80\xa0\xe3", new_instructions)
-
-    return modified_bytes
+    """
+    Overwrites the original mov r8, #0x32 instruction with a new one using the new ammo value.
+    """
+    return GenerateArmBytes(ammo_value).mov(8)
 
 
 def patch_starting_ammo(ammo_value: int) -> bytes:
-    binary = read_bytes_from_file("starting_ammo.bin")
-    new_instructions = GenerateArmBytes(ammo_value).mov(2)
-    modified_bytes = binary.replace(b"2\x80\xa0\xe3", new_instructions)
-
-    return modified_bytes
+    """
+    Overwrites the original mov r2, #0x19C instruction with a new one using the new ammo value.
+    """
+    return GenerateArmBytes(ammo_value).mov(2)
 
 
 def patch_planets_and_artifacts(unlock_planets: dict, starting_artifacts: dict) -> bytes:
@@ -131,10 +128,17 @@ def patch_planets_and_artifacts(unlock_planets: dict, starting_artifacts: dict) 
 
 
 def patch_energy_refills(refill_value: int) -> bytes:
+    """
+    Overwrites the original refill value with a new one.
+    """
     return refill_value.to_bytes()
 
 
 def patch_ammo_refills(refill_value: int) -> bytes:
+    """
+    Overwrites the original conditional regarding game state.
+    Sets how much ammo is recovered from an ammo refill.
+    """
     binary = read_bytes_from_file("ammo_refill.bin")
     converted_value = (refill_value * 10).to_bytes(4, "little")
     placeholder_value = b"\xff\x00\x00\x00"
@@ -145,7 +149,7 @@ def patch_ammo_refills(refill_value: int) -> bytes:
 
 def patch_refill_sound() -> bytes:
     """
-    Overwrites the original instruction of loading from the sp to just moving a direct value
-    This is necessary to preserve the sfx when picking up a small/large energy refill that has its values changed
+    Overwrites the original instruction of loading from the sp to just moving a direct value.
+    This is necessary to preserve the sfx when picking up a small/large energy refill that has its values changed.
     """
     return GenerateArmBytes(30, False).mov(0)

@@ -23,9 +23,6 @@ def test_read_bytes():
         b"\x00\xea\x00\xf0 \xe3\x00\xf0 \xe3\x00\xf0 \xe3\x00\xf0 \xe3\x00\xf0 \xe3\x00\xf0 \xe3\x10\x97\x0e\x02"
     )
 
-    ammo_per_expansion = read_bytes_from_file("ammo_per_expansion.bin")
-    assert ammo_per_expansion == b"\xff \x82\xe2"
-
 
 @pytest.mark.parametrize(
     ("value", "expected_bytes"),
