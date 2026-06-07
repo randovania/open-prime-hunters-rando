@@ -62,13 +62,13 @@ class Artifact(Entity):
         artifact_id: int = 0,
         active: bool = True,
         has_base: bool = False,
-        message1_target: int = 0,
+        message1_target: int = -1,
         message1: Message = Message.NONE,
-        message2_target: int = 0,
+        message2_target: int = -1,
         message2: Message = Message.NONE,
-        message3_target: int = 0,
+        message3_target: int = -1,
         message3: Message = Message.NONE,
-        linked_entity_id: int = 0,
+        linked_entity_id: int = -1,
     ) -> typing.Self:
         obj = super().create(
             node_name,
