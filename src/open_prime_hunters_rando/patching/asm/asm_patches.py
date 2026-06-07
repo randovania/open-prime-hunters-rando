@@ -35,6 +35,7 @@ class AsmPatches:
         self.large_energy = patch_energy_refills(self.refill_sizes["large_energy"])
         self.small_ammo = patch_ammo_refills(self.refill_sizes["small_ammo"])
         self.large_ammo = patch_ammo_refills(self.refill_sizes["large_ammo"])
+        self.refill_play_sfx = patch_refill_sound()
 
         # Game Patches
         self.init_save_file_rewrite = patch_planets_and_artifacts(
@@ -140,3 +141,11 @@ def patch_ammo_refills(refill_value: int) -> bytes:
     modified_bytes = binary.replace(placeholder_value, converted_value)
 
     return modified_bytes
+
+
+def patch_refill_sound() -> bytes:
+    """
+    Overwrites the original instruction of loading from the sp to just moving a direct value
+    This is necessary to preserve the sfx when picking up a small/large energy refill that has its values changed
+    """
+    return GenerateArmBytes(30, False).mov(0)

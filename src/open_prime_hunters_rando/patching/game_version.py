@@ -33,6 +33,8 @@ class PlayerPickupItemsAddresses:
     missiles_per_expansion: int
     small_ammo_refill_amount: int
     large_ammo_refill_amount: int
+    small_energy_play_sfx: int
+    large_energy_play_sfx: int
     ammo_per_expansion: int
 
 
@@ -111,6 +113,8 @@ ALL_VERSIONS = [
             missiles_per_expansion=0x0201A350,
             small_ammo_refill_amount=0x02019DD4,
             large_ammo_refill_amount=0x02019D74,
+            small_energy_play_sfx=0x0201A144,
+            large_energy_play_sfx=0x0201A1E4,
             ammo_per_expansion=0x0201A3AC,
         ),
         hud_update_addresses=HudUpdateAddresses(
@@ -161,6 +165,8 @@ ALL_VERSIONS = [
             missiles_per_expansion=0x0201A350,
             small_ammo_refill_amount=0x02019DD4,
             large_ammo_refill_amount=0x02019D74,
+            small_energy_play_sfx=0x0201A144,
+            large_energy_play_sfx=0x0201A1E4,
             ammo_per_expansion=0x0201A3AC,
         ),
         hud_update_addresses=HudUpdateAddresses(
@@ -211,6 +217,8 @@ ALL_VERSIONS = [
             missiles_per_expansion=0x0201A350,
             small_ammo_refill_amount=0x02019DD4,
             large_ammo_refill_amount=0x02019D74,
+            small_energy_play_sfx=0x0201A144,
+            large_energy_play_sfx=0x0201A1E4,
             ammo_per_expansion=0x0201A3AC,
         ),
         hud_update_addresses=HudUpdateAddresses(
@@ -261,6 +269,8 @@ ALL_VERSIONS = [
             missiles_per_expansion=0x0201A350,
             small_ammo_refill_amount=0x02019DD4,
             large_ammo_refill_amount=0x02019D74,
+            small_energy_play_sfx=0x0201A144,
+            large_energy_play_sfx=0x0201A1E4,
             ammo_per_expansion=0x0201A3AC,
         ),
         hud_update_addresses=HudUpdateAddresses(
@@ -311,6 +321,8 @@ ALL_VERSIONS = [
             missiles_per_expansion=0x0201A350,
             small_ammo_refill_amount=0x02019DD4,
             large_ammo_refill_amount=0x02019D74,
+            small_energy_play_sfx=0x0201A144,
+            large_energy_play_sfx=0x0201A1E4,
             ammo_per_expansion=0x0201A3AC,
         ),
         hud_update_addresses=HudUpdateAddresses(

@@ -27,6 +27,8 @@ def patch_arm9(rom: NintendoDSRom, version: GameVersion, configuration: dict) ->
         pickup.missiles_per_expansion: patches.missiles_per_expansion,  # Missiles per expansion
         pickup.small_ammo_refill_amount: patches.small_ammo,  # Ammo replenished by Small Ammo
         pickup.large_ammo_refill_amount: patches.large_ammo,  # Ammo replenished by Large Ammo
+        pickup.small_energy_play_sfx: patches.refill_play_sfx,  # Fixes pickup sfx if refill value is changed
+        pickup.large_energy_play_sfx: patches.refill_play_sfx,  # Fixes pickup sfx if refill value is changed
         pickup.ammo_per_expansion: patches.ammo_per_expansion,  # UA per expansion
         # The next three addresses hijack Cloak hud code for the custom Missile Launcher
         hud.cloak_base_case: read_bytes_from_file("cloak_base_case.bin"),
