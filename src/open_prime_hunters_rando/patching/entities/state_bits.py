@@ -198,6 +198,7 @@ def create_shield_key_triggers(file_manager: FileManager) -> None:
             node_name=shield_key.node_name,
             layer_state=shield_key.layer_state,
             subtype=TriggerVolumeType.STATE_BITS,
+            always_active=False,
             required_state_bit=state_bit,
             parent_id=shield_key.notify_entity_id,
             parent_message=shield_key.collected_message,
