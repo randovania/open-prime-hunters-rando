@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING, TypedDict
 
-from open_prime_hunters_rando.parsing.common_types.volume import SphereVolumeType
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
@@ -118,16 +117,16 @@ def _add_shield_key_pickup_trigger(entity_file: EntityFile, new_entity: ItemSpaw
     # 24 is added to the message_id because the first custom state bit is 32
     message_id = state_bit + 24
 
-    # Updates the state bit set by the shield key based on the configuration
+    # Updates the message and state bit set by the shield key based on the configuration
+    new_entity.collected_message = Message.SET_TRIGGER_STATE
     new_entity.collected_message_param1 = state_bit
 
     # Create a new trigger volume to show the message and play the sfx
     key_trigger = TriggerVolume.create(
         node_name=new_entity.node_name,
-        position=new_entity.position,
         layer_state=new_entity.layer_state,
         subtype=TriggerVolumeType.STATE_BITS,
-        volume=SphereVolumeType.create(),
+        always_active=False,
         required_state_bit=state_bit,
         parent_message=Message.SHOW_PROMPT,
         parent_message_param1=message_id,
