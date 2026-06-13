@@ -38,10 +38,10 @@
                     },
                     "default": {
                         "battlehammer": false,
-                        "missile_launcher": false,
                         "imperialist": false,
                         "judicator": false,
                         "magmaul": false,
+                        "missile_launcher": false,
                         "shock_coil": false,
                         "volt_driver": false
                     }
