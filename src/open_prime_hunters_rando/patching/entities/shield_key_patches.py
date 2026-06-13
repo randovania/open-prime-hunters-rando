@@ -21,6 +21,7 @@ def patch_shield_key_rooms(file_manager: FileManager) -> None:
     _weapons_complex(file_manager)
     _stasis_bunker(file_manager)
     _sic_transit(file_manager)
+    _sanctorus(file_manager)
 
 
 def _high_ground(file_manager: FileManager) -> None:
@@ -245,4 +246,17 @@ def _sic_transit(file_manager: FileManager) -> None:
 
     camera_sequence = sic_transit.get_entity(23, CameraSequence)
     camera_sequence.end_message_target_id = unlocking_trigger.entity_id
+    camera_sequence.end_message = Message.ACTIVATE
+
+
+def _sanctorus(file_manager: FileManager) -> None:
+    sanctorus = file_manager.get_entity_file("Arcterra", "Sanctorus")
+
+    # Move the message that activates the Gaurdians to the artifact shield camera sequence
+    artifact = sanctorus.get_entity(7, Artifact)
+    artifact.message1_target = -1
+    artifact.message1 = Message.NONE
+
+    camera_sequence = sanctorus.get_entity(37, CameraSequence)
+    camera_sequence.end_message_target_id = 38
     camera_sequence.end_message = Message.ACTIVATE
