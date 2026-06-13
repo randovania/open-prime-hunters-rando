@@ -74,14 +74,22 @@ def _high_ground(file_manager: FileManager) -> None:
 def _elder_passage(file_manager: FileManager) -> None:
     elder_passage = file_manager.get_entity_file("Alinos", "Elder Passage")
 
-    # Move the message that unlocks the doors from the artifact to the camera sequence
+    # Remove the messages that unlocks the door and sets the state bit
     artifact = elder_passage.get_entity(4, Artifact)
     artifact.message1_target = -1
     artifact.message1 = Message.NONE
+    artifact.message2_target = -1
+    artifact.message2 = Message.NONE
 
+    # Spire exit camera sequence now sets the state bit
     camera_sequence = elder_passage.get_entity(26, CameraSequence)
-    camera_sequence.end_message_target_id = 43
-    camera_sequence.end_message = Message.ACTIVATE
+    camera_sequence.end_message_target_id = 40
+    camera_sequence.end_message = Message.TRIGGER
+
+    # Remove the message that locks the lower door
+    locking_trigger = elder_passage.get_entity(40, TriggerVolume)
+    locking_trigger.child_id = -1
+    locking_trigger.child_message = Message.NONE
 
 
 def _piston_cave(file_manager: FileManager) -> None:
