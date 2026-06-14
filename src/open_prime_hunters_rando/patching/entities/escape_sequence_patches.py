@@ -76,7 +76,7 @@ def _disable_boss_force_fields(file_manager: FileManager) -> None:
 
 
 def _patch_specific_layer_states(file_manager: FileManager) -> None:
-    # Patch layer states per room (IDs, Entity Type, Layers, Value)
+    # Patch layer states per room (IDs, Layers, Value)
     patches_per_layer_state: dict[str, dict[str, list[tuple[list[int], list[int], bool]]]] = {
         "Alinos": {
             "Elder Passage": [
@@ -94,6 +94,9 @@ def _patch_specific_layer_states(file_manager: FileManager) -> None:
         "Celestial Archives": {
             "Data Shrine 01": [
                 ([37], [1, 2], False),  # Second Pass Door
+            ],
+            "Data Shrine 03": [
+                ([47, 48, 49], [2], False),  # FIXME: Random Guardian Spawns can crash if Kanden is active
             ],
             "Incubation Vault 02": [
                 ([5, 11], [1, 2], False),  # 2nd pass Psycho Bit and Voldrum spawners
