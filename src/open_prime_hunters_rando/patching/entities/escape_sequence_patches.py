@@ -88,7 +88,6 @@ def _patch_specific_layer_states(file_manager: FileManager) -> None:
                 ([56, 72], [1, 2, 3], False),  # Second Pass Bottom Doors
                 ([74, 77], [3], True),  # Force Fields
                 ([57, 58], [3], True),  # Portals
-                ([85, 95], [1], True),  # Hunter Spawns
             ],
         },
         "Celestial Archives": {
