@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.area_volume import AreaVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.object import Object
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import TriggerVolume
@@ -15,6 +16,7 @@ def misc_patches(file_manager: FileManager) -> None:
     _disable_message_prompts(file_manager)
     _remove_elder_passage_top_lock_and_force_field(file_manager)
     _move_data_shrine_01_fight_trigger(file_manager)
+    _save_vram_ice_hive(file_manager)
 
 
 def _disable_message_prompts(file_manager: FileManager) -> None:
@@ -56,3 +58,15 @@ def _move_data_shrine_01_fight_trigger(file_manager: FileManager) -> None:
     lower_scan = entity_file.get_entity(52, Object)
     lower_scan.scan_message_target = 43
     lower_scan.scan_message = Message.TRIGGER
+
+
+def _save_vram_ice_hive(file_manager: FileManager) -> None:
+    # Remove some entities to prevent VRAM overflow in large rooms
+    entity_file = file_manager.get_entity_file("Arcterra", "Ice Hive")
+
+    # Remove the Carnivorous Plants in the path under the Artifact
+    to_remove = [33, 108, 111]
+    for entity_id in to_remove:
+        carnivorous_plant = entity_file.get_entity(entity_id, EnemySpawn)
+        for layer in range(3):
+            carnivorous_plant.layer_state[layer] = False
