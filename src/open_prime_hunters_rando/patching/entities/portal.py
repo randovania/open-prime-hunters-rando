@@ -1,8 +1,9 @@
 from typing import TypedDict
 
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.object import Object, ObjectEffectFlags, ObjectFlags
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.teleporter import Teleporter
-from open_prime_hunters_rando.parsing.level_data import ALL_PORTAL_FILE_NAMES
+from open_prime_hunters_rando.parsing.level_data import ALL_AREAS, ALL_PORTAL_FILE_NAMES
 
 
 class PortalProperties(TypedDict):
@@ -40,6 +41,32 @@ def _patch_portal_destination(entity_file: EntityFile, portal: PortalProperties,
     is_active = portal.get("active", None)
     if is_active is not None:
         entity.active = is_active
+
+    # Add a scan point above the portal that indicates the destination room if it is visible
+    # No return portals are invisible and do not get a scan point
+    # Magma Drop entrance portal is invisible but is excluded from this rule and does get a scan point
+    if (room_name == "High Ground" and entity_id == 57) or not entity.invisible:
+        # The first custom string id for portal scans is 475
+        scan_id = 475
+        for area_data in ALL_AREAS:
+            for room, level_data in area_data.items():
+                if level_data.portal_file_name in file_name:
+                    scan_id += level_data.room_id - 27
+                    break
+
+        destination_scan = Object.create(
+            node_name=entity.node_name,
+            layer_state=entity.layer_state,
+            position=entity.position,
+            object_flags=ObjectFlags.STATE_BIT0,
+            object_effect_flags=ObjectEffectFlags.UNKNOWN,
+            model_id=0,
+            scan_id=scan_id,
+            effect_interval=10,
+            effect_on_inverals=1,
+        )
+        destination_scan.position.y += 2
+        entity_file.append_entity(destination_scan)
 
 
 def _fix_incubation_vault_03_portal_spawn(incubation_vault_03: EntityFile) -> None:
