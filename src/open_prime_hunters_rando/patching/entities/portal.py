@@ -42,14 +42,15 @@ def _patch_portal_destination(entity_file: EntityFile, portal: PortalProperties,
     if is_active is not None:
         entity.active = is_active
 
-    # Add a scan point above the portal that indicates the destination room if it is visible
-    # No return portals are invisible and do not get a scan point
-    # Magma Drop entrance portal is invisible but is excluded from this rule and does get a scan point
+    # Add a scan point above the portal that indicates the destination room
+    # No return portals are invisible and do not get a scan point since they aren't usable
+    # Magma Drop entrance portal is invisible but does get a scan point since it is usable
     if (room_name == "High Ground" and entity_id == 57) or not entity.invisible:
         # The first custom string id for portal scans is 475
         scan_id = 475
         for area_data in ALL_AREAS:
             for room, level_data in area_data.items():
+                assert level_data.portal_file_name is not None
                 if level_data.portal_file_name in file_name:
                     scan_id += level_data.room_id - 27
                     break
