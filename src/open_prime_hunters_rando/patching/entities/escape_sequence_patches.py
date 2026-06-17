@@ -38,7 +38,7 @@ def _remove_disabled_portals(file_manager: FileManager) -> None:
             "Council Chamber": [54, 57],
         },
         "Celestial Archives": {
-            "Synergy Core": [47, 45],
+            "Synergy Core": [41, 45, 47],
             "New Arrival Registration": [43, 45],
         },
         "Vesper Defense Outpost": {
