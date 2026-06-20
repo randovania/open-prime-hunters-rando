@@ -286,7 +286,16 @@
                     "properties": {
                         "scan_log": {
                             "type": "object",
-                            "description": "Modify the text of an entry in the ScanLog.",
+                            "description": "Modify the text of an entry in ScanLog.bin.",
+                            "patternProperties": {
+                                ".*": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "ship_in_space": {
+                            "type": "object",
+                            "description": "Modify the text of an entry in ShipInSpace.bin",
                             "patternProperties": {
                                 ".*": {
                                     "type": "string"
