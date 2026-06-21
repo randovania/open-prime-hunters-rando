@@ -17,6 +17,7 @@ def misc_patches(file_manager: FileManager) -> None:
     _remove_elder_passage_top_lock_and_force_field(file_manager)
     _move_data_shrine_01_fight_trigger(file_manager)
     _save_vram_ice_hive(file_manager)
+    _add_area_intro_message_oubliette_gateway(file_manager)
 
 
 def _disable_message_prompts(file_manager: FileManager) -> None:
@@ -70,3 +71,13 @@ def _save_vram_ice_hive(file_manager: FileManager) -> None:
         carnivorous_plant = entity_file.get_entity(entity_id, EnemySpawn)
         for layer in range(3):
             carnivorous_plant.layer_state[layer] = False
+
+
+def _add_area_intro_message_oubliette_gateway(file_manager: FileManager) -> None:
+    entity_file = file_manager.get_entity_file("Oubliette", "Oubliette Gateway")
+
+    # Add the message overlay to the trigger that activates the camera sequence
+    trigger = entity_file.get_entity(18, TriggerVolume)
+    trigger.child_message = Message.SHOW_OVERLAY
+    trigger.child_message_param1 = 80
+    trigger.child_message_param2 = 90
