@@ -93,7 +93,8 @@ def _planet_intros(file_manager: FileManager) -> None:
 
         # Disable the camera sequence
         camera_sequence = entity_file.get_entity(camera_sequence_id, CameraSequence)
-        camera_sequence.layer_state[0] = False
+        for layer in camera_sequence.active_layers:
+            camera_sequence.layer_state[layer] = False
 
         # Disable the area volume that moves the ship
         area_volume = entity_file.get_entity(area_volume_id, AreaVolume)
