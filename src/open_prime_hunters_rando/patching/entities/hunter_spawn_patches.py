@@ -44,7 +44,7 @@ _ROOMS_WITH_HUNTERS: dict[str, dict[str, dict[int, int]]] = {
 
 
 def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
-    shuffle_hunter_colors = configuration["game_patches"]["shuffle_hunter_colors"]
+    shuffle_hunter_colors = configuration["cosmetic_patches"]["shuffle_hunter_colors"]
     shuffle_hunter_ids = configuration["game_patches"]["shuffle_hunter_ids"]
 
     if not shuffle_hunter_colors and not shuffle_hunter_ids:
