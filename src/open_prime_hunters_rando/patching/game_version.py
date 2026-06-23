@@ -78,6 +78,7 @@ class OverlayOffsets:
 @dataclasses.dataclass(frozen=True)
 class MetroidHuntersTextFileOffsets:
     main_menu_textbox: int
+    credits_end_transmission: int
 
 
 @dataclasses.dataclass(frozen=True)
@@ -146,6 +147,7 @@ ALL_VERSIONS = [
         ),
         metroidhunters_text_file_offsets=MetroidHuntersTextFileOffsets(
             main_menu_textbox=7944,
+            credits_end_transmission=3600,
         ),
     ),
     GameVersion(
@@ -198,6 +200,7 @@ ALL_VERSIONS = [
         ),
         metroidhunters_text_file_offsets=MetroidHuntersTextFileOffsets(
             main_menu_textbox=6792,
+            credits_end_transmission=3144,
         ),
     ),
     GameVersion(
@@ -250,6 +253,7 @@ ALL_VERSIONS = [
         ),
         metroidhunters_text_file_offsets=MetroidHuntersTextFileOffsets(
             main_menu_textbox=8012,
+            credits_end_transmission=3632,
         ),
     ),
     GameVersion(
@@ -302,6 +306,7 @@ ALL_VERSIONS = [
         ),
         metroidhunters_text_file_offsets=MetroidHuntersTextFileOffsets(
             main_menu_textbox=6792,
+            credits_end_transmission=3144,
         ),
     ),
     GameVersion(
@@ -354,6 +359,7 @@ ALL_VERSIONS = [
         ),
         metroidhunters_text_file_offsets=MetroidHuntersTextFileOffsets(
             main_menu_textbox=7944,
+            credits_end_transmission=3600,
         ),
     ),
 ]
