@@ -1248,8 +1248,9 @@
         "missile_expansion": 10,
         "ua_expansion": 30
     },
-    "game_patches": {
-        "shuffle_hunter_colors": false
+    "cosmetic_patches": {
+        "shuffle_hunter_colors": false,
+        "suit_color": "varia"
     },
     "text_patches": {
         "string_tables": {

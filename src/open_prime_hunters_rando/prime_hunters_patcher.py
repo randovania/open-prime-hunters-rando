@@ -16,6 +16,7 @@ from open_prime_hunters_rando.patching.entities.hunter_spawn_patches import patc
 from open_prime_hunters_rando.patching.entities.misc_patches import misc_patches
 from open_prime_hunters_rando.patching.entities.shield_key_patches import patch_shield_key_rooms
 from open_prime_hunters_rando.patching.entities.state_bits import create_shield_key_triggers
+from open_prime_hunters_rando.patching.misc.suit_color import patch_suit_color
 from open_prime_hunters_rando.patching.text.frontend_text_patches import patch_frontend_text_files
 from open_prime_hunters_rando.patching.text.string_tables_patches import patch_string_tables
 from open_prime_hunters_rando.validator_with_default import DefaultValidatingDraft7Validator
@@ -59,6 +60,9 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
     # Modify overlay files
     LOG.info("Patching overlays")
     patch_overlays(rom, version)
+
+    # Use alternate suit color
+    patch_suit_color(rom, configuration["cosmetic_patches"]["suit_color"])
 
     # Remove cutscenes
     LOG.info("Removing cutscenes")
