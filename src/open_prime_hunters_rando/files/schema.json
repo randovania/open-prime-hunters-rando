@@ -242,17 +242,17 @@
                     "default": false
                 },
                 "suit_color": {
-                    "type": "integer",
+                    "type": "string",
                     "description": "Changes the palette used for Samus' suit",
                     "enum": [
-                        0,
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
+                        "varia",
+                        "purple",
+                        "blue",
+                        "black",
+                        "orange",
+                        "green"
                     ],
-                    "default": 0
+                    "default": "varia"
                 }
             }
         },

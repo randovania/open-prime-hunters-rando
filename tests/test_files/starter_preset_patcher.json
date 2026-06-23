@@ -1250,7 +1250,7 @@
     },
     "cosmetic_patches": {
         "shuffle_hunter_colors": false,
-        "suit_color": 0
+        "suit_color": "varia"
     },
     "text_patches": {
         "string_tables": {
