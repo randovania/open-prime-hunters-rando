@@ -5,7 +5,7 @@ from construct import Byte, Int16sl, Int16ul, Int32sl, Int32ul, Padded, Struct
 
 from open_prime_hunters_rando.parsing.common_types import BaseFlags, MessageConstruct
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3, Vector3Fx
-from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, BoxVolumeType, CollisionVolume
+from open_prime_hunters_rando.parsing.common_types.volume import BaseVolumeType, CollisionVolume, SphereVolumeType
 from open_prime_hunters_rando.parsing.construct_extensions import FlagsEnumAdapter
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
@@ -102,11 +102,11 @@ class Object(Entity):
         effect_id: int = 0,
         effect_interval: int = 0,
         effect_on_inverals: int = 0,
-        effect_position_offset: Vec3 | tuple[float, float, float] = (0.0, 0.0, 1.0),
+        effect_position_offset: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
         volume: BaseVolumeType | None = None,
     ) -> typing.Self:
         if volume is None:
-            volume = BoxVolumeType.create()
+            volume = SphereVolumeType.create()
 
         obj = super().create(
             node_name,

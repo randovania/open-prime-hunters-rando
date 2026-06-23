@@ -3,6 +3,7 @@ from typing import TypedDict
 
 from open_prime_hunters_rando.parsing.file_manager import FileManager, Language
 from open_prime_hunters_rando.parsing.formats.string_tables import ScanCategory, ScanSpeed, StringTable
+from open_prime_hunters_rando.parsing.level_data import ALL_AREAS
 from open_prime_hunters_rando.patching.entities.state_bits import create_shield_key_messages
 
 
@@ -149,6 +150,7 @@ def _add_scan_log_strings(scan_log: StringTable) -> None:
             "scan_speed": ScanSpeed.FAST,
             "scan_category": ScanCategory.EQUIPMENT,
         },
+        *_create_portal_destination_scans(),  # Custom portal scans are added in order of room id
     ]
 
     for custom_scan_log in custom_scan_logs:
@@ -166,3 +168,21 @@ def _add_hud_messages_strings(hud_messages_sp: StringTable, missile_launcher_amm
     for custom_hud_message in custom_hud_messages:
         new_string = hud_messages_sp.add_string("H")
         new_string.text = custom_hud_message
+
+
+def _create_portal_destination_scans() -> list:
+    all_destination_scans = []
+    for area_data in ALL_AREAS:
+        for room_name, level_data in area_data.items():
+            all_destination_scans.append(
+                {
+                    "text": (
+                        "PORTAL DESTINATION\\the destination of this PORTAL is "
+                        f"{level_data.area_name.upper()} - {room_name.upper()}."
+                    ),
+                    "scan_speed": ScanSpeed.FAST,
+                    "scan_category": ScanCategory.OBJECT,
+                }
+            )
+
+    return all_destination_scans
