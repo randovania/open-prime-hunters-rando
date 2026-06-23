@@ -26,18 +26,21 @@ class RefillProperties(TypedDict):
     string_ids: list[str]
 
 
+type StringTablesConfig = dict[str, dict[str, str]]
+
+
 def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
-    ammo_sizes = configuration.get("ammo_sizes", {})
-    refill_sizes = configuration.get("refill_sizes", {})
-    string_tables = configuration["text_patches"]["string_tables"]
-    scan_log_config = string_tables.get("scan_log", {})
+    ammo_sizes: dict[str, int] = configuration.get("ammo_sizes", {})
+    refill_sizes: dict[str, int] = configuration.get("refill_sizes", {})
+    string_tables: StringTablesConfig = configuration["text_patches"]["string_tables"]
 
     for language in Language:
         scan_log = file_manager.get_string_table(language, StringTables.SCAN_LOG)
         game_messages = file_manager.get_string_table(language, StringTables.GAME_MESSAGES)
         hud_messages_sp = file_manager.get_string_table(language, StringTables.HUD_MESSAGES_SP)
+        ship_in_space = file_manager.get_string_table(language, StringTables.SHIP_IN_SPACE)
 
-        _patch_hints(scan_log, scan_log_config)
+        _patch_string_table_configs(string_tables, scan_log, ship_in_space)
         _patch_ammo(scan_log, game_messages, ammo_sizes)
         _patch_refills(scan_log, refill_sizes)
         _patch_alimbic_cannon_control_room(game_messages, configuration["starting_items"]["octoliths"])
@@ -46,10 +49,17 @@ def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
         _add_hud_messages_strings(hud_messages_sp, ammo_sizes["missile_launcher"])
 
 
-def _patch_hints(scan_log: StringTable, hints: dict[str, str]) -> None:
-    for string_id, text in hints.items():
-        string_entry = scan_log.get_string(string_id)
-        string_entry.text = text
+def _patch_string_table_configs(
+    string_tables: StringTablesConfig, scan_log: StringTable, ship_in_space: StringTable
+) -> None:
+    string_tables_mapping: list[tuple[StringTable, dict[str, str]]] = [
+        (scan_log, string_tables.get("scan_log", {})),  # Hints
+        (ship_in_space, string_tables.get("ship_in_space", {})),  # Intro Text
+    ]
+    for string_table, config in string_tables_mapping:
+        for string_id, text in config.items():
+            string_entry = string_table.get_string(string_id)
+            string_entry.text = text
 
 
 def _patch_ammo(scan_log: StringTable, game_messages: StringTable, ammo_sizes: dict[str, int]) -> None:

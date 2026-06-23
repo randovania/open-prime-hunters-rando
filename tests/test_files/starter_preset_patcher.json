@@ -1258,6 +1258,20 @@
                 "014L": "OCTOLITH HINTS 02\\OCTOLITH 3 is located in ARCTERRA. OCTOLITH 4 is located in ALINOS.",
                 "114L": "OCTOLITH HINTS 03\\Want a hint? Just go where the items are.",
                 "214L": "OCTOLITH HINTS 04\\Made you look!"
+            },
+            "ship_in_space": {
+                "100S": "---STARTING ITEMS---",
+                "200S": "JUDICATOR\nARCTERRA BINARY SUBSCRIPTURE ARTIFACT 2\nMISSILE LAUNCHER",
+                "300S": "---GOAL---",
+                "400S": "collect 4 OCTOLITHS and defeat GOREA in OUBLIETTE.",
+                "500S": "---GAMEPLAY CHANGES---",
+                "600S": "FORCE FIELD weaknesses have been RANDOMIZED.",
+                "700S": "PORTAL destinations have been randomized TWO-WAY, UNCHECKED.",
+                "800S": "DOOR WEAKNESSES have been RANDOMIZED by TYPE.",
+                "900S": "---MORE INFO---",
+                "010S": "for further information, visit randovania.org.",
+                "110S": "join the discord server if you have any questions.",
+                "210S": "good luck and have fun!"
             }
         }
     }
