@@ -1,16 +1,23 @@
 from open_prime_hunters_rando.parsing.file_manager import FileManager
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.area_volume import AreaVolume
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.camera_sequence import CameraSequence
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.object import Object
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.platform import Platform, PlatformFlags
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.player_spawn import PlayerSpawn
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import TriggerVolume
 from open_prime_hunters_rando.parsing.formats.entities.enum import Message
 
 
-def remove_cutscenes(file_manager: FileManager) -> None:
+def remove_cutscenes(file_manager: FileManager, skip_planet_intros: bool) -> None:
     _alimbic_gardens(file_manager)
     _helm_room_scan_door(file_manager)
     _new_arrival_registration(file_manager)
     _fault_line_imperialist_tutorial(file_manager)
+
+    if skip_planet_intros:
+        _planet_intros(file_manager)
 
 
 def _alimbic_gardens(file_manager: FileManager) -> None:
@@ -55,3 +62,40 @@ def _fault_line_imperialist_tutorial(file_manager: FileManager) -> None:
     imperialist = fault_line.get_entity(46, ItemSpawn)
     imperialist.notify_entity_id = 0
     imperialist.collected_message = Message.NONE
+
+
+def _planet_intros(file_manager: FileManager) -> None:
+    ship_landing_mapping = [
+        ("Alinos", "Alinos Gateway", 1, 4, 6, 11),
+        ("Celestial Archives", "Celestial Gateway", 0, 5, 7, 8),
+        ("Vesper Defense Outpost", "VDO Gateway", 0, 6, 11, 9),
+        ("Arcterra", "Arcterra Gateway", 0, 9, 36, 41),
+        ("Oubliette", "Oubliette Gateway", 14, 0, 19, 20),
+    ]
+
+    for (
+        area_name,
+        room_name,
+        player_spawn_id,
+        ship_platform_id,
+        camera_sequence_id,
+        area_volume_id,
+    ) in ship_landing_mapping:
+        entity_file = file_manager.get_entity_file(area_name, room_name)
+
+        # Activate the player spawn
+        player_spawn = entity_file.get_entity(player_spawn_id, PlayerSpawn)
+        player_spawn.active = 1
+
+        # Force the ship to be landed on load
+        ship = entity_file.get_entity(ship_platform_id, Platform)
+        ship.platform_flags = PlatformFlags.BIT15
+
+        # Disable the camera sequence
+        camera_sequence = entity_file.get_entity(camera_sequence_id, CameraSequence)
+        for layer in camera_sequence.active_layers:
+            camera_sequence.layer_state[layer] = False
+
+        # Disable the area volume that moves the ship
+        area_volume = entity_file.get_entity(area_volume_id, AreaVolume)
+        area_volume.active = False

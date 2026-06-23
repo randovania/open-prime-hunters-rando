@@ -146,6 +146,7 @@ def _add_game_messages_strings(game_messages: StringTable) -> None:
     custom_game_messages: list = [
         "PNOTHING FOUND\\you've obtained NOTHING.",
         *create_shield_key_messages(),  # Shield Key Messages
+        "AOUBLIETTE\\oubliette",
     ]
 
     for custom_game_message in custom_game_messages:

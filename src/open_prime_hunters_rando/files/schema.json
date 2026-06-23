@@ -265,6 +265,11 @@
                         "Arcterra": true,
                         "Vesper Defense Outpost": true
                     }
+                },
+                "skip_planet_intros": {
+                    "type": "boolean",
+                    "description": "If enabled, disables the ship landing sequence for each planet.",
+                    "default": false
                 }
             },
             "default": {}

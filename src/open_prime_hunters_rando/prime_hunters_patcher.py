@@ -62,7 +62,7 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
 
     # Remove cutscenes
     LOG.info("Removing cutscenes")
-    remove_cutscenes(file_manager)
+    remove_cutscenes(file_manager, configuration["game_patches"]["skip_planet_intros"])
 
     # Static patches to rooms
     LOG.info("Patching rooms")
