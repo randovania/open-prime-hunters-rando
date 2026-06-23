@@ -28,11 +28,22 @@ def patch_frontend_text_files(version: GameVersion, file_manager: FileManager, t
             continue
 
         text_file = file_manager.get_metroidhunters_text_file(language_file)
+        offsets = version.metroidhunters_text_file_offsets
 
-        _add_patcher_version(version, text_file, frontend)
+        _add_patcher_version(offsets.main_menu_textbox, text_file, frontend)
+        _patch_credits(offsets.credits_end_transmission, text_file)
 
 
-def _add_patcher_version(version: GameVersion, text_file: MetroidHuntersTextFile, frontend: dict) -> None:
-    data_offset = version.metroidhunters_text_file_offsets.main_menu_textbox
+def _add_patcher_version(data_offset: int, text_file: MetroidHuntersTextFile, frontend: dict) -> None:
     patcher_version = frontend.get("patcher_version", "Open Prime Hunters Rando\ndevelopment version")
     text_file.get_string(data_offset).text = patcher_version
+
+
+def _patch_credits(data_offset: int, text_file: MetroidHuntersTextFile) -> None:
+    randomizer_credits_text = (
+        "RANDOMIZER CREDITS\nproject lead: DYCERON\ngame patching: DUNCATHAN_SALT\n"
+        "logic database: SCHWARTZ GANDHI\n"
+        "special thanks: THE MPHREAD TEAM, SHIDR"
+    )
+
+    text_file.get_string(data_offset).text = randomizer_credits_text
