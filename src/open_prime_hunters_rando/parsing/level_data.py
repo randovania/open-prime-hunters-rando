@@ -149,7 +149,7 @@ ALINOS: dict[str, LevelData] = {
         room_id=39,
         area_name="Alinos",
         entity_file="unit1_RM2_ent",
-        portal_file_name="unit1_RM2_ent",
+        portal_file_name="unit1_RM2_Ent",
     ),
     "Council Chamber": LevelData(
         room_id=40,
