@@ -8,6 +8,7 @@ from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volu
     TriggerVolumeType,
 )
 from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, ItemType, Message
+from open_prime_hunters_rando.patching.entities.state_bits import get_state_bit
 
 if TYPE_CHECKING:
     from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
@@ -113,27 +114,30 @@ def _remove_shield_key_messages(entity: ItemSpawn) -> None:
 
 
 def _add_shield_key_pickup_trigger(entity_file: EntityFile, new_entity: ItemSpawn, state_bit: int) -> None:
-    # First Shield Key message has a string_id of 56
-    # 24 is added to the message_id because the first custom state bit is 32
-    message_id = state_bit + 24
-
     # Updates the message and state bit set by the shield key based on the configuration
     new_entity.collected_message = Message.SET_TRIGGER_STATE
     new_entity.collected_message_param1 = state_bit
 
-    # Create a new trigger volume to show the message and play the sfx
-    key_trigger = TriggerVolume.create(
-        node_name=new_entity.node_name,
-        layer_state=new_entity.layer_state,
-        subtype=TriggerVolumeType.STATE_BITS,
-        always_active=False,
-        required_state_bit=state_bit,
-        parent_message=Message.SHOW_PROMPT,
-        parent_message_param1=message_id,
-        child_message=Message.PLAY_SFX_SCRIPT,
-        child_message_param1=19,
-    )
-    entity_file.append_entity(key_trigger)
+    # Create a new trigger volume to show the message and play the sfx if the new Shield Key is not vanilla
+    vanilla_shield_key = get_state_bit(state_bit)
+    if vanilla_shield_key.entity_id != new_entity.entity_id:
+        # First Shield Key message has a string_id of 56
+        # 24 is added to the message_id because the first custom state bit is 32
+        message_id = state_bit + 24
+
+        # Create new trigger volume
+        key_trigger = TriggerVolume.create(
+            node_name=new_entity.node_name,
+            layer_state=new_entity.layer_state,
+            subtype=TriggerVolumeType.STATE_BITS,
+            always_active=False,
+            required_state_bit=state_bit,
+            parent_message=Message.SHOW_PROMPT,
+            parent_message_param1=message_id,
+            child_message=Message.PLAY_SFX_SCRIPT,
+            child_message_param1=19,
+        )
+        entity_file.append_entity(key_trigger)
 
 
 def _update_high_ground_big_health_layers(high_ground: EntityFile) -> None:
