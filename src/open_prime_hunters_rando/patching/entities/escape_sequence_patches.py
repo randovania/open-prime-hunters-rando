@@ -79,6 +79,9 @@ def _patch_specific_layer_states(file_manager: FileManager) -> None:
     # Patch layer states per room (IDs, Layers, Value)
     patches_per_layer_state: dict[str, dict[str, list[tuple[list[int], list[int], bool]]]] = {
         "Alinos": {
+            "Alinos Perch": [
+                ([32], [1, 2], True),  # Crash Site Door Unlocked Camera Sequence
+            ],
             "Elder Passage": [
                 ([11, 18], [1, 2], False),  # Second Pass Doors
             ],
