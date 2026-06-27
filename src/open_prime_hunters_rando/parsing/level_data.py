@@ -483,6 +483,171 @@ OUBLIETTE: dict[str, LevelData] = {
     ),
 }
 
+MULTIPLAYER: dict[str, LevelData] = {
+    "Data Shrine": LevelData(
+        room_id=93,
+        area_name="Multiplayer",
+        entity_file="mp1_Ent",
+        portal_file_name="mp1_Ent",
+    ),
+    "Harvester": LevelData(
+        room_id=94,
+        area_name="Multiplayer",
+        entity_file="mp2_Ent",
+        portal_file_name="mp2_Ent",
+    ),
+    "Combat Hall": LevelData(
+        room_id=95,
+        area_name="Multiplayer",
+        entity_file="mp3_Ent",
+        portal_file_name="mp3_Ent",
+    ),
+    "Elder Passage": LevelData(
+        room_id=96,
+        area_name="Multiplayer",
+        entity_file="mp4_Ent",
+        portal_file_name="mp4_Ent",
+    ),
+    "High Ground": LevelData(
+        room_id=97,
+        area_name="Multiplayer",
+        entity_file="mp4_dm1_Ent",
+        portal_file_name="mp4_dm1_Ent",
+    ),
+    "Compression Chamber": LevelData(
+        room_id=98,
+        area_name="Multiplayer",
+        entity_file="mp5_Ent",
+        portal_file_name="mp5_Ent",
+    ),
+    "Head Shot": LevelData(
+        room_id=99,
+        area_name="Multiplayer",
+        entity_file="mp6_Ent",
+        portal_file_name="mp6_Ent",
+    ),
+    "Processor Core": LevelData(
+        room_id=100,
+        area_name="Multiplayer",
+        entity_file="mp7_Ent",
+        portal_file_name="mp7_Ent",
+    ),
+    "Weapons Complex": LevelData(
+        room_id=101,
+        area_name="Multiplayer",
+        entity_file="mp8_Ent",
+        portal_file_name="mp8_Ent",
+    ),
+    "Ice Hive": LevelData(
+        room_id=102,
+        area_name="Multiplayer",
+        entity_file="mp9_Ent",
+        portal_file_name="mp9_Ent",
+    ),
+    "Incubation Vault": LevelData(
+        room_id=103,
+        area_name="Multiplayer",
+        entity_file="mp10_Ent",
+        portal_file_name="mp10_Ent",
+    ),
+    "Sanctorus": LevelData(
+        room_id=104,
+        area_name="Multiplayer",
+        entity_file="mp11_Ent",
+        portal_file_name="mp11_Ent",
+    ),
+    "Sic Transit": LevelData(
+        room_id=105,
+        area_name="Multiplayer",
+        entity_file="mp12_Ent",
+        portal_file_name="mp12_Ent",
+    ),
+    "Fuel Stack": LevelData(
+        room_id=106,
+        area_name="Multiplayer",
+        entity_file="mp13_Ent",
+        portal_file_name="mp13_Ent",
+    ),
+    "Outer Reach": LevelData(
+        room_id=107,
+        area_name="Multiplayer",
+        entity_file="mp14_Ent",
+        portal_file_name="mp14_Ent",
+    ),
+    "Fault Line": LevelData(
+        room_id=108,
+        area_name="Multiplayer",
+        entity_file="ctf1_Ent",
+        portal_file_name="ctf1_Ent",
+    ),
+    "Subterranean": LevelData(
+        room_id=109,
+        area_name="Multiplayer",
+        entity_file="ctf1_dm1_Ent",
+        portal_file_name="ctf1_dm1_Ent",
+    ),
+    "Transfer Lock (Expanded)": LevelData(
+        room_id=110,
+        area_name="Multiplayer",
+        entity_file="ad1_Ent",
+        portal_file_name="ad1_Ent",
+    ),
+    "Transfer Lock": LevelData(
+        room_id=111,
+        area_name="Multiplayer",
+        entity_file="ad1_dm1_Ent",
+        portal_file_name="ad1_dm1_Ent",
+    ),
+    "Council Chamber": LevelData(
+        room_id=112,
+        area_name="Multiplayer",
+        entity_file="ad2_Ent",
+        portal_file_name="ad2_Ent",
+    ),
+    "Alinos Perch": LevelData(
+        room_id=113,
+        area_name="Multiplayer",
+        entity_file="ad2_dm1_Ent",
+        portal_file_name="ad2_dm1_Ent",
+    ),
+    "Alinos Gateway": LevelData(
+        room_id=114,
+        area_name="Multiplayer",
+        entity_file="Unit1_Land_dm1_Ent",
+        portal_file_name="unit1_land_dm1_Ent",
+    ),
+    "Celestial Gateway": LevelData(
+        room_id=115,
+        area_name="Multiplayer",
+        entity_file="Unit2_Land_dm1_Ent",
+        portal_file_name="unit2_land_dm1_Ent",
+    ),
+    "VDO Gateway": LevelData(
+        room_id=116,
+        area_name="Multiplayer",
+        entity_file="Unit3_Land_dm1_Ent",
+        portal_file_name="unit3_land_dm1_Ent",
+    ),
+    "Arcterra Gateway": LevelData(
+        room_id=117,
+        area_name="Multiplayer",
+        entity_file="Unit4_Land_dm1_Ent",
+        portal_file_name="unit4_land_dm1_Ent",
+    ),
+    "Oubliette": LevelData(
+        room_id=118,
+        area_name="Multiplayer",
+        entity_file="gorea_b2_dm_Ent",
+        portal_file_name="Gorea_b2_dm_Ent",
+    ),
+    "Stasis Bunker": LevelData(
+        room_id=119,
+        area_name="Multiplayer",
+        entity_file="e3Level_Ent",
+        portal_file_name="e3Level_Ent",
+    ),
+}
+
 
 def get_data(area_name: str, room_name: str) -> LevelData:
     match area_name:
@@ -496,11 +661,13 @@ def get_data(area_name: str, room_name: str) -> LevelData:
             return ARCTERRA[room_name]
         case "Oubliette":
             return OUBLIETTE[room_name]
+        case "Multiplayer":
+            return MULTIPLAYER[room_name]
         case _:
             return CONNECTORS[room_name]
 
 
-ALL_AREAS = [ALINOS, CELESTIAL_ARCHIVES, VESPER_DEFENSE_OUTPOST, ARCTERRA, OUBLIETTE]
+ALL_AREAS = [ALINOS, CELESTIAL_ARCHIVES, VESPER_DEFENSE_OUTPOST, ARCTERRA, OUBLIETTE, MULTIPLAYER]
 ALL_PORTAL_FILE_NAMES = [
     portal_file_name
     for area in ALL_AREAS
