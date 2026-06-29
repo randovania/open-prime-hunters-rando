@@ -1,15 +1,30 @@
+import enum
 import typing
 
 from construct import Byte, Construct, Flag, Int16sl, Padded, Struct
 
 from open_prime_hunters_rando.parsing.common_types import MessageConstruct
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3
+from open_prime_hunters_rando.parsing.construct_extensions import EnumAdapter
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_classes import field
 from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, Message
 
+
+class ModelId(enum.Enum):
+    ALINOS1 = 0
+    ALINOS2 = 1
+    CELESTIAL_ARCHIVES1 = 2
+    CELESTIAL_ARCHIVES2 = 3
+    VDO1 = 4
+    VDO2 = 5
+    ARCTERRA1 = 6
+    ARCTERRA2 = 7
+    OCTOLITH = 8
+
+
 ArtifactEntityData = Struct(
-    "model_id" / Byte,
+    "model_id" / EnumAdapter(ModelId, Byte),
     "artifact_id" / Byte,
     "active" / Flag,
     "has_base" / Flag,
@@ -28,7 +43,7 @@ class Artifact(Entity):
     def type_construct(cls) -> Construct:
         return ArtifactEntityData
 
-    model_id = field(int)
+    model_id = field(ModelId)
     artifact_id = field(int)
 
     active = field(bool)
@@ -58,7 +73,7 @@ class Artifact(Entity):
         position: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
         up_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
         facing_vector: Vec3 | tuple[float, float, float] = (0.0, 0.0, 0.0),
-        model_id: int = 0,
+        model_id: ModelId = ModelId.ALINOS1,
         artifact_id: int = 0,
         active: bool = True,
         has_base: bool = False,
