@@ -66,7 +66,7 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties) -> None:
                 artifact_id=pickup["artifact_id"],
                 active=entity.enabled,
                 # Octoliths do no have a base and will crash if "has_base" is true
-                has_base=entity.has_base if pickup["model_id"] != ModelId.OCTOLITH else False,
+                has_base=entity.has_base if ModelId(pickup["model_id"]) != ModelId.OCTOLITH else False,
                 message1_target=entity.notify_entity_id,
                 message1=entity.collected_message,
                 linked_entity_id=(-1 if entity.parent_id == 65535 else entity.parent_id),
