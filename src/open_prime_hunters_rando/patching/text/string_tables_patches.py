@@ -2,6 +2,11 @@ from enum import Enum
 from typing import TypedDict
 
 from open_prime_hunters_rando.parsing.file_manager import FileManager, Language
+from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
+from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact, ModelId
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
+from open_prime_hunters_rando.parsing.formats.entities.enum import EntityType, ItemType
 from open_prime_hunters_rando.parsing.formats.string_tables import ScanCategory, ScanSpeed, StringTable
 from open_prime_hunters_rando.parsing.level_data import ALL_AREAS
 from open_prime_hunters_rando.patching.entities.state_bits import create_shield_key_messages
@@ -47,6 +52,7 @@ def patch_string_tables(file_manager: FileManager, configuration: dict) -> None:
         _add_game_messages_strings(game_messages)
         _add_scan_log_strings(scan_log)
         _add_hud_messages_strings(hud_messages_sp, ammo_sizes["missile_launcher"])
+        _patch_elder_passage_scan(scan_log, file_manager.get_entity_file("Alinos", "Elder Passage"))
 
 
 def _patch_string_table_configs(
@@ -197,3 +203,43 @@ def _create_portal_destination_scans() -> list:
             )
 
     return all_destination_scans
+
+
+def _patch_elder_passage_scan(scan_log: StringTable, elder_passage: EntityFile) -> None:
+    # Change the scan that spawns the Shield Key to mention the item that spawns instead
+    item_type_mapping: dict[ItemType, str] = {
+        ItemType.HEALTH_SMALL: "SMALL ENERGY",
+        ItemType.HEALTH_MEDIUM: "MEDIUM ENERGY",
+        ItemType.HEALTH_BIG: "BIG ENERGY",
+        ItemType.ENERGY_TANK: "ENERGY TANK",
+        ItemType.VOLT_DRIVER: "VOLT DRIVER",
+        ItemType.MISSILE_EXPANSION: "MISSILE EXPANSION",
+        ItemType.BATTLEHAMMER: "BATTLEHAMMER",
+        ItemType.IMPERIALIST: "IMPERIALIST",
+        ItemType.JUDICATOR: "JUDICATOR",
+        ItemType.MAGMAUL: "MAGMAUL",
+        ItemType.SHOCK_COIL: "SHOCK COIL",
+        ItemType.OMEGA_CANNON: "OMEGA CANNON",
+        ItemType.UA_SMALL: "SMALL UA PACK",
+        ItemType.UA_BIG: "LARGE UA PACK",
+        ItemType.MISSILE_SMALL: "SMALL MISSILE PACK",
+        ItemType.MISSILE_BIG: "LARGE MISSILE PACK",
+        ItemType.CLOAK: "NOTHING",
+        ItemType.UA_EXPANSION: "UA EXPANSION",
+        ItemType.ARTIFACT_KEY: "SHIELD KEY",
+        ItemType.AFFINITY_WEAPON: "MISSILE LAUNCHER",
+    }
+
+    shield_key = elder_passage.get_entity(29, Entity)
+    if shield_key.entity_type == EntityType.ITEM_SPAWN:
+        assert isinstance(shield_key, ItemSpawn)
+        new_name = item_type_mapping[shield_key.item_type]
+    else:
+        assert isinstance(shield_key, Artifact)
+        if shield_key.model_id == ModelId.OCTOLITH:
+            new_name = "OCTOLITH"
+        else:
+            new_name = "ARTIFACT"
+
+    string = scan_log.get_string("164L")
+    string.text = string.text.replace("SHIELD KEY", new_name)
