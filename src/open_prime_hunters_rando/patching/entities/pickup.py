@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, TypedDict
 
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact, ModelId
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import (
     TriggerVolume,
@@ -62,10 +62,11 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties) -> None:
                 _remove_shield_key_messages(entity)
 
             new_entity = Artifact.create(
-                model_id=pickup["model_id"],
+                model_id=ModelId(pickup["model_id"]),
                 artifact_id=pickup["artifact_id"],
                 active=entity.enabled,
-                has_base=entity.has_base,
+                # Octoliths do no have a base and will crash if "has_base" is true
+                has_base=entity.has_base if pickup["model_id"] != ModelId.OCTOLITH else False,
                 message1_target=entity.notify_entity_id,
                 message1=entity.collected_message,
                 linked_entity_id=(-1 if entity.parent_id == 65535 else entity.parent_id),
@@ -80,8 +81,11 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties) -> None:
 
         # Entity is still Artifact
         if new_entity_type == EntityType.ARTIFACT:
-            entity.model_id = pickup["model_id"]
+            entity.model_id = ModelId(pickup["model_id"])
             entity.artifact_id = pickup["artifact_id"]
+            # Octoliths do no have a base and will crash if "has_base" is true
+            if entity.model_id == ModelId.OCTOLITH:
+                entity.has_base = False
 
         # Entity is now ItemSpawn
         else:
