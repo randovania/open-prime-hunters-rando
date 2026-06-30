@@ -18,7 +18,7 @@ def patch_overlays(rom: NintendoDSRom, version: GameVersion) -> None:
         8: {
             # Prevent the Octolith pickup movie from playing
             version.overlay8_offsets.octolith_start_movie: NOP * 11,
-            # Remove the layer state changes from collecting an Ocolith
+            # Remove the layer state changes from collecting an Octolith
             version.overlay8_offsets.octolith_set_game_state: NOP * 11,
         },
     }
