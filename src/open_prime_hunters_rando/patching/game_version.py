@@ -46,6 +46,11 @@ class HudUpdateAddresses:
 
 
 @dataclasses.dataclass(frozen=True)
+class ProcessState:
+    octolith_picked_up_conditional: int
+
+
+@dataclasses.dataclass(frozen=True)
 class RoomTransitionEndAddresses:
     door_locking_condition: int
 
@@ -70,9 +75,15 @@ class DataSectionAddresses:
 
 
 @dataclasses.dataclass(frozen=True)
-class OverlayOffsets:
+class Overlay2Offsets:
     cloak: int
     affinity_weapon: int
+
+
+@dataclasses.dataclass(frozen=True)
+class Overlay8Offsets:
+    octolith_start_movie: int
+    octolith_set_game_state: int
 
 
 @dataclasses.dataclass(frozen=True)
@@ -89,10 +100,12 @@ class GameVersion:
     init_enemy_hunter_spawns_addresses: InitEnemyHunterSpawnsAddresses
     player_pickup_items_addresses: PlayerPickupItemsAddresses
     hud_update_addresses: HudUpdateAddresses
+    process_state: ProcessState
     room_transition_end_addresses: RoomTransitionEndAddresses
     init_save_file_addresses: InitSaveFileAddresses
     data_section_addresses: DataSectionAddresses
-    overlay_offsets: OverlayOffsets
+    overlay2_offsets: Overlay2Offsets
+    overlay8_offsets: Overlay8Offsets
     metroidhunters_text_file_offsets: MetroidHuntersTextFileOffsets
 
 
@@ -123,6 +136,9 @@ ALL_VERSIONS = [
             hud_up_cloak_base=0x0202D594,
             hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
+        process_state=ProcessState(
+            octolith_picked_up_conditional=0x0202E45C,
+        ),
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
         ),
@@ -141,9 +157,13 @@ ALL_VERSIONS = [
         data_section_addresses=DataSectionAddresses(
             story_save_data=0x020E8C50,
         ),
-        overlay_offsets=OverlayOffsets(
+        overlay2_offsets=Overlay2Offsets(
             cloak=0x01E20A,
             affinity_weapon=0x01E212,
+        ),
+        overlay8_offsets=Overlay8Offsets(
+            octolith_start_movie=0x010A8,
+            octolith_set_game_state=0x01120,
         ),
         metroidhunters_text_file_offsets=MetroidHuntersTextFileOffsets(
             main_menu_textbox=7944,
@@ -176,6 +196,9 @@ ALL_VERSIONS = [
             hud_up_cloak_base=0x0202D594,
             hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
+        process_state=ProcessState(
+            octolith_picked_up_conditional=0x0202E45C,
+        ),
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
         ),
@@ -194,9 +217,13 @@ ALL_VERSIONS = [
         data_section_addresses=DataSectionAddresses(
             story_save_data=0x020E9710,
         ),
-        overlay_offsets=OverlayOffsets(
+        overlay2_offsets=Overlay2Offsets(
             cloak=0x01E26A,
             affinity_weapon=0x01E272,
+        ),
+        overlay8_offsets=Overlay8Offsets(
+            octolith_start_movie=0x010A8,
+            octolith_set_game_state=0x01120,
         ),
         metroidhunters_text_file_offsets=MetroidHuntersTextFileOffsets(
             main_menu_textbox=6792,
@@ -229,6 +256,9 @@ ALL_VERSIONS = [
             hud_up_cloak_base=0x0202D594,
             hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
+        process_state=ProcessState(
+            octolith_picked_up_conditional=0x0202E45C,
+        ),
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
         ),
@@ -247,9 +277,13 @@ ALL_VERSIONS = [
         data_section_addresses=DataSectionAddresses(
             story_save_data=0x020E9730,
         ),
-        overlay_offsets=OverlayOffsets(
+        overlay2_offsets=Overlay2Offsets(
             cloak=0x01E20A,
             affinity_weapon=0x01E212,
+        ),
+        overlay8_offsets=Overlay8Offsets(
+            octolith_start_movie=0x010A8,
+            octolith_set_game_state=0x01120,
         ),
         metroidhunters_text_file_offsets=MetroidHuntersTextFileOffsets(
             main_menu_textbox=8012,
@@ -282,6 +316,9 @@ ALL_VERSIONS = [
             hud_up_cloak_base=0x0202D594,
             hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
+        process_state=ProcessState(
+            octolith_picked_up_conditional=0x0202E45C,
+        ),
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
         ),
@@ -300,9 +337,13 @@ ALL_VERSIONS = [
         data_section_addresses=DataSectionAddresses(
             story_save_data=0x020E97B0,
         ),
-        overlay_offsets=OverlayOffsets(
+        overlay2_offsets=Overlay2Offsets(
             cloak=0x01E26A,
             affinity_weapon=0x01E272,
+        ),
+        overlay8_offsets=Overlay8Offsets(
+            octolith_start_movie=0x010A8,
+            octolith_set_game_state=0x01120,
         ),
         metroidhunters_text_file_offsets=MetroidHuntersTextFileOffsets(
             main_menu_textbox=6792,
@@ -335,6 +376,9 @@ ALL_VERSIONS = [
             hud_up_cloak_base=0x0202D594,
             hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
+        process_state=ProcessState(
+            octolith_picked_up_conditional=0x0202E45C,
+        ),
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
         ),
@@ -353,9 +397,13 @@ ALL_VERSIONS = [
         data_section_addresses=DataSectionAddresses(
             story_save_data=0x020EADA0,
         ),
-        overlay_offsets=OverlayOffsets(
+        overlay2_offsets=Overlay2Offsets(
             cloak=0x01E20A,
             affinity_weapon=0x01E212,
+        ),
+        overlay8_offsets=Overlay8Offsets(
+            octolith_start_movie=0x010A8,
+            octolith_set_game_state=0x01120,
         ),
         metroidhunters_text_file_offsets=MetroidHuntersTextFileOffsets(
             main_menu_textbox=7944,

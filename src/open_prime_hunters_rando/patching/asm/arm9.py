@@ -1,6 +1,6 @@
 from ndspy.rom import NintendoDSRom
 
-from open_prime_hunters_rando.patching.asm import read_bytes_from_file
+from open_prime_hunters_rando.patching.asm import NOP, read_bytes_from_file
 from open_prime_hunters_rando.patching.asm.asm_patches import AsmPatches
 from open_prime_hunters_rando.patching.game_version import GameVersion
 
@@ -9,6 +9,7 @@ def patch_arm9(rom: NintendoDSRom, version: GameVersion, configuration: dict) ->
     hunter = version.init_enemy_hunter_spawns_addresses
     pickup = version.player_pickup_items_addresses
     hud = version.hud_update_addresses
+    pstate = version.process_state
     room = version.room_transition_end_addresses
     save_file = version.init_save_file_addresses
     data_section = version.data_section_addresses
@@ -34,6 +35,7 @@ def patch_arm9(rom: NintendoDSRom, version: GameVersion, configuration: dict) ->
         hud.cloak_base_case: read_bytes_from_file("cloak_base_case.bin"),
         hud.hud_up_cloak_base: read_bytes_from_file("hud_up_cloak_base.bin"),
         hud.hud_up_weapon_unlocked_case_2: read_bytes_from_file("hud_up_weapon_unlocked_case_2.bin"),
+        pstate.octolith_picked_up_conditional: NOP * 12,  # Forces the pickup dialog to display on pickup
         room.door_locking_condition: read_bytes_from_file(
             "door_locking_condition.bin"
         ),  # Handles the door locking code
