@@ -2,6 +2,7 @@ import enum
 
 
 class EntityType(enum.Enum):
+    NONE = -1
     PLATFORM = 0
     OBJECT = 1
     PLAYER_SPAWN = 2

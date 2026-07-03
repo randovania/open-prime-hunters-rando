@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Literal
 from construct import Container, ListContainer
 
 from open_prime_hunters_rando.logger import LOG
+from open_prime_hunters_rando.parsing.formats.camera_sequences import CameraSequenceFile
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
 from open_prime_hunters_rando.parsing.formats.metroidhunters_text import MetroidHuntersTextFile
 from open_prime_hunters_rando.parsing.formats.string_tables import StringTable
@@ -28,7 +29,7 @@ class Language(Enum):
     SPANISH = "stringTables_sp"
 
 
-type ExportedFormat = Literal["entity_files", "string_tables", "text_files"]
+type ExportedFormat = Literal["entity_files", "string_tables", "text_files", "camera_sequence"]
 
 
 class FileManager:
@@ -38,6 +39,7 @@ class FileManager:
         self.entity_files: dict[str, EntityFile] = {}
         self.string_tables: dict[str, StringTable] = {}
         self.metroidhunters_text_files: dict[str, MetroidHuntersTextFile] = {}
+        self.camera_sequence_files: dict[str, CameraSequenceFile] = {}
 
     def get_entity_file(self, area_name: str, room_name: str) -> EntityFile:
         level_data = get_data(area_name, room_name)
@@ -57,6 +59,12 @@ class FileManager:
         if file_name not in self.metroidhunters_text_files:
             self.metroidhunters_text_files[file_name] = MetroidHuntersTextFile.parse(self.rom.getFileByName(file_name))
         return self.metroidhunters_text_files[file_name]
+
+    def get_camera_sequence_file(self, camera_sequence_file: str) -> CameraSequenceFile:
+        file_name = f"cameraEditor/{camera_sequence_file}.bin"
+        if file_name not in self.camera_sequence_files:
+            self.camera_sequence_files[file_name] = CameraSequenceFile.parse(self.rom.getFileByName(file_name))
+        return self.camera_sequence_files[file_name]
 
     def finalize_parsed_files(self) -> None:
         for file_name, entity_file in self.entity_files.items():
@@ -79,6 +87,13 @@ class FileManager:
             # Export parsed metroidhunters text files
             if self.export_parsed_files:
                 self.export_metroidhunters_text_file(file_name, metroidhunters_text_file)
+
+        for file_name, camera_sequence_file in self.camera_sequence_files.items():
+            self.rom.setFileByName(file_name, camera_sequence_file.build())
+
+            # Export parsed camera sequence files
+            if self.export_parsed_files:
+                self.export_camera_sequence_file(file_name, camera_sequence_file)
 
     def _set_export_path(self, format_to_be_exported: ExportedFormat, language: str = "") -> Path:
         export_path = Path(__file__).parent.parent.joinpath("exported_files", f"{format_to_be_exported}" + language)
@@ -120,6 +135,19 @@ class FileManager:
         )
 
         with Path.open(self._set_export_path("text_files") / f"{file_name[9:-4]}.txt", "w", encoding="utf-8") as f:
+            f.write(str(to_export))
+
+    def export_camera_sequence_file(self, file_name: str, camera_sequence_file: CameraSequenceFile) -> None:
+        to_export = Container(
+            {
+                "header": camera_sequence_file._raw.header,
+                "keyframes": ListContainer([e._raw for e in camera_sequence_file.keyframes]),
+            }
+        )
+
+        with Path.open(
+            self._set_export_path("camera_sequences") / f"{file_name[13:-4]}.txt", "w", encoding="utf-8"
+        ) as f:
             f.write(str(to_export))
 
     def save_to_rom(self, output_path: Path) -> None:
