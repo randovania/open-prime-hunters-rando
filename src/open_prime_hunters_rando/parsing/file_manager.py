@@ -29,7 +29,7 @@ class Language(Enum):
     SPANISH = "stringTables_sp"
 
 
-type ExportedFormat = Literal["entity_files", "string_tables", "text_files", "camera_sequence"]
+type ExportedFormat = Literal["entity_files", "string_tables", "text_files", "camera_sequences"]
 
 
 class FileManager:
