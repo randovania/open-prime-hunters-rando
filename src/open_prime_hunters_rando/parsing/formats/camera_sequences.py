@@ -117,6 +117,35 @@ class KeyFrameEntry:
     def __repr__(self) -> str:
         return f"<Keyframe data={self._raw}"
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, KeyFrameEntry):
+            return False
+        return (
+            self.position == other.position
+            and self.to_target == other.to_target
+            and self.roll == other.roll
+            and self.fov == other.fov
+            and self.move_time == other.move_time
+            and self.hold_time == other.hold_time
+            and self.fade_in_time == other.fade_in_time
+            and self.fade_out_time == other.fade_out_time
+            and self.fade_in_type == other.fade_in_type
+            and self.fade_out_type == other.fade_out_type
+            and self.previous_frame_influence == other.previous_frame_influence
+            and self.after_frame_influence == other.after_frame_influence
+            and self.use_entity_transform == other.use_entity_transform
+            and self.pos_entity_type == other.pos_entity_type
+            and self.pos_entity_id == other.pos_entity_id
+            and self.target_entity_type == other.target_entity_type
+            and self.target_entity_id == other.target_entity_id
+            and self.message_target_type == other.message_target_type
+            and self.message_target_id == other.message_target_id
+            and self.message_id == other.message_id
+            and self.message_param == other.message_param
+            and self.easing == other.easing
+            and self.node_name == other.node_name
+        )
+
     def __hash__(self) -> int:
         return hash(self._raw)
 
