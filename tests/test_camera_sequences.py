@@ -6,7 +6,6 @@ all_camera_sequences = [
     "bigeye1_intro",
     "bigeye_morphball",
     "bigeye_octolith_intro",
-    "cameraEditBG",
     "gorea_b2_gun_intro",
     "gorea_land_cockpit",
     "gorea_land_cockpit_land",
