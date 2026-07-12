@@ -194,14 +194,16 @@ def create_shield_key_triggers(file_manager: FileManager) -> None:
 
         # Create a new trigger that checks if the state bit is set
         # If set, it sends out the original message of the shield key
+        # After the messages have been sent, clear the state bit to prevent the event from reactivating
         shield_key_trigger = TriggerVolume.create(
             node_name=shield_key.node_name,
             layer_state=shield_key.layer_state,
             subtype=TriggerVolumeType.STATE_BITS,
-            always_active=False,
             required_state_bit=state_bit,
             parent_id=shield_key.notify_entity_id,
             parent_message=shield_key.collected_message,
+            child_message=Message.CLEAR_TRIGGER_STATE,
+            child_message_param1=state_bit,
         )
         entity_file.append_entity(shield_key_trigger)
 
