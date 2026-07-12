@@ -1,6 +1,7 @@
 import copy
 
 from open_prime_hunters_rando.parsing.file_manager import FileManager
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.area_volume import AreaVolume
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.camera_sequence import CameraSequence
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
@@ -15,13 +16,21 @@ def patch_shield_key_rooms(file_manager: FileManager) -> None:
     _high_ground(file_manager)
     _elder_passage(file_manager)
     _piston_cave(file_manager)
+    _council_chamber(file_manager)
     _data_shrine_01(file_manager)
     _data_shrine_03(file_manager)
     _synergy_core(file_manager)
+    _new_arrival_registration(file_manager)
+    _docking_bay(file_manager)
     _weapons_complex(file_manager)
+    _compression_chamber(file_manager)
+    _fuel_stack(file_manager)
     _stasis_bunker(file_manager)
+    _ice_hive(file_manager)
     _sic_transit(file_manager)
+    _subterranean(file_manager)
     _sanctorus(file_manager)
+    _fault_line(file_manager)
 
 
 def _high_ground(file_manager: FileManager) -> None:
@@ -71,6 +80,10 @@ def _high_ground(file_manager: FileManager) -> None:
     spire2.message2_target = post_spire_trigger.entity_id
     spire2.message2 = Message.ACTIVATE
 
+    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    checkpoint = high_ground.get_entity(86, AreaVolume)
+    checkpoint.message_delay = 180
+
 
 def _elder_passage(file_manager: FileManager) -> None:
     elder_passage = file_manager.get_entity_file("Alinos", "Elder Passage")
@@ -111,6 +124,14 @@ def _piston_cave(file_manager: FileManager) -> None:
     artifact.message2 = Message.NONE
 
 
+def _council_chamber(file_manager: FileManager) -> None:
+    council_chamber = file_manager.get_entity_file("Alinos", "Council Chamber")
+
+    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    checkpoint = council_chamber.get_entity(67, AreaVolume)
+    checkpoint.message_delay = 180
+
+
 def _data_shrine_01(file_manager: FileManager) -> None:
     data_shrine_01 = file_manager.get_entity_file("Celestial Archives", "Data Shrine 01")
 
@@ -136,6 +157,10 @@ def _data_shrine_01(file_manager: FileManager) -> None:
     camera_sequence = data_shrine_01.get_entity(10, CameraSequence)
     camera_sequence.end_message_target_id = door_unlocking_trigger.entity_id
     camera_sequence.end_message = Message.ACTIVATE
+
+    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    checkpoint = data_shrine_01.get_entity(50, AreaVolume)
+    checkpoint.message_delay = 180
 
 
 def _data_shrine_03(file_manager: FileManager) -> None:
@@ -164,6 +189,10 @@ def _data_shrine_03(file_manager: FileManager) -> None:
     camera_sequence.end_message_target_id = door_unlocking_trigger.entity_id
     camera_sequence.end_message = Message.ACTIVATE
 
+    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    checkpoint = data_shrine_03.get_entity(50, AreaVolume)
+    checkpoint.message_delay = 180
+
 
 def _synergy_core(file_manager: FileManager) -> None:
     synergy_core = file_manager.get_entity_file("Celestial Archives", "Synergy Core")
@@ -183,6 +212,28 @@ def _synergy_core(file_manager: FileManager) -> None:
     artifact.message1_target = -1
     artifact.message1 = Message.NONE
 
+    # Delay setting the checkpoints to prevent the shield key cutscenes from not reactivating if shuffled
+    checkpoints = [50, 51]
+    for checkpoint_id in checkpoints:
+        checkpoint = synergy_core.get_entity(checkpoint_id, AreaVolume)
+        checkpoint.message_delay = 180
+
+
+def _new_arrival_registration(file_manager: FileManager) -> None:
+    new_arrival_registration = file_manager.get_entity_file("Celestial Archives", "New Arrival Registration")
+
+    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    checkpoint = new_arrival_registration.get_entity(35, AreaVolume)
+    checkpoint.message_delay = 180
+
+
+def _docking_bay(file_manager: FileManager) -> None:
+    docking_bay = file_manager.get_entity_file("Celestial Archives", "Docking Bay")
+
+    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    checkpoint = docking_bay.get_entity(21, AreaVolume)
+    checkpoint.message_delay = 180
+
 
 def _weapons_complex(file_manager: FileManager) -> None:
     weapons_complex = file_manager.get_entity_file("Vesper Defense Outpost", "Weapons Complex")
@@ -196,6 +247,28 @@ def _weapons_complex(file_manager: FileManager) -> None:
     first_shield_key_trigger = weapons_complex.get_entity(101, TriggerVolume)
     first_shield_key_trigger.parent_id = 63
     first_shield_key_trigger.parent_message = Message.SET_ACTIVE
+
+    # Delay setting the checkpoints to prevent the shield key cutscenes from not reactivating if shuffled
+    checkpoints = [46, 82]
+    for checkpoint_id in checkpoints:
+        checkpoint = weapons_complex.get_entity(checkpoint_id, AreaVolume)
+        checkpoint.message_delay = 180
+
+
+def _compression_chamber(file_manager: FileManager) -> None:
+    compression_chamber = file_manager.get_entity_file("Vesper Defense Outpost", "Compression Chamber")
+
+    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    checkpoint = compression_chamber.get_entity(44, AreaVolume)
+    checkpoint.message_delay = 180
+
+
+def _fuel_stack(file_manager: FileManager) -> None:
+    fuel_stack = file_manager.get_entity_file("Vesper Defense Outpost", "Fuel Stack")
+
+    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    checkpoint = fuel_stack.get_entity(7, AreaVolume)
+    checkpoint.message_delay = 180
 
 
 def _stasis_bunker(file_manager: FileManager) -> None:
@@ -225,6 +298,18 @@ def _stasis_bunker(file_manager: FileManager) -> None:
     camera_sequence.end_message_target_id = 34
     camera_sequence.end_message = Message.ACTIVATE
 
+    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    checkpoint = stasis_bunker.get_entity(70, AreaVolume)
+    checkpoint.message_delay = 255
+
+
+def _ice_hive(file_manager: FileManager) -> None:
+    ice_hive = file_manager.get_entity_file("Arcterra", "Ice Hive")
+
+    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    checkpoint = ice_hive.get_entity(170, AreaVolume)
+    checkpoint.message_delay = 180
+
 
 def _sic_transit(file_manager: FileManager) -> None:
     sic_transit = file_manager.get_entity_file("Arcterra", "Sic Transit")
@@ -248,6 +333,18 @@ def _sic_transit(file_manager: FileManager) -> None:
     camera_sequence.end_message_target_id = unlocking_trigger.entity_id
     camera_sequence.end_message = Message.ACTIVATE
 
+    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    checkpoint = sic_transit.get_entity(61, AreaVolume)
+    checkpoint.message_delay = 180
+
+
+def _subterranean(file_manager: FileManager) -> None:
+    subterranean = file_manager.get_entity_file("Arcterra", "Subterranean")
+
+    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    checkpoint = subterranean.get_entity(55, AreaVolume)
+    checkpoint.message_delay = 180
+
 
 def _sanctorus(file_manager: FileManager) -> None:
     sanctorus = file_manager.get_entity_file("Arcterra", "Sanctorus")
@@ -260,3 +357,15 @@ def _sanctorus(file_manager: FileManager) -> None:
     camera_sequence = sanctorus.get_entity(37, CameraSequence)
     camera_sequence.end_message_target_id = 38
     camera_sequence.end_message = Message.ACTIVATE
+
+    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    checkpoint = sanctorus.get_entity(32, AreaVolume)
+    checkpoint.message_delay = 180
+
+
+def _fault_line(file_manager: FileManager) -> None:
+    fault_line = file_manager.get_entity_file("Arcterra", "Fault Line")
+
+    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    checkpoint = fault_line.get_entity(70, AreaVolume)
+    checkpoint.message_delay = 180
