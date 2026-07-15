@@ -4,11 +4,11 @@ from open_prime_hunters_rando.patching.asm import (
     create_bitmask,
     read_bytes_from_file,
 )
-from open_prime_hunters_rando.patching.game_version import DataSectionAddresses
+from open_prime_hunters_rando.patching.game_version import GameVersion
 
 
 class AsmPatches:
-    def __init__(self, configuration: dict, data_section: DataSectionAddresses) -> None:
+    def __init__(self, configuration: dict, version: GameVersion) -> None:
         # Setup
         self.starting_items = configuration["starting_items"]
         self.game_patches = configuration["game_patches"]
@@ -25,7 +25,7 @@ class AsmPatches:
         # Ammo Sizes
         self.ammo_per_expansion = patch_ammo_per_expansion(self.ammo_sizes["ua_expansion"])
         self.missile_launcher = patch_missile_launcher(
-            self.ammo_sizes["missile_launcher"], data_section.story_save_data
+            self.ammo_sizes["missile_launcher"], version.data_section_addresses.story_save_data
         )
         self.missiles_per_expansion = patch_ammo_per_expansion(self.ammo_sizes["missile_expansion"])
 
@@ -38,6 +38,7 @@ class AsmPatches:
         self.refill_play_sfx = patch_refill_sound()
 
         # Game Patches
+        self.hud_up_cloak_base = patch_hud_up_cloak_base(version.get_hud_string_address)
         self.init_save_file_rewrite = patch_planets_and_artifacts(
             self.game_patches["unlock_planets"], self.starting_items["artifacts"]
         )
@@ -153,3 +154,18 @@ def patch_refill_sound() -> bytes:
     This is necessary to preserve the sfx when picking up a small/large energy refill that has its values changed.
     """
     return GenerateArmBytes(30, False).mov(0)
+
+
+def patch_hud_up_cloak_base(get_hud_string_address: int) -> bytes:
+    binary = read_bytes_from_file("hud_up_cloak_base.bin")
+
+    byte_mapping: dict[int, bytes] = {
+        0x0203C2D8: b"N",
+        0x0203C2E0: b"P",
+        0x0203C3B0: b"\x84",
+    }
+    new_instruction = byte_mapping[get_hud_string_address] + b";\x00\xeb"
+
+    modified_bytes = binary.replace(b"P;\x00\xeb", new_instruction)
+
+    return modified_bytes
