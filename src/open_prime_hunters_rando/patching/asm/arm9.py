@@ -30,7 +30,7 @@ def patch_arm9(rom: NintendoDSRom, version: GameVersion, configuration: dict) ->
         pickup.large_energy_play_sfx: patches.refill_play_sfx,  # Fixes pickup sfx if refill value is changed
         pickup.ammo_per_expansion: patches.ammo_per_expansion,  # UA per expansion
         # The next three addresses hijack Cloak hud code for the custom Missile Launcher
-        hud.cloak_base_case: read_bytes_from_file("cloak_base_case.bin"),
+        hud.cloak_base_case: patches.cloak_base_case,
         hud.hud_up_cloak_base: patches.hud_up_cloak_base,
         hud.hud_up_weapon_unlocked_case_2: read_bytes_from_file("hud_up_weapon_unlocked_case_2.bin"),
         room.door_locking_condition: read_bytes_from_file(

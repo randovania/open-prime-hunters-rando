@@ -228,9 +228,9 @@ ALL_VERSIONS = [
             ammo_per_expansion=0x0201A3AC,
         ),
         hud_update_addresses=HudUpdateAddresses(
-            cloak_base_case=0x0202D128,
-            hud_up_cloak_base=0x0202D594,
-            hud_up_weapon_unlocked_case_2=0x0202DAD0,
+            cloak_base_case=0x0202D120,
+            hud_up_cloak_base=0x0202D58C,
+            hud_up_weapon_unlocked_case_2=0x0202DAC8,
         ),
         get_hud_string_address=0x0203C2D8,
         room_transition_end_addresses=RoomTransitionEndAddresses(
