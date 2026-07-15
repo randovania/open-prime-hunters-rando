@@ -69,7 +69,7 @@ def patch_missile_launcher(ammo_value: int, story_save_data_address: int) -> byt
 
     # Replace the StorySaveData address based on the version
     ssd = story_save_data_address.to_bytes(4, "little")
-    modified_bytes = binary.replace(b"\x32\x10\x81\xe2", new_instructions).replace(b"P\x8c\x0e\x02", ssd)
+    modified_bytes = binary.replace(b"\x32\x10\x81\xe2", new_instructions).replace(b"\xff\xff\xff\xff", ssd)
 
     return modified_bytes
 
