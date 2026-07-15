@@ -162,10 +162,11 @@ def patch_refill_sound() -> bytes:
 def patch_hud_up_cloak_base(get_hud_string_address: int) -> bytes:
     binary = read_bytes_from_file("hud_up_cloak_base.bin")
 
+    # Different revisions have different addresses for the get_hud_string address
     byte_mapping: dict[int, bytes] = {
-        0x0203C2D8: b"N",
-        0x0203C2E0: b"P",
-        0x0203C3B0: b"\x84",
+        0x0203C2D8: b"N",  # EU 1.0
+        0x0203C2E0: b"P",  # US 1.1/EU 1.1
+        0x0203C3B0: b"\x84",  # US 1.0
     }
     new_instruction = byte_mapping[get_hud_string_address] + b";\x00\xeb"
 
