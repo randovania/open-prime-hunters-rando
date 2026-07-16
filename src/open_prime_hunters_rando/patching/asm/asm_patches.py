@@ -70,7 +70,7 @@ def patch_missile_launcher(ammo_value: int, version: GameVersion) -> bytes:
     ssd = version.data_section_addresses.story_save_data.to_bytes(4, "little")
     modified_bytes = binary.replace(b"\x32\x10\x81\xe2", new_instructions).replace(b"\xff\xff\xff\xff", ssd)
 
-    # The address for EU 1.0 is 8 bytes before other versions
+    # The address for EU Rev0 is 8 bytes sooner compared to other revisions
     if version.description == "Europe 1.0":
         modified_bytes = modified_bytes.replace(b"\x06\x00\x00\xea", b"\x04\x00\x00\xea")
 
@@ -178,7 +178,7 @@ def patch_hud_up_cloak_base(get_hud_string_address: int) -> bytes:
 def patch_cloak_base_case(version: str) -> bytes:
     binary = read_bytes_from_file("cloak_base_case.bin")
 
-    # The address for EU 1.0 is 8 bytes before other versions
+    # The address for EU Rev0 is 8 bytes sooner compared to other revisions
     if version == "Europe 1.0":
         return binary.replace(b"\x01", b"\x03")
     else:
