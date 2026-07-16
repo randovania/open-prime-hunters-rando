@@ -89,6 +89,7 @@ class GameVersion:
     init_enemy_hunter_spawns_addresses: InitEnemyHunterSpawnsAddresses
     player_pickup_items_addresses: PlayerPickupItemsAddresses
     hud_update_addresses: HudUpdateAddresses
+    get_hud_string_address: int
     room_transition_end_addresses: RoomTransitionEndAddresses
     init_save_file_addresses: InitSaveFileAddresses
     data_section_addresses: DataSectionAddresses
@@ -123,6 +124,7 @@ ALL_VERSIONS = [
             hud_up_cloak_base=0x0202D594,
             hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
+        get_hud_string_address=0x0203C3B0,
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
         ),
@@ -176,6 +178,7 @@ ALL_VERSIONS = [
             hud_up_cloak_base=0x0202D594,
             hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
+        get_hud_string_address=0x0203C2E0,
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
         ),
@@ -225,10 +228,11 @@ ALL_VERSIONS = [
             ammo_per_expansion=0x0201A3AC,
         ),
         hud_update_addresses=HudUpdateAddresses(
-            cloak_base_case=0x0202D128,
-            hud_up_cloak_base=0x0202D594,
-            hud_up_weapon_unlocked_case_2=0x0202DAD0,
+            cloak_base_case=0x0202D120,
+            hud_up_cloak_base=0x0202D58C,
+            hud_up_weapon_unlocked_case_2=0x0202DAC8,
         ),
+        get_hud_string_address=0x0203C2D8,
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
         ),
@@ -282,6 +286,7 @@ ALL_VERSIONS = [
             hud_up_cloak_base=0x0202D594,
             hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
+        get_hud_string_address=0x0203C2E0,
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
         ),
@@ -335,6 +340,7 @@ ALL_VERSIONS = [
             hud_up_cloak_base=0x0202D594,
             hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
+        get_hud_string_address=0x0203C2E0,
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
         ),
