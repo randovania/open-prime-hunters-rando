@@ -103,8 +103,8 @@ ALL_VERSIONS = [
         revision=Revision.REV0,
         description="USA 1.0",
         init_enemy_hunter_spawns_addresses=InitEnemyHunterSpawnsAddresses(
-            random_hunter_spawn_first_condition=0x02015994,
-            random_hunter_spawn_game_state=0x02015AFC,
+            random_hunter_spawn_first_condition=0x0201598C,
+            random_hunter_spawn_game_state=0x02015AF8,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
             small_energy_refill_amount=0x02019BD8,
@@ -126,7 +126,7 @@ ALL_VERSIONS = [
         ),
         get_hud_string_address=0x0203C3B0,
         room_transition_end_addresses=RoomTransitionEndAddresses(
-            door_locking_condition=0x02053B3C,
+            door_locking_condition=0x0205331C,
         ),
         init_save_file_addresses=InitSaveFileAddresses(
             starting_octoliths=0x0205BCD4,
@@ -211,8 +211,8 @@ ALL_VERSIONS = [
         revision=Revision.REV0,
         description="Europe 1.0",
         init_enemy_hunter_spawns_addresses=InitEnemyHunterSpawnsAddresses(
-            random_hunter_spawn_first_condition=0x02015994,
-            random_hunter_spawn_game_state=0x02015AFC,
+            random_hunter_spawn_first_condition=0x02015988,
+            random_hunter_spawn_game_state=0x02015AF0,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
             small_energy_refill_amount=0x02019BD8,
@@ -234,7 +234,7 @@ ALL_VERSIONS = [
         ),
         get_hud_string_address=0x0203C2D8,
         room_transition_end_addresses=RoomTransitionEndAddresses(
-            door_locking_condition=0x02053B3C,
+            door_locking_condition=0x02053B10,
         ),
         init_save_file_addresses=InitSaveFileAddresses(
             starting_octoliths=0x0205C548,
@@ -319,8 +319,8 @@ ALL_VERSIONS = [
         revision=Revision.REV0,
         description="Japanese 1.0",
         init_enemy_hunter_spawns_addresses=InitEnemyHunterSpawnsAddresses(
-            random_hunter_spawn_first_condition=0x02015994,
-            random_hunter_spawn_game_state=0x02015AFC,
+            random_hunter_spawn_first_condition=0x02015984,
+            random_hunter_spawn_game_state=0x02015AD8,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
             small_energy_refill_amount=0x02019BD8,
@@ -342,7 +342,7 @@ ALL_VERSIONS = [
         ),
         get_hud_string_address=0x0203C2E0,
         room_transition_end_addresses=RoomTransitionEndAddresses(
-            door_locking_condition=0x02053B3C,
+            door_locking_condition=0x02054D6C,
         ),
         init_save_file_addresses=InitSaveFileAddresses(
             starting_octoliths=0x0205D9C4,
