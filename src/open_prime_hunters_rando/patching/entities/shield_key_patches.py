@@ -349,12 +349,12 @@ def _subterranean(file_manager: FileManager) -> None:
 def _sanctorus(file_manager: FileManager) -> None:
     sanctorus = file_manager.get_entity_file("Arcterra", "Sanctorus")
 
-    # Move the message that activates the Gaurdians to the artifact shield camera sequence
+    # Move the message that activates the Guardians to the shield key activation camera sequence
     artifact = sanctorus.get_entity(7, Artifact)
     artifact.message1_target = -1
     artifact.message1 = Message.NONE
 
-    camera_sequence = sanctorus.get_entity(37, CameraSequence)
+    camera_sequence = sanctorus.get_entity(39, CameraSequence)
     camera_sequence.end_message_target_id = 38
     camera_sequence.end_message = Message.ACTIVATE
 
