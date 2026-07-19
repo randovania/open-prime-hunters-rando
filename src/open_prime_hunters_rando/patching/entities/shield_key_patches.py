@@ -341,6 +341,18 @@ def _sic_transit(file_manager: FileManager) -> None:
 def _subterranean(file_manager: FileManager) -> None:
     subterranean = file_manager.get_entity_file("Arcterra", "Subterranean")
 
+    # The artifact now only unlocks the force field
+    artifact = subterranean.get_entity(18, Artifact)
+    artifact.message1_target = 58
+    artifact.message1 = Message.UNLOCK
+    artifact.message2_target = -1
+    artifact.message2 = Message.NONE
+
+    # Move the message that activates the Guardians to the shield key activation camera sequence
+    camera_sequence = subterranean.get_entity(35, CameraSequence)
+    camera_sequence.end_message_target_id = 56
+    camera_sequence.end_message = Message.ACTIVATE
+
     # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
     checkpoint = subterranean.get_entity(55, AreaVolume)
     checkpoint.message_delay = 180
