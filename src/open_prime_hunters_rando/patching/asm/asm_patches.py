@@ -4,11 +4,11 @@ from open_prime_hunters_rando.patching.asm import (
     create_bitmask,
     read_bytes_from_file,
 )
-from open_prime_hunters_rando.patching.game_version import DataSectionAddresses
+from open_prime_hunters_rando.patching.game_version import GameVersion
 
 
 class AsmPatches:
-    def __init__(self, configuration: dict, data_section: DataSectionAddresses) -> None:
+    def __init__(self, configuration: dict, version: GameVersion) -> None:
         # Setup
         self.starting_items = configuration["starting_items"]
         self.game_patches = configuration["game_patches"]
@@ -24,9 +24,7 @@ class AsmPatches:
 
         # Ammo Sizes
         self.ammo_per_expansion = patch_ammo_per_expansion(self.ammo_sizes["ua_expansion"])
-        self.missile_launcher = patch_missile_launcher(
-            self.ammo_sizes["missile_launcher"], data_section.story_save_data
-        )
+        self.missile_launcher = patch_missile_launcher(self.ammo_sizes["missile_launcher"], version)
         self.missiles_per_expansion = patch_ammo_per_expansion(self.ammo_sizes["missile_expansion"])
 
         # Energy/Ammo Refills
@@ -38,6 +36,8 @@ class AsmPatches:
         self.refill_play_sfx = patch_refill_sound()
 
         # Game Patches
+        self.cloak_base_case = patch_cloak_base_case(version.description)
+        self.hud_up_cloak_base = patch_hud_up_cloak_base(version.get_hud_string_address)
         self.init_save_file_rewrite = patch_planets_and_artifacts(
             self.game_patches["unlock_planets"], self.starting_items["artifacts"]
         )
@@ -62,13 +62,17 @@ def patch_starting_weapons(starting_weapons: dict[str, bool]) -> bytes:
     return bitfield_to_bytes(weapons)
 
 
-def patch_missile_launcher(ammo_value: int, story_save_data_address: int) -> bytes:
+def patch_missile_launcher(ammo_value: int, version: GameVersion) -> bytes:
     binary = read_bytes_from_file("missile_launcher.bin")
     new_instructions = GenerateArmBytes(ammo_value).add(1, 1)
 
     # Replace the StorySaveData address based on the version
-    ssd = story_save_data_address.to_bytes(4, "little")
-    modified_bytes = binary.replace(b"\x32\x10\x81\xe2", new_instructions).replace(b"P\x8c\x0e\x02", ssd)
+    ssd = version.data_section_addresses.story_save_data.to_bytes(4, "little")
+    modified_bytes = binary.replace(b"\x32\x10\x81\xe2", new_instructions).replace(b"\xff\xff\xff\xff", ssd)
+
+    # The address for EU Rev0 is 8 bytes sooner compared to other revisions
+    if version.description == "Europe 1.0":
+        modified_bytes = modified_bytes.replace(b"\x06\x00\x00\xea", b"\x04\x00\x00\xea")
 
     return modified_bytes
 
@@ -153,3 +157,29 @@ def patch_refill_sound() -> bytes:
     This is necessary to preserve the sfx when picking up a small/large energy refill that has its values changed.
     """
     return GenerateArmBytes(30, False).mov(0)
+
+
+def patch_hud_up_cloak_base(get_hud_string_address: int) -> bytes:
+    binary = read_bytes_from_file("hud_up_cloak_base.bin")
+
+    # Different revisions have different addresses for the get_hud_string address
+    byte_mapping: dict[int, bytes] = {
+        0x0203C2D8: b"N",  # EU 1.0
+        0x0203C2E0: b"P",  # US 1.1/EU 1.1
+        0x0203C3B0: b"\x84",  # US 1.0
+    }
+    new_instruction = byte_mapping[get_hud_string_address] + b";\x00\xeb"
+
+    modified_bytes = binary.replace(b"P;\x00\xeb", new_instruction)
+
+    return modified_bytes
+
+
+def patch_cloak_base_case(version: str) -> bytes:
+    binary = read_bytes_from_file("cloak_base_case.bin")
+
+    # The address for EU Rev0 is 8 bytes sooner compared to other revisions
+    if version == "Europe 1.0":
+        return binary.replace(b"\x01", b"\x03")
+    else:
+        return binary

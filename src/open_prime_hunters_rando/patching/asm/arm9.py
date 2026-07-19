@@ -12,9 +12,8 @@ def patch_arm9(rom: NintendoDSRom, version: GameVersion, configuration: dict) ->
     pstate = version.process_state
     room = version.room_transition_end_addresses
     save_file = version.init_save_file_addresses
-    data_section = version.data_section_addresses
 
-    patches = AsmPatches(configuration, data_section)
+    patches = AsmPatches(configuration, version)
 
     ARM9_PATCHES: dict[int, bytes] = {
         # Both Addresses below handle random hunter spawns
@@ -32,8 +31,8 @@ def patch_arm9(rom: NintendoDSRom, version: GameVersion, configuration: dict) ->
         pickup.large_energy_play_sfx: patches.refill_play_sfx,  # Fixes pickup sfx if refill value is changed
         pickup.ammo_per_expansion: patches.ammo_per_expansion,  # UA per expansion
         # The next three addresses hijack Cloak hud code for the custom Missile Launcher
-        hud.cloak_base_case: read_bytes_from_file("cloak_base_case.bin"),
-        hud.hud_up_cloak_base: read_bytes_from_file("hud_up_cloak_base.bin"),
+        hud.cloak_base_case: patches.cloak_base_case,
+        hud.hud_up_cloak_base: patches.hud_up_cloak_base,
         hud.hud_up_weapon_unlocked_case_2: read_bytes_from_file("hud_up_weapon_unlocked_case_2.bin"),
         pstate.octolith_picked_up_conditional: NOP * 12,  # Forces the pickup dialog to display on pickup
         room.door_locking_condition: read_bytes_from_file(
