@@ -28,10 +28,10 @@ def patch_pickups(entity_file: EntityFile, pickups: list[PickupProperties], room
         _update_high_ground_big_health_layers(entity_file)
 
     for pickup in pickups:
-        _patch_pickup(entity_file, pickup)
+        _patch_pickup(entity_file, pickup, room_name)
 
 
-def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties) -> None:
+def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties, room_name: str) -> None:
     entity_id = pickup["entity_id"]
     new_entity_type = EntityType(pickup["entity_type"])
 
@@ -51,7 +51,7 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties) -> None:
             entity.item_type = new_item_type
 
             if new_item_type == ItemType.ARTIFACT_KEY:
-                _add_shield_key_pickup_trigger(entity_file, entity, pickup["state_bit"])
+                _add_shield_key_pickup_trigger(entity_file, entity, pickup["state_bit"], room_name)
 
         # Entity is now Artifact
         else:
@@ -105,7 +105,7 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties) -> None:
             )
 
             if new_entity.item_type == ItemType.ARTIFACT_KEY:
-                _add_shield_key_pickup_trigger(entity_file, new_entity, pickup["state_bit"])
+                _add_shield_key_pickup_trigger(entity_file, new_entity, pickup["state_bit"], room_name)
 
             entity_file.replace_entity(entity_id, new_entity)
 
@@ -117,14 +117,16 @@ def _remove_shield_key_messages(entity: ItemSpawn) -> None:
     entity.collected_message_param1 = 0
 
 
-def _add_shield_key_pickup_trigger(entity_file: EntityFile, new_entity: ItemSpawn, state_bit: int) -> None:
+def _add_shield_key_pickup_trigger(
+    entity_file: EntityFile, new_entity: ItemSpawn, state_bit: int, room_name: str
+) -> None:
     # Updates the message and state bit set by the shield key based on the configuration
     new_entity.collected_message = Message.SET_TRIGGER_STATE
     new_entity.collected_message_param1 = state_bit
 
     # Create a new trigger volume to show the message and play the sfx if the new Shield Key is not vanilla
     vanilla_shield_key = get_state_bit(state_bit)
-    if vanilla_shield_key.entity_id != new_entity.entity_id:
+    if vanilla_shield_key.entity_id != new_entity.entity_id or vanilla_shield_key.room_name != room_name:
         # First Shield Key message has a string_id of 56
         # 24 is added to the message_id because the first custom state bit is 32
         message_id = state_bit + 24
