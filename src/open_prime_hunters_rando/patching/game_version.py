@@ -89,6 +89,7 @@ class GameVersion:
     init_enemy_hunter_spawns_addresses: InitEnemyHunterSpawnsAddresses
     player_pickup_items_addresses: PlayerPickupItemsAddresses
     hud_update_addresses: HudUpdateAddresses
+    get_hud_string_address: int
     room_transition_end_addresses: RoomTransitionEndAddresses
     init_save_file_addresses: InitSaveFileAddresses
     data_section_addresses: DataSectionAddresses
@@ -102,8 +103,8 @@ ALL_VERSIONS = [
         revision=Revision.REV0,
         description="USA 1.0",
         init_enemy_hunter_spawns_addresses=InitEnemyHunterSpawnsAddresses(
-            random_hunter_spawn_first_condition=0x02015994,
-            random_hunter_spawn_game_state=0x02015AFC,
+            random_hunter_spawn_first_condition=0x0201598C,
+            random_hunter_spawn_game_state=0x02015AF8,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
             small_energy_refill_amount=0x02019BD8,
@@ -123,8 +124,9 @@ ALL_VERSIONS = [
             hud_up_cloak_base=0x0202D594,
             hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
+        get_hud_string_address=0x0203C3B0,
         room_transition_end_addresses=RoomTransitionEndAddresses(
-            door_locking_condition=0x02053B3C,
+            door_locking_condition=0x0205331C,
         ),
         init_save_file_addresses=InitSaveFileAddresses(
             starting_octoliths=0x0205BCD4,
@@ -176,6 +178,7 @@ ALL_VERSIONS = [
             hud_up_cloak_base=0x0202D594,
             hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
+        get_hud_string_address=0x0203C2E0,
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
         ),
@@ -208,8 +211,8 @@ ALL_VERSIONS = [
         revision=Revision.REV0,
         description="Europe 1.0",
         init_enemy_hunter_spawns_addresses=InitEnemyHunterSpawnsAddresses(
-            random_hunter_spawn_first_condition=0x02015994,
-            random_hunter_spawn_game_state=0x02015AFC,
+            random_hunter_spawn_first_condition=0x02015988,
+            random_hunter_spawn_game_state=0x02015AF0,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
             small_energy_refill_amount=0x02019BD8,
@@ -225,12 +228,13 @@ ALL_VERSIONS = [
             ammo_per_expansion=0x0201A3AC,
         ),
         hud_update_addresses=HudUpdateAddresses(
-            cloak_base_case=0x0202D128,
-            hud_up_cloak_base=0x0202D594,
-            hud_up_weapon_unlocked_case_2=0x0202DAD0,
+            cloak_base_case=0x0202D120,
+            hud_up_cloak_base=0x0202D58C,
+            hud_up_weapon_unlocked_case_2=0x0202DAC8,
         ),
+        get_hud_string_address=0x0203C2D8,
         room_transition_end_addresses=RoomTransitionEndAddresses(
-            door_locking_condition=0x02053B3C,
+            door_locking_condition=0x02053B10,
         ),
         init_save_file_addresses=InitSaveFileAddresses(
             starting_octoliths=0x0205C548,
@@ -282,6 +286,7 @@ ALL_VERSIONS = [
             hud_up_cloak_base=0x0202D594,
             hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
+        get_hud_string_address=0x0203C2E0,
         room_transition_end_addresses=RoomTransitionEndAddresses(
             door_locking_condition=0x02053B3C,
         ),
@@ -314,8 +319,8 @@ ALL_VERSIONS = [
         revision=Revision.REV0,
         description="Japanese 1.0",
         init_enemy_hunter_spawns_addresses=InitEnemyHunterSpawnsAddresses(
-            random_hunter_spawn_first_condition=0x02015994,
-            random_hunter_spawn_game_state=0x02015AFC,
+            random_hunter_spawn_first_condition=0x02015984,
+            random_hunter_spawn_game_state=0x02015AD8,
         ),
         player_pickup_items_addresses=PlayerPickupItemsAddresses(
             small_energy_refill_amount=0x02019BD8,
@@ -335,8 +340,9 @@ ALL_VERSIONS = [
             hud_up_cloak_base=0x0202D594,
             hud_up_weapon_unlocked_case_2=0x0202DAD0,
         ),
+        get_hud_string_address=0x0203C2E0,
         room_transition_end_addresses=RoomTransitionEndAddresses(
-            door_locking_condition=0x02053B3C,
+            door_locking_condition=0x02054D6C,
         ),
         init_save_file_addresses=InitSaveFileAddresses(
             starting_octoliths=0x0205D9C4,
