@@ -104,6 +104,12 @@ def _patch_specific_layer_states(file_manager: FileManager) -> None:
                 ([5, 11], [1, 2], False),  # 2nd pass Psycho Bit and Voldrum spawners
             ],
         },
+        "Vesper Defense Outpost": {
+            "Weapons Complex": [
+                ([5], [1], True),  # Sylux ship on escape layer
+                ([27, 33], [2, 3], False),  # FIXME: Sylux ship cannon and camera sequence on second pass to save memory
+            ]
+        },
         "Arcterra": {
             "Arcterra Gateway": [
                 ([36], [1, 2], True),  # Landing Camera
@@ -170,7 +176,7 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
             "Fuel Stack": [],
             "VDO Gateway": [],
             "Stasis Bunker": [],
-            "Weapons Complex": [],
+            "Weapons Complex": [5, 27, 33],  # Sylux ship and camera sequence
         },
         "Arcterra": {
             "Drip Moat": [],
