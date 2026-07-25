@@ -125,6 +125,7 @@ def _patch_specific_layer_states(file_manager: FileManager) -> None:
                 ([65], [1, 2], False),  # Entrance Jump Pad
             ],
             "Sic Transit": [
+                ([9, 23, 82, 84, 85, 86, 87, 88], [1, 2], True),  # Shield Key Scan Points, Trigger, and Camera Sequence
                 ([11], [1, 2], False),  # Second Pass Inner Door
                 ([24], [1, 2], True),  # First Pass Inner Door
                 ([35], [1, 2], True),  # Artifact
