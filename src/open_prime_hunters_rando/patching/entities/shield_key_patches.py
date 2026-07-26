@@ -321,10 +321,24 @@ def _sic_transit(file_manager: FileManager) -> None:
     artifact.message2_target = -1
     artifact.message2 = Message.NONE
 
+    # Create a new checkpoint for the shield key activate cutscene
+    checkpoint = sic_transit.get_entity(61, AreaVolume)
+    post_shield_key_checkpoint = copy.deepcopy(checkpoint)
+
+    # Delay setting the new checkpoint to prevent the shield key cutscene from not reactivating if shuffled
+    post_shield_key_checkpoint.active = False
+    sic_transit.append_entity(post_shield_key_checkpoint)
+
+    scan_door_unlock = sic_transit.get_entity(55, CameraSequence)
+    scan_door_unlock.end_message_target_id = post_shield_key_checkpoint.entity_id
+    scan_door_unlock.end_message = Message.ACTIVATE
+
     # Unlock the doors after the shield key spawns
     door_locking_trigger = sic_transit.get_entity(20, TriggerVolume)
 
     unlocking_trigger = copy.deepcopy(door_locking_trigger)
+    unlocking_trigger.subtype = TriggerVolumeType.AUTOMATIC
+    unlocking_trigger.active = False
     unlocking_trigger.parent_message = Message.UNLOCK
     unlocking_trigger.child_message = Message.UNLOCK
     sic_transit.append_entity(unlocking_trigger)
@@ -332,10 +346,6 @@ def _sic_transit(file_manager: FileManager) -> None:
     camera_sequence = sic_transit.get_entity(23, CameraSequence)
     camera_sequence.end_message_target_id = unlocking_trigger.entity_id
     camera_sequence.end_message = Message.ACTIVATE
-
-    # Delay setting the checkpoint to prevent the shield key cutscene from not reactivating if shuffled
-    checkpoint = sic_transit.get_entity(61, AreaVolume)
-    checkpoint.message_delay = 180
 
 
 def _subterranean(file_manager: FileManager) -> None:
