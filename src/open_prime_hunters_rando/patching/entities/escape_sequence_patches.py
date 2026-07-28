@@ -42,7 +42,7 @@ def _remove_disabled_portals(file_manager: FileManager) -> None:
             "New Arrival Registration": [43, 45],
         },
         "Vesper Defense Outpost": {
-            "Weapons Complex": [78, 54],
+            "Weapons Complex": [48, 54, 78],
             "Ascension": [38, 6],
         },
         "Arcterra": {
