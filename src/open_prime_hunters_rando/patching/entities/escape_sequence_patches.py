@@ -108,6 +108,7 @@ def _patch_specific_layer_states(file_manager: FileManager) -> None:
             "Weapons Complex": [
                 ([5], [1], True),  # Sylux ship on escape layer
                 ([27, 33], [2, 3], False),  # FIXME: Sylux ship cannon and camera sequence on second pass to save memory
+                ([52, 91], [2], False),  # FIXME: Sylux is always loaded in memory which crashes with random encounters
             ]
         },
         "Arcterra": {
