@@ -3,7 +3,7 @@ from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
 
 
-def patch_escape_sequences(file_manager: FileManager) -> None:
+def patch_layer_states(file_manager: FileManager) -> None:
     _disable_escape_triggers(file_manager)
     _remove_disabled_portals(file_manager)
     _disable_boss_force_fields(file_manager)
