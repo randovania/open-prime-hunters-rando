@@ -91,6 +91,7 @@ def _patch_specific_layer_states(file_manager: FileManager) -> None:
                 ([56, 72], [1, 2, 3], False),  # Second Pass Bottom Doors
                 ([74, 77], [3], True),  # Force Fields
                 ([57, 58], [3], True),  # Portals
+                ([90, 93], [0, 1, 2], True),  # Artifact Shield Unlocking Camera Sequence
             ],
         },
         "Celestial Archives": {
