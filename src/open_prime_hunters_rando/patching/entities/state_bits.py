@@ -197,7 +197,7 @@ def create_shield_key_triggers(file_manager: FileManager) -> None:
         # After the messages have been sent, clear the state bit to prevent the event from reactivating
         shield_key_trigger = TriggerVolume.create(
             node_name=shield_key.node_name,
-            layer_state=shield_key.layer_state,
+            layer_state=[True] * 16,
             subtype=TriggerVolumeType.STATE_BITS,
             required_state_bit=state_bit,
             parent_id=shield_key.notify_entity_id,

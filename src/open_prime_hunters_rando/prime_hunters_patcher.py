@@ -11,8 +11,8 @@ from open_prime_hunters_rando.patching.asm.arm9 import patch_arm9
 from open_prime_hunters_rando.patching.asm.overlays import patch_overlays
 from open_prime_hunters_rando.patching.entities.cutscene_patches import remove_cutscenes
 from open_prime_hunters_rando.patching.entities.entity_patching import patch_entities
-from open_prime_hunters_rando.patching.entities.escape_sequence_patches import patch_escape_sequences
 from open_prime_hunters_rando.patching.entities.hunter_spawn_patches import patch_hunters
+from open_prime_hunters_rando.patching.entities.layer_state_patches import patch_layer_states
 from open_prime_hunters_rando.patching.entities.misc_patches import misc_patches
 from open_prime_hunters_rando.patching.entities.shield_key_patches import patch_shield_key_rooms
 from open_prime_hunters_rando.patching.entities.state_bits import create_shield_key_triggers
@@ -77,9 +77,9 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
     create_shield_key_triggers(file_manager)
     patch_shield_key_rooms(file_manager)
 
-    # Patch escape sequences
-    LOG.info("Removing escape sequences")
-    patch_escape_sequences(file_manager)
+    # Patch layer states
+    LOG.info("Patching layer states")
+    patch_layer_states(file_manager)
 
     # Patch entities
     patch_entities(file_manager, configuration["areas"])
