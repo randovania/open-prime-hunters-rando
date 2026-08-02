@@ -1,7 +1,7 @@
 from open_prime_hunters_rando.logger import LOG
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.entity_file import EntityFile
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.artifact import Artifact, ModelId
 from open_prime_hunters_rando.parsing.formats.entities.enum import Message
 from open_prime_hunters_rando.patching.entities import NewTrigger
 from open_prime_hunters_rando.patching.entities.add_entities import add_new_entities
@@ -58,7 +58,8 @@ def _create_artifact_triggers(area_name: str, room_name: str, entity_file: Entit
                 continue
             message_list.append((message_target, message))
 
-        if len(message_list) < 2:
+        # Create a new trigger if there are more than two messages or if the entity is an Octolith
+        if len(message_list) < 2 and entity.model_id != ModelId.OCTOLITH:
             continue
 
         artifact_triggers.append(
