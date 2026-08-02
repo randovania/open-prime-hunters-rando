@@ -173,6 +173,7 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
             "Docking Bay": [],
             "Incubation Vault 01": [],
             "Incubation Vault 02": [],
+            "Incubation Vault 03": [],
             "New Arrival Registration": [],
             "Synergy Core": [],
             "Tetra Vista": [],
