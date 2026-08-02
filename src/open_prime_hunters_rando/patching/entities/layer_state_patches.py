@@ -1,12 +1,17 @@
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.base_entity import Entity
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.force_field import ForceField
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import TriggerVolume
+from open_prime_hunters_rando.parsing.formats.entities.enum import Message
 
 
 def patch_layer_states(file_manager: FileManager) -> None:
     _disable_escape_triggers(file_manager)
     _remove_disabled_portals(file_manager)
     _disable_boss_force_fields(file_manager)
+    _remove_elder_passage_top_lock_and_force_field(file_manager)
+    _save_vram_ice_hive(file_manager)
     _patch_specific_layer_states(file_manager)
     _patch_both_escape_layers(file_manager)
 
@@ -202,3 +207,25 @@ def _patch_both_escape_layers(file_manager: FileManager) -> None:
                 if entity.layer_state[0]:
                     entity.layer_state[1] = True
                     entity.layer_state[2] = True
+
+
+def _remove_elder_passage_top_lock_and_force_field(file_manager: FileManager) -> None:
+    entity_file = file_manager.get_entity_file("Alinos", "Elder Passage")
+    trigger_volume = entity_file.get_entity(25, TriggerVolume)
+    trigger_volume.parent_message = Message.NONE
+
+    force_field = entity_file.get_entity(39, ForceField)
+    force_field.layer_state[0] = False
+    force_field.layer_state[3] = False
+
+
+def _save_vram_ice_hive(file_manager: FileManager) -> None:
+    # Remove some entities to prevent VRAM overflow in large rooms
+    entity_file = file_manager.get_entity_file("Arcterra", "Ice Hive")
+
+    # Remove the Carnivorous Plants in the path under the Artifact
+    to_remove = [33, 108, 111]
+    for entity_id in to_remove:
+        carnivorous_plant = entity_file.get_entity(entity_id, EnemySpawn)
+        for layer in range(3):
+            carnivorous_plant.layer_state[layer] = False
