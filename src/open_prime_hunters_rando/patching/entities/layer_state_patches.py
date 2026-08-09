@@ -109,6 +109,9 @@ def _patch_specific_layer_states(file_manager: FileManager) -> None:
             "Incubation Vault 02": [
                 ([5, 11], [1, 2], False),  # 2nd pass Psycho Bit and Voldrum spawners
             ],
+            "Transfer Lock": [
+                ([35, 66], [1, 2], False),  # 2nd pass upper portals (one is active, the other is inactive)
+            ],
         },
         "Vesper Defense Outpost": {
             "Weapons Complex": [
