@@ -51,7 +51,7 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties, room_name: 
             entity.item_type = new_item_type
 
             if new_item_type == ItemType.ARTIFACT_KEY:
-                _add_shield_key_pickup_trigger(entity_file, entity, pickup["state_bit"], room_name)
+                _add_shield_key_pickup_trigger(entity_file, None, entity, pickup["state_bit"], room_name)
 
         # Entity is now Artifact
         else:
@@ -105,7 +105,7 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties, room_name: 
             )
 
             if new_entity.item_type == ItemType.ARTIFACT_KEY:
-                _add_shield_key_pickup_trigger(entity_file, new_entity, pickup["state_bit"], room_name)
+                _add_shield_key_pickup_trigger(entity_file, entity, new_entity, pickup["state_bit"], room_name)
 
             entity_file.replace_entity(entity_id, new_entity)
 
@@ -118,11 +118,33 @@ def _remove_shield_key_messages(entity: ItemSpawn) -> None:
 
 
 def _add_shield_key_pickup_trigger(
-    entity_file: EntityFile, new_entity: ItemSpawn, state_bit: int, room_name: str
+    entity_file: EntityFile, artifact_entity: Artifact | None, new_entity: ItemSpawn, state_bit: int, room_name: str
 ) -> None:
-    # Updates the message and state bit set by the shield key based on the configuration
-    new_entity.collected_message = Message.SET_TRIGGER_STATE
-    new_entity.collected_message_param1 = state_bit
+    # Adds a new trigger if the Shield Key replaced an Artifact which sets the state bit and sends any other messages
+    if artifact_entity is not None:
+        artifact_trigger = TriggerVolume.create(
+            node_name=new_entity.node_name,
+            layer_state=new_entity.layer_state,
+            subtype=TriggerVolumeType.AUTOMATIC,
+            active=False,
+            always_active=False,
+            parent_id=new_entity.notify_entity_id,
+            parent_message=new_entity.collected_message,
+            parent_message_param1=new_entity.collected_message_param1,
+            parent_message_param2=new_entity.collected_message_param2,
+            child_message=Message.SET_TRIGGER_STATE,
+            child_message_param1=state_bit,
+        )
+        entity_file.append_entity(artifact_trigger)
+
+        # The Shield Key will activate the new trigger
+        new_entity.notify_entity_id = artifact_trigger.entity_id
+        new_entity.collected_message = Message.ACTIVATE
+
+    else:
+        # Updates the message and state bit set by the shield key based on the configuration
+        new_entity.collected_message = Message.SET_TRIGGER_STATE
+        new_entity.collected_message_param1 = state_bit
 
     # Create a new trigger volume to show the message and play the sfx if the new Shield Key is not vanilla
     vanilla_shield_key = get_state_bit(state_bit)
