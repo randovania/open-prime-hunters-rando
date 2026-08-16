@@ -288,6 +288,11 @@
                     "type": "boolean",
                     "description": "If enabled, disables the ship landing sequence for each planet.",
                     "default": false
+                },
+                "keep_doors_locked": {
+                    "type": "boolean",
+                    "description": "If enabled, prevents doors from being unlocked by events. This should be enabled when door weaknesses are changed.",
+                    "default": false
                 }
             },
             "default": {}
