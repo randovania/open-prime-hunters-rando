@@ -10,3 +10,4 @@ class NewTrigger(NamedTuple):
     entity_id: int
     artifact_messages: list[tuple[int, Message]]
     node_name: str = "rmMain"
+    created_from_octolith: bool = False

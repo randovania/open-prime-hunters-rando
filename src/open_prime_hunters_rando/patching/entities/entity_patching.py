@@ -70,6 +70,8 @@ def _create_artifact_triggers(area_name: str, room_name: str, entity_file: Entit
                 active_layers=entity.active_layers,
                 entity_id=entity.entity_id,
                 artifact_messages=message_list,
+                # Necessary to always unlock the boss door if the Octolith gets replaced by an item spawn
+                created_from_octolith=True if entity.model_id == ModelId.OCTOLITH else False,
             )
         )
 

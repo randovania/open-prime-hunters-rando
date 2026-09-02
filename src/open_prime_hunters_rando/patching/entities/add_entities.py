@@ -6,7 +6,10 @@ from open_prime_hunters_rando.parsing.common_types.volume import SphereVolumeTyp
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.object import Object
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import TriggerVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import (
+    TriggerVolume,
+    TriggerVolumeType,
+)
 from open_prime_hunters_rando.parsing.formats.entities.enum import ItemType, Message
 from open_prime_hunters_rando.patching.entities import NewTrigger
 
@@ -43,6 +46,10 @@ def _add_new_triggers(file_manager: FileManager, new_artifact_triggers: list[New
             active=False,
             trigger_flags=TriggerVolumeFlags.PLAYER_BIPED | TriggerVolumeFlags.PLAYER_ALT,
         )
+
+        # Set the trigger to AUTOMATIC if it was an Octolith so the boss door always unlocks on pickup
+        if new_trigger.created_from_octolith:
+            template_trigger.subtype = TriggerVolumeType.AUTOMATIC
 
         # Get the new trigger
         trigger_volume_a = entity_file.get_entity(entity_file.append_entity(template_trigger), TriggerVolume)
