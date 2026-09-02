@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.area_volume import AreaVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.object import Object
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import TriggerVolume
 from open_prime_hunters_rando.parsing.formats.entities.enum import Message
@@ -14,6 +15,7 @@ def misc_patches(file_manager: FileManager) -> None:
     _disable_message_prompts(file_manager)
     _move_data_shrine_01_fight_trigger(file_manager)
     _add_area_intro_message_oubliette_gateway(file_manager)
+    _respawn_data_shrine_03_alimbic_turrets(file_manager)
 
 
 def _disable_message_prompts(file_manager: FileManager) -> None:
@@ -55,3 +57,13 @@ def _add_area_intro_message_oubliette_gateway(file_manager: FileManager) -> None
     trigger.child_message = Message.SHOW_OVERLAY
     trigger.child_message_param1 = 80
     trigger.child_message_param2 = 90
+
+
+def _respawn_data_shrine_03_alimbic_turrets(file_manager: FileManager) -> None:
+    entity_file = file_manager.get_entity_file("Celestial Archives", "Data Shrine 03")
+
+    # The Alimbic Turrets will now respawn when renentering the room preventing a potential softlock
+    turret_ids = [8, 16]
+    for turret_id in turret_ids:
+        turret = entity_file.get_entity(turret_id, EnemySpawn)
+        turret.always_active = True
