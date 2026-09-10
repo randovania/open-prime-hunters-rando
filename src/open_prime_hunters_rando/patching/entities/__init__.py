@@ -18,7 +18,7 @@ class NewTrigger(NamedTuple):
 
 def get_random_float() -> float:
     """
-    Returns a random float
+    Returns a random float ranging from 0.0 to 1.0 inclusive
     """
     return float(random.randint(0, 255)) / 255
 
