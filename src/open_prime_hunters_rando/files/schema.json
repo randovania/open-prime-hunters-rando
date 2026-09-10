@@ -253,6 +253,11 @@
                         "green"
                     ],
                     "default": "varia"
+                },
+                "randomize_light_source_colors": {
+                    "type": "boolean",
+                    "description": "If enabled, randomizes the colors of all light sources in the game.",
+                    "default": false
                 }
             }
         },

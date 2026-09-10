@@ -7,15 +7,16 @@ from open_prime_hunters_rando.patching.entities import NewTrigger
 from open_prime_hunters_rando.patching.entities.add_entities import add_new_entities
 from open_prime_hunters_rando.patching.entities.door import patch_doors
 from open_prime_hunters_rando.patching.entities.force_field import patch_force_fields
+from open_prime_hunters_rando.patching.entities.light_sources import patch_light_sources
 from open_prime_hunters_rando.patching.entities.pickup import patch_pickups
 from open_prime_hunters_rando.patching.entities.portal import patch_portals
 
 
-def patch_entities(file_manager: FileManager, configuration: dict[str, dict]) -> None:
+def patch_entities(file_manager: FileManager, configuration: dict) -> None:
     # List of all artifact triggers with multiple messages
     new_artifact_triggers: list = []
 
-    for area_name, area_config in configuration.items():
+    for area_name, area_config in configuration["areas"].items():
         for level_name, level_config in area_config.items():
             for room_name, entity_groups in level_config.items():
                 # Load the entity file for the room
@@ -31,6 +32,9 @@ def patch_entities(file_manager: FileManager, configuration: dict[str, dict]) ->
                 patch_force_fields(entity_file, entity_groups["force_fields"])
                 patch_portals(entity_file, entity_groups["portals"], room_name)
                 patch_doors(entity_file, entity_groups["doors"], room_name)
+
+                if configuration["cosmetic_patches"]["randomize_light_source_colors"]:
+                    patch_light_sources(entity_file)
 
                 new_artifact_triggers.extend(artifact_triggers_per_room)
 
