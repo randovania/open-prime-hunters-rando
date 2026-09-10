@@ -1,4 +1,5 @@
 import json
+import random
 import typing
 from pathlib import Path
 
@@ -53,6 +54,9 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
     # Initialize the file manager
     file_manager = FileManager(rom, export_parsed_files)
 
+    # Generate a random seed based on the configuration id
+    random.seed(configuration["configuration_id"])
+
     # Modify main code file arm9.bin
     LOG.info("Patching arm9.bin")
     patch_arm9(rom, version, configuration)
@@ -82,7 +86,7 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
     patch_layer_states(file_manager)
 
     # Patch entities
-    patch_entities(file_manager, configuration["areas"])
+    patch_entities(file_manager, configuration)
 
     # Patch Hunter Spawns
     patch_hunters(file_manager, configuration)
