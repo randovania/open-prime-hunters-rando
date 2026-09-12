@@ -78,7 +78,7 @@ def patch_rom(input_path: Path, output_path: Path, configuration: dict, export_p
 
     # Patch shield keys
     LOG.info("Patching shield keys")
-    create_shield_key_triggers(file_manager)
+    create_shield_key_triggers(file_manager, configuration["starting_items"]["state_bits"])
     patch_shield_key_rooms(file_manager)
 
     # Patch layer states
