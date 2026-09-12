@@ -128,7 +128,12 @@
                 "state_bits": {
                     "type": "array",
                     "description": "Determines which state bits are set by default.",
-                    "default": []
+                    "default": [],
+                    "items": {
+                        "type": "number",
+                        "minimum": 32,
+                        "maximum": 64
+                    }
                 }
             },
             "required": [
