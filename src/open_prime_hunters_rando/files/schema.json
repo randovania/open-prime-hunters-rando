@@ -124,6 +124,11 @@
                     "description": "Bitfield that determines what Octoliths to start with in descending order, 8-1.\nLeft to Right: Arcterra 2-1, VDO 2-1, Alinos 2-1, Celestial Archives 2-1",
                     "minLength": 8,
                     "default": "00000000"
+                },
+                "state_bits": {
+                    "type": "array",
+                    "description": "Determines which state bits are set by default.",
+                    "default": []
                 }
             },
             "required": [

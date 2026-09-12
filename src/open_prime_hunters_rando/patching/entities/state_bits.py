@@ -186,11 +186,16 @@ def create_shield_key_messages() -> list[str]:
     return pickup_messages
 
 
-def create_shield_key_triggers(file_manager: FileManager) -> None:
+def create_shield_key_triggers(file_manager: FileManager, starting_state_bits: list[int]) -> None:
     for state_bit, shield_key_data in STATE_BIT_SHIELD_KEY_MAPPING.items():
         # Get the Shield Key
         entity_file = file_manager.get_entity_file(shield_key_data.area_name, shield_key_data.room_name)
         shield_key = entity_file.get_entity(shield_key_data.entity_id, ItemSpawn)
+
+        # Check to see if the shield key is a starting item and activate the trigger automatically if so
+        is_starting = False
+        if state_bit in starting_state_bits:
+            is_starting = True
 
         # Create a new trigger that checks if the state bit is set
         # If set, it sends out the original message of the shield key
@@ -198,8 +203,8 @@ def create_shield_key_triggers(file_manager: FileManager) -> None:
         shield_key_trigger = TriggerVolume.create(
             node_name=shield_key.node_name,
             layer_state=[True] * 16,
-            subtype=TriggerVolumeType.STATE_BITS,
-            required_state_bit=state_bit,
+            required_state_bit=state_bit if not is_starting else 0,
+            subtype=TriggerVolumeType.STATE_BITS if not is_starting else TriggerVolumeType.AUTOMATIC,
             parent_id=shield_key.notify_entity_id,
             parent_message=shield_key.collected_message,
             child_message=Message.CLEAR_TRIGGER_STATE,
