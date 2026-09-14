@@ -178,9 +178,9 @@ def _add_shield_key_pickup_trigger(
         entity_file.append_entity(key_trigger)
 
 
-def _adjust_octolith_positions(entity: ItemSpawn, room_name: str) -> None:
+def _adjust_octolith_positions(entity: ItemSpawn | Artifact, room_name: str) -> None:
     # Adjust the height of Octoliths on a room by room basis
-    rooms_with_height_adjustments: dict[list[tuple[int, float]]] = {
+    rooms_with_height_adjustments: dict[str, list[tuple[int, float]]] = {
         "Cortex CPU": [(18, 1.6)],
         "Compression Chamber": [(9, 1.1)],
         "Council Chamber": [(19, 2.0)],
