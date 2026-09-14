@@ -56,13 +56,17 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties, room_name: 
         # Entity is now Artifact
         else:
             # Raise entity so it doesn't clip into the floor if not an Octolith
-            if pickup["model_id"] != ModelId.OCTOLITH:
+            if ModelId(pickup["model_id"]) != ModelId.OCTOLITH:
                 entity.position.y += 0.3
+            # Otherwise adjust the height of Octoliths on a room by room basis
+            else:
+                _adjust_octolith_heights(entity, room_name)
 
             if entity.collected_message == Message.SET_TRIGGER_STATE:
                 _remove_shield_key_messages(entity)
 
             new_entity = Artifact.create(
+                position=entity.position,
                 model_id=ModelId(pickup["model_id"]),
                 artifact_id=pickup["artifact_id"],
                 active=entity.enabled,
@@ -84,9 +88,16 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties, room_name: 
         if new_entity_type == EntityType.ARTIFACT:
             entity.model_id = ModelId(pickup["model_id"])
             entity.artifact_id = pickup["artifact_id"]
+
             # Octoliths do not have a base and will crash if "has_base" is true
             if entity.model_id == ModelId.OCTOLITH:
-                entity.has_base = False
+                # For Artifact locations that are not in a shield, lower the Octolith and remove the base
+                if entity.has_base:
+                    entity.position.y -= 0.5
+                    entity.has_base = False
+                # Adjust the height of Octoliths on a room by room basis
+                else:
+                    _adjust_octolith_heights(entity, room_name)
 
         # Entity is now ItemSpawn
         else:
@@ -167,6 +178,29 @@ def _add_shield_key_pickup_trigger(
             child_message_param1=19,
         )
         entity_file.append_entity(key_trigger)
+
+
+def _adjust_octolith_heights(entity: ItemSpawn, room_name: str) -> None:
+    rooms_with_adjustments = {
+        "Echo Hall": [(15, 1.0)],
+        "High Ground": [(59, 1.6)],
+        "Elder Passage": [(29, 0.9)],
+        "Council Chamber": [(19, 2.0)],
+        "Data Shrine 01": [(14, 1.2), (55, 1.2), (57, 1.4)],
+        "Data Shrine 02": [(15, 1.4), (18, 1.1)],
+        "Cortex CPU": [(18, 1.6)],
+        "Compression Chamber": [(9, 1.1)],
+        "Sic Transit": [(29, 0.5)],
+        "Frost Labyrinth": [(18, 0.6)],
+        "Fault Line": [(47, 0.6)],
+    }
+
+    entity_ids = rooms_with_adjustments.get(room_name, None)
+    if entity_ids is not None:
+        for entity_id, adjustment in entity_ids:
+            if entity.entity_id == entity_id:
+                entity.position.y -= adjustment
+                break
 
 
 def _update_high_ground_big_health_layers(high_ground: EntityFile) -> None:
