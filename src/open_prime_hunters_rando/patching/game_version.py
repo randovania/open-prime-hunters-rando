@@ -82,6 +82,7 @@ class Overlay2Offsets:
 
 @dataclasses.dataclass(frozen=True)
 class Overlay8Offsets:
+    octolith_pickup_radius: int
     octolith_start_movie: int
     octolith_set_game_state: int
 
@@ -164,6 +165,7 @@ ALL_VERSIONS = [
             affinity_weapon=0x01E212,
         ),
         overlay8_offsets=Overlay8Offsets(
+            octolith_pickup_radius=0x01230,
             octolith_start_movie=0x010A8,
             octolith_set_game_state=0x01120,
         ),
@@ -225,6 +227,7 @@ ALL_VERSIONS = [
             affinity_weapon=0x01E272,
         ),
         overlay8_offsets=Overlay8Offsets(
+            octolith_pickup_radius=0x01230,
             octolith_start_movie=0x010A8,
             octolith_set_game_state=0x01120,
         ),
@@ -286,6 +289,7 @@ ALL_VERSIONS = [
             affinity_weapon=0x01E212,
         ),
         overlay8_offsets=Overlay8Offsets(
+            octolith_pickup_radius=0x01230,
             octolith_start_movie=0x010A8,
             octolith_set_game_state=0x01120,
         ),
@@ -347,6 +351,7 @@ ALL_VERSIONS = [
             affinity_weapon=0x01E272,
         ),
         overlay8_offsets=Overlay8Offsets(
+            octolith_pickup_radius=0x01230,
             octolith_start_movie=0x010A8,
             octolith_set_game_state=0x01120,
         ),
@@ -408,6 +413,7 @@ ALL_VERSIONS = [
             affinity_weapon=0x01E212,
         ),
         overlay8_offsets=Overlay8Offsets(
+            octolith_pickup_radius=0x01230,
             octolith_start_movie=0x010A8,
             octolith_set_game_state=0x01120,
         ),
