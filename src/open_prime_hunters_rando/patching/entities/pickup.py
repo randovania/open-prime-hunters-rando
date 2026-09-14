@@ -58,9 +58,8 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties, room_name: 
             # Raise entity so it doesn't clip into the floor if not an Octolith
             if ModelId(pickup["model_id"]) != ModelId.OCTOLITH:
                 entity.position.y += 0.3
-            # Otherwise adjust the height of Octoliths on a room by room basis
             else:
-                _adjust_octolith_heights(entity, room_name)
+                _adjust_octolith_positions(entity, room_name)
 
             if entity.collected_message == Message.SET_TRIGGER_STATE:
                 _remove_shield_key_messages(entity)
@@ -95,9 +94,8 @@ def _patch_pickup(entity_file: EntityFile, pickup: PickupProperties, room_name: 
                 if entity.has_base:
                     entity.position.y -= 0.5
                     entity.has_base = False
-                # Adjust the height of Octoliths on a room by room basis
                 else:
-                    _adjust_octolith_heights(entity, room_name)
+                    _adjust_octolith_positions(entity, room_name)
 
         # Entity is now ItemSpawn
         else:
@@ -180,27 +178,38 @@ def _add_shield_key_pickup_trigger(
         entity_file.append_entity(key_trigger)
 
 
-def _adjust_octolith_heights(entity: ItemSpawn, room_name: str) -> None:
-    rooms_with_adjustments = {
-        "Echo Hall": [(15, 1.0)],
-        "High Ground": [(59, 1.6)],
-        "Elder Passage": [(29, 0.9)],
+def _adjust_octolith_positions(entity: ItemSpawn, room_name: str) -> None:
+    # Adjust the height of Octoliths on a room by room basis
+    rooms_with_height_adjustments: dict[list[tuple[int, float]]] = {
+        "Cortex CPU": [(18, 1.6)],
+        "Compression Chamber": [(9, 1.1)],
         "Council Chamber": [(19, 2.0)],
         "Data Shrine 01": [(14, 1.2), (55, 1.2), (57, 1.4)],
         "Data Shrine 02": [(15, 1.4), (18, 1.1)],
-        "Cortex CPU": [(18, 1.6)],
-        "Compression Chamber": [(9, 1.1)],
-        "Sic Transit": [(29, 0.5)],
-        "Frost Labyrinth": [(18, 0.6)],
+        "Echo Hall": [(15, 1.0), (42, 1.0)],
+        "Elder Passage": [(29, 0.9)],
         "Fault Line": [(47, 0.6)],
+        "Frost Labyrinth": [(18, 0.6)],
+        "High Ground": [(59, 1.6)],
+        "Sic Transit": [(29, 0.5)],
     }
 
-    entity_ids = rooms_with_adjustments.get(room_name, None)
+    entity_ids = rooms_with_height_adjustments.get(room_name, None)
     if entity_ids is not None:
         for entity_id, adjustment in entity_ids:
             if entity.entity_id == entity_id:
                 entity.position.y -= adjustment
-                break
+            break
+
+    # Move the Zoomers pickup away from the wall
+    if room_name == "Echo Hall" and entity.entity_id == 42:
+        entity.position.z += 0.3
+    # Move the small room pickups away from the walls
+    if room_name == "Data Shrine 03":
+        if entity.entity_id == 2:
+            entity.position.z -= 0.1
+        elif entity.entity_id == 46:
+            entity.position.x -= 0.2
 
 
 def _update_high_ground_big_health_layers(high_ground: EntityFile) -> None:
