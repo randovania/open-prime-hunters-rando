@@ -18,7 +18,7 @@ def patch_overlays(rom: NintendoDSRom, version: GameVersion) -> None:
         },
         # Single Player Entities
         8: {
-            # Reduce radius to prevent collecting an Octolith inside an Artifact Shield from the outside (Default: 5.5)
+            # Reduce radius from 5.5 to prevent collecting an Octolith through an Artifact Shield
             version.overlay8_offsets.octolith_pickup_radius: struct.pack("<f", 4.5),
             # Prevent the Octolith pickup movie from playing
             version.overlay8_offsets.octolith_start_movie: NOP * 11,
