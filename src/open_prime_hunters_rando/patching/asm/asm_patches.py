@@ -38,8 +38,10 @@ class AsmPatches:
         # Game Patches
         self.cloak_base_case = patch_cloak_base_case(version.description)
         self.hud_up_cloak_base = patch_hud_up_cloak_base(version.get_hud_string_address)
-        self.init_save_file_rewrite = patch_planets_and_artifacts(
-            self.game_patches["unlock_planets"], self.starting_items["artifacts"]
+        self.init_save_file_rewrite = patch_init_save_file_rewrite(
+            self.game_patches["unlock_planets"],
+            self.starting_items["artifacts"],
+            self.starting_items["state_bits"],
         )
 
 
@@ -98,7 +100,13 @@ def patch_starting_ammo(ammo_value: int) -> bytes:
     return GenerateArmBytes(ammo_value).mov(2)
 
 
-def patch_planets_and_artifacts(unlock_planets: dict, starting_artifacts: dict) -> bytes:
+def patch_init_save_file_rewrite(
+    unlock_planets: dict, starting_artifacts: dict, starting_state_bits: list[int]
+) -> bytes:
+    """
+    Patches the init_story_save_function to be more optimized.
+    Allows for custom patching of starting planets, artifacts, and state bits.
+    """
     binary = read_bytes_from_file("optimized_story_save_init.bin")
 
     # Starting Planets
@@ -123,9 +131,19 @@ def patch_planets_and_artifacts(unlock_planets: dict, starting_artifacts: dict) 
 
     artifact_bitmask = create_bitmask(artifact_bitfields)
 
-    # Replace bytes from unlocked planets and starting artifacts
-    modified_bytes = binary.replace(b"\x0c\x10\xa0\xe3", planets_instruction).replace(
-        b"\xff\xff\xff\xff", artifact_bitmask
+    # Starting State Bits
+    total_starting_bits = 0
+    for state_bit in starting_state_bits:
+        total_starting_bits |= 1 << (state_bit - 32)
+
+    # Convert to 4-byte little-endian hex string
+    starting_sb_as_hex = total_starting_bits.to_bytes(4, "little")
+
+    # Replace all modified bytes
+    modified_bytes = (
+        binary.replace(b"\x0c\x10\xa0\xe3", planets_instruction)
+        .replace(b"\xff\xff\xff\xff", artifact_bitmask, 1)
+        .replace(b"\xff\xff\xff\xff", starting_sb_as_hex)
     )
 
     return modified_bytes
