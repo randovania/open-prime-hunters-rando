@@ -51,26 +51,14 @@
                     "description": "The number of missiles to start with.",
                     "default": 5,
                     "minimum": 0,
-                    "maximum": 102,
-                    "if": {
-                        "exclusiveMinimum": 25
-                    },
-                    "then": {
-                        "multipleOf": 2
-                    }
+                    "maximum": 100
                 },
                 "ammo": {
                     "type": "integer",
                     "description": "The amount of UA to start with.",
                     "default": 40,
                     "minimum": 0,
-                    "maximum": 102,
-                    "if": {
-                        "exclusiveMinimum": 25
-                    },
-                    "then": {
-                        "multipleOf": 2
-                    }
+                    "maximum": 100
                 },
                 "energy": {
                     "type": "integer",
@@ -177,25 +165,13 @@
                     "type": "integer",
                     "default": 10,
                     "minimum": 0,
-                    "maximum": 102,
-                    "if": {
-                        "exclusiveMinimum": 25
-                    },
-                    "then": {
-                        "multipleOf": 2
-                    }
+                    "maximum": 100
                 },
                 "ua_expansion": {
                     "type": "integer",
                     "default": 30,
                     "minimum": 0,
-                    "maximum": 102,
-                    "if": {
-                        "exclusiveMinimum": 25
-                    },
-                    "then": {
-                        "multipleOf": 2
-                    }
+                    "maximum": 100
                 }
             },
             "default": {}
