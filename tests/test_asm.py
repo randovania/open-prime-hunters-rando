@@ -58,7 +58,7 @@ def test_replace_missile_launcher_bytes():
         (10, b"d \x82\xe2"),
         (20, b"\xc8 \x82\xe2"),
         (60, b"\x96/\x82\xe2"),
-        (102, b"\xff\x2f\x82\xe2"),
+        (100, b"\xfa\x2f\x82\xe2"),
     ],
 )
 def test_replace_ammo_expansion_bytes(value, expected_bytes):
@@ -73,7 +73,7 @@ def test_replace_ammo_expansion_bytes(value, expected_bytes):
         (20, b"\xc8\x80\xa0\xe3", b"\xc8\x20\xa0\xe3"),
         (60, b"\x96\x8f\xa0\xe3", b"\x96\x2f\xa0\xe3"),
         (40, b"\x19\x8e\xa0\xe3", b"\x19\x2e\xa0\xe3"),
-        (102, b"\xff\x8f\xa0\xe3", b"\xff\x2f\xa0\xe3"),
+        (100, b"\xfa\x8f\xa0\xe3", b"\xfa\x2f\xa0\xe3"),
     ],
 )
 def test_replace_starting_ammo_bytes(value, expected_missile_bytes, expected_ammo_bytes):
