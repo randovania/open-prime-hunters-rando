@@ -138,14 +138,15 @@ def _patch_specific_layer_states(file_manager: FileManager) -> None:
             ],
             "Sic Transit": [
                 (
-                    [9, 20, 23, 34, 55, 82, 84, 85, 86, 87, 88, 92],
+                    [9, 20, 23, 34, 55, 82, 84, 85, 86, 87, 88],
                     [1, 2],
                     True,
-                ),  # Shield Key Scan Points, Trigger, Camera Sequences, and Door Unlocking
+                ),  # Shield Key Scan Points, Trigger, and Camera Sequences
                 ([11], [1, 2], False),  # Second Pass Inner Door
                 ([24], [1, 2], True),  # First Pass Inner Door
                 ([35], [1, 2], True),  # Artifact
                 ([61], [1], True),  # Checkpoint
+                ([92], [1, 2], True),  # Door Unlocking Trigger
             ],
             "Subterranean": [
                 ([44], [1, 2], False),  # Second Pass Elevator
