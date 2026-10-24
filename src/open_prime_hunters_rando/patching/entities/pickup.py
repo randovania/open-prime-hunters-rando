@@ -183,7 +183,7 @@ def _adjust_octolith_positions(entity: ItemSpawn | Artifact, room_name: str) -> 
     rooms_with_height_adjustments: dict[str, list[tuple[int, float]]] = {
         "Cortex CPU": [(18, 1.6)],
         "Compression Chamber": [(9, 1.1)],
-        "Council Chamber": [(19, 2.0)],
+        "Council Chamber": [(19, 1.5)],
         "Data Shrine 01": [(14, 1.2), (55, 1.2), (57, 1.4)],
         "Data Shrine 02": [(15, 1.4), (18, 1.1)],
         "Echo Hall": [(15, 1.0), (42, 1.0)],
