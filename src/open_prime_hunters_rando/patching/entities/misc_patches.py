@@ -2,8 +2,12 @@ from typing import TYPE_CHECKING
 
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.area_volume import AreaVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.enemy_spawn import EnemySpawn
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.object import Object
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import TriggerVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import (
+    TriggerVolume,
+    TriggerVolumeType,
+)
 from open_prime_hunters_rando.parsing.formats.entities.enum import Message
 
 if TYPE_CHECKING:
@@ -14,6 +18,8 @@ def misc_patches(file_manager: FileManager) -> None:
     _disable_message_prompts(file_manager)
     _move_data_shrine_01_fight_trigger(file_manager)
     _add_area_intro_message_oubliette_gateway(file_manager)
+    _respawn_data_shrine_03_alimbic_turrets(file_manager)
+    _add_custom_subterranean_platform_trigger(file_manager)
 
 
 def _disable_message_prompts(file_manager: FileManager) -> None:
@@ -55,3 +61,35 @@ def _add_area_intro_message_oubliette_gateway(file_manager: FileManager) -> None
     trigger.child_message = Message.SHOW_OVERLAY
     trigger.child_message_param1 = 80
     trigger.child_message_param2 = 90
+
+
+def _respawn_data_shrine_03_alimbic_turrets(file_manager: FileManager) -> None:
+    entity_file = file_manager.get_entity_file("Celestial Archives", "Data Shrine 03")
+
+    # The Alimbic Turrets will now respawn when renentering the room preventing a potential softlock
+    turret_ids = [8, 16]
+    for turret_id in turret_ids:
+        turret = entity_file.get_entity(turret_id, EnemySpawn)
+        turret.always_active = True
+
+
+def _add_custom_subterranean_platform_trigger(file_manager: FileManager) -> None:
+    entity_file = file_manager.get_entity_file("Arcterra", "Subterranean")
+
+    current_trigger = entity_file.get_entity(33, TriggerVolume)
+
+    # Add a new trigger that activates the platform so it never fails on post-boss layers
+    new_trigger = TriggerVolume.create(
+        node_name="rmMain",
+        layer_state=current_trigger.layer_state,
+        subtype=TriggerVolumeType.AUTOMATIC,
+        active=False,
+        always_active=False,
+        deactivate_after_use=False,
+        parent_id=4,
+        parent_message=Message.PLATFORM_WAKEUP,
+    )
+    entity_file.append_entity(new_trigger)
+
+    current_trigger.child_id = new_trigger.entity_id
+    current_trigger.child_message = Message.ACTIVATE

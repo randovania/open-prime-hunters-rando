@@ -100,8 +100,7 @@ class StringTableAdapter(construct.Adapter):
             string = string_wrapper._raw
 
             size = len(string_wrapper.text)
-            if string.header._string_length > size:
-                size = string.header._string_length
+            string.header._string_length = size
             string.header._data_offset = offset
 
             offset += size + num_bytes_to_align(size)

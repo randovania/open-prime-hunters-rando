@@ -2,11 +2,14 @@ import copy
 from typing import TYPE_CHECKING, NamedTuple
 
 from open_prime_hunters_rando.parsing.common_types.vectors import Vec3
-from open_prime_hunters_rando.parsing.common_types.volume import SphereVolumeType, TriggerVolumeFlags
+from open_prime_hunters_rando.parsing.common_types.volume import TriggerVolumeFlags
 from open_prime_hunters_rando.parsing.file_manager import FileManager
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.item_spawn import ItemSpawn
 from open_prime_hunters_rando.parsing.formats.entities.entity_types.object import Object
-from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import TriggerVolume
+from open_prime_hunters_rando.parsing.formats.entities.entity_types.trigger_volume import (
+    TriggerVolume,
+    TriggerVolumeType,
+)
 from open_prime_hunters_rando.parsing.formats.entities.enum import ItemType, Message
 from open_prime_hunters_rando.patching.entities import NewTrigger
 
@@ -39,7 +42,7 @@ def _add_new_triggers(file_manager: FileManager, new_artifact_triggers: list[New
             node_name=new_trigger.node_name,
             layer_state=item_spawn.layer_state,
             position=item_spawn.position,
-            volume=SphereVolumeType.create(),
+            subtype=TriggerVolumeType.AUTOMATIC,
             active=False,
             trigger_flags=TriggerVolumeFlags.PLAYER_BIPED | TriggerVolumeFlags.PLAYER_ALT,
         )

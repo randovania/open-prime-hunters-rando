@@ -51,7 +51,6 @@ def patch_hunters(file_manager: FileManager, configuration: dict) -> None:
         return
 
     LOG.info("Modifying hunter spawns")
-    random.seed(configuration["configuration_id"])
 
     if shuffle_hunter_colors:
         hunter_colors = list(range(6))

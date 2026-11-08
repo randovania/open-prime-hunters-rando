@@ -85,6 +85,7 @@ def _patch_specific_layer_states(file_manager: FileManager) -> None:
     patches_per_layer_state: dict[str, dict[str, list[tuple[list[int], list[int], bool]]]] = {
         "Alinos": {
             "Alinos Perch": [
+                ([26], [1, 2], True),  # Magmaul Force Field
                 ([32], [1, 2], True),  # Crash Site Door Unlocked Camera Sequence
             ],
             "Elder Passage": [
@@ -136,11 +137,16 @@ def _patch_specific_layer_states(file_manager: FileManager) -> None:
                 ([65], [1, 2], False),  # Entrance Jump Pad
             ],
             "Sic Transit": [
-                ([9, 23, 82, 84, 85, 86, 87, 88], [1, 2], True),  # Shield Key Scan Points, Trigger, and Camera Sequence
+                (
+                    [9, 23, 34, 55, 82, 84, 85, 86, 87, 88],
+                    [1, 2],
+                    True,
+                ),  # Shield Key Scan Points, Trigger, and Camera Sequences
                 ([11], [1, 2], False),  # Second Pass Inner Door
                 ([24], [1, 2], True),  # First Pass Inner Door
                 ([35], [1, 2], True),  # Artifact
                 ([61], [1], True),  # Checkpoint
+                ([20, 92], [1, 2], True),  # Door Locking/Unlocking Triggers
             ],
             "Subterranean": [
                 ([44], [1, 2], False),  # Second Pass Elevator
